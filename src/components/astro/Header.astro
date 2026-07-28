@@ -1,0 +1,28 @@
+---
+import Logo from "./Logo.astro";
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <Logo />
+    <nav class="desktop-nav" aria-label="주요 메뉴">
+      <a href="/find">소모품 찾기</a>
+      <a href="/category/air-purifier">카테고리</a>
+      <a href="/#brands">브랜드</a>
+      <a href="/guide">가이드</a>
+      <a href="/methodology">검증 기준</a>
+    </nav>
+    <a class="button button-danger button-compact desktop-report" href="/report">정보 수정 제보</a>
+    <details class="mobile-menu">
+      <summary aria-label="메뉴 열기"><span></span><span></span><span></span></summary>
+      <nav aria-label="모바일 메뉴">
+        <a href="/find">소모품 찾기</a>
+        <a href="/category/air-purifier">공기청정기</a>
+        <a href="/category/robot-vacuum">로봇청소기</a>
+        <a href="/guide">가이드</a>
+        <a href="/methodology">검증 기준</a>
+        <a href="/report">정보 수정 제보</a>
+      </nav>
+    </details>
+  </div>
+</header>

@@ -1,0 +1,31 @@
+---
+import type { ApplianceModel } from "@/types";
+import { categoryLabels } from "@/utils/labels";
+import VerificationBadge from "./VerificationBadge.astro";
+
+const { model } = Astro.props as { model: ApplianceModel };
+---
+
+<article class="model-card card">
+  <div class="model-card-top">
+    <span class="category-chip">
+      <span aria-hidden="true">{model.category === "air-purifier" ? "▤" : "◉"}</span>
+      {categoryLabels[model.category]}
+    </span>
+    <span class={model.isDemo ? "demo-chip" : "official-chip"}>
+      {model.isDemo ? "데모 데이터" : "공식 모델 정보"}
+    </span>
+  </div>
+  <h3><a href={`/model/${model.brandId}/${model.slug}`}>{model.brandName} {model.modelName}</a></h3>
+  <p class="model-series">{model.modelCode} {model.series ? `· ${model.series}` : ""}</p>
+  <div class="model-card-status">
+    <VerificationBadge status={model.verificationStatus} />
+    <span>{model.lastVerifiedAt} 확인</span>
+  </div>
+  <div class="model-card-footer">
+    <strong>호환 소모품 {model.consumableIds.length}개</strong>
+    <a class="text-link" href={`/model/${model.brandId}/${model.slug}`}
+      >상세 보기 <span aria-hidden="true">→</span></a
+    >
+  </div>
+</article>

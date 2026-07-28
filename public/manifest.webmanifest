@@ -1,0 +1,18 @@
+{
+  "name": "모델핏",
+  "short_name": "모델핏",
+  "description": "가전 모델명으로 호환 소모품을 찾는 구매 전 확인 도구",
+  "lang": "ko",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f8fafc",
+  "theme_color": "#1d4ed8",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

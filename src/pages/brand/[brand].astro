@@ -1,0 +1,94 @@
+---
+import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
+import ModelCard from "@/components/astro/ModelCard.astro";
+import SearchBox from "@/components/react/SearchBox";
+import { brands } from "@/data/brands";
+import { guides } from "@/data/guides";
+import { models } from "@/data/models";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { categoryLabels } from "@/utils/labels";
+
+export function getStaticPaths() {
+  return brands.map((brand) => ({ params: { brand: brand.slug }, props: { brand } }));
+}
+
+const { brand } = Astro.props;
+const brandModels = models.filter((model) => model.brandId === brand.id);
+const officialModels = brandModels.filter((model) => !model.isDemo);
+---
+
+<BaseLayout
+  title={`${brand.name} 호환 소모품 모델 찾기`}
+  description={`${brand.name} ${brand.nameEn ?? ""} 공기청정기와 로봇청소기 모델별 소모품 정보를 찾아보세요.`}
+  canonicalPath={`/brand/${brand.slug}`}
+>
+  <section class="page-hero">
+    <div class="container">
+      <Breadcrumbs items={[{ label: "브랜드", href: "/#brands" }, { label: brand.name }]} />
+      <div class="eyebrow">브랜드</div>
+      <h1>{brand.name} <span class="model-code">{brand.nameEn}</span></h1>
+      <p>
+        지원 카테고리: {
+          brand.supportedCategories.map((category) => categoryLabels[category]).join(" · ")
+        }
+      </p>
+      <div class="stats-row">
+        <div class="stat-card card">
+          <strong>{officialModels.length}</strong><span>공식 모델</span>
+        </div>
+        <div class="stat-card card">
+          <strong>{brand.supportedCategories.length}</strong><span>지원 카테고리</span>
+        </div>
+        <div class="stat-card card"><strong>공식 출처</strong><span>모델 확인 기준</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="content-narrow">
+        <div class="section-header">
+          <div>
+            <div class="eyebrow">브랜드 내 검색</div><h2>{brand.name} 모델명을 입력하세요</h2>
+          </div>
+        </div>
+        <SearchBox initialQuery={brand.name} compact client:load />
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow">모델 목록</div><h2>{brand.name} 등록 모델</h2><p>
+            모델 정보와 소모품 호환 검증 상태를 각각 확인하세요.
+          </p>
+        </div>
+      </div>
+      <div class="model-grid">
+        {brandModels.map((model) => <ModelCard model={model} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div><div class="eyebrow">관련 가이드</div><h2>모델 확인에 도움이 되는 글</h2></div>
+      </div>
+      <div class="related-grid">
+        {
+          guides.slice(0, 3).map((guide) => (
+            <a class="related-card card interactive-card" href={`/guide/${guide.slug}`}>
+              <>
+                <h3>{guide.title}</h3>
+                <p>{guide.summary}</p>
+              </>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>

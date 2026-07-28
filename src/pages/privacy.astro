@@ -1,0 +1,31 @@
+---
+import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="개인정보처리방침"
+  description="모델핏 개인정보처리방침과 선택적 분석 도구 사용 원칙을 안내합니다."
+  canonicalPath="/privacy"
+>
+  <section class="page-hero">
+    <div class="container content-narrow">
+      <Breadcrumbs items={[{ label: "개인정보처리방침" }]} /><h1>개인정보처리방침</h1><p>
+        시행일: 2026년 7월 27일
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container content-narrow legal-content">
+      <h2>수집하는 정보</h2><p>
+        기본 서비스는 회원가입 없이 사용할 수 있으며 서버에 검색어 또는 개인정보를 저장하지
+        않습니다. 오류 제보는 사용자의 메일 앱을 통해 전송됩니다.
+      </p><h2>선택적 분석 도구</h2><p>
+        환경변수로 GA4가 설정된 경우 검색과 페이지 이용 이벤트가 전송될 수 있습니다. 측정 ID가
+        없으면 분석 스크립트를 삽입하지 않습니다.
+      </p><h2>외부 링크</h2><p>
+        제조사, 판매자 또는 제휴 사이트로 이동하면 해당 사이트의 개인정보처리방침이 적용됩니다.
+      </p><h2>문의</h2><p>개인정보 관련 문의는 오류 제보 페이지의 이메일 방식을 이용해 주세요.</p>
+    </div>
+  </section>
+</BaseLayout>

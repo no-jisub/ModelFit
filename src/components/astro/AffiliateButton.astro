@@ -1,0 +1,54 @@
+---
+import { buildAffiliateUrl } from "@/utils/affiliate";
+
+const {
+  keyword,
+  kind = "genuine",
+  partId,
+  directUrl,
+  enabled = false,
+} = Astro.props as {
+  keyword: string;
+  kind?: "genuine" | "compatible";
+  partId: string;
+  directUrl?: string;
+  enabled?: boolean;
+};
+const baseUrl = import.meta.env.PUBLIC_COUPANG_BASE_URL;
+const query = kind === "genuine" ? `${keyword} 정품` : `${keyword} 호환`;
+const marketplaceUrl = kind === "genuine" && enabled ? directUrl : undefined;
+const affiliateUrl = buildAffiliateUrl(baseUrl, query);
+const url = marketplaceUrl ?? affiliateUrl;
+const isDirectProduct = marketplaceUrl?.includes("/vp/products/");
+const isAffiliate = !marketplaceUrl && Boolean(affiliateUrl);
+const label = marketplaceUrl
+  ? isDirectProduct
+    ? "쿠팡에서 공식 소모품 보기"
+    : "쿠팡에서 공식 소모품 검색"
+  : kind === "genuine"
+    ? "쿠팡에서 정품 검색"
+    : "쿠팡에서 호환품 검색";
+---
+
+{
+  url ? (
+    <a
+      class="button button-secondary affiliate-button"
+      href={url}
+      rel={isAffiliate ? "nofollow sponsored noopener noreferrer" : "nofollow noopener noreferrer"}
+      target="_blank"
+      data-affiliate-kind={kind}
+      data-part-id={partId}
+    >
+      {label} <span aria-hidden="true">↗</span>
+    </a>
+  ) : (
+    <span
+      class="button button-secondary affiliate-button is-disabled"
+      aria-disabled="true"
+      title="제휴 링크 설정 전입니다."
+    >
+      {label} · 준비 중
+    </span>
+  )
+}

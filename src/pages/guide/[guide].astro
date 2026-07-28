@@ -1,0 +1,111 @@
+---
+import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
+import SearchBox from "@/components/react/SearchBox";
+import { guides } from "@/data/guides";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+export function getStaticPaths() {
+  return guides.map((guide) => ({ params: { guide: guide.slug }, props: { guide } }));
+}
+
+const { guide } = Astro.props;
+const related = guides.filter((item) => item.slug !== guide.slug).slice(0, 3);
+const articleJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: guide.title,
+  description: guide.summary,
+  inLanguage: "ko-KR",
+  author: { "@type": "Organization", name: "모델핏" },
+  publisher: { "@type": "Organization", name: "모델핏" },
+  mainEntityOfPage: Astro.url,
+};
+---
+
+<BaseLayout
+  title={guide.title}
+  description={guide.summary}
+  canonicalPath={`/guide/${guide.slug}`}
+  jsonLd={articleJsonLd}
+>
+  <section class="page-hero">
+    <div class="container content-narrow">
+      <Breadcrumbs items={[{ label: "가이드", href: "/guide" }, { label: guide.title }]} />
+      <div class="eyebrow">{guide.category} 가이드</div>
+      <h1>{guide.title}</h1>
+      <p>{guide.summary}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="guide-layout">
+        <nav class="guide-toc" aria-label="글 목차">
+          <strong>목차</strong>
+          <a href="#summary">한눈에 보기</a>
+          <a href="#steps">단계별 확인</a>
+          <a href="#checklist">체크리스트</a>
+          <a href="#cautions">실수하기 쉬운 부분</a>
+          <a href="#search">관련 모델 찾기</a>
+        </nav>
+        <article class="article-body">
+          <section class="article-section" id="summary">
+            <div class="article-summary">
+              {guide.summary} 아래 순서를 따라가면 구매 전 확인할 핵심 항목을 빠뜨리지 않을 수 있습니다.
+            </div>
+          </section>
+          <section class="article-section" id="steps">
+            <h2>단계별 확인</h2>
+            {
+              guide.steps.map((step, index) => (
+                <div class="article-step">
+                  <>
+                    <span>{index + 1}</span>
+                    <div>
+                      <>
+                        <h3>{step.title}</h3>
+                        <p>{step.description}</p>
+                      </>
+                    </div>
+                  </>
+                </div>
+              ))
+            }
+          </section>
+          <section class="article-section" id="checklist">
+            <h2>구매 전 체크리스트</h2>
+            <ul class="checklist">{guide.checklist.map((item) => <li>{item}</li>)}</ul>
+          </section>
+          <section class="article-section" id="cautions">
+            <h2>실수하기 쉬운 부분</h2>
+            <div class="notice-card">
+              <span aria-hidden="true">!</span><ul>
+                {guide.cautions.map((item) => <li>{item}</li>)}
+              </ul>
+            </div>
+          </section>
+          <section class="article-section" id="search">
+            <h2>관련 모델 찾기</h2>
+            <p>제품 라벨의 모델 코드를 입력하면 공백과 하이픈 차이를 정규화해 검색합니다.</p>
+            <SearchBox compact client:load />
+          </section>
+          <section class="article-section">
+            <h2>관련 가이드</h2>
+            <div class="related-grid">
+              {
+                related.map((item) => (
+                  <a class="related-card card interactive-card" href={`/guide/${item.slug}`}>
+                    <>
+                      <h3>{item.title}</h3>
+                      <p>{item.summary}</p>
+                    </>
+                  </a>
+                ))
+              }
+            </div>
+          </section>
+        </article>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,102 @@
+---
+import AffiliateButton from "@/components/astro/AffiliateButton.astro";
+import AffiliateDisclosure from "@/components/astro/AffiliateDisclosure.astro";
+import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
+import ModelCard from "@/components/astro/ModelCard.astro";
+import SourceList from "@/components/astro/SourceList.astro";
+import VerificationBadge from "@/components/astro/VerificationBadge.astro";
+import { consumables } from "@/data/consumables";
+import { models } from "@/data/models";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { partTypeLabels } from "@/utils/labels";
+
+export function getStaticPaths() {
+  return consumables.map((part) => ({ params: { part: part.slug }, props: { part } }));
+}
+
+const { part } = Astro.props;
+const compatibleModels = part.compatibleModelIds
+  .map((id: string) => models.find((model) => model.id === id))
+  .filter((model) => model !== undefined);
+---
+
+<BaseLayout
+  title={`${part.displayName} 호환 모델과 구매 전 확인`}
+  description={`${part.displayName}의 제조사 공식 호환 모델, 부품번호, 교체주기와 근거 출처를 확인하세요.`}
+  canonicalPath={`/part/${part.slug}`}
+>
+  <section class="page-hero">
+    <div class="container model-content">
+      <Breadcrumbs items={[{ label: "소모품" }, { label: part.displayName }]} />
+      <div class="part-hero-grid">
+        <div>
+          <div class="eyebrow">{partTypeLabels[part.type]}</div>
+          <h1>{part.displayName}</h1>
+          <div class="model-meta">
+            <VerificationBadge status={part.verificationStatus} />
+            <span>호환 모델 {compatibleModels.length}개</span>
+            <span>·</span>
+            <span>정품 부품번호 {part.genuinePartNumber ?? "데이터 없음"}</span>
+          </div>
+          <div class="alert-box" role="alert">
+            <span aria-hidden="true">!</span>
+            <div>
+              {
+                part.verificationStatus === "official" ? (
+                  <h2>제조사 공식 자료로 확인한 호환 정보</h2>
+                ) : (
+                  <h2>구매 전 추가 확인이 필요한 정보</h2>
+                )
+              }
+              <p>{part.purchaseWarning}</p>
+            </div>
+          </div>
+        </div>
+        <aside class="part-actions">
+          <h2>상품 검색</h2>
+          <AffiliateButton
+            keyword={part.affiliate.searchKeyword}
+            kind="genuine"
+            partId={part.id}
+            directUrl={part.affiliate.directUrl}
+            enabled={part.affiliate.enabled}
+          />
+          <AffiliateButton
+            keyword={part.affiliate.searchKeyword}
+            kind="compatible"
+            partId={part.id}
+          />
+          <AffiliateDisclosure />
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <div class="container model-content">
+    <section class="detail-section">
+      <h2>소모품 정보</h2>
+      <dl class="detail-list card" style="padding: 24px;">
+        <div><dt>소모품 유형</dt><dd>{partTypeLabels[part.type]}</dd></div>
+        <div><dt>교체주기 참고</dt><dd>{part.replacementInterval ?? "제조사 안내 확인"}</dd></div>
+        <div><dt>정품 부품번호</dt><dd>{part.genuinePartNumber ?? "데이터 없음"}</dd></div>
+      </dl>
+    </section>
+
+    <section class="detail-section">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow">호환 모델</div><h2>제조사 자료에서 확인된 적용 모델</h2><p>
+            제품 라벨의 전체 모델명과 공식 부품 페이지의 적용 범위를 함께 확인하세요.
+          </p>
+        </div>
+      </div>
+      <div class="model-grid">
+        {compatibleModels.map((model) => <ModelCard model={model} />)}
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <SourceList sources={part.sources} />
+    </section>
+  </div>
+</BaseLayout>

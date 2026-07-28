@@ -1,0 +1,239 @@
+---
+import AffiliateDisclosure from "@/components/astro/AffiliateDisclosure.astro";
+import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
+import ConsumableCard from "@/components/astro/ConsumableCard.astro";
+import ModelCard from "@/components/astro/ModelCard.astro";
+import ModelNumberGuide from "@/components/astro/ModelNumberGuide.astro";
+import SourceList from "@/components/astro/SourceList.astro";
+import VerificationBadge from "@/components/astro/VerificationBadge.astro";
+import { consumables } from "@/data/consumables";
+import { guides } from "@/data/guides";
+import { models } from "@/data/models";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { categoryLabels } from "@/utils/labels";
+
+export function getStaticPaths() {
+  return models.map((model) => ({
+    params: { brand: model.brandId, model: model.slug },
+    props: { model },
+  }));
+}
+
+const { model } = Astro.props;
+const parts = model.consumableIds
+  .map((id: string) => consumables.find((part) => part.id === id))
+  .filter((part) => part !== undefined);
+const relatedModels = models
+  .filter((item) => item.category === model.category && item.id !== model.id)
+  .slice(0, 3);
+const relatedGuides = guides
+  .filter(
+    (guide) =>
+      guide.category === (model.category === "air-purifier" ? "공기청정기" : "로봇청소기") ||
+      guide.category === "기초",
+  )
+  .slice(0, 3);
+const categoryLabel = categoryLabels[model.category];
+const title = `${model.brandName} ${model.modelName} 호환 소모품 찾기`;
+const description = model.isDemo
+  ? `${model.brandName} ${model.modelCode}에 맞는 필터, 브러시, 먼지봉투 등 호환 소모품 정보를 확인하세요. 현재 내용은 미검증 데모 데이터입니다.`
+  : `${model.brandName} ${model.modelCode}의 제조사 공식 모델 출처와 소모품 호환 정보 등록 상태를 확인하세요.`;
+const breadcrumbJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "홈", item: Astro.site },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: categoryLabel,
+      item: new URL(`/category/${model.category}`, Astro.site),
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: `${model.brandName} ${model.modelCode}`,
+      item: Astro.url,
+    },
+  ],
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonicalPath={`/model/${model.brandId}/${model.slug}`}
+  jsonLd={breadcrumbJsonLd}
+>
+  <section class="model-detail-hero">
+    <div class="container model-content">
+      <Breadcrumbs
+        items={[
+          { label: categoryLabel, href: `/category/${model.category}` },
+          { label: model.brandName, href: `/brand/${model.brandId}` },
+          { label: model.modelCode },
+        ]}
+      />
+      <div class="model-title-line">
+        <div>
+          <span class="category-chip"
+            >{model.category === "air-purifier" ? "▤" : "◉"} {categoryLabel}</span
+          >
+          <h1>{model.brandName} {model.modelName}</h1>
+          <div class="model-code">{model.modelCode} {model.series ? `· ${model.series}` : ""}</div>
+          <p>{model.shortDescription}</p>
+          <div class="model-meta">
+            <VerificationBadge status={model.verificationStatus} />
+            <span>마지막 확인일 {model.lastVerifiedAt}</span>
+            <span>·</span>
+            <span>호환 소모품 {parts.length}개</span>
+          </div>
+        </div>
+        <a
+          class="button button-danger"
+          href={`/report?brand=${model.brandId}&model=${model.modelCode}`}
+        >
+          정보 수정 제보
+        </a>
+      </div>
+      <div class="alert-box" role="alert">
+        <span aria-hidden="true">!</span>
+        <div>
+          {
+            model.isDemo ? (
+              <>
+                <h2>이 정보는 공식 자료로 확인되지 않은 데모 데이터입니다.</h2>
+                <p>실제 구매 전 반드시 제조사 또는 판매자에게 모델별 호환 여부를 확인하세요.</p>
+              </>
+            ) : model.consumableNote ? (
+              <>
+                <h2>제조사 공식 소모품 관리 안내</h2>
+                <p>{model.consumableNote}</p>
+              </>
+            ) : parts.length === 0 ? (
+              <>
+                <h2>모델명은 제조사 공식 자료에서 확인했습니다.</h2>
+                <p>
+                  소모품 호환 정보는 아직 공식 근거가 등록되지 않았습니다. 임의의 호환품을 연결하지
+                  않습니다.
+                </p>
+              </>
+            ) : (
+              <>
+                <h2>공식 출처와 호환성 검증 상태를 함께 확인하세요.</h2>
+                <p>구매 전 부품번호와 적용 모델 범위를 한 번 더 대조하는 것을 권장합니다.</p>
+              </>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container model-content">
+    <section class="detail-section">
+      <h2>모델명 확인</h2>
+      <div class="info-card card">
+        <span class="info-icon" aria-hidden="true">i</span>
+        <div>
+          <h3>이 모델의 라벨 위치</h3>
+          <p>{model.modelNumberLocation ?? "제품의 뒷면 또는 바닥면 정격 라벨을 확인하세요."}</p>
+          <p class="model-code">검색 키워드: {[model.modelCode, ...model.aliases].join(" · ")}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow">호환 소모품</div>
+          <h2>이 모델에 연결된 소모품 {parts.length}개</h2>
+          <p>호환 정보가 먼저, 구매 링크는 그 다음에 표시됩니다.</p>
+        </div>
+      </div>
+      <div class="consumable-list">
+        {
+          parts.length > 0 ? (
+            parts.map((part) => <ConsumableCard part={part} />)
+          ) : model.consumableNote ? (
+            <div class="empty-state card">
+              <span class="empty-icon" aria-hidden="true">
+                ✓
+              </span>
+              <h2>정기 교체용 필터가 연결되지 않았습니다</h2>
+              <p>{model.consumableNote}</p>
+            </div>
+          ) : (
+            <div class="empty-state card">
+              <span class="empty-icon" aria-hidden="true">
+                ⌕
+              </span>
+              <h2>검증된 호환 소모품을 준비 중입니다</h2>
+              <p>제조사 설명서나 공식 부품 페이지에서 적용 모델 근거를 확인한 뒤에만 연결합니다.</p>
+              <div class="button-row">
+                <a
+                  class="button button-secondary"
+                  href={`/report?brand=${model.brandId}&model=${model.modelCode}`}
+                >
+                  공식 자료 제보하기
+                </a>
+              </div>
+            </div>
+          )
+        }
+      </div>
+      {parts.length > 0 && <AffiliateDisclosure />}
+    </section>
+
+    <section class="detail-section">
+      <SourceList sources={model.sources} />
+    </section>
+
+    <section class="detail-section">
+      <ModelNumberGuide />
+    </section>
+
+    <section class="detail-section">
+      <div class="section-header">
+        <div><div class="eyebrow">관련 모델</div><h2>같은 카테고리의 다른 모델</h2></div>
+      </div>
+      <div class="related-grid">
+        {relatedModels.map((related) => <ModelCard model={related} />)}
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <div class="section-header">
+        <div><div class="eyebrow">관련 가이드</div><h2>구매 전 확인 가이드</h2></div>
+      </div>
+      <div class="related-grid">
+        {
+          relatedGuides.map((guide) => (
+            <a class="related-card card interactive-card" href={`/guide/${guide.slug}`}>
+              <>
+                <h3>{guide.title}</h3>
+                <p>{guide.summary}</p>
+              </>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="detail-section">
+      <div class="notice-card">
+        <span aria-hidden="true">!</span>
+        <div>
+          <strong>면책 안내</strong>
+          <p>
+            {
+              model.isDemo
+                ? "본 페이지는 정보 탐색용 데모입니다. 부품번호, 규격, 가격, 재고를 보증하지 않으며 구매 전 제조사 확인이 필요합니다."
+                : "모델명은 제조사 공식 출처에서 확인했지만, 부품번호·규격·가격·재고는 각 소모품의 검증 상태와 판매 페이지를 다시 확인해야 합니다."
+            }
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

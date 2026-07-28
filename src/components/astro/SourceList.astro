@@ -1,0 +1,31 @@
+---
+import type { SourceReference } from "@/types";
+
+const { sources } = Astro.props as { sources: SourceReference[] };
+---
+
+<section class="source-list" aria-labelledby="source-title">
+  <h3 id="source-title">확인 출처</h3>
+  {
+    sources.length > 0 ? (
+      <ul>
+        {sources.map((source) => (
+          <li>
+            <a href={source.url} rel="noopener noreferrer" target="_blank">
+              {source.title}
+            </a>
+            <span>{source.checkedAt} 확인</span>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div class="empty-inline">
+        <span aria-hidden="true">!</span>
+        <p>
+          <strong>등록된 공식 출처가 없습니다.</strong> 이 데이터는 미검증 데모이며 구매 판단에
+          사용할 수 없습니다.
+        </p>
+      </div>
+    )
+  }
+</section>

@@ -1,0 +1,37 @@
+---
+import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="서비스 소개"
+  description="모델핏은 가전 모델명으로 호환 소모품 정보를 찾는 구매 전 확인 도구입니다."
+  canonicalPath="/about"
+>
+  <section class="page-hero">
+    <div class="container content-narrow">
+      <Breadcrumbs items={[{ label: "서비스 소개" }]} /><div class="eyebrow">About ModelFit</div><h1
+      >
+        쇼핑보다 확인이 먼저인 소모품 검색
+      </h1><p>
+        모델핏은 상품 판매 사이트가 아니라 모델과 소모품의 연결 정보를 이해하기 쉽게 정리하는 도구를
+        지향합니다.
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container content-narrow legal-content">
+      <h2>왜 만들었나요?</h2><p>
+        같은 제품군 안에서도 모델 코드에 따라 필터 크기와 브러시 결합 방식이 다릅니다. 모델핏은 구매
+        전에 확인해야 할 정보를 모델 코드 중심으로 모읍니다.
+      </p><h2>무엇을 제공하나요?</h2><ul>
+        <li>공기청정기와 로봇청소기 모델 검색</li><li>호환 소모품 유형과 부품번호 구조</li><li>
+          검증 상태와 마지막 확인일
+        </li><li>공식 출처와 구매 전 주의사항</li>
+      </ul><h2>현재 단계</h2><p>
+        모델 정보는 제조사 공식 자료에서 확인한 항목만 공개합니다. 실제 소모품 호환성 데이터는 공식
+        근거를 확인한 뒤 별도로 등록합니다.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

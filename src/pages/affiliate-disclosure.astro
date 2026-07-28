@@ -1,0 +1,36 @@
+---
+import AffiliateDisclosure from "@/components/astro/AffiliateDisclosure.astro";
+import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="제휴 링크 안내"
+  description="모델핏의 쿠팡 등 제휴 링크 표시 방식과 운영 원칙을 안내합니다."
+  canonicalPath="/affiliate-disclosure"
+>
+  <section class="page-hero">
+    <div class="container content-narrow">
+      <Breadcrumbs items={[{ label: "제휴 링크 안내" }]} /><div class="eyebrow">투명한 운영</div><h1
+      >
+        제휴 링크 안내
+      </h1><p>구매 링크는 모델과 호환 정보를 확인한 뒤에만 표시합니다.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container content-narrow legal-content">
+      <div class="notice-card">
+        <span aria-hidden="true">ⓘ</span><div><AffiliateDisclosure /></div>
+      </div><h2>표시 원칙</h2><ul>
+        <li>일반 상품·검색 링크와 제휴 링크를 구분해 고지합니다.</li><li>
+          최저가, 100% 호환, 공식 정품 보장 같은 확인되지 않은 표현을 사용하지 않습니다.
+        </li><li>확인된 상품 페이지가 없으면 부품번호 검색 링크만 제공합니다.</li><li>
+          제휴 설정이 없으면 구매 버튼을 비활성 상태로 표시합니다.
+        </li>
+      </ul><h2>구매 전 확인</h2><p>
+        판매 페이지의 모델 코드, 부품번호, 구성품과 교환 조건을 직접 확인하세요. 모델핏의 링크는
+        특정 상품의 호환성을 보증하지 않습니다.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

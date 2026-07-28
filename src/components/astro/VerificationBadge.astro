@@ -1,0 +1,21 @@
+---
+import type { VerificationStatus } from "@/types";
+import { statusLabels } from "@/utils/labels";
+
+interface Props {
+  status: VerificationStatus;
+}
+
+const { status } = Astro.props;
+const icons: Record<VerificationStatus, string> = {
+  official: "✓",
+  "seller-confirmed": "▣",
+  "user-reported": "●",
+  unverified: "!",
+};
+---
+
+<span class:list={["status-badge", `status-${status}`]} title={`${statusLabels[status]} 상태`}>
+  <span aria-hidden="true">{icons[status]}</span>
+  {statusLabels[status]}
+</span>

@@ -1,0 +1,26 @@
+---
+import SearchResults from "@/components/react/SearchResults";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const query = Astro.url.searchParams.get("q") ?? "";
+---
+
+<BaseLayout
+  title="모델 통합 검색"
+  description="브랜드, 모델명, 모델 코드로 공기청정기와 로봇청소기 소모품 정보를 검색하세요."
+  canonicalPath="/find"
+  noindex
+>
+  <section class="page-hero">
+    <div class="container">
+      <div class="content-narrow">
+        <div class="eyebrow">통합 검색</div>
+        <h1>내 제품 모델 찾기</h1>
+        <p>공백·하이픈·대소문자가 달라도 검색할 수 있습니다.</p>
+      </div>
+    </div>
+  </section>
+  <div class="container search-page-shell">
+    <SearchResults initialQuery={query} client:load />
+  </div>
+</BaseLayout>

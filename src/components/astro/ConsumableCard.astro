@@ -1,0 +1,34 @@
+---
+import type { ConsumableCompatibility } from "@/types";
+import { partTypeLabels } from "@/utils/labels";
+import AffiliateButton from "./AffiliateButton.astro";
+import VerificationBadge from "./VerificationBadge.astro";
+
+const { part } = Astro.props as { part: ConsumableCompatibility };
+---
+
+<article class="consumable-card card">
+  <div class="consumable-info">
+    <div class="eyebrow">{partTypeLabels[part.type]}</div>
+    <h3><a href={`/part/${part.slug}`}>{part.displayName}</a></h3>
+    <dl class="detail-list">
+      <div><dt>정품 부품번호</dt><dd>{part.genuinePartNumber ?? "데이터 없음"}</dd></div>
+      <div><dt>교체주기 참고</dt><dd>{part.replacementInterval ?? "제조사 안내 확인"}</dd></div>
+      <div><dt>검증 상태</dt><dd><VerificationBadge status={part.verificationStatus} /></dd></div>
+    </dl>
+    <div class="warning-inline"><span aria-hidden="true">!</span><p>{part.purchaseWarning}</p></div>
+  </div>
+  <div class="consumable-actions">
+    <a class="text-link part-detail-link" href={`/part/${part.slug}`}
+      >호환 모델과 상세 정보 보기 →</a
+    >
+    <AffiliateButton
+      keyword={part.affiliate.searchKeyword}
+      kind="genuine"
+      partId={part.id}
+      directUrl={part.affiliate.directUrl}
+      enabled={part.affiliate.enabled}
+    />
+    <AffiliateButton keyword={part.affiliate.searchKeyword} kind="compatible" partId={part.id} />
+  </div>
+</article>

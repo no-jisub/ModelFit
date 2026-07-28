@@ -1,0 +1,11 @@
+---
+const { inverted = false } = Astro.props;
+---
+
+<a class:list={["logo", { inverted }]} href="/" aria-label="모델핏 홈">
+  <span class="logo-mark" aria-hidden="true">✓</span>
+  <span class="logo-copy">
+    <strong>모델핏</strong>
+    <small>ModelFit</small>
+  </span>
+</a>
