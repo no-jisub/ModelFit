@@ -78,6 +78,15 @@ export function validateData(
     ) {
       errors.push(`${part.id}: 검색 링크 상태이지만 쿠팡 검색 URL이 아닙니다.`);
     }
+    if (Number.isNaN(Date.parse(part.affiliate.linkCheckedAt))) {
+      errors.push(`${part.id}: 구매 링크 확인일이 올바르지 않습니다.`);
+    }
+    if (
+      part.affiliate.priceStatus === "manual-check-required" &&
+      part.affiliate.stockStatus !== "manual-check-required"
+    ) {
+      warnings.push(`${part.id}: 가격과 재고의 수동 확인 상태가 다릅니다.`);
+    }
     if (part.affiliate.directUrl) {
       try {
         const url = new URL(part.affiliate.directUrl);

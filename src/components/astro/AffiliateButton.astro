@@ -8,6 +8,9 @@ const {
   directUrl,
   enabled = false,
   linkStatus,
+  priceStatus,
+  stockStatus,
+  linkCheckedAt,
 } = Astro.props as {
   keyword: string;
   kind?: "genuine" | "compatible";
@@ -15,6 +18,9 @@ const {
   directUrl?: string;
   enabled?: boolean;
   linkStatus?: "direct-product" | "search-results" | "unavailable";
+  priceStatus?: "manual-check-required" | "recently-checked";
+  stockStatus?: "manual-check-required" | "in-stock" | "out-of-stock";
+  linkCheckedAt?: string;
 };
 const baseUrl = import.meta.env.PUBLIC_COUPANG_BASE_URL;
 const query = kind === "genuine" ? `${keyword} 정품` : `${keyword} 호환`;
@@ -45,6 +51,14 @@ const statusClass =
     : linkStatus === "search-results"
       ? "coupang-status-search"
       : "coupang-status-unavailable";
+const priceLabel =
+  priceStatus === "recently-checked" ? "가격: 최근 수동 확인" : "가격: 판매 페이지에서 확인";
+const stockLabel =
+  stockStatus === "in-stock"
+    ? "재고: 확인 당시 판매 중"
+    : stockStatus === "out-of-stock"
+      ? "재고: 확인 당시 품절"
+      : "재고: 수동 확인 필요";
 ---
 
 <div class="affiliate-link-stack">
@@ -53,7 +67,9 @@ const statusClass =
       <a
         class="button button-secondary affiliate-button"
         href={url}
-        rel={isAffiliate ? "nofollow sponsored noopener noreferrer" : "nofollow noopener noreferrer"}
+        rel={
+          isAffiliate ? "nofollow sponsored noopener noreferrer" : "nofollow noopener noreferrer"
+        }
         target="_blank"
         data-affiliate-kind={kind}
         data-part-id={partId}
@@ -72,4 +88,9 @@ const statusClass =
     )
   }
   {statusLabel && <span class={`coupang-link-status ${statusClass}`}>{statusLabel}</span>}
+  <div class="commerce-status" aria-label="가격과 재고 확인 상태">
+    <span>{priceLabel}</span>
+    <span>{stockLabel}</span>
+    {linkCheckedAt && <small>링크 확인 {linkCheckedAt}</small>}
+  </div>
 </div>

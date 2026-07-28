@@ -25,6 +25,9 @@ const affiliate = (searchKeyword: string, directUrl?: string) => {
     status: resolvedUrl.includes("/vp/products/")
       ? ("direct-product" as const)
       : ("search-results" as const),
+    priceStatus: "manual-check-required" as const,
+    stockStatus: "manual-check-required" as const,
+    linkCheckedAt: checkedAt,
   };
 };
 

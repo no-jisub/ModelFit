@@ -38,4 +38,15 @@ describe("data validation", () => {
       }),
     ).toBe(true);
   });
+
+  it("모든 구매 링크는 가격·재고 수동 확인 상태와 확인일을 제공한다", () => {
+    expect(
+      consumables.every(
+        (part) =>
+          part.affiliate.priceStatus === "manual-check-required" &&
+          part.affiliate.stockStatus === "manual-check-required" &&
+          !Number.isNaN(Date.parse(part.affiliate.linkCheckedAt)),
+      ),
+    ).toBe(true);
+  });
 });

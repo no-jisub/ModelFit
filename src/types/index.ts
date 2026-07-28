@@ -25,6 +25,9 @@ export interface AffiliateLinkData {
   directUrl?: string;
   enabled: boolean;
   status: "direct-product" | "search-results" | "unavailable";
+  priceStatus: "manual-check-required" | "recently-checked";
+  stockStatus: "manual-check-required" | "in-stock" | "out-of-stock";
+  linkCheckedAt: string;
 }
 
 export interface ConsumableCompatibility {

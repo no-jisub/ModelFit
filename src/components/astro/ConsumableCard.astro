@@ -29,6 +29,9 @@ const { part } = Astro.props as { part: ConsumableCompatibility };
       directUrl={part.affiliate.directUrl}
       enabled={part.affiliate.enabled}
       linkStatus={part.affiliate.status}
+      priceStatus={part.affiliate.priceStatus}
+      stockStatus={part.affiliate.stockStatus}
+      linkCheckedAt={part.affiliate.linkCheckedAt}
     />
     <AffiliateButton keyword={part.affiliate.searchKeyword} kind="compatible" partId={part.id} />
   </div>
