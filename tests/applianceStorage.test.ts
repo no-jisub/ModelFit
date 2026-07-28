@@ -28,7 +28,7 @@ describe("내 가전함 저장소", () => {
           { modelId: "", savedAt: "invalid" },
         ]),
       ),
-    ).toEqual([{ modelId: "model-a", savedAt: "2026-07-29T00:00:00.000Z" }]);
+    ).toEqual([{ modelId: "model-a", savedAt: "2026-07-29T00:00:00.000Z", reminders: [] }]);
   });
 
   it("같은 모델을 다시 누르면 저장 목록에서 제거한다", () => {
@@ -36,7 +36,7 @@ describe("내 가전함 저장소", () => {
     const now = new Date("2026-07-29T01:00:00.000Z");
 
     expect(toggleSavedAppliance("model-a", storage, now)).toEqual([
-      { modelId: "model-a", savedAt: now.toISOString() },
+      { modelId: "model-a", savedAt: now.toISOString(), reminders: [] },
     ]);
     expect(toggleSavedAppliance("model-a", storage, now)).toEqual([]);
     expect(readSavedAppliances(storage)).toEqual([]);

@@ -1,19 +1,29 @@
 import { useEffect, useMemo, useState } from "react";
+import { consumables } from "@/data/consumables";
 import { models } from "@/data/models";
 import {
   APPLIANCE_STORAGE_EVENT,
+  type ReplacementReminder,
+  type SavedAppliance,
   readSavedAppliances,
   writeSavedAppliances,
 } from "@/utils/applianceStorage";
 import { categoryLabels } from "@/utils/labels";
+import {
+  formatKoreanDate,
+  getDefaultIntervalDays,
+  getLocalDateValue,
+  getNextReplacementDate,
+  getReminderState,
+} from "@/utils/replacementReminder";
 
 export default function MyAppliances() {
-  const [savedIds, setSavedIds] = useState<string[]>([]);
+  const [savedAppliances, setSavedAppliances] = useState<SavedAppliance[]>([]);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     const sync = () => {
-      setSavedIds(readSavedAppliances().map((item) => item.modelId));
+      setSavedAppliances(readSavedAppliances());
       setReady(true);
     };
 
@@ -28,11 +38,26 @@ export default function MyAppliances() {
 
   const savedModels = useMemo(
     () =>
-      savedIds
-        .map((id) => models.find((model) => model.id === id))
-        .filter((model) => model !== undefined),
-    [savedIds],
+      savedAppliances
+        .map((saved) => {
+          const model = models.find((item) => item.id === saved.modelId);
+          return model ? { model, saved } : undefined;
+        })
+        .filter((item) => item !== undefined),
+    [savedAppliances],
   );
+
+  const updateReminder = (modelId: string, partId: string, reminder: ReplacementReminder): void => {
+    const next = savedAppliances.map((appliance) => {
+      if (appliance.modelId !== modelId) return appliance;
+      return {
+        ...appliance,
+        reminders: [...appliance.reminders.filter((item) => item.partId !== partId), reminder],
+      };
+    });
+    writeSavedAppliances(next);
+    setSavedAppliances(next);
+  };
 
   if (!ready) {
     return <div className="cabinet-loading card">내 가전 정보를 불러오는 중입니다.</div>;
@@ -57,39 +82,133 @@ export default function MyAppliances() {
 
   return (
     <div className="cabinet-grid">
-      {savedModels.map((model) => (
-        <article className="cabinet-card card" key={model.id}>
-          <div>
-            <span className="category-chip">{categoryLabels[model.category]}</span>
-            <h2>
-              <a href={`/model/${model.brandId}/${model.slug}`}>
-                {model.brandName} {model.modelName}
-              </a>
-            </h2>
-            <p className="model-code">{model.modelCode}</p>
-            <p>{model.shortDescription}</p>
-          </div>
-          <div className="cabinet-card-footer">
-            <span>연결된 소모품 {model.consumableIds.length}개</span>
-            <div className="button-row">
-              <a className="button button-primary" href={`/model/${model.brandId}/${model.slug}`}>
-                소모품 보기
-              </a>
-              <button
-                className="button button-secondary"
-                type="button"
-                onClick={() => {
-                  const next = readSavedAppliances().filter((item) => item.modelId !== model.id);
-                  writeSavedAppliances(next);
-                  setSavedIds(next.map((item) => item.modelId));
-                }}
-              >
-                삭제
-              </button>
+      {savedModels.map(({ model, saved }) => {
+        const parts = model.consumableIds
+          .map((id) => consumables.find((part) => part.id === id))
+          .filter((part) => part !== undefined);
+
+        return (
+          <article className="cabinet-card card" key={model.id}>
+            <div className="cabinet-card-heading">
+              <span className="category-chip">{categoryLabels[model.category]}</span>
+              <h2>
+                <a href={`/model/${model.brandId}/${model.slug}`}>
+                  {model.brandName} {model.modelName}
+                </a>
+              </h2>
+              <p className="model-code">{model.modelCode}</p>
+              <p>{model.shortDescription}</p>
             </div>
-          </div>
-        </article>
-      ))}
+            <div className="cabinet-card-footer">
+              <span>연결된 소모품 {model.consumableIds.length}개</span>
+              <div className="button-row">
+                <a className="button button-primary" href={`/model/${model.brandId}/${model.slug}`}>
+                  소모품 보기
+                </a>
+                <button
+                  className="button button-secondary"
+                  type="button"
+                  onClick={() => {
+                    const next = readSavedAppliances().filter((item) => item.modelId !== model.id);
+                    writeSavedAppliances(next);
+                    setSavedAppliances(next);
+                  }}
+                >
+                  삭제
+                </button>
+              </div>
+            </div>
+            <section className="reminder-panel" aria-labelledby={`reminder-${model.id}`}>
+              <div className="reminder-panel-heading">
+                <div>
+                  <span className="eyebrow">사이트 내부 알림</span>
+                  <h3 id={`reminder-${model.id}`}>교체 일정</h3>
+                </div>
+                <span>이 브라우저에서만 표시</span>
+              </div>
+              {parts.length > 0 ? (
+                <div className="reminder-list">
+                  {parts.map((part) => {
+                    const reminder = saved.reminders.find((item) => item.partId === part.id);
+                    const defaultDays = getDefaultIntervalDays(part.type);
+                    const state = getReminderState(reminder);
+                    const stateLabel = {
+                      unset: "알림 설정 필요",
+                      ok: "교체 전",
+                      soon: "곧 교체",
+                      overdue: "교체일 지남",
+                    }[state];
+
+                    return (
+                      <div className="reminder-item" key={part.id}>
+                        <div className="reminder-copy">
+                          <a href={`/part/${part.slug}`}>{part.displayName}</a>
+                          <span className={`reminder-status reminder-${state}`}>{stateLabel}</span>
+                          <small>
+                            {reminder
+                              ? `다음 교체 예정 ${formatKoreanDate(getNextReplacementDate(reminder))}`
+                              : `권장 기본값 ${defaultDays}일 · 사용 환경에 맞게 조정`}
+                          </small>
+                        </div>
+                        <div className="reminder-controls">
+                          <label>
+                            <span>마지막 교체일</span>
+                            <input
+                              type="date"
+                              value={reminder?.lastReplacedAt ?? ""}
+                              onChange={(event) => {
+                                if (!event.target.value) return;
+                                updateReminder(model.id, part.id, {
+                                  partId: part.id,
+                                  lastReplacedAt: event.target.value,
+                                  intervalDays: reminder?.intervalDays ?? defaultDays,
+                                });
+                              }}
+                            />
+                          </label>
+                          <label>
+                            <span>주기(일)</span>
+                            <input
+                              type="number"
+                              min="1"
+                              max="3650"
+                              value={reminder?.intervalDays ?? defaultDays}
+                              onChange={(event) => {
+                                const intervalDays = Number(event.target.value);
+                                if (!Number.isInteger(intervalDays) || intervalDays < 1) return;
+                                updateReminder(model.id, part.id, {
+                                  partId: part.id,
+                                  lastReplacedAt: reminder?.lastReplacedAt ?? getLocalDateValue(),
+                                  intervalDays,
+                                });
+                              }}
+                            />
+                          </label>
+                          <button
+                            className="button button-secondary button-compact"
+                            type="button"
+                            onClick={() =>
+                              updateReminder(model.id, part.id, {
+                                partId: part.id,
+                                lastReplacedAt: getLocalDateValue(),
+                                intervalDays: reminder?.intervalDays ?? defaultDays,
+                              })
+                            }
+                          >
+                            오늘 교체
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="reminder-empty">알림을 설정할 교체형 소모품이 없습니다.</p>
+              )}
+            </section>
+          </article>
+        );
+      })}
     </div>
   );
 }
