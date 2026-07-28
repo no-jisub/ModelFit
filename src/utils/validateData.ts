@@ -66,6 +66,18 @@ export function validateData(
     if (part.affiliate.enabled && !part.affiliate.directUrl) {
       errors.push(`${part.id}: 활성화된 구매 링크 URL이 없습니다.`);
     }
+    if (
+      part.affiliate.status === "direct-product" &&
+      !part.affiliate.directUrl?.includes("/vp/products/")
+    ) {
+      errors.push(`${part.id}: 직접 상품 링크 상태이지만 쿠팡 상품 URL이 아닙니다.`);
+    }
+    if (
+      part.affiliate.status === "search-results" &&
+      !part.affiliate.directUrl?.includes("/np/search")
+    ) {
+      errors.push(`${part.id}: 검색 링크 상태이지만 쿠팡 검색 URL이 아닙니다.`);
+    }
     if (part.affiliate.directUrl) {
       try {
         const url = new URL(part.affiliate.directUrl);

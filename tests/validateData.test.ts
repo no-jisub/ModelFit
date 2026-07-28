@@ -26,4 +26,16 @@ describe("data validation", () => {
       }),
     ).toBe(true);
   });
+
+  it("쿠팡 링크 상태가 URL 유형과 일치한다", () => {
+    expect(
+      consumables.every((part) => {
+        const url = part.affiliate.directUrl ?? "";
+
+        if (part.affiliate.status === "direct-product") return url.includes("/vp/products/");
+        if (part.affiliate.status === "search-results") return url.includes("/np/search");
+        return !part.affiliate.enabled;
+      }),
+    ).toBe(true);
+  });
 });

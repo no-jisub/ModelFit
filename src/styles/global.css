@@ -1331,6 +1331,33 @@ h3 {
   font-size: 13px;
 }
 
+.affiliate-link-stack {
+  display: grid;
+  width: 100%;
+  gap: 6px;
+}
+
+.coupang-link-status {
+  display: block;
+  padding: 0 4px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.coupang-status-direct {
+  color: var(--color-success-700);
+}
+
+.coupang-status-search {
+  color: var(--color-warning-700);
+}
+
+.coupang-status-unavailable {
+  color: var(--color-neutral-500);
+}
+
 .affiliate-button.is-disabled {
   opacity: 0.65;
   cursor: not-allowed;

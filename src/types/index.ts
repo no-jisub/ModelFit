@@ -24,6 +24,7 @@ export interface AffiliateLinkData {
   searchKeyword: string;
   directUrl?: string;
   enabled: boolean;
+  status: "direct-product" | "search-results" | "unavailable";
 }
 
 export interface ConsumableCompatibility {
