@@ -6,6 +6,7 @@ import ModelCard from "@/components/astro/ModelCard.astro";
 import ModelNumberGuide from "@/components/astro/ModelNumberGuide.astro";
 import SourceList from "@/components/astro/SourceList.astro";
 import VerificationBadge from "@/components/astro/VerificationBadge.astro";
+import SaveApplianceButton from "@/components/react/SaveApplianceButton";
 import { consumables } from "@/data/consumables";
 import { guides } from "@/data/guides";
 import { models } from "@/data/models";
@@ -89,12 +90,15 @@ const breadcrumbJsonLd = {
             <span>호환 소모품 {parts.length}개</span>
           </div>
         </div>
-        <a
-          class="button button-danger"
-          href={`/report?brand=${model.brandId}&model=${model.modelCode}`}
-        >
-          정보 수정 제보
-        </a>
+        <div class="model-primary-actions">
+          <SaveApplianceButton modelId={model.id} client:load />
+          <a
+            class="button button-danger"
+            href={`/report?brand=${model.brandId}&model=${model.modelCode}`}
+          >
+            정보 수정 제보
+          </a>
+        </div>
       </div>
       <div class="alert-box" role="alert">
         <span aria-hidden="true">!</span>
