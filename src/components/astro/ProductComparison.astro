@@ -1,0 +1,62 @@
+---
+import type { ConsumableCompatibility } from "@/types";
+
+const { part } = Astro.props as { part: ConsumableCompatibility };
+const genuineLinkState =
+  part.affiliate.status === "direct-product"
+    ? "쿠팡 직접 상품 링크 등록"
+    : part.affiliate.status === "search-results"
+      ? "쿠팡 검색 결과 링크 등록"
+      : "등록된 쿠팡 링크 없음";
+---
+
+<div class="product-comparison">
+  <div class="comparison-scroll card" tabindex="0" aria-label="정품과 호환품 비교표">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">비교 항목</th>
+          <th scope="col"><span class="comparison-chip genuine">정품</span></th>
+          <th scope="col"><span class="comparison-chip compatible">호환품</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">제품 구분</th>
+          <td>제조사 또는 공식 유통 표기가 있는 교체 부품</td>
+          <td>제3자 제조·판매자가 호환된다고 안내하는 제품</td>
+        </tr>
+        <tr>
+          <th scope="row">호환 근거</th>
+          <td>제조사 공식 출처 {part.sources.length}건 등록</td>
+          <td>판매 페이지의 적용 모델 표기를 구매자가 다시 확인</td>
+        </tr>
+        <tr>
+          <th scope="row">대조할 번호</th>
+          <td>{part.genuinePartNumber ?? "공개된 정품 부품번호 없음"}</td>
+          <td
+            >{
+              part.genuinePartNumber
+                ? `“${part.genuinePartNumber} 호환” 표기 확인`
+                : "제품 모델 코드 완전 일치 확인"
+            }</td
+          >
+        </tr>
+        <tr>
+          <th scope="row">현재 등록 상태</th>
+          <td>{genuineLinkState}</td>
+          <td>특정 호환 상품 검증 전 · 검색 링크만 제공</td>
+        </tr>
+        <tr>
+          <th scope="row">구매 전 확인</th>
+          <td>판매자·브랜드 표기와 적용 모델 범위를 모두 확인</td>
+          <td>크기·결합부·구성품·교환 조건과 판매자 고지를 확인</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="comparison-footnote">
+    ‘호환’ 문구만으로는 작동이나 품질을 보증할 수 없습니다.
+    <a class="text-link" href="/guide/genuine-vs-compatible">비교 가이드 자세히 보기 →</a>
+  </p>
+</div>

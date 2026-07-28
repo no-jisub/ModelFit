@@ -3,6 +3,7 @@ import AffiliateButton from "@/components/astro/AffiliateButton.astro";
 import AffiliateDisclosure from "@/components/astro/AffiliateDisclosure.astro";
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import ModelCard from "@/components/astro/ModelCard.astro";
+import ProductComparison from "@/components/astro/ProductComparison.astro";
 import SourceList from "@/components/astro/SourceList.astro";
 import VerificationBadge from "@/components/astro/VerificationBadge.astro";
 import { consumables } from "@/data/consumables";
@@ -81,6 +82,17 @@ const compatibleModels = part.compatibleModelIds
         <div><dt>교체주기 참고</dt><dd>{part.replacementInterval ?? "제조사 안내 확인"}</dd></div>
         <div><dt>정품 부품번호</dt><dd>{part.genuinePartNumber ?? "데이터 없음"}</dd></div>
       </dl>
+    </section>
+
+    <section class="detail-section">
+      <div class="section-header">
+        <div>
+          <div class="eyebrow">구매 판단</div>
+          <h2>정품과 호환품 비교</h2>
+          <p>같은 모델명이 보여도 근거와 판매 주체가 다릅니다.</p>
+        </div>
+      </div>
+      <ProductComparison part={part} />
     </section>
 
     <section class="detail-section">

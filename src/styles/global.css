@@ -1801,6 +1801,81 @@ h3 {
   gap: var(--space-3);
 }
 
+.product-comparison {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.comparison-scroll {
+  overflow-x: auto;
+}
+
+.comparison-scroll:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.comparison-scroll table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+  color: var(--color-neutral-600);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.comparison-scroll th,
+.comparison-scroll td {
+  border-bottom: 1px solid var(--color-neutral-200);
+  padding: var(--space-4) var(--space-5);
+  text-align: left;
+  vertical-align: top;
+}
+
+.comparison-scroll thead th {
+  background: var(--color-neutral-50);
+  color: var(--color-neutral-900);
+}
+
+.comparison-scroll tbody th {
+  width: 150px;
+  color: var(--color-neutral-800);
+  font-weight: 700;
+}
+
+.comparison-scroll tbody tr:last-child th,
+.comparison-scroll tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.comparison-chip {
+  display: inline-flex;
+  border-radius: var(--radius-full);
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.comparison-chip.genuine {
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+}
+
+.comparison-chip.compatible {
+  background: var(--color-warning-50);
+  color: var(--color-warning-700);
+}
+
+.comparison-footnote {
+  margin: 0;
+  color: var(--color-neutral-500);
+  font-size: 13px;
+}
+
+.comparison-footnote .text-link {
+  margin-left: var(--space-2);
+}
+
 .form-card {
   padding: var(--space-8);
 }
