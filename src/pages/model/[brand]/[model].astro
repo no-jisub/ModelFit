@@ -12,6 +12,7 @@ import { guides } from "@/data/guides";
 import { models } from "@/data/models";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { categoryLabels } from "@/utils/labels";
+import { getModelFullName } from "@/utils/modelDisplayName";
 
 export function getStaticPaths() {
   return models.map((model) => ({
@@ -35,7 +36,8 @@ const relatedGuides = guides
   )
   .slice(0, 3);
 const categoryLabel = categoryLabels[model.category];
-const title = `${model.brandName} ${model.modelName} 호환 소모품 찾기`;
+const fullModelName = getModelFullName(model);
+const title = `${fullModelName} 호환 소모품 찾기`;
 const description = model.isDemo
   ? `${model.brandName} ${model.modelCode}에 맞는 필터, 브러시, 먼지봉투 등 호환 소모품 정보를 확인하세요. 현재 내용은 미검증 데모 데이터입니다.`
   : `${model.brandName} ${model.modelCode}의 제조사 공식 모델 출처와 소모품 호환 정보 등록 상태를 확인하세요.`;
@@ -80,7 +82,7 @@ const breadcrumbJsonLd = {
           <span class="category-chip"
             >{model.category === "air-purifier" ? "▤" : "◉"} {categoryLabel}</span
           >
-          <h1>{model.brandName} {model.modelName}</h1>
+          <h1>{fullModelName}</h1>
           <div class="model-code">{model.modelCode} {model.series ? `· ${model.series}` : ""}</div>
           <p>{model.shortDescription}</p>
           <div class="model-meta">
@@ -147,7 +149,7 @@ const breadcrumbJsonLd = {
       </div>
     </section>
 
-    <section class="detail-section">
+    <section class="detail-section compatible-parts-section" id="compatible-parts">
       <div class="section-header">
         <div>
           <div class="eyebrow">호환 소모품</div>

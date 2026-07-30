@@ -9,6 +9,7 @@ import {
   writeSavedAppliances,
 } from "@/utils/applianceStorage";
 import { categoryLabels } from "@/utils/labels";
+import { getModelDisplayName } from "@/utils/modelDisplayName";
 import {
   formatKoreanDate,
   getDefaultIntervalDays,
@@ -91,9 +92,10 @@ export default function MyAppliances() {
           <article className="cabinet-card card" key={model.id}>
             <div className="cabinet-card-heading">
               <span className="category-chip">{categoryLabels[model.category]}</span>
+              <p className="model-brand-label">{model.brandName}</p>
               <h2>
                 <a href={`/model/${model.brandId}/${model.slug}`}>
-                  {model.brandName} {model.modelName}
+                  {getModelDisplayName(model)}
                 </a>
               </h2>
               <p className="model-code">{model.modelCode}</p>

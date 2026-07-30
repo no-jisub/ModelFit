@@ -1,12 +1,13 @@
 ---
 import Logo from "./Logo.astro";
+import SearchBox from "../react/SearchBox";
 ---
 
 <header class="site-header">
   <div class="container header-inner">
     <Logo />
+    <SearchBox header client:load />
     <nav class="desktop-nav" aria-label="주요 메뉴">
-      <a href="/find">소모품 찾기</a>
       <a href="/my-appliances">내 가전함</a>
       <a href="/category/air-purifier">카테고리</a>
       <a href="/#brands">브랜드</a>

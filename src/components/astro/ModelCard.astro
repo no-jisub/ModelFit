@@ -1,9 +1,11 @@
 ---
 import type { ApplianceModel } from "@/types";
 import { categoryLabels } from "@/utils/labels";
+import { getModelDisplayName } from "@/utils/modelDisplayName";
 import VerificationBadge from "./VerificationBadge.astro";
 
 const { model } = Astro.props as { model: ApplianceModel };
+const displayName = getModelDisplayName(model);
 ---
 
 <article class="model-card card">
@@ -16,7 +18,8 @@ const { model } = Astro.props as { model: ApplianceModel };
       {model.isDemo ? "데모 데이터" : "공식 모델 정보"}
     </span>
   </div>
-  <h3><a href={`/model/${model.brandId}/${model.slug}`}>{model.brandName} {model.modelName}</a></h3>
+  <p class="model-brand-label">{model.brandName}</p>
+  <h3><a href={`/model/${model.brandId}/${model.slug}`}>{displayName}</a></h3>
   <p class="model-series">{model.modelCode} {model.series ? `· ${model.series}` : ""}</p>
   <div class="model-card-status">
     <VerificationBadge status={model.verificationStatus} />
