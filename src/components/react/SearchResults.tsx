@@ -36,6 +36,11 @@ function ModelResultCard({
   onSelect: () => void;
   association?: CompatibleModelMatch;
 }) {
+  const modelParts = model.consumableIds
+    .map((id) => consumables.find((part) => part.id === id))
+    .filter((part) => part !== undefined);
+  const panelId = `model-parts-${model.id}`;
+
   return (
     <article className={`model-card card ${selected ? "is-selected" : ""}`}>
       <div className="model-card-top">
@@ -75,10 +80,53 @@ function ModelResultCard({
       </div>
       <div className="model-card-footer">
         <strong>호환 소모품 {model.consumableIds.length}개</strong>
-        <button className="text-button" type="button" aria-expanded={selected} onClick={onSelect}>
+        <button
+          className="text-button"
+          type="button"
+          aria-expanded={selected}
+          aria-controls={panelId}
+          onClick={onSelect}
+        >
           {selected ? "소모품 닫기 ↑" : "소모품 바로 보기 ↓"}
         </button>
       </div>
+      {selected && (
+        <section
+          className="model-inline-consumables"
+          id={panelId}
+          aria-label={`${model.brandName} ${model.modelCode} 공식 호환 소모품`}
+        >
+          <div className="model-inline-heading">
+            <div>
+              <span className="eyebrow">공식 호환 소모품</span>
+              <strong>{modelParts.length}개가 연결되어 있습니다</strong>
+            </div>
+            <a
+              className="text-link"
+              href={`/model/${model.brandId}/${model.slug}#compatible-parts`}
+            >
+              전체 정보 →
+            </a>
+          </div>
+          {modelParts.length > 0 ? (
+            <div className="model-inline-parts">
+              {modelParts.map((part) => (
+                <a className="model-inline-part" href={`/part/${part.slug}`} key={part.id}>
+                  <span>
+                    <strong>{part.displayName}</strong>
+                    <small>
+                      {partTypeLabels[part.type]} · {part.genuinePartNumber ?? "부품번호 미등록"}
+                    </small>
+                  </span>
+                  <span aria-hidden="true">→</span>
+                </a>
+              ))}
+            </div>
+          ) : (
+            <p className="empty-inline">현재 연결된 공식 소모품을 조사 중입니다.</p>
+          )}
+        </section>
+      )}
     </article>
   );
 }
@@ -97,12 +145,6 @@ export default function SearchResults({ initialQuery = "" }: Props) {
       }),
     [query, category, brandId],
   );
-  const selectedModel = models.find((model) => model.id === selectedModelId);
-  const selectedParts = selectedModel
-    ? selectedModel.consumableIds
-        .map((id) => consumables.find((part) => part.id === id))
-        .filter((part) => part !== undefined)
-    : [];
   const totalResults =
     results.models.length + results.consumables.length + results.compatibleModels.length;
 
@@ -122,12 +164,6 @@ export default function SearchResults({ initialQuery = "" }: Props) {
 
   const selectModel = (modelId: string) => {
     setSelectedModelId((current) => (current === modelId ? null : modelId));
-    window.setTimeout(() => {
-      document.getElementById("selected-model-consumables")?.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-      });
-    }, 0);
   };
 
   return (
@@ -192,44 +228,6 @@ export default function SearchResults({ initialQuery = "" }: Props) {
                   />
                 ))}
               </div>
-            </section>
-          )}
-
-          {selectedModel && (
-            <section
-              className="selected-model-consumables card"
-              id="selected-model-consumables"
-              aria-labelledby="selected-model-heading"
-            >
-              <div className="selected-model-heading">
-                <div>
-                  <span className="eyebrow">선택한 모델의 공식 호환 정보</span>
-                  <h2 id="selected-model-heading">
-                    {selectedModel.brandName} {selectedModel.modelCode} 소모품
-                  </h2>
-                </div>
-                <a
-                  className="text-link"
-                  href={`/model/${selectedModel.brandId}/${selectedModel.slug}#compatible-parts`}
-                >
-                  모델 상세에서 보기 →
-                </a>
-              </div>
-              {selectedParts.length > 0 ? (
-                <div className="selected-parts-grid">
-                  {selectedParts.map((part) => (
-                    <a className="selected-part-item" href={`/part/${part.slug}`} key={part.id}>
-                      <span className="official-chip">공식 호환 확인</span>
-                      <strong>{part.displayName}</strong>
-                      <small>
-                        {partTypeLabels[part.type]} · {part.genuinePartNumber ?? "부품번호 미등록"}
-                      </small>
-                    </a>
-                  ))}
-                </div>
-              ) : (
-                <p className="empty-inline">현재 연결된 공식 소모품을 조사 중입니다.</p>
-              )}
             </section>
           )}
 
