@@ -1,12 +1,14 @@
 ---
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import ModelCard from "@/components/astro/ModelCard.astro";
+import ModelGroupCard from "@/components/astro/ModelGroupCard.astro";
 import SearchBox from "@/components/react/SearchBox";
 import { brands } from "@/data/brands";
 import { guides } from "@/data/guides";
 import { models } from "@/data/models";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { categoryLabels } from "@/utils/labels";
+import { groupModelsByName } from "@/utils/modelGroups";
 
 export function getStaticPaths() {
   return brands.map((brand) => ({ params: { brand: brand.slug }, props: { brand } }));
@@ -14,6 +16,7 @@ export function getStaticPaths() {
 
 const { brand } = Astro.props;
 const brandModels = models.filter((model) => model.brandId === brand.id);
+const brandModelGroups = groupModelsByName(brandModels);
 const officialModels = brandModels.filter((model) => !model.isDemo);
 ---
 
@@ -62,12 +65,20 @@ const officialModels = brandModels.filter((model) => !model.isDemo);
       <div class="section-header">
         <div>
           <div class="eyebrow">모델 목록</div><h2>{brand.name} 등록 모델</h2><p>
-            모델 정보와 소모품 호환 검증 상태를 각각 확인하세요.
+            같은 제품명은 하나로 묶었습니다. 모델번호를 선택해 출시일과 소모품 정보를 확인하세요.
           </p>
         </div>
       </div>
       <div class="model-grid">
-        {brandModels.map((model) => <ModelCard model={model} />)}
+        {
+          brandModelGroups.map(({ models: groupedModels }) =>
+            groupedModels.length > 1 ? (
+              <ModelGroupCard models={groupedModels} />
+            ) : (
+              groupedModels[0] && <ModelCard model={groupedModels[0]} />
+            ),
+          )
+        }
       </div>
     </div>
   </section>

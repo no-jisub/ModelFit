@@ -2,12 +2,14 @@
 import BrandCard from "@/components/astro/BrandCard.astro";
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import ModelCard from "@/components/astro/ModelCard.astro";
+import ModelGroupCard from "@/components/astro/ModelGroupCard.astro";
 import { brands } from "@/data/brands";
 import { guides } from "@/data/guides";
 import { models } from "@/data/models";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import type { ApplianceCategory } from "@/types";
 import { categoryLabels, partTypeLabels } from "@/utils/labels";
+import { groupModelsByName } from "@/utils/modelGroups";
 
 export function getStaticPaths() {
   return (["air-purifier", "robot-vacuum"] satisfies ApplianceCategory[]).map((category) => ({
@@ -18,6 +20,7 @@ export function getStaticPaths() {
 const category = Astro.params.category as ApplianceCategory;
 const label = categoryLabels[category];
 const categoryModels = models.filter((model) => model.category === category);
+const categoryModelGroups = groupModelsByName(categoryModels);
 const categoryBrands = brands.filter((brand) => brand.supportedCategories.includes(category));
 const relatedGuides = guides.filter(
   (guide) =>
@@ -94,11 +97,24 @@ const partTypes =
   <section class="section">
     <div class="container">
       <div class="section-header">
-        <div><div class="eyebrow">모델 목록</div><h2>{label} 등록 모델</h2></div>
+        <div>
+          <div class="eyebrow">모델 목록</div><h2>{label} 등록 모델</h2><p>
+            같은 제품명은 하나로 묶었습니다. 모델번호를 선택하면 출시일과 상세 정보를 확인할 수
+            있습니다.
+          </p>
+        </div>
         <a class="text-link" href={`/find?category=${category}`}>검색에서 필터링 →</a>
       </div>
       <div class="model-grid">
-        {categoryModels.map((model) => <ModelCard model={model} />)}
+        {
+          categoryModelGroups.map(({ models: groupedModels }) =>
+            groupedModels.length > 1 ? (
+              <ModelGroupCard models={groupedModels} />
+            ) : (
+              groupedModels[0] && <ModelCard model={groupedModels[0]} />
+            ),
+          )
+        }
       </div>
     </div>
   </section>

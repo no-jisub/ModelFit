@@ -13,6 +13,7 @@ import { models } from "@/data/models";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { categoryLabels } from "@/utils/labels";
 import { getModelFullName } from "@/utils/modelDisplayName";
+import { formatModelReleaseDate } from "@/utils/modelReleaseDate";
 
 export function getStaticPaths() {
   return models.map((model) => ({
@@ -88,6 +89,8 @@ const breadcrumbJsonLd = {
           <div class="model-meta">
             <VerificationBadge status={model.verificationStatus} />
             <span>마지막 확인일 {model.lastVerifiedAt}</span>
+            <span>·</span>
+            <span>{formatModelReleaseDate(model.releaseDate)}</span>
             <span>·</span>
             <span>호환 소모품 {parts.length}개</span>
           </div>

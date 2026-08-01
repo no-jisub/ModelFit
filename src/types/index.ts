@@ -60,6 +60,7 @@ export interface ApplianceModel {
   shortDescription: string;
   consumableNote?: string;
   modelNumberLocation?: string;
+  releaseDate?: string;
   consumableIds: string[];
   sources: SourceReference[];
   lastVerifiedAt: string;

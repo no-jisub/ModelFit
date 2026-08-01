@@ -1,0 +1,75 @@
+---
+import type { ApplianceModel } from "@/types";
+import { categoryLabels } from "@/utils/labels";
+import { getModelDisplayName } from "@/utils/modelDisplayName";
+import { formatModelReleaseDate } from "@/utils/modelReleaseDate";
+import VerificationBadge from "./VerificationBadge.astro";
+
+const { models } = Astro.props as { models: ApplianceModel[] };
+const representative = models[0];
+
+if (!representative) throw new Error("ModelGroupCard에는 모델이 한 개 이상 필요합니다.");
+
+const displayName = getModelDisplayName(representative);
+const consumableCount = new Set(models.flatMap((model) => model.consumableIds)).size;
+const lastVerifiedAt = models
+  .map((model) => model.lastVerifiedAt)
+  .sort((a, b) => b.localeCompare(a))[0];
+---
+
+<article class="model-card model-group-card card">
+  <div class="model-card-top">
+    <span class="category-chip">
+      <span aria-hidden="true">{representative.category === "air-purifier" ? "▤" : "◉"}</span>
+      {categoryLabels[representative.category]}
+    </span>
+    <span class="official-chip">모델번호 {models.length}개</span>
+  </div>
+
+  <p class="model-brand-label">{representative.brandName}</p>
+  <h3>{displayName}</h3>
+  <p class="model-series">{representative.series ?? "제품군"}</p>
+
+  <div class="model-card-status">
+    <VerificationBadge status={representative.verificationStatus} />
+    <span>{lastVerifiedAt} 확인</span>
+  </div>
+
+  <details class="model-variant-picker">
+    <summary>
+      <span>
+        <strong>모델번호 선택</strong>
+        <small>{models.length}개 모델의 출시일과 상세 정보를 확인하세요.</small>
+      </span>
+      <span class="model-variant-chevron" aria-hidden="true">⌄</span>
+    </summary>
+    <div class="model-variant-list">
+      {
+        models.map((model) => (
+          <a class="model-variant-option" href={`/model/${model.brandId}/${model.slug}`}>
+            <span>
+              <strong>{model.modelCode}</strong>
+              <small class:list={{ "is-pending": !model.releaseDate }}>
+                {formatModelReleaseDate(model.releaseDate)}
+              </small>
+            </span>
+            <span aria-hidden="true">→</span>
+          </a>
+        ))
+      }
+    </div>
+  </details>
+
+  <div class="model-card-footer">
+    <strong>
+      {
+        consumableCount > 0
+          ? `제품군 소모품 ${consumableCount}개`
+          : representative.consumableNote
+            ? "교체형 소모품 없음"
+            : "공식 소모품 조사 중"
+      }
+    </strong>
+    <span class="model-group-hint">모델번호를 선택하세요</span>
+  </div>
+</article>

@@ -50,6 +50,12 @@ export function validateData(
     if (model.isDemo && model.verificationStatus !== "unverified") {
       errors.push(`${model.id}: 데모 모델은 미검증으로 표시해야 합니다.`);
     }
+    if (
+      model.releaseDate &&
+      !/^\d{4}-(0[1-9]|1[0-2])(?:-(0[1-9]|[12]\d|3[01]))?$/.test(model.releaseDate)
+    ) {
+      errors.push(`${model.id}: 출시일은 YYYY-MM 또는 YYYY-MM-DD 형식이어야 합니다.`);
+    }
   }
 
   for (const part of consumables) {

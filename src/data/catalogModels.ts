@@ -12,6 +12,8 @@ interface CatalogEntry {
   sourceUrl: string;
   sourceTitle: string;
   sourceType?: SourceReference["sourceType"];
+  releaseDate?: string;
+  releaseSourceUrl?: string;
 }
 
 const checkedAt = "2026-07-27";
@@ -34,6 +36,16 @@ const entries: CatalogEntry[] = [
     series: "Bespoke AI",
     sourceUrl: "https://www.samsung.com/sec/event/air-cleaner/",
     sourceTitle: "삼성전자 공기청정기 공식 제품 안내",
+    releaseDate: "2026-02",
+    releaseSourceUrl: (
+      {
+        AP90H10198EDD: "https://prod.danawa.com/info/?cate=10356347&pcode=106704350",
+        AP90H10198UDD: "https://m.danawa.com/product/product.html?code=106704317",
+        AP90H03193EGD: "https://prod.danawa.com/info/?pcode=106484915",
+        AP90H03193UGD: "https://prod.danawa.com/info/?pcode=106481861",
+        AP90H10198MDD: "https://prod.danawa.com/info/?pcode=106512809",
+      } as Record<string, string>
+    )[modelCode],
   })),
 
   // LG전자
@@ -410,6 +422,7 @@ export const catalogModels: ApplianceModel[] = entries.map((entry) => {
       entry.brandId === "samsung" && entry.modelCode.startsWith("AP90H")
         ? "삼성 공식 제품 안내상 이 모델은 주기적으로 교체하는 필터 대신 물세척으로 관리하는 리유저블 필터를 사용합니다."
         : undefined,
+    releaseDate: entry.releaseDate,
     consumableIds: modelConsumableIds[id] ?? [],
     sources: [
       {
@@ -418,6 +431,16 @@ export const catalogModels: ApplianceModel[] = entries.map((entry) => {
         sourceType: entry.sourceType ?? "manufacturer",
         checkedAt,
       },
+      ...(entry.releaseSourceUrl
+        ? [
+            {
+              title: "다나와 모델 등록월 정보",
+              url: entry.releaseSourceUrl,
+              sourceType: "other" as const,
+              checkedAt,
+            },
+          ]
+        : []),
     ],
     lastVerifiedAt: checkedAt,
     verificationStatus: "official",
