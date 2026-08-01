@@ -12,6 +12,12 @@ if (!representative) throw new Error("ModelGroupCard에는 모델이 한 개 이
 
 const displayName = getModelDisplayName(representative);
 const consumableCount = new Set(models.flatMap((model) => model.consumableIds)).size;
+const consumableSummary =
+  consumableCount > 0
+    ? `소모품 ${consumableCount}개`
+    : representative.consumableNote
+      ? "교체형 소모품 없음"
+      : "소모품 조사 중";
 const lastVerifiedAt = models
   .map((model) => model.lastVerifiedAt)
   .sort((a, b) => b.localeCompare(a))[0];
@@ -39,7 +45,7 @@ const lastVerifiedAt = models
     <summary>
       <span>
         <strong>모델번호 선택</strong>
-        <small>{models.length}개 모델의 출시일과 상세 정보를 확인하세요.</small>
+        <small>{models.length}개 모델 · {consumableSummary}</small>
       </span>
       <span class="model-variant-chevron" aria-hidden="true">⌄</span>
     </summary>
@@ -59,17 +65,4 @@ const lastVerifiedAt = models
       }
     </div>
   </details>
-
-  <div class="model-card-footer">
-    <strong>
-      {
-        consumableCount > 0
-          ? `제품군 소모품 ${consumableCount}개`
-          : representative.consumableNote
-            ? "교체형 소모품 없음"
-            : "공식 소모품 조사 중"
-      }
-    </strong>
-    <span class="model-group-hint">모델번호를 선택하세요</span>
-  </div>
 </article>
