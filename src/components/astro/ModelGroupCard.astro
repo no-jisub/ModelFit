@@ -21,6 +21,14 @@ const consumableSummary =
 const lastVerifiedAt = models
   .map((model) => model.lastVerifiedAt)
   .sort((a, b) => b.localeCompare(a))[0];
+const releaseDates = new Set(models.map((model) => model.releaseDate).filter(Boolean));
+const releaseDateSummary =
+  releaseDates.size === 1 && models.every((model) => model.releaseDate)
+    ? formatModelReleaseDate(models[0]?.releaseDate)
+    : releaseDates.size > 0
+      ? "모델별 출시일 확인"
+      : formatModelReleaseDate(undefined);
+const isReleaseDatePending = releaseDates.size === 0;
 ---
 
 <article class="model-card model-group-card card">
@@ -29,12 +37,16 @@ const lastVerifiedAt = models
       <span aria-hidden="true">{representative.category === "air-purifier" ? "▤" : "◉"}</span>
       {categoryLabels[representative.category]}
     </span>
-    <span class="official-chip">모델번호 {models.length}개</span>
+    <span class="official-chip">공식 모델 정보</span>
   </div>
 
   <p class="model-brand-label">{representative.brandName}</p>
   <h3>{displayName}</h3>
   <p class="model-series">{representative.series ?? "제품군"}</p>
+  <p class:list={["model-release-date", { "is-pending": isReleaseDatePending }]}>
+    <span aria-hidden="true">◷</span>
+    {releaseDateSummary}
+  </p>
 
   <div class="model-card-status">
     <VerificationBadge status={representative.verificationStatus} />

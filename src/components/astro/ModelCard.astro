@@ -7,6 +7,12 @@ import VerificationBadge from "./VerificationBadge.astro";
 
 const { model } = Astro.props as { model: ApplianceModel };
 const displayName = getModelDisplayName(model);
+const consumableSummary =
+  model.consumableIds.length > 0
+    ? `소모품 ${model.consumableIds.length}개`
+    : model.consumableNote
+      ? "교체형 소모품 없음"
+      : "소모품 조사 중";
 ---
 
 <article class="model-card card">
@@ -30,18 +36,15 @@ const displayName = getModelDisplayName(model);
     <VerificationBadge status={model.verificationStatus} />
     <span>{model.lastVerifiedAt} 확인</span>
   </div>
-  <div class="model-card-footer">
-    <strong>
-      {
-        model.consumableIds.length > 0
-          ? `호환 소모품 ${model.consumableIds.length}개`
-          : model.consumableNote
-            ? "교체형 소모품 없음"
-            : "공식 소모품 조사 중"
-      }
-    </strong>
-    <a class="text-link" href={`/model/${model.brandId}/${model.slug}`}
-      >상세 보기 <span aria-hidden="true">→</span></a
-    >
-  </div>
+  <a
+    class="model-card-action"
+    href={`/model/${model.brandId}/${model.slug}`}
+    aria-label={`${displayName} 상세 보기`}
+  >
+    <span>
+      <strong>모델 상세 보기</strong>
+      <small>{model.modelCode} · {consumableSummary}</small>
+    </span>
+    <span class="model-card-action-arrow" aria-hidden="true">→</span>
+  </a>
 </article>
