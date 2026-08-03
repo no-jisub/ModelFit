@@ -10,12 +10,13 @@ const source = (
   title: string,
   url: string,
   sourceType: SourceReference["sourceType"] = "official-store",
-): SourceReference => ({ title, url, sourceType, checkedAt });
+  verifiedAt = checkedAt,
+): SourceReference => ({ title, url, sourceType, checkedAt: verifiedAt });
 
 const coupangSearch = (keyword: string) =>
   `https://www.coupang.com/np/search?q=${encodeURIComponent(keyword)}`;
 
-const affiliate = (searchKeyword: string, directUrl?: string) => {
+const affiliate = (searchKeyword: string, directUrl?: string, verifiedAt = checkedAt) => {
   const resolvedUrl = directUrl ?? coupangSearch(searchKeyword);
 
   return {
@@ -27,7 +28,7 @@ const affiliate = (searchKeyword: string, directUrl?: string) => {
       : ("search-results" as const),
     priceStatus: "manual-check-required" as const,
     stockStatus: "manual-check-required" as const,
-    linkCheckedAt: checkedAt,
+    linkCheckedAt: verifiedAt,
   };
 };
 
@@ -44,6 +45,7 @@ const researchedPart = ({
   genuinePartNumber,
   replacementInterval,
   regional = false,
+  verifiedAt = checkedAt,
 }: {
   id: string;
   type: ConsumableCompatibility["type"];
@@ -57,6 +59,7 @@ const researchedPart = ({
   genuinePartNumber?: string;
   replacementInterval?: string;
   regional?: boolean;
+  verifiedAt?: string;
 }): ConsumableCompatibility => ({
   id,
   slug: id,
@@ -69,8 +72,8 @@ const researchedPart = ({
   replacementInterval,
   purchaseWarning: regional ? regionalWarning : domesticWarning,
   verificationStatus: "official",
-  sources: [source(sourceTitle, sourceUrl, sourceType)],
-  affiliate: affiliate(searchKeyword),
+  sources: [source(sourceTitle, sourceUrl, sourceType, verifiedAt)],
+  affiliate: affiliate(searchKeyword, undefined, verifiedAt),
 });
 
 export const consumables: ConsumableCompatibility[] = [
@@ -1282,6 +1285,42 @@ export const consumables: ConsumableCompatibility[] = [
       searchKeyword: `${displayName} 정품`,
     }),
   ),
+  researchedPart({
+    id: "everybot-three-spin-microfiber-mop",
+    type: "mop-pad",
+    displayName: "에브리봇 쓰리스핀 극세사 걸레 3장",
+    compatibleProductName: "에브리봇 물걸레 로봇청소기 극세사걸레(3장)",
+    modelIds: ["everybot-ts402m"],
+    sourceTitle: "에브리봇 공식몰 — 쓰리스핀용 극세사 걸레 3장",
+    sourceUrl:
+      "https://everybotmall.com/product/%EC%97%90%EB%B8%8C%EB%A6%AC%EB%B4%87-%EB%AC%BC%EA%B1%B8%EB%A0%88-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0-%EA%B7%B9%EC%84%B8%EC%82%AC%EA%B1%B8%EB%A0%883%EC%9E%A5/219/",
+    searchKeyword: "에브리봇 쓰리스핀 EVO 극세사 걸레 3장 정품",
+    verifiedAt: "2026-08-03",
+  }),
+  researchedPart({
+    id: "everybot-three-spin-yarn-mop",
+    type: "mop-pad",
+    displayName: "에브리봇 쓰리스핀 분섬사 걸레 3장",
+    compatibleProductName: "에브리봇 물걸레 로봇청소기 분섬사걸레(3장)",
+    modelIds: ["everybot-ts402m"],
+    sourceTitle: "에브리봇 공식몰 — 쓰리스핀용 분섬사 걸레 3장",
+    sourceUrl:
+      "https://everybotmall.com/product/%EC%97%90%EB%B8%8C%EB%A6%AC%EB%B4%87-%EB%AC%BC%EA%B1%B8%EB%A0%88-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0-%EB%B6%84%EC%84%AC%EC%82%AC%EA%B1%B8%EB%A0%883%EC%9E%A5/209/",
+    searchKeyword: "에브리봇 쓰리스핀 EVO 분섬사 걸레 3장 정품",
+    verifiedAt: "2026-08-03",
+  }),
+  researchedPart({
+    id: "everybot-three-spin-disposable-sheet",
+    type: "mop-pad",
+    displayName: "에브리봇 일회용 물걸레 청소포 30매",
+    compatibleProductName: "쓰리스핀용 중간패드에 부착하는 일회용 청소포",
+    modelIds: ["everybot-ts402m"],
+    sourceTitle: "에브리봇 공식몰 — 일회용 물걸레 청소포 30매",
+    sourceUrl:
+      "https://everybotmall.com/product/%EC%97%90%EB%B8%8C%EB%A6%AC%EB%B4%87-%EB%AC%BC%EA%B1%B8%EB%A0%88-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0-%EC%9D%BC%ED%9A%8C%EC%9A%A9-%EC%B2%AD%EC%86%8C%ED%8F%AC30%EB%A7%A4/93/",
+    searchKeyword: "에브리봇 쓰리스핀 EVO 일회용 청소포 30매 정품",
+    verifiedAt: "2026-08-03",
+  }),
   ...([
     ["eufy-s2-filter", "dust-bin-filter", "eufy Omni S2 교체 필터"],
     ["eufy-s2-main-brush", "main-brush", "eufy Omni S2 롤러 브러시"],

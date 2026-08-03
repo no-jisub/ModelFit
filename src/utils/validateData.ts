@@ -47,6 +47,9 @@ export function validateData(
     if (!model.isDemo && model.sources.length === 0) {
       errors.push(`${model.id}: 실제 모델에 제조사 출처가 없습니다.`);
     }
+    if (!model.isDemo && model.consumableIds.length === 0 && !model.consumableNote?.trim()) {
+      errors.push(`${model.id}: 공식 소모품 또는 소모품 미등록 사유가 없습니다.`);
+    }
     if (model.isDemo && model.verificationStatus !== "unverified") {
       errors.push(`${model.id}: 데모 모델은 미검증으로 표시해야 합니다.`);
     }

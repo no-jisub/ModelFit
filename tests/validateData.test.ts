@@ -49,4 +49,13 @@ describe("data validation", () => {
       ),
     ).toBe(true);
   });
+
+  it("모든 실제 모델은 공식 소모품 또는 비등록 사유를 제공한다", () => {
+    expect(
+      models.every(
+        (model) =>
+          model.isDemo || model.consumableIds.length > 0 || Boolean(model.consumableNote?.trim()),
+      ),
+    ).toBe(true);
+  });
 });

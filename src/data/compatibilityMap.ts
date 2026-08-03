@@ -220,6 +220,11 @@ export const modelConsumableIds: Record<string, string[]> = {
   ],
   "everybot-q3-turbo-plus": ["everybot-q3-filter", "everybot-q3-main-brush"],
   "everybot-rs350": ["everybot-rs350-microfiber-mop", "everybot-rs350-yarn-mop"],
+  "everybot-ts402m": [
+    "everybot-three-spin-microfiber-mop",
+    "everybot-three-spin-yarn-mop",
+    "everybot-three-spin-disposable-sheet",
+  ],
 
   "eufy-omni-s2": [
     "eufy-s2-filter",
