@@ -3,6 +3,7 @@ import type { ApplianceModel } from "@/types";
 import { categoryLabels } from "@/utils/labels";
 import { getModelDisplayName } from "@/utils/modelDisplayName";
 import { formatModelReleaseDate } from "@/utils/modelReleaseDate";
+import CategoryIcon from "./CategoryIcon.astro";
 import VerificationBadge from "./VerificationBadge.astro";
 
 const { model } = Astro.props as { model: ApplianceModel };
@@ -18,7 +19,7 @@ const consumableSummary =
 <article class="model-card card">
   <div class="model-card-top">
     <span class="category-chip">
-      <span aria-hidden="true">{model.category === "air-purifier" ? "▤" : "◉"}</span>
+      <CategoryIcon category={model.category} />
       {categoryLabels[model.category]}
     </span>
     <span class={model.isDemo ? "demo-chip" : "official-chip"}>
