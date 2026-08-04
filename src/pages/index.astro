@@ -17,6 +17,11 @@ const popularModels = [
 ]
   .map((id) => models.find((model) => model.id === id))
   .filter((model) => model !== undefined);
+const featuredBrandIds = ["samsung", "lg", "roborock", "dreame", "coway", "xiaomi"];
+const featuredBrands = featuredBrandIds
+  .map((id) => brands.find((brand) => brand.id === id))
+  .filter((brand) => brand !== undefined);
+const otherBrands = brands.filter((brand) => !featuredBrandIds.includes(brand.id));
 const recentModels = models.slice(-4).reverse();
 const websiteJsonLd = [
   {
@@ -80,11 +85,16 @@ const websiteJsonLd = [
           <div class="eyebrow">인기 브랜드</div>
           <h2>브랜드별로 모델 찾기</h2>
         </div>
-        <a class="text-link" href="/find">전체 모델 보기 →</a>
       </div>
       <div class="brand-grid">
-        {brands.map((brand) => <BrandCard brand={brand} />)}
+        {featuredBrands.map((brand) => <BrandCard brand={brand} />)}
       </div>
+      <details class="brand-directory">
+        <summary>{brands.length}개 브랜드 전체 보기 <span aria-hidden="true">→</span></summary>
+        <div class="brand-grid brand-grid-secondary">
+          {otherBrands.map((brand) => <BrandCard brand={brand} />)}
+        </div>
+      </details>
     </div>
   </section>
 

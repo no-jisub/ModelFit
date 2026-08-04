@@ -836,6 +836,33 @@ h3 {
   gap: var(--space-4);
 }
 
+.brand-directory {
+  margin-top: var(--space-6);
+}
+
+.brand-directory summary {
+  width: fit-content;
+  margin-left: auto;
+  color: var(--color-primary-700);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  list-style: none;
+}
+
+.brand-directory summary::-webkit-details-marker {
+  display: none;
+}
+
+.brand-directory[open] summary span {
+  display: inline-block;
+  transform: rotate(90deg);
+}
+
+.brand-grid-secondary {
+  margin-top: var(--space-5);
+}
+
 .brand-card {
   display: grid;
   min-height: 118px;
@@ -2635,6 +2662,11 @@ h3 {
   .category-card {
     min-height: 150px;
     padding: 20px;
+  }
+
+  .brand-card {
+    min-height: 96px;
+    padding: 14px 16px;
   }
 
   .model-card {
