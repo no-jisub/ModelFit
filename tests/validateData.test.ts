@@ -58,4 +58,40 @@ describe("data validation", () => {
       ),
     ).toBe(true);
   });
+
+  it("2차 검증 소모품은 둘 이상의 공식 근거와 최신 확인일을 제공한다", () => {
+    const secondPassIds = [
+      "irobot-clean-base-autowash-dust-bag",
+      "irobot-combo-i-e-j-dual-rubber-brushes",
+      "irobot-combo-i-e-j-edge-brush",
+      "irobot-combo-j9-washable-mop-pad",
+      "irobot-combo-i5-mopping-kit",
+      "roborock-saros-z70-main-brush",
+      "roborock-saros-z70-side-brush",
+      "roborock-saros-z70-filter",
+      "roborock-saros-z70-mop-cloth",
+      "eufy-x10-pro-main-brush",
+      "eufy-x10-pro-filter",
+      "eufy-x10-pro-mop-cloth",
+      "eufy-x10-pro-dust-bag",
+      "eufy-c28-side-brush",
+      "eufy-c28-main-brush",
+      "eufy-c28-roller-mop",
+      "xiaomi-5-series-anti-tangle-side-brush",
+    ];
+
+    const secondPassParts = secondPassIds.map((id) => consumables.find((part) => part.id === id));
+
+    expect(secondPassParts.every(Boolean)).toBe(true);
+    expect(
+      secondPassParts.every(
+        (part) =>
+          part?.verificationStatus === "official" &&
+          part.sources.length >= 2 &&
+          part.sources.every(
+            (source) => source.url.startsWith("https://") && source.checkedAt === "2026-08-04",
+          ),
+      ),
+    ).toBe(true);
+  });
 });

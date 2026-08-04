@@ -49,8 +49,8 @@ export const modelConsumableIds: Record<string, string[]> = {
   "dyson-tp09": ["dyson-360-glass-hepa-carbon-filter"],
   "dyson-ph04": ["dyson-360-glass-hepa-carbon-filter"],
 
-  "xiaomi-5-pro": ["xiaomi-5-series-mop-pad"],
-  "xiaomi-5": ["xiaomi-5-series-mop-pad"],
+  "xiaomi-5-pro": ["xiaomi-5-series-mop-pad", "xiaomi-5-series-anti-tangle-side-brush"],
+  "xiaomi-5": ["xiaomi-5-series-mop-pad", "xiaomi-5-series-anti-tangle-side-brush"],
   "xiaomi-x20-plus": [
     "xiaomi-x20-plus-filter",
     "xiaomi-x20-plus-main-brush",
@@ -90,7 +90,13 @@ export const modelConsumableIds: Record<string, string[]> = {
   "blueair-5210i": ["blueair-dustmagnet-5200-combofilter"],
   "blueair-3410": ["blueair-3410-particle-carbon-filter"],
 
-  "roborock-saros-z70": ["roborock-saros-qrevo-s8-dust-bag"],
+  "roborock-saros-z70": [
+    "roborock-saros-qrevo-s8-dust-bag",
+    "roborock-saros-z70-main-brush",
+    "roborock-saros-z70-side-brush",
+    "roborock-saros-z70-filter",
+    "roborock-saros-z70-mop-cloth",
+  ],
   "roborock-s10-maxv-ultra": [
     "roborock-s10-maxv-main-brush",
     "roborock-s10-maxv-side-brush",
@@ -193,15 +199,31 @@ export const modelConsumableIds: Record<string, string[]> = {
   ],
   "narwal-freo": ["narwal-freo-mop-pad", "narwal-freo-side-brush"],
 
-  "irobot-combo-10-max": ["irobot-combo-j-high-efficiency-filter"],
+  "irobot-combo-10-max": [
+    "irobot-combo-j-high-efficiency-filter",
+    "irobot-clean-base-autowash-dust-bag",
+    "irobot-combo-i-e-j-dual-rubber-brushes",
+    "irobot-combo-i-e-j-edge-brush",
+  ],
   "irobot-205-dustcompactor": [
     "irobot-205-filter",
     "irobot-205-main-brush",
     "irobot-205-side-brush",
     "irobot-205-mop-pad",
   ],
-  "irobot-combo-j9-plus": ["irobot-combo-j-high-efficiency-filter"],
-  "irobot-combo-i5": ["irobot-i-e-j-high-efficiency-filter"],
+  "irobot-combo-j9-plus": [
+    "irobot-combo-j-high-efficiency-filter",
+    "irobot-clean-base-autowash-dust-bag",
+    "irobot-combo-i-e-j-dual-rubber-brushes",
+    "irobot-combo-i-e-j-edge-brush",
+    "irobot-combo-j9-washable-mop-pad",
+  ],
+  "irobot-combo-i5": [
+    "irobot-i-e-j-high-efficiency-filter",
+    "irobot-combo-i-e-j-dual-rubber-brushes",
+    "irobot-combo-i-e-j-edge-brush",
+    "irobot-combo-i5-mopping-kit",
+  ],
   "irobot-105-vac": ["irobot-105-filter"],
 
   "everybot-q11": [
@@ -240,7 +262,13 @@ export const modelConsumableIds: Record<string, string[]> = {
     "eufy-c20-side-brush",
     "eufy-c20-mop-cloth",
   ],
-  "eufy-x10-pro-omni": ["eufy-x10-pro-side-brush"],
+  "eufy-x10-pro-omni": [
+    "eufy-x10-pro-side-brush",
+    "eufy-x10-pro-main-brush",
+    "eufy-x10-pro-filter",
+    "eufy-x10-pro-mop-cloth",
+    "eufy-x10-pro-dust-bag",
+  ],
   "eufy-omni-s1-pro": [
     "eufy-s1-pro-filter",
     "eufy-s1-pro-main-brush",
@@ -248,5 +276,11 @@ export const modelConsumableIds: Record<string, string[]> = {
     "eufy-s1-pro-roller-mop",
     "eufy-s1-pro-dust-bag",
   ],
-  "eufy-omni-c28": ["eufy-c28-filter", "eufy-c28-dust-bag"],
+  "eufy-omni-c28": [
+    "eufy-c28-filter",
+    "eufy-c28-dust-bag",
+    "eufy-c28-side-brush",
+    "eufy-c28-main-brush",
+    "eufy-c28-roller-mop",
+  ],
 };

@@ -46,6 +46,7 @@ const researchedPart = ({
   replacementInterval,
   regional = false,
   verifiedAt = checkedAt,
+  secondarySources = [],
 }: {
   id: string;
   type: ConsumableCompatibility["type"];
@@ -60,6 +61,11 @@ const researchedPart = ({
   replacementInterval?: string;
   regional?: boolean;
   verifiedAt?: string;
+  secondarySources?: Array<{
+    title: string;
+    url: string;
+    sourceType?: SourceReference["sourceType"];
+  }>;
 }): ConsumableCompatibility => ({
   id,
   slug: id,
@@ -72,7 +78,12 @@ const researchedPart = ({
   replacementInterval,
   purchaseWarning: regional ? regionalWarning : domesticWarning,
   verificationStatus: "official",
-  sources: [source(sourceTitle, sourceUrl, sourceType, verifiedAt)],
+  sources: [
+    source(sourceTitle, sourceUrl, sourceType, verifiedAt),
+    ...secondarySources.map((item) =>
+      source(item.title, item.url, item.sourceType ?? "official-store", verifiedAt),
+    ),
+  ],
   affiliate: affiliate(searchKeyword, undefined, verifiedAt),
 });
 
@@ -158,12 +169,7 @@ export const consumables: ConsumableCompatibility[] = [
     type: "pre-filter",
     displayName: "코웨이 노블 공기청정기 4D 프리필터",
     compatibleProductName: "4D 프리필터 2개",
-    compatibleModelIds: [
-      "coway-ap-4025d",
-      "coway-ap-3024h",
-      "coway-ap-2021a",
-      "coway-ap-1521b",
-    ],
+    compatibleModelIds: ["coway-ap-4025d", "coway-ap-3024h", "coway-ap-2021a", "coway-ap-1521b"],
     searchKeywords: ["코웨이 AP-4025D AP-3024H AP-2021A AP-1521B 4D 프리필터"],
     purchaseWarning: domesticWarning,
     verificationStatus: "official",
@@ -187,12 +193,7 @@ export const consumables: ConsumableCompatibility[] = [
     type: "all-in-one-filter",
     displayName: "코웨이 노블 공기청정기 4D 입체필터",
     compatibleProductName: "4D 입체필터 2개",
-    compatibleModelIds: [
-      "coway-ap-4025d",
-      "coway-ap-3024h",
-      "coway-ap-2021a",
-      "coway-ap-1521b",
-    ],
+    compatibleModelIds: ["coway-ap-4025d", "coway-ap-3024h", "coway-ap-2021a", "coway-ap-1521b"],
     searchKeywords: ["코웨이 AP-4025D AP-3024H AP-2021A AP-1521B 4D 입체필터"],
     purchaseWarning: domesticWarning,
     verificationStatus: "official",
@@ -216,12 +217,7 @@ export const consumables: ConsumableCompatibility[] = [
     type: "deodorizing-filter",
     displayName: "코웨이 노블 공기청정기 에어매칭필터",
     compatibleProductName: "에어매칭필터 4개",
-    compatibleModelIds: [
-      "coway-ap-4025d",
-      "coway-ap-3024h",
-      "coway-ap-2021a",
-      "coway-ap-1521b",
-    ],
+    compatibleModelIds: ["coway-ap-4025d", "coway-ap-3024h", "coway-ap-2021a", "coway-ap-1521b"],
     searchKeywords: ["코웨이 AP-4025D AP-3024H AP-2021A AP-1521B 에어매칭필터"],
     purchaseWarning: domesticWarning,
     verificationStatus: "official",
@@ -916,13 +912,40 @@ export const consumables: ConsumableCompatibility[] = [
     sourceUrl: "https://www.cuckoo.co.kr/rental/productView?cateUid=31&idx=860",
     searchKeyword: "쿠쿠 AC-14L10FEW 정품 필터",
   }),
-  ...([
-    ["xiaomi-x20-plus-filter", "dust-bin-filter", "샤오미 X20+ 먼지통 필터", "샤오미 X20+ 정품 필터"],
-    ["xiaomi-x20-plus-main-brush", "main-brush", "샤오미 X20+ 메인 브러시", "샤오미 X20+ 정품 메인 브러시"],
-    ["xiaomi-x20-plus-side-brush", "side-brush", "샤오미 X20+ 사이드 브러시", "샤오미 X20+ 정품 사이드 브러시"],
-    ["xiaomi-x20-plus-mop-pad", "mop-pad", "샤오미 X20+ 물걸레 패드", "샤오미 X20+ 정품 물걸레 패드"],
-    ["xiaomi-x20-plus-dust-bag", "dust-bag", "샤오미 X20+ 일회용 먼지봉투", "샤오미 X20+ 정품 먼지봉투"],
-  ] as const).map(([id, type, displayName, searchKeyword]) =>
+  ...(
+    [
+      [
+        "xiaomi-x20-plus-filter",
+        "dust-bin-filter",
+        "샤오미 X20+ 먼지통 필터",
+        "샤오미 X20+ 정품 필터",
+      ],
+      [
+        "xiaomi-x20-plus-main-brush",
+        "main-brush",
+        "샤오미 X20+ 메인 브러시",
+        "샤오미 X20+ 정품 메인 브러시",
+      ],
+      [
+        "xiaomi-x20-plus-side-brush",
+        "side-brush",
+        "샤오미 X20+ 사이드 브러시",
+        "샤오미 X20+ 정품 사이드 브러시",
+      ],
+      [
+        "xiaomi-x20-plus-mop-pad",
+        "mop-pad",
+        "샤오미 X20+ 물걸레 패드",
+        "샤오미 X20+ 정품 물걸레 패드",
+      ],
+      [
+        "xiaomi-x20-plus-dust-bag",
+        "dust-bag",
+        "샤오미 X20+ 일회용 먼지봉투",
+        "샤오미 X20+ 정품 먼지봉투",
+      ],
+    ] as const
+  ).map(([id, type, displayName, searchKeyword]) =>
     researchedPart({
       id,
       type,
@@ -935,13 +958,45 @@ export const consumables: ConsumableCompatibility[] = [
       regional: true,
     }),
   ),
-  ...([
-    ["xiaomi-x10-plus-filter", "dust-bin-filter", "샤오미 X10+ 먼지통 필터", undefined, "샤오미 X10+ 정품 필터"],
-    ["xiaomi-x10-plus-main-brush", "main-brush", "샤오미 X10+ 메인 브러시", "B101CN-ZS", "샤오미 X10+ B101CN-ZS"],
-    ["xiaomi-x10-plus-side-brush", "side-brush", "샤오미 X10+ 사이드 브러시", "B101CN-BS", "샤오미 X10+ B101CN-BS"],
-    ["xiaomi-x10-plus-mop-pad", "mop-pad", "샤오미 X10+ 물걸레 패드", "B101CN-TB", "샤오미 X10+ B101CN-TB"],
-    ["xiaomi-x10-plus-dust-bag", "dust-bag", "샤오미 X10+ 일회용 먼지봉투", "B101CN-CHD", "샤오미 X10+ B101CN-CHD"],
-  ] as const).map(([id, type, displayName, genuinePartNumber, searchKeyword]) =>
+  ...(
+    [
+      [
+        "xiaomi-x10-plus-filter",
+        "dust-bin-filter",
+        "샤오미 X10+ 먼지통 필터",
+        undefined,
+        "샤오미 X10+ 정품 필터",
+      ],
+      [
+        "xiaomi-x10-plus-main-brush",
+        "main-brush",
+        "샤오미 X10+ 메인 브러시",
+        "B101CN-ZS",
+        "샤오미 X10+ B101CN-ZS",
+      ],
+      [
+        "xiaomi-x10-plus-side-brush",
+        "side-brush",
+        "샤오미 X10+ 사이드 브러시",
+        "B101CN-BS",
+        "샤오미 X10+ B101CN-BS",
+      ],
+      [
+        "xiaomi-x10-plus-mop-pad",
+        "mop-pad",
+        "샤오미 X10+ 물걸레 패드",
+        "B101CN-TB",
+        "샤오미 X10+ B101CN-TB",
+      ],
+      [
+        "xiaomi-x10-plus-dust-bag",
+        "dust-bag",
+        "샤오미 X10+ 일회용 먼지봉투",
+        "B101CN-CHD",
+        "샤오미 X10+ B101CN-CHD",
+      ],
+    ] as const
+  ).map(([id, type, displayName, genuinePartNumber, searchKeyword]) =>
     researchedPart({
       id,
       type,
@@ -1060,12 +1115,18 @@ export const consumables: ConsumableCompatibility[] = [
     searchKeyword: "블루에어 3410 정품 필터",
     replacementInterval: "약 6개월(사용 환경에 따라 다름)",
   }),
-  ...([
-    ["roborock-s10-maxv-main-brush", "main-brush", "로보락 S10 MaxV Ultra DuoDivide 메인 브러시"],
-    ["roborock-s10-maxv-side-brush", "side-brush", "로보락 S10 MaxV Ultra FlexiArm 사이드 브러시"],
-    ["roborock-s10-maxv-mop-pad", "mop-pad", "로보락 S10 MaxV Ultra VibraRise 물걸레"],
-    ["roborock-s10-maxv-dust-bag", "dust-bag", "로보락 S10 MaxV Ultra RockDock 먼지봉투"],
-  ] as const).map(([id, type, displayName]) =>
+  ...(
+    [
+      ["roborock-s10-maxv-main-brush", "main-brush", "로보락 S10 MaxV Ultra DuoDivide 메인 브러시"],
+      [
+        "roborock-s10-maxv-side-brush",
+        "side-brush",
+        "로보락 S10 MaxV Ultra FlexiArm 사이드 브러시",
+      ],
+      ["roborock-s10-maxv-mop-pad", "mop-pad", "로보락 S10 MaxV Ultra VibraRise 물걸레"],
+      ["roborock-s10-maxv-dust-bag", "dust-bag", "로보락 S10 MaxV Ultra RockDock 먼지봉투"],
+    ] as const
+  ).map(([id, type, displayName]) =>
     researchedPart({
       id,
       type,
@@ -1077,13 +1138,15 @@ export const consumables: ConsumableCompatibility[] = [
       searchKeyword: `${displayName} 정품`,
     }),
   ),
-  ...([
-    ["dreame-x50s-main-brush", "main-brush", "드리미 X50s Pro 메인 브러시"],
-    ["dreame-x50s-side-brush", "side-brush", "드리미 X50s Pro 사이드 브러시"],
-    ["dreame-x50s-dust-box-filter", "dust-bin-filter", "드리미 X50s Pro 먼지통 필터"],
-    ["dreame-x50s-mop-pad", "mop-pad", "드리미 X50s Pro 물걸레 패드"],
-    ["dreame-x50s-dust-bag", "dust-bag", "드리미 X50s Pro 먼지봉투"],
-  ] as const).map(([id, type, displayName]) =>
+  ...(
+    [
+      ["dreame-x50s-main-brush", "main-brush", "드리미 X50s Pro 메인 브러시"],
+      ["dreame-x50s-side-brush", "side-brush", "드리미 X50s Pro 사이드 브러시"],
+      ["dreame-x50s-dust-box-filter", "dust-bin-filter", "드리미 X50s Pro 먼지통 필터"],
+      ["dreame-x50s-mop-pad", "mop-pad", "드리미 X50s Pro 물걸레 패드"],
+      ["dreame-x50s-dust-bag", "dust-bag", "드리미 X50s Pro 먼지봉투"],
+    ] as const
+  ).map(([id, type, displayName]) =>
     researchedPart({
       id,
       type,
@@ -1096,13 +1159,15 @@ export const consumables: ConsumableCompatibility[] = [
       searchKeyword: `${displayName} 정품`,
     }),
   ),
-  ...([
-    ["dreame-x40s-main-brush", "main-brush", "드리미 X40s Pro Ultra 메인 브러시"],
-    ["dreame-x40s-side-brush", "side-brush", "드리미 X40s Pro Ultra 사이드 브러시"],
-    ["dreame-x40s-filter", "dust-bin-filter", "드리미 X40s Pro Ultra 먼지통 필터"],
-    ["dreame-x40s-mop-pad", "mop-pad", "드리미 X40s Pro Ultra 물걸레 패드"],
-    ["dreame-x40s-dust-bag", "dust-bag", "드리미 X40s Pro Ultra 먼지봉투"],
-  ] as const).map(([id, type, displayName]) =>
+  ...(
+    [
+      ["dreame-x40s-main-brush", "main-brush", "드리미 X40s Pro Ultra 메인 브러시"],
+      ["dreame-x40s-side-brush", "side-brush", "드리미 X40s Pro Ultra 사이드 브러시"],
+      ["dreame-x40s-filter", "dust-bin-filter", "드리미 X40s Pro Ultra 먼지통 필터"],
+      ["dreame-x40s-mop-pad", "mop-pad", "드리미 X40s Pro Ultra 물걸레 패드"],
+      ["dreame-x40s-dust-bag", "dust-bag", "드리미 X40s Pro Ultra 먼지봉투"],
+    ] as const
+  ).map(([id, type, displayName]) =>
     researchedPart({
       id,
       type,
@@ -1114,12 +1179,14 @@ export const consumables: ConsumableCompatibility[] = [
       searchKeyword: `${displayName} 정품`,
     }),
   ),
-  ...([
-    ["dreame-l10s-heat-main-brush", "main-brush", "드리미 L10s Pro Ultra Heat 메인 브러시"],
-    ["dreame-l10s-heat-side-brush", "side-brush", "드리미 L10s Pro Ultra Heat 사이드 브러시"],
-    ["dreame-l10s-heat-mop-pad", "mop-pad", "드리미 L10s Pro Ultra Heat 물걸레 패드"],
-    ["dreame-l10s-heat-dust-bag", "dust-bag", "드리미 L10s Pro Ultra Heat 3.2L 먼지봉투"],
-  ] as const).map(([id, type, displayName]) =>
+  ...(
+    [
+      ["dreame-l10s-heat-main-brush", "main-brush", "드리미 L10s Pro Ultra Heat 메인 브러시"],
+      ["dreame-l10s-heat-side-brush", "side-brush", "드리미 L10s Pro Ultra Heat 사이드 브러시"],
+      ["dreame-l10s-heat-mop-pad", "mop-pad", "드리미 L10s Pro Ultra Heat 물걸레 패드"],
+      ["dreame-l10s-heat-dust-bag", "dust-bag", "드리미 L10s Pro Ultra Heat 3.2L 먼지봉투"],
+    ] as const
+  ).map(([id, type, displayName]) =>
     researchedPart({
       id,
       type,
@@ -1132,12 +1199,14 @@ export const consumables: ConsumableCompatibility[] = [
       regional: true,
     }),
   ),
-  ...([
-    ["ecovacs-x12-filter", "dust-bin-filter", "에코백스 DEEBOT X12 필터"],
-    ["ecovacs-x12-main-brush", "main-brush", "에코백스 DEEBOT X12 메인 브러시"],
-    ["ecovacs-x12-side-brush", "side-brush", "에코백스 DEEBOT X12 사이드 브러시"],
-    ["ecovacs-x12-roller-mop", "mop-pad", "에코백스 DEEBOT X12 OZMO 롤러 물걸레"],
-  ] as const).map(([id, type, displayName]) =>
+  ...(
+    [
+      ["ecovacs-x12-filter", "dust-bin-filter", "에코백스 DEEBOT X12 필터"],
+      ["ecovacs-x12-main-brush", "main-brush", "에코백스 DEEBOT X12 메인 브러시"],
+      ["ecovacs-x12-side-brush", "side-brush", "에코백스 DEEBOT X12 사이드 브러시"],
+      ["ecovacs-x12-roller-mop", "mop-pad", "에코백스 DEEBOT X12 OZMO 롤러 물걸레"],
+    ] as const
+  ).map(([id, type, displayName]) =>
     researchedPart({
       id,
       type,
@@ -1151,12 +1220,14 @@ export const consumables: ConsumableCompatibility[] = [
       regional: true,
     }),
   ),
-  ...([
-    ["ecovacs-x11-filter", "dust-bin-filter", "에코백스 DEEBOT X11 항균 필터"],
-    ["ecovacs-x11-main-brush", "main-brush", "에코백스 DEEBOT X11 롤러 브러시"],
-    ["ecovacs-x11-side-brush", "side-brush", "에코백스 DEEBOT X11 사이드 브러시"],
-    ["ecovacs-x11-roller-mop", "mop-pad", "에코백스 DEEBOT X11 OZMO 롤러 물걸레"],
-  ] as const).map(([id, type, displayName]) =>
+  ...(
+    [
+      ["ecovacs-x11-filter", "dust-bin-filter", "에코백스 DEEBOT X11 항균 필터"],
+      ["ecovacs-x11-main-brush", "main-brush", "에코백스 DEEBOT X11 롤러 브러시"],
+      ["ecovacs-x11-side-brush", "side-brush", "에코백스 DEEBOT X11 사이드 브러시"],
+      ["ecovacs-x11-roller-mop", "mop-pad", "에코백스 DEEBOT X11 OZMO 롤러 물걸레"],
+    ] as const
+  ).map(([id, type, displayName]) =>
     researchedPart({
       id,
       type,
@@ -1168,11 +1239,13 @@ export const consumables: ConsumableCompatibility[] = [
       searchKeyword: `${displayName} 정품`,
     }),
   ),
-  ...([
-    ["ecovacs-x9-t80-filter", "dust-bin-filter", "에코백스 X9·T80 항균 필터"],
-    ["ecovacs-x9-t80-dust-bag", "dust-bag", "에코백스 X9·T80 항균 먼지봉투"],
-    ["ecovacs-x9-t80-roller-mop", "mop-pad", "에코백스 X9·T80 항균 롤러 물걸레"],
-  ] as const).map(([id, type, displayName]) =>
+  ...(
+    [
+      ["ecovacs-x9-t80-filter", "dust-bin-filter", "에코백스 X9·T80 항균 필터"],
+      ["ecovacs-x9-t80-dust-bag", "dust-bag", "에코백스 X9·T80 항균 먼지봉투"],
+      ["ecovacs-x9-t80-roller-mop", "mop-pad", "에코백스 X9·T80 항균 롤러 물걸레"],
+    ] as const
+  ).map(([id, type, displayName]) =>
     researchedPart({
       id,
       type,
@@ -1197,13 +1270,15 @@ export const consumables: ConsumableCompatibility[] = [
     searchKeyword: "에코백스 T80 정품 안티탱글 메인 브러시",
     regional: true,
   }),
-  ...([
-    ["narwal-flow-dustbin-filter", "dust-bin-filter", "나르왈 Flow 먼지통 필터"],
-    ["narwal-flow-main-brush", "main-brush", "나르왈 Flow 제로탱글 플로팅 브러시"],
-    ["narwal-flow-side-brush", "side-brush", "나르왈 Flow 안티탱글 사이드 브러시"],
-    ["narwal-flow-track-mop", "mop-pad", "나르왈 Flow 크롤러 물걸레"],
-    ["narwal-flow-dust-bag", "dust-bag", "나르왈 Flow 베이스 스테이션 먼지봉투"],
-  ] as const).map(([id, type, displayName]) =>
+  ...(
+    [
+      ["narwal-flow-dustbin-filter", "dust-bin-filter", "나르왈 Flow 먼지통 필터"],
+      ["narwal-flow-main-brush", "main-brush", "나르왈 Flow 제로탱글 플로팅 브러시"],
+      ["narwal-flow-side-brush", "side-brush", "나르왈 Flow 안티탱글 사이드 브러시"],
+      ["narwal-flow-track-mop", "mop-pad", "나르왈 Flow 크롤러 물걸레"],
+      ["narwal-flow-dust-bag", "dust-bag", "나르왈 Flow 베이스 스테이션 먼지봉투"],
+    ] as const
+  ).map(([id, type, displayName]) =>
     researchedPart({
       id,
       type,
@@ -1216,12 +1291,14 @@ export const consumables: ConsumableCompatibility[] = [
       regional: true,
     }),
   ),
-  ...([
-    ["irobot-205-filter", "dust-bin-filter", "아이로봇 Roomba 205 DustCompactor 필터"],
-    ["irobot-205-main-brush", "main-brush", "아이로봇 Roomba 205 멀티서피스 러버 브러시"],
-    ["irobot-205-side-brush", "side-brush", "아이로봇 Roomba 205 엣지 스위핑 브러시"],
-    ["irobot-205-mop-pad", "mop-pad", "아이로봇 Roomba 205 세척형 물걸레 패드"],
-  ] as const).map(([id, type, displayName]) =>
+  ...(
+    [
+      ["irobot-205-filter", "dust-bin-filter", "아이로봇 Roomba 205 DustCompactor 필터"],
+      ["irobot-205-main-brush", "main-brush", "아이로봇 Roomba 205 멀티서피스 러버 브러시"],
+      ["irobot-205-side-brush", "side-brush", "아이로봇 Roomba 205 엣지 스위핑 브러시"],
+      ["irobot-205-mop-pad", "mop-pad", "아이로봇 Roomba 205 세척형 물걸레 패드"],
+    ] as const
+  ).map(([id, type, displayName]) =>
     researchedPart({
       id,
       type,
@@ -1235,13 +1312,15 @@ export const consumables: ConsumableCompatibility[] = [
       regional: true,
     }),
   ),
-  ...([
-    ["everybot-q11-filter", "dust-bin-filter", "에브리봇 Q11 HEPA 필터"],
-    ["everybot-q11-main-brush", "main-brush", "에브리봇 Q11 메인 브러시"],
-    ["everybot-q11-side-brush", "side-brush", "에브리봇 Q11 사이드 브러시"],
-    ["everybot-q11-mop-pad", "mop-pad", "에브리봇 Q11 전용 걸레"],
-    ["everybot-q11-dust-bag", "dust-bag", "에브리봇 Q11 먼지봉투"],
-  ] as const).map(([id, type, displayName]) =>
+  ...(
+    [
+      ["everybot-q11-filter", "dust-bin-filter", "에브리봇 Q11 HEPA 필터"],
+      ["everybot-q11-main-brush", "main-brush", "에브리봇 Q11 메인 브러시"],
+      ["everybot-q11-side-brush", "side-brush", "에브리봇 Q11 사이드 브러시"],
+      ["everybot-q11-mop-pad", "mop-pad", "에브리봇 Q11 전용 걸레"],
+      ["everybot-q11-dust-bag", "dust-bag", "에브리봇 Q11 먼지봉투"],
+    ] as const
+  ).map(([id, type, displayName]) =>
     researchedPart({
       id,
       type,
@@ -1252,13 +1331,15 @@ export const consumables: ConsumableCompatibility[] = [
       searchKeyword: `${displayName} 정품`,
     }),
   ),
-  ...([
-    ["everybot-q9-filter", "dust-bin-filter", "에브리봇 Q9 HEPA 필터"],
-    ["everybot-q9-main-brush", "main-brush", "에브리봇 Q9 메인 브러시"],
-    ["everybot-q9-side-brush", "side-brush", "에브리봇 Q9 사이드 브러시"],
-    ["everybot-q9-mop-pad", "mop-pad", "에브리봇 Q9 전용 걸레"],
-    ["everybot-q9-dust-bag", "dust-bag", "에브리봇 Q9 먼지봉투"],
-  ] as const).map(([id, type, displayName]) =>
+  ...(
+    [
+      ["everybot-q9-filter", "dust-bin-filter", "에브리봇 Q9 HEPA 필터"],
+      ["everybot-q9-main-brush", "main-brush", "에브리봇 Q9 메인 브러시"],
+      ["everybot-q9-side-brush", "side-brush", "에브리봇 Q9 사이드 브러시"],
+      ["everybot-q9-mop-pad", "mop-pad", "에브리봇 Q9 전용 걸레"],
+      ["everybot-q9-dust-bag", "dust-bag", "에브리봇 Q9 먼지봉투"],
+    ] as const
+  ).map(([id, type, displayName]) =>
     researchedPart({
       id,
       type,
@@ -1270,10 +1351,12 @@ export const consumables: ConsumableCompatibility[] = [
       searchKeyword: `${displayName} 정품`,
     }),
   ),
-  ...([
-    ["everybot-q3-filter", "dust-bin-filter", "에브리봇 Q3·Q3 Plus 스폰지+HEPA 필터"],
-    ["everybot-q3-main-brush", "main-brush", "에브리봇 Q3·Q3 Plus 메인 브러시"],
-  ] as const).map(([id, type, displayName]) =>
+  ...(
+    [
+      ["everybot-q3-filter", "dust-bin-filter", "에브리봇 Q3·Q3 Plus 스폰지+HEPA 필터"],
+      ["everybot-q3-main-brush", "main-brush", "에브리봇 Q3·Q3 Plus 메인 브러시"],
+    ] as const
+  ).map(([id, type, displayName]) =>
     researchedPart({
       id,
       type,
@@ -1321,13 +1404,15 @@ export const consumables: ConsumableCompatibility[] = [
     searchKeyword: "에브리봇 쓰리스핀 EVO 일회용 청소포 30매 정품",
     verifiedAt: "2026-08-03",
   }),
-  ...([
-    ["eufy-s2-filter", "dust-bin-filter", "eufy Omni S2 교체 필터"],
-    ["eufy-s2-main-brush", "main-brush", "eufy Omni S2 롤러 브러시"],
-    ["eufy-s2-side-brush", "side-brush", "eufy Omni S2 사이드 브러시"],
-    ["eufy-s2-roller-mop", "mop-pad", "eufy Omni S2 롤러 물걸레"],
-    ["eufy-s2-dust-bag", "dust-bag", "eufy Omni S2 먼지봉투"],
-  ] as const).map(([id, type, displayName]) =>
+  ...(
+    [
+      ["eufy-s2-filter", "dust-bin-filter", "eufy Omni S2 교체 필터"],
+      ["eufy-s2-main-brush", "main-brush", "eufy Omni S2 롤러 브러시"],
+      ["eufy-s2-side-brush", "side-brush", "eufy Omni S2 사이드 브러시"],
+      ["eufy-s2-roller-mop", "mop-pad", "eufy Omni S2 롤러 물걸레"],
+      ["eufy-s2-dust-bag", "dust-bag", "eufy Omni S2 먼지봉투"],
+    ] as const
+  ).map(([id, type, displayName]) =>
     researchedPart({
       id,
       type,
@@ -1339,13 +1424,15 @@ export const consumables: ConsumableCompatibility[] = [
       regional: true,
     }),
   ),
-  ...([
-    ["eufy-s1-pro-filter", "dust-bin-filter", "eufy Omni S1 Pro 고성능 필터"],
-    ["eufy-s1-pro-main-brush", "main-brush", "eufy Omni S1 Pro 롤링 브러시"],
-    ["eufy-s1-pro-side-brush", "side-brush", "eufy Omni S1 Pro 사이드 브러시"],
-    ["eufy-s1-pro-roller-mop", "mop-pad", "eufy Omni S1 Pro 롤링 물걸레"],
-    ["eufy-s1-pro-dust-bag", "dust-bag", "eufy Omni S1 Pro 먼지봉투"],
-  ] as const).map(([id, type, displayName]) =>
+  ...(
+    [
+      ["eufy-s1-pro-filter", "dust-bin-filter", "eufy Omni S1 Pro 고성능 필터"],
+      ["eufy-s1-pro-main-brush", "main-brush", "eufy Omni S1 Pro 롤링 브러시"],
+      ["eufy-s1-pro-side-brush", "side-brush", "eufy Omni S1 Pro 사이드 브러시"],
+      ["eufy-s1-pro-roller-mop", "mop-pad", "eufy Omni S1 Pro 롤링 물걸레"],
+      ["eufy-s1-pro-dust-bag", "dust-bag", "eufy Omni S1 Pro 먼지봉투"],
+    ] as const
+  ).map(([id, type, displayName]) =>
     researchedPart({
       id,
       type,
@@ -1357,4 +1444,266 @@ export const consumables: ConsumableCompatibility[] = [
       regional: true,
     }),
   ),
+  researchedPart({
+    id: "irobot-clean-base-autowash-dust-bag",
+    type: "dust-bag",
+    displayName: "iRobot Clean Base·AutoWash 먼지봉투 3개입",
+    compatibleProductName: "Replacement Dirt Disposal Bags, 3-Pack",
+    genuinePartNumber: "4640235",
+    modelIds: ["irobot-combo-10-max", "irobot-combo-j9-plus"],
+    sourceTitle: "iRobot 공식몰 — Clean Base·AutoWash 교체용 먼지봉투 Item #4640235",
+    sourceUrl:
+      "https://www.irobot.com/en_US/replacement-dirt-disposal-bags%252c-3-pack/4640235.html",
+    searchKeyword: "iRobot 4640235 정품 먼지봉투",
+    regional: true,
+    verifiedAt: "2026-08-04",
+    secondarySources: [
+      {
+        title: "iRobot 공식 Combo 10 Max 시리즈 액세서리 호환표",
+        url: "https://www.irobot.com/en_US/roomba-combo-10-max-2",
+      },
+      {
+        title: "iRobot 공식 Combo j9 시리즈 액세서리 호환표",
+        url: "https://www.irobot.com/en_US/roomba-combo-j9plus",
+      },
+    ],
+  }),
+  researchedPart({
+    id: "irobot-combo-i-e-j-dual-rubber-brushes",
+    type: "main-brush",
+    displayName: "iRobot Combo·i·e·j 시리즈 듀얼 고무 브러시",
+    compatibleProductName: "Dual Multi-Surface Rubber Brushes",
+    genuinePartNumber: "4639309",
+    modelIds: ["irobot-combo-10-max", "irobot-combo-j9-plus", "irobot-combo-i5"],
+    sourceTitle: "iRobot 공식몰 — 듀얼 멀티 서피스 고무 브러시 Item #4639309",
+    sourceUrl:
+      "https://www.irobot.com/en_US/dual-multi-surface-rubber-brushes-for-roomba-combo-and-roomba-e%2C-i%2C-and-j-series-and-roomba-combo-10-max/4639309.html",
+    searchKeyword: "iRobot 4639309 정품 듀얼 고무 브러시",
+    regional: true,
+    verifiedAt: "2026-08-04",
+    secondarySources: [
+      {
+        title: "iRobot 공식 Combo 10 Max 시리즈 액세서리 호환표",
+        url: "https://www.irobot.com/en_US/roomba-combo-10-max-2",
+      },
+      {
+        title: "iRobot 공식 Combo j9 시리즈 액세서리 호환표",
+        url: "https://www.irobot.com/en_US/roomba-combo-j9plus",
+      },
+      {
+        title: "iRobot 공식 Combo i5 시리즈 액세서리 호환표",
+        url: "https://www.irobot.com/en_US/us/robot-vacuum-plus-mop-accessories/roomba-combo-i5-series",
+      },
+    ],
+  }),
+  researchedPart({
+    id: "irobot-combo-i-e-j-edge-brush",
+    type: "side-brush",
+    displayName: "iRobot Combo·i·e·j 시리즈 엣지 브러시 3개입",
+    compatibleProductName: "Edge-Sweeping Brush 3 Pack",
+    genuinePartNumber: "4757625",
+    modelIds: ["irobot-combo-10-max", "irobot-combo-j9-plus", "irobot-combo-i5"],
+    sourceTitle: "iRobot 공식몰 — 엣지 스위핑 브러시 Item #4757625",
+    sourceUrl:
+      "https://www.irobot.com/en_US/edge-sweeping-brush-3-pack-for-roomba-combo-and-roomba-i%2C-e-and-j-series-and-roomba-combo-10-max/4757625.html",
+    searchKeyword: "iRobot 4757625 정품 엣지 브러시",
+    regional: true,
+    verifiedAt: "2026-08-04",
+    secondarySources: [
+      {
+        title: "iRobot 공식 Combo 10 Max 시리즈 액세서리 호환표",
+        url: "https://www.irobot.com/en_US/roomba-combo-10-max-2",
+      },
+      {
+        title: "iRobot 공식 Combo j9 시리즈 액세서리 호환표",
+        url: "https://www.irobot.com/en_US/roomba-combo-j9plus",
+      },
+      {
+        title: "iRobot 공식 Combo i5 시리즈 액세서리 호환표",
+        url: "https://www.irobot.com/en_US/us/robot-vacuum-plus-mop-accessories/roomba-combo-i5-series",
+      },
+    ],
+  }),
+  researchedPart({
+    id: "irobot-combo-j9-washable-mop-pad",
+    type: "mop-pad",
+    displayName: "iRobot Roomba Combo j9+ 세척형 물걸레 패드 2개입",
+    compatibleProductName: "Washable Cleaning Pad, 2-Pack",
+    modelIds: ["irobot-combo-j9-plus"],
+    sourceTitle: "iRobot 공식 Combo j9 시리즈 — 세척형 클리닝 패드",
+    sourceUrl: "https://www.irobot.com/en_US/roomba-combo-j9plus",
+    searchKeyword: "iRobot Roomba Combo j9+ 정품 물걸레 패드",
+    regional: true,
+    verifiedAt: "2026-08-04",
+    secondarySources: [
+      {
+        title: "iRobot 공식 전체 액세서리 목록 — Combo j9+ 세척형 패드",
+        url: "https://www.irobot.com/en_US/us/all-parts-and-accessories",
+      },
+    ],
+  }),
+  researchedPart({
+    id: "irobot-combo-i5-mopping-kit",
+    type: "mop-pad",
+    displayName: "iRobot Roomba Combo i5 물걸레 보충 키트",
+    compatibleProductName: "Roomba Combo j5 & i5 Mopping Replenishment Kit",
+    modelIds: ["irobot-combo-i5"],
+    sourceTitle: "iRobot 공식 Combo i5 시리즈 — 물걸레 보충 키트",
+    sourceUrl:
+      "https://www.irobot.com/en_US/us/robot-vacuum-plus-mop-accessories/roomba-combo-i5-series",
+    searchKeyword: "iRobot Roomba Combo i5 정품 물걸레 키트",
+    regional: true,
+    verifiedAt: "2026-08-04",
+    secondarySources: [
+      {
+        title: "iRobot 공식 전체 액세서리 목록 — Combo i5 보충 키트",
+        url: "https://www.irobot.com/en_US/us/all-parts-and-accessories",
+      },
+    ],
+  }),
+  ...(
+    [
+      [
+        "roborock-saros-z70-main-brush",
+        "main-brush",
+        "Roborock Saros Z70 메인 브러시",
+        "Main Brush for Roborock Saros Z70",
+      ],
+      [
+        "roborock-saros-z70-side-brush",
+        "side-brush",
+        "Roborock Saros Z70 사이드 브러시",
+        "Side Brush for Saros Series",
+      ],
+      [
+        "roborock-saros-z70-filter",
+        "dust-bin-filter",
+        "Roborock Saros Z70 세척형 필터 2개입",
+        "Washable Filter 2-Pack",
+      ],
+      [
+        "roborock-saros-z70-mop-cloth",
+        "mop-pad",
+        "Roborock Saros Z70 물걸레 패드 4개입",
+        "Mop Cloth 4-Pack",
+      ],
+    ] as const
+  ).map(([id, type, displayName, compatibleProductName]) =>
+    researchedPart({
+      id,
+      type,
+      displayName,
+      compatibleProductName,
+      modelIds: ["roborock-saros-z70"],
+      sourceTitle: "Roborock 공식 Saros Z70 제품 페이지 — 정품 교체 부품",
+      sourceUrl: "https://us.roborock.com/products/roborock-saros-z70",
+      searchKeyword: `${displayName} 정품`,
+      regional: true,
+      verifiedAt: "2026-08-04",
+      secondarySources: [
+        {
+          title: "Roborock 공식 액세서리 목록 — Saros Z70 호환 부품",
+          url: "https://us.roborock.com/collections/accessories",
+        },
+      ],
+    }),
+  ),
+  ...(
+    [
+      [
+        "eufy-x10-pro-main-brush",
+        "main-brush",
+        "eufy X10 Pro Omni 롤러 브러시",
+        "T29E90J1",
+        "https://www.eufy.com/products/t29e90j1",
+      ],
+      [
+        "eufy-x10-pro-filter",
+        "dust-bin-filter",
+        "eufy X10 Pro Omni 세척형 필터 2개입",
+        "T29E80W1",
+        "https://www.eufy.com/products/t29e80w1",
+      ],
+      [
+        "eufy-x10-pro-mop-cloth",
+        "mop-pad",
+        "eufy X10 Pro Omni 세척형 물걸레 패드 2개입",
+        "T29E7031",
+        "https://www.eufy.com/us/products/t29e7031",
+      ],
+      [
+        "eufy-x10-pro-dust-bag",
+        "dust-bag",
+        "eufy X10 Pro Omni 대용량 먼지봉투 6개입",
+        "T29F70A2",
+        "https://www.eufy.com/products/t29f70a2",
+      ],
+    ] as const
+  ).map(([id, type, displayName, genuinePartNumber, sourceUrl]) =>
+    researchedPart({
+      id,
+      type,
+      displayName,
+      genuinePartNumber,
+      modelIds: ["eufy-x10-pro-omni"],
+      sourceTitle: `eufy 공식몰 — X10 Pro Omni 호환 ${displayName}`,
+      sourceUrl,
+      searchKeyword: `${displayName} 정품`,
+      regional: true,
+      verifiedAt: "2026-08-04",
+      secondarySources: [
+        {
+          title: "eufy 공식 X10 Pro Omni 교체 부품 키트 구성",
+          url: "https://www.eufy.com/products/t29g00r1",
+        },
+      ],
+    }),
+  ),
+  ...(
+    [
+      ["eufy-c28-side-brush", "side-brush", "eufy Omni C28 사이드 브러시"],
+      ["eufy-c28-main-brush", "main-brush", "eufy Omni C28 롤러 브러시와 가드"],
+      ["eufy-c28-roller-mop", "mop-pad", "eufy Omni C28 롤러 물걸레"],
+    ] as const
+  ).map(([id, type, displayName]) =>
+    researchedPart({
+      id,
+      type,
+      displayName,
+      compatibleProductName: "C28 Replacement Kit T291VAR0 포함 정품 교체 부품",
+      modelIds: ["eufy-omni-c28"],
+      sourceTitle: "eufy 공식몰 — Omni C28 교체 키트 구성과 호환 모델",
+      sourceUrl: "https://www.eufy.com/products/t291var0",
+      searchKeyword: `${displayName} 정품`,
+      regional: true,
+      verifiedAt: "2026-08-04",
+      secondarySources: [
+        {
+          title: "eufy 공식 Omni C28 제품 페이지 — DuoSpiral 브러시·롤러 물걸레",
+          url: "https://www.eufy.com/products/t211a110",
+          sourceType: "manufacturer",
+        },
+      ],
+    }),
+  ),
+  researchedPart({
+    id: "xiaomi-5-series-anti-tangle-side-brush",
+    type: "side-brush",
+    displayName: "Xiaomi Robot Vacuum 5·5 Pro 엉킴 방지 사이드 브러시 2개입",
+    compatibleProductName: "Robot Vacuum 5/5 Pro Anti-tangle Side Brush",
+    genuinePartNumber: "OV81GL-BS",
+    modelIds: ["xiaomi-5", "xiaomi-5-pro"],
+    sourceTitle: "Xiaomi Global 공식 액세서리 — 5·5 Pro 엉킴 방지 사이드 브러시",
+    sourceUrl: "https://www.mi.com/global/product/xiaomi-robot-vacuum-anti-tangle-side-brush/",
+    searchKeyword: "Xiaomi OV81GL-BS 정품 사이드 브러시",
+    regional: true,
+    verifiedAt: "2026-08-04",
+    secondarySources: [
+      {
+        title: "Xiaomi Global 공식 5 Pro 사양 — 사이드 브러시 구성 확인",
+        url: "https://www.mi.com/global/product/xiaomi-robot-vacuum-5-pro/specs/",
+        sourceType: "manufacturer",
+      },
+    ],
+  }),
 ];
