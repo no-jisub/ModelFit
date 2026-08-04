@@ -115,7 +115,7 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
           id={inputId}
           type="search"
           value={query}
-          placeholder={header ? "모델·소모품 검색" : "예: 로보락 S8, ADQ30041405, 먼지봉투"}
+          placeholder={header ? "모델·소모품 검색" : "예: 로보락 S8 또는 ADQ30041405"}
           autoComplete="off"
           role="combobox"
           aria-autocomplete="list"
@@ -131,7 +131,7 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
           onKeyDown={onKeyDown}
         />
         <button className="button button-primary search-submit" type="submit">
-          {header ? "검색" : "통합 검색"}
+          {header ? "검색" : "소모품 찾기"}
         </button>
       </form>
       {open && query.trim() && (
