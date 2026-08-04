@@ -2673,6 +2673,23 @@ h3 {
     padding: 20px;
   }
 
+  .home-models .official-chip,
+  .home-models .model-release-date {
+    display: none;
+  }
+
+  .home-models .model-brand-label {
+    margin-top: var(--space-3);
+  }
+
+  .home-models .model-series {
+    margin-bottom: var(--space-3);
+  }
+
+  .home-models .model-card-action {
+    margin-top: var(--space-3);
+  }
+
   .filter-bar {
     flex-direction: column;
   }
