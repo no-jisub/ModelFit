@@ -22,6 +22,7 @@ const siteName = import.meta.env.PUBLIC_SITE_NAME || "모델핏";
 const siteUrl = import.meta.env.PUBLIC_SITE_URL || Astro.site?.toString() || Astro.url.origin;
 const canonical = new URL(canonicalPath, siteUrl).toString();
 const pageTitle = title.includes(siteName) ? title : `${title} | ${siteName}`;
+const isHome = Astro.url.pathname === "/";
 const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
 const gaScript = gaId
   ? `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}window.gtag=gtag;gtag("js",new Date());gtag("config",${JSON.stringify(gaId)});`
@@ -61,7 +62,7 @@ const gaScript = gaId
   </head>
   <body>
     <a class="skip-link" href="#main-content">본문 바로가기</a>
-    <Header />
+    <Header showSearch={!isHome} />
     <main id="main-content">
       <slot />
     </main>

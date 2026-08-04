@@ -1,12 +1,18 @@
 ---
 import Logo from "./Logo.astro";
 import SearchBox from "../react/SearchBox";
+
+interface Props {
+  showSearch?: boolean;
+}
+
+const { showSearch = true } = Astro.props;
 ---
 
-<header class="site-header">
+<header class:list={["site-header", { "is-home": !showSearch }]}>
   <div class="container header-inner">
     <Logo />
-    <SearchBox header client:load />
+    {showSearch && <SearchBox header client:load />}
     <nav class="desktop-nav" aria-label="주요 메뉴">
       <a href="/my-appliances">내 가전함</a>
       <a href="/category/air-purifier">카테고리</a>
@@ -14,7 +20,7 @@ import SearchBox from "../react/SearchBox";
       <a href="/guide">가이드</a>
       <a href="/methodology">검증 기준</a>
     </nav>
-    <a class="button button-danger button-compact desktop-report" href="/report">정보 수정 제보</a>
+    <a class="button button-secondary button-compact desktop-report" href="/report">정보 수정 제보</a>
     <details class="mobile-menu">
       <summary aria-label="메뉴 열기"><span></span><span></span><span></span></summary>
       <nav aria-label="모바일 메뉴">

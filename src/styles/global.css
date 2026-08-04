@@ -2709,6 +2709,10 @@ h3 {
     display: none;
   }
 
+  .site-header.is-home .logo-copy {
+    display: flex;
+  }
+
   .site-header .logo-mark {
     width: 36px;
     height: 36px;
