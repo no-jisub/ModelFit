@@ -1213,6 +1213,18 @@ h3 {
   padding: 36px;
 }
 
+.home-verification {
+  padding: 30px 32px;
+}
+
+.home-verification h2 {
+  margin-bottom: var(--space-3);
+}
+
+.home-verification p {
+  margin-bottom: var(--space-5);
+}
+
 .verification-list {
   display: grid;
   gap: var(--space-3);
