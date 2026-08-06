@@ -41,7 +41,7 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
         kind: "part" as const,
         title: part.displayName,
         description: `${partTypeLabels[part.type]} · ${
-          part.genuinePartNumber ?? "부품번호 미등록"
+          part.genuinePartNumber ?? "부품번호 정보 없음"
         }`,
         status: reason === "part-number" ? "부품번호 일치" : "소모품",
         url: `/part/${part.slug}`,

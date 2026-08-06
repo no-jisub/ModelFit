@@ -3,6 +3,7 @@ import AffiliateButton from "@/components/astro/AffiliateButton.astro";
 import AffiliateDisclosure from "@/components/astro/AffiliateDisclosure.astro";
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import ModelCard from "@/components/astro/ModelCard.astro";
+import PartNumberBadge from "@/components/astro/PartNumberBadge.astro";
 import ProductComparison from "@/components/astro/ProductComparison.astro";
 import SourceList from "@/components/astro/SourceList.astro";
 import VerificationBadge from "@/components/astro/VerificationBadge.astro";
@@ -35,10 +36,9 @@ const primarySource = part.sources[0];
           <div class="eyebrow">{partTypeLabels[part.type]}</div>
           <h1>{part.displayName}</h1>
           <div class="model-meta">
-            <VerificationBadge status={part.verificationStatus} />
+            <VerificationBadge status={part.verificationStatus} context="compatibility" />
+            <PartNumberBadge partNumber={part.genuinePartNumber} />
             <span>호환 모델 {compatibleModels.length}개</span>
-            <span>·</span>
-            <span>정품 부품번호 {part.genuinePartNumber ?? "데이터 없음"}</span>
           </div>
           <div class="part-trust-summary">
             <span aria-hidden="true">✓</span>
@@ -96,7 +96,10 @@ const primarySource = part.sources[0];
       <dl class="detail-list card" style="padding: 24px;">
         <div><dt>소모품 유형</dt><dd>{partTypeLabels[part.type]}</dd></div>
         <div><dt>교체주기 참고</dt><dd>{part.replacementInterval ?? "제조사 안내 확인"}</dd></div>
-        <div><dt>정품 부품번호</dt><dd>{part.genuinePartNumber ?? "데이터 없음"}</dd></div>
+        <div>
+          <dt>부품번호 상태</dt><dd><PartNumberBadge partNumber={part.genuinePartNumber} /></dd>
+        </div>
+        <div><dt>정품 부품번호</dt><dd>{part.genuinePartNumber ?? "정보 없음"}</dd></div>
       </dl>
     </section>
 

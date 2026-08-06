@@ -87,7 +87,7 @@ const breadcrumbJsonLd = {
           <div class="model-code">{model.modelCode} {model.series ? `· ${model.series}` : ""}</div>
           <p>{model.shortDescription}</p>
           <div class="model-meta">
-            <VerificationBadge status={model.verificationStatus} />
+            <VerificationBadge status={model.verificationStatus} context="model" />
             <span>마지막 확인일 {model.lastVerifiedAt}</span>
             <span>·</span>
             <span>{formatModelReleaseDate(model.releaseDate)}</span>

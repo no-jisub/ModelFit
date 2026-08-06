@@ -1189,6 +1189,29 @@ h3 {
   color: var(--color-danger-700);
 }
 
+.part-number-badge {
+  display: inline-flex;
+  min-height: 26px;
+  width: fit-content;
+  align-items: center;
+  gap: 5px;
+  border-radius: var(--radius-full);
+  padding: 4px 9px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.part-number-badge.is-confirmed {
+  background: var(--color-primary-50);
+  color: var(--color-primary-700);
+}
+
+.part-number-badge.is-not-available {
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-600);
+}
+
 .info-steps {
   display: grid;
   grid-template-columns: repeat(3, 1fr);

@@ -1,12 +1,14 @@
 ---
 import type { VerificationStatus } from "@/types";
-import { statusLabels } from "@/utils/labels";
+import { getVerificationLabel, type VerificationContext } from "@/utils/labels";
 
 interface Props {
   status: VerificationStatus;
+  context?: VerificationContext;
 }
 
-const { status } = Astro.props;
+const { status, context = "source" } = Astro.props;
+const label = getVerificationLabel(status, context);
 const icons: Record<VerificationStatus, string> = {
   official: "✓",
   "seller-confirmed": "▣",
@@ -15,7 +17,7 @@ const icons: Record<VerificationStatus, string> = {
 };
 ---
 
-<span class:list={["status-badge", `status-${status}`]} title={`${statusLabels[status]} 상태`}>
+<span class:list={["status-badge", `status-${status}`]} title={`${label} 상태`}>
   <span aria-hidden="true">{icons[status]}</span>
-  {statusLabels[status]}
+  {label}
 </span>

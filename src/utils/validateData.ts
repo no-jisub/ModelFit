@@ -106,7 +106,7 @@ export function validateData(
         errors.push(`${part.id}: 잘못된 구매 링크 ${part.affiliate.directUrl}`);
       }
     }
-    if (!part.genuinePartNumber) warnings.push(`${part.id}: 정품 부품번호 미등록`);
+    if (!part.genuinePartNumber) warnings.push(`${part.id}: 정품 부품번호 정보 없음`);
   }
 
   return { errors, warnings };

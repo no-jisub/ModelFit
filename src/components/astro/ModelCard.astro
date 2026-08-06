@@ -34,7 +34,7 @@ const consumableSummary =
     {formatModelReleaseDate(model.releaseDate)}
   </p>
   <div class="model-card-status">
-    <VerificationBadge status={model.verificationStatus} />
+    <VerificationBadge status={model.verificationStatus} context="model" />
     <span>{model.lastVerifiedAt} 확인</span>
   </div>
   <a

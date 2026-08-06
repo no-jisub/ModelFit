@@ -6,11 +6,34 @@ export const categoryLabels: Record<ApplianceCategory, string> = {
 };
 
 export const statusLabels: Record<VerificationStatus, string> = {
-  official: "공식 확인",
+  official: "공식 출처 확인",
   "seller-confirmed": "판매자 확인",
   "user-reported": "사용자 제보",
   unverified: "미검증",
 };
+
+export type VerificationContext = "source" | "model" | "compatibility";
+
+export function getVerificationLabel(
+  status: VerificationStatus,
+  context: VerificationContext = "source",
+) {
+  if (status !== "official") return statusLabels[status];
+  if (context === "model") return "공식 모델 확인";
+  if (context === "compatibility") return "공식 호환 확인";
+  return statusLabels.official;
+}
+
+export type PartNumberStatus = "confirmed" | "not-available";
+
+export const partNumberStatusLabels: Record<PartNumberStatus, string> = {
+  confirmed: "부품번호 확인",
+  "not-available": "부품번호 정보 없음",
+};
+
+export function getPartNumberStatus(partNumber?: string): PartNumberStatus {
+  return partNumber?.trim() ? "confirmed" : "not-available";
+}
 
 export const partTypeLabels: Record<ConsumableType, string> = {
   "hepa-filter": "HEPA 필터",

@@ -2,6 +2,7 @@
 import type { ConsumableCompatibility } from "@/types";
 import { partTypeLabels } from "@/utils/labels";
 import AffiliateButton from "./AffiliateButton.astro";
+import PartNumberBadge from "./PartNumberBadge.astro";
 import VerificationBadge from "./VerificationBadge.astro";
 
 const { part } = Astro.props as { part: ConsumableCompatibility };
@@ -12,9 +13,16 @@ const { part } = Astro.props as { part: ConsumableCompatibility };
     <div class="eyebrow">{partTypeLabels[part.type]}</div>
     <h3><a href={`/part/${part.slug}`}>{part.displayName}</a></h3>
     <dl class="detail-list">
-      <div><dt>정품 부품번호</dt><dd>{part.genuinePartNumber ?? "데이터 없음"}</dd></div>
+      <div><dt>정품 부품번호</dt><dd>{part.genuinePartNumber ?? "정보 없음"}</dd></div>
       <div><dt>교체주기 참고</dt><dd>{part.replacementInterval ?? "제조사 안내 확인"}</dd></div>
-      <div><dt>검증 상태</dt><dd><VerificationBadge status={part.verificationStatus} /></dd></div>
+      <div>
+        <dt>검증 상태</dt><dd>
+          <VerificationBadge status={part.verificationStatus} context="compatibility" />
+        </dd>
+      </div>
+      <div>
+        <dt>부품번호 상태</dt><dd><PartNumberBadge partNumber={part.genuinePartNumber} /></dd>
+      </div>
     </dl>
   </div>
   <div class="consumable-actions">

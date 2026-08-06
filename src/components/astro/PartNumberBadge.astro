@@ -1,0 +1,16 @@
+---
+import { getPartNumberStatus, partNumberStatusLabels } from "@/utils/labels";
+
+interface Props {
+  partNumber?: string;
+}
+
+const { partNumber } = Astro.props;
+const status = getPartNumberStatus(partNumber);
+const label = partNumberStatusLabels[status];
+---
+
+<span class:list={["part-number-badge", `is-${status}`]} title={partNumber ?? label}>
+  <span aria-hidden="true">{status === "confirmed" ? "✓" : "—"}</span>
+  {label}
+</span>

@@ -4,7 +4,13 @@ import { consumables } from "@/data/consumables";
 import { models } from "@/data/models";
 import type { ApplianceCategory, ApplianceModel } from "@/types";
 import { analytics } from "@/utils/analytics";
-import { categoryLabels, partTypeLabels, statusLabels } from "@/utils/labels";
+import {
+  categoryLabels,
+  getPartNumberStatus,
+  getVerificationLabel,
+  partNumberStatusLabels,
+  partTypeLabels,
+} from "@/utils/labels";
 import { getModelDisplayName } from "@/utils/modelDisplayName";
 import {
   type CompatibleModelMatch,
@@ -75,7 +81,7 @@ function ModelResultCard({
       )}
       <div className="model-card-status">
         <span className={`status-badge status-${model.verificationStatus}`}>
-          ✓ {statusLabels[model.verificationStatus]}
+          ✓ {getVerificationLabel(model.verificationStatus, "model")}
         </span>
         <span>{model.lastVerifiedAt} 확인</span>
       </div>
@@ -116,7 +122,7 @@ function ModelResultCard({
                   <span>
                     <strong>{part.displayName}</strong>
                     <small>
-                      {partTypeLabels[part.type]} · {part.genuinePartNumber ?? "부품번호 미등록"}
+                      {partTypeLabels[part.type]} · {part.genuinePartNumber ?? "부품번호 정보 없음"}
                     </small>
                   </span>
                   <span aria-hidden="true">→</span>
@@ -279,9 +285,13 @@ export default function SearchResults({ initialQuery = "" }: Props) {
                       <h3>
                         <a href={`/part/${part.slug}`}>{part.displayName}</a>
                       </h3>
-                      <p className="model-code">
-                        {part.genuinePartNumber ?? "공개된 정품 부품번호 없음"}
-                      </p>
+                      <p className="model-code">{part.genuinePartNumber ?? "정보 없음"}</p>
+                      <span
+                        className={`part-number-badge is-${getPartNumberStatus(part.genuinePartNumber)}`}
+                      >
+                        <span aria-hidden="true">{part.genuinePartNumber ? "✓" : "—"}</span>
+                        {partNumberStatusLabels[getPartNumberStatus(part.genuinePartNumber)]}
+                      </span>
                       <div className="compatible-model-links">
                         <strong>공식 호환 모델</strong>
                         <div>
@@ -380,9 +390,13 @@ export default function SearchResults({ initialQuery = "" }: Props) {
                           <h3>
                             <a href={`/part/${part.slug}`}>{part.displayName}</a>
                           </h3>
-                          <p className="model-code">
-                            {part.genuinePartNumber ?? "공개된 정품 부품번호 없음"}
-                          </p>
+                          <p className="model-code">{part.genuinePartNumber ?? "정보 없음"}</p>
+                          <span
+                            className={`part-number-badge is-${getPartNumberStatus(part.genuinePartNumber)}`}
+                          >
+                            <span aria-hidden="true">{part.genuinePartNumber ? "✓" : "—"}</span>
+                            {partNumberStatusLabels[getPartNumberStatus(part.genuinePartNumber)]}
+                          </span>
                           <a className="text-link" href={`/part/${part.slug}`}>
                             호환 근거 보기 →
                           </a>
