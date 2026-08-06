@@ -1926,37 +1926,80 @@ h3 {
   font-size: 13px;
 }
 
-.alert-box {
+.part-trust-summary {
   display: flex;
   gap: var(--space-4);
   margin-top: var(--space-6);
-  border: 1px solid #fecaca;
+  border: 1px solid var(--color-primary-100);
   border-radius: var(--radius-lg);
-  background: var(--color-danger-50);
+  background: var(--color-primary-50);
   padding: var(--space-5);
-  color: #991b1b;
+  color: var(--color-primary-800);
 }
 
-.alert-box > span {
+.part-trust-summary > span {
   display: grid;
   width: 28px;
   height: 28px;
   flex: none;
   place-items: center;
   border-radius: 50%;
-  background: #fee2e2;
+  background: white;
+  color: var(--color-primary-600);
   font-weight: 900;
 }
 
-.alert-box h2 {
-  margin-bottom: 3px;
-  color: #7f1d1d;
-  font-size: 16px;
+.part-trust-summary strong {
+  display: block;
+  color: var(--color-primary-900);
+  font-size: 15px;
 }
 
-.alert-box p {
-  margin: 0;
+.part-trust-summary p {
+  margin: 4px 0 0;
   font-size: 14px;
+}
+
+.purchase-note {
+  margin-top: var(--space-3);
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-md);
+  background: white;
+  color: var(--color-neutral-600);
+  font-size: 13px;
+}
+
+.purchase-note summary {
+  cursor: pointer;
+  list-style: none;
+  padding: 11px 14px;
+  color: var(--color-neutral-700);
+  font-weight: 700;
+}
+
+.purchase-note summary::-webkit-details-marker {
+  display: none;
+}
+
+.purchase-note summary::after {
+  content: "+";
+  float: right;
+  color: var(--color-primary-600);
+}
+
+.purchase-note[open] summary::after {
+  content: "−";
+}
+
+.purchase-note p {
+  margin: 0;
+  border-top: 1px solid var(--color-neutral-100);
+  padding: 12px 14px;
+}
+
+.purchase-note.is-compact {
+  margin-top: 2px;
+  background: var(--color-neutral-50);
 }
 
 .detail-section {
@@ -2009,7 +2052,6 @@ h3 {
   font-weight: 650;
 }
 
-.warning-inline,
 .empty-inline {
   display: flex;
   gap: var(--space-3);
@@ -2021,7 +2063,6 @@ h3 {
   font-size: 13px;
 }
 
-.warning-inline > span,
 .empty-inline > span {
   display: grid;
   width: 20px;
@@ -2033,7 +2074,6 @@ h3 {
   font-weight: 900;
 }
 
-.warning-inline p,
 .empty-inline p {
   margin: 0;
 }
@@ -2048,8 +2088,8 @@ h3 {
 }
 
 .part-detail-link {
-  margin-bottom: 2px;
-  font-size: 13px;
+  width: 100%;
+  font-size: 14px;
 }
 
 .affiliate-button {
@@ -2546,6 +2586,16 @@ h3 {
 .part-actions h2 {
   margin: 0;
   font-size: 15px;
+}
+
+.part-source-button {
+  width: 100%;
+}
+
+.part-action-copy {
+  margin: -2px 2px 2px;
+  color: var(--color-neutral-500);
+  font-size: 12px;
 }
 
 @media (min-width: 768px) {

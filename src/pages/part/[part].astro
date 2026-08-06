@@ -19,6 +19,7 @@ const { part } = Astro.props;
 const compatibleModels = part.compatibleModelIds
   .map((id: string) => models.find((model) => model.id === id))
   .filter((model) => model !== undefined);
+const primarySource = part.sources[0];
 ---
 
 <BaseLayout
@@ -39,22 +40,34 @@ const compatibleModels = part.compatibleModelIds
             <span>·</span>
             <span>정품 부품번호 {part.genuinePartNumber ?? "데이터 없음"}</span>
           </div>
-          <div class="alert-box" role="alert">
-            <span aria-hidden="true">!</span>
+          <div class="part-trust-summary">
+            <span aria-hidden="true">✓</span>
             <div>
-              {
-                part.verificationStatus === "official" ? (
-                  <h2>제조사 공식 자료로 확인한 호환 정보</h2>
-                ) : (
-                  <h2>구매 전 추가 확인이 필요한 정보</h2>
-                )
-              }
-              <p>{part.purchaseWarning}</p>
+              <strong>제조사 공식 자료 {part.sources.length}건으로 호환 범위를 확인했습니다.</strong
+              >
+              <p>구매 전 제품 라벨의 전체 모델명과 판매 페이지의 적용 모델을 대조하세요.</p>
             </div>
           </div>
+          <details class="purchase-note">
+            <summary>구매 전 확인사항</summary>
+            <p>{part.purchaseWarning}</p>
+          </details>
         </div>
         <aside class="part-actions">
-          <h2>상품 검색</h2>
+          <h2>다음 단계</h2>
+          {
+            primarySource && (
+              <a
+                class="button button-primary part-source-button"
+                href={primarySource.url}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                공식 호환 근거 보기 <span aria-hidden="true">↗</span>
+              </a>
+            )
+          }
+          <p class="part-action-copy">근거를 확인한 뒤 판매 페이지의 모델 표기와 대조하세요.</p>
           <AffiliateButton
             keyword={part.affiliate.searchKeyword}
             kind="genuine"

@@ -16,11 +16,10 @@ const { part } = Astro.props as { part: ConsumableCompatibility };
       <div><dt>교체주기 참고</dt><dd>{part.replacementInterval ?? "제조사 안내 확인"}</dd></div>
       <div><dt>검증 상태</dt><dd><VerificationBadge status={part.verificationStatus} /></dd></div>
     </dl>
-    <div class="warning-inline"><span aria-hidden="true">!</span><p>{part.purchaseWarning}</p></div>
   </div>
   <div class="consumable-actions">
-    <a class="text-link part-detail-link" href={`/part/${part.slug}`}
-      >호환 모델과 상세 정보 보기 →</a
+    <a class="button button-primary part-detail-link" href={`/part/${part.slug}`}
+      >호환 근거 확인하기 →</a
     >
     <AffiliateButton
       keyword={part.affiliate.searchKeyword}
@@ -34,5 +33,9 @@ const { part } = Astro.props as { part: ConsumableCompatibility };
       linkCheckedAt={part.affiliate.linkCheckedAt}
     />
     <AffiliateButton keyword={part.affiliate.searchKeyword} kind="compatible" partId={part.id} />
+    <details class="purchase-note is-compact">
+      <summary>구매 전 확인사항</summary>
+      <p>{part.purchaseWarning}</p>
+    </details>
   </div>
 </article>
