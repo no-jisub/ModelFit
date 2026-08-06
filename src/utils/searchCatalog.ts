@@ -32,6 +32,16 @@ export interface CatalogSearchResult {
   compatibleModels: CompatibleModelMatch[];
 }
 
+export function splitStrongMatches<T extends { score: number }>(items: T[]) {
+  const topScore = items[0]?.score ?? 0;
+  if (topScore < 30) return { primary: items, related: [] as T[] };
+
+  return {
+    primary: items.filter(({ score }) => score === topScore),
+    related: items.filter(({ score }) => score !== topScore),
+  };
+}
+
 function getConsumableValues(part: ConsumableCompatibility) {
   return {
     partNumber: normalizeSearch(part.genuinePartNumber ?? ""),
@@ -103,7 +113,7 @@ export function searchConsumables(
       .map((model) => model.id),
   );
 
-  const results = allConsumables
+  const ranked = allConsumables
     .filter((part) => part.compatibleModelIds.some((id) => eligibleModelIds.has(id)))
     .map((part) => ({ part, ...scoreConsumable(part, query) }))
     .filter((result) => result.score > 0)
@@ -111,7 +121,7 @@ export function searchConsumables(
       (a, b) => b.score - a.score || a.part.displayName.localeCompare(b.part.displayName, "ko"),
     );
 
-  return typeof consumableLimit === "number" ? results.slice(0, consumableLimit) : results;
+  return typeof consumableLimit === "number" ? ranked.slice(0, consumableLimit) : ranked;
 }
 
 export function searchCatalog(

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { consumables } from "../src/data/consumables";
 import { models } from "../src/data/models";
-import { searchCatalog, searchConsumables } from "../src/utils/searchCatalog";
+import { searchCatalog, searchConsumables, splitStrongMatches } from "../src/utils/searchCatalog";
 
 describe("통합검색", () => {
   it("정품 부품번호 완전 일치를 가장 먼저 반환한다", () => {
@@ -37,5 +37,18 @@ describe("통합검색", () => {
       ),
     ).toBe(true);
     expect(result.compatibleModels.every(({ model }) => model.brandId === "roborock")).toBe(true);
+  });
+
+  it("강한 일치와 브랜드명만 일치하는 관련 결과를 분리한다", () => {
+    const result = searchCatalog(models, consumables, "로보락 S8");
+    const modelMatches = splitStrongMatches(result.models);
+    const partMatches = splitStrongMatches(result.consumables);
+
+    expect(modelMatches.primary.map(({ model }) => model.id)).toEqual(["roborock-s8-maxv-ultra"]);
+    expect(partMatches.primary.map(({ part }) => part.id)).toEqual([
+      "roborock-saros-qrevo-s8-dust-bag",
+    ]);
+    expect(modelMatches.related.length).toBeGreaterThan(0);
+    expect(partMatches.related.length).toBeGreaterThan(0);
   });
 });

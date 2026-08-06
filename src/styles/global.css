@@ -1399,6 +1399,53 @@ h3 {
   gap: var(--space-16);
 }
 
+.related-results {
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-lg);
+  background: white;
+}
+
+.related-results > summary {
+  display: flex;
+  min-height: 58px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  list-style: none;
+  padding: 14px 18px;
+  color: var(--color-neutral-800);
+  font-weight: 750;
+}
+
+.related-results > summary::-webkit-details-marker {
+  display: none;
+}
+
+.related-results > summary::after {
+  content: "+";
+  color: var(--color-primary-600);
+  font-size: 20px;
+}
+
+.related-results[open] > summary::after {
+  content: "−";
+}
+
+.related-results > summary span {
+  margin-left: auto;
+  color: var(--color-neutral-500);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.related-result-groups {
+  display: grid;
+  gap: var(--space-12);
+  border-top: 1px solid var(--color-neutral-200);
+  padding: var(--space-6);
+}
+
 .result-group {
   scroll-margin-top: 90px;
 }

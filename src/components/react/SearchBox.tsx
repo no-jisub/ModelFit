@@ -3,7 +3,7 @@ import { consumables } from "@/data/consumables";
 import { models } from "@/data/models";
 import { categoryLabels, partTypeLabels, statusLabels } from "@/utils/labels";
 import { getModelFullName } from "@/utils/modelDisplayName";
-import { searchCatalog } from "@/utils/searchCatalog";
+import { searchCatalog, splitStrongMatches } from "@/utils/searchCatalog";
 
 interface Props {
   initialQuery?: string;
@@ -26,7 +26,7 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
       compatibleModelLimit: 0,
     });
 
-    return [
+    const ranked = [
       ...results.models.map(({ model, score }) => ({
         id: `model-${model.id}`,
         kind: "model" as const,
@@ -47,9 +47,13 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
         url: `/part/${part.slug}`,
         score,
       })),
-    ]
-      .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title, "ko"))
-      .slice(0, 6);
+    ].sort(
+      (a, b) =>
+        b.score - a.score ||
+        (a.kind === b.kind ? a.title.localeCompare(b.title, "ko") : a.kind === "model" ? -1 : 1),
+    );
+
+    return splitStrongMatches(ranked).primary.slice(0, 4);
   }, [query]);
 
   useEffect(() => {

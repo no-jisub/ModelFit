@@ -24,4 +24,11 @@ describe("searchModels", () => {
     const results = searchModels(models, "S8 MAXV ULTRA");
     expect(results[0]?.model.id).toBe("roborock-s8-maxv-ultra");
   });
+
+  it("강한 모델 일치를 브랜드명만 일치하는 결과보다 먼저 반환한다", () => {
+    const results = searchModels(models, "로보락 S8");
+
+    expect(results[0]?.model.id).toBe("roborock-s8-maxv-ultra");
+    expect(results[0]?.score).toBeGreaterThan(results[1]?.score ?? 0);
+  });
 });
