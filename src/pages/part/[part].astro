@@ -33,6 +33,8 @@ const primarySourceLabel =
   title={`${part.displayName} 호환 모델과 구매 전 확인`}
   description={`${part.displayName}의 제조사 공식 호환 모델, 부품번호, 교체주기와 근거 출처를 확인하세요.`}
   canonicalPath={`/part/${part.slug}`}
+  analyticsEntityType="part"
+  analyticsEntityId={part.id}
 >
   <section class="page-hero">
     <div class="container model-content">

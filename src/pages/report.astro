@@ -48,6 +48,7 @@ const model = Astro.url.searchParams.get("model") ?? "";
             href={externalFormUrl}
             target="_blank"
             rel="noopener noreferrer"
+            data-report-channel="external-form"
           >
             외부 제보 폼 열기 ↗
           </a>
@@ -110,10 +111,13 @@ const model = Astro.url.searchParams.get("model") ?? "";
     </div>
   </section>
   <script>
+    import { analytics } from "@/utils/analytics";
+
     const form = document.querySelector<HTMLFormElement>("#report-form");
     form?.addEventListener("submit", (event) => {
       event.preventDefault();
       if (!form.reportValidity()) return;
+      analytics.trackReportSubmit("email");
       const data = new FormData(form);
       const subject = `[모델핏 정보 제보] ${data.get("brand")} ${data.get("model")}`;
       const body = [

@@ -4,6 +4,7 @@ import { models } from "@/data/models";
 import { categoryLabels, partTypeLabels, statusLabels } from "@/utils/labels";
 import { getModelFullName } from "@/utils/modelDisplayName";
 import { searchCatalog, splitStrongMatches } from "@/utils/searchCatalog";
+import { analytics } from "@/utils/analytics";
 
 interface Props {
   initialQuery?: string;
@@ -29,6 +30,7 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
     const ranked = [
       ...results.models.map(({ model, score }) => ({
         id: `model-${model.id}`,
+        entityId: model.id,
         kind: "model" as const,
         title: getModelFullName(model),
         description: `${model.modelCode} · ${categoryLabels[model.category]}`,
@@ -38,6 +40,7 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
       })),
       ...results.consumables.map(({ part, score, reason }) => ({
         id: `part-${part.id}`,
+        entityId: part.id,
         kind: "part" as const,
         title: part.displayName,
         description: `${partTypeLabels[part.type]} · ${
@@ -70,7 +73,18 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
 
   function goToSearch(value = query) {
     const normalized = value.trim();
+    analytics.trackSearchSubmit(
+      normalized,
+      value === query ? (header ? "header" : "page") : "popular",
+    );
     window.location.assign(normalized ? `/find?q=${encodeURIComponent(normalized)}` : "/find");
+  }
+
+  function selectSuggestion(index: number) {
+    const selected = suggestions[index];
+    if (!selected) return;
+    analytics.trackAutocompleteSelect(query.trim(), selected.kind, selected.entityId, index + 1);
+    window.location.assign(selected.url);
   }
 
   function onKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
@@ -91,8 +105,7 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
       setOpen(false);
     } else if (event.key === "Enter" && activeIndex >= 0) {
       event.preventDefault();
-      const selected = suggestions[activeIndex];
-      if (selected) window.location.assign(selected.url);
+      selectSuggestion(activeIndex);
     }
   }
 
@@ -150,7 +163,7 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
                 className={activeIndex === index ? "is-active" : ""}
                 key={suggestion.id}
                 onMouseEnter={() => setActiveIndex(index)}
-                onClick={() => window.location.assign(suggestion.url)}
+                onClick={() => selectSuggestion(index)}
               >
                 <span>
                   <strong>{suggestion.title}</strong>

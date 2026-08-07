@@ -9,6 +9,8 @@ interface Props {
   canonicalPath?: string;
   noindex?: boolean;
   jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  analyticsEntityType?: "model" | "part";
+  analyticsEntityId?: string;
 }
 
 const {
@@ -17,6 +19,8 @@ const {
   canonicalPath = Astro.url.pathname,
   noindex = false,
   jsonLd,
+  analyticsEntityType,
+  analyticsEntityId,
 } = Astro.props;
 const siteName = import.meta.env.PUBLIC_SITE_NAME || "모델핏";
 const siteUrl = import.meta.env.PUBLIC_SITE_URL || Astro.site?.toString() || Astro.url.origin;
@@ -60,7 +64,7 @@ const gaScript = gaId
       )
     }
   </head>
-  <body>
+  <body data-entity-type={analyticsEntityType} data-entity-id={analyticsEntityId}>
     <a class="skip-link" href="#main-content">본문 바로가기</a>
     <Header showSearch={!hideHeaderSearch} />
     <main id="main-content">
@@ -69,3 +73,9 @@ const gaScript = gaId
     <Footer />
   </body>
 </html>
+
+<script>
+  import { bindAnalyticsInteractions } from "@/utils/analytics";
+
+  bindAnalyticsInteractions();
+</script>

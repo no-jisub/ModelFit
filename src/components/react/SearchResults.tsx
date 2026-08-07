@@ -188,9 +188,13 @@ export default function SearchResults({ initialQuery = "" }: Props) {
   }, [query, category, brandId, urlStateReady]);
 
   useEffect(() => {
-    analytics.trackSearch(query, totalResults);
-    if (query && totalResults === 0) analytics.trackNoResult(query);
-  }, [query, totalResults]);
+    if (!urlStateReady || !query.trim()) return;
+    const timeoutId = window.setTimeout(() => {
+      analytics.trackSearch(query, totalResults);
+      if (totalResults === 0) analytics.trackNoResult(query);
+    }, 500);
+    return () => window.clearTimeout(timeoutId);
+  }, [query, totalResults, urlStateReady]);
 
   const selectModel = (modelId: string) => {
     setSelectedModelId((current) => (current === modelId ? null : modelId));
@@ -346,7 +350,16 @@ export default function SearchResults({ initialQuery = "" }: Props) {
           )}
 
           {hasRelatedResults && (
-            <details className="related-results">
+            <details
+              className="related-results"
+              onToggle={(event) =>
+                analytics.trackRelatedResults(
+                  event.currentTarget.open,
+                  modelMatches.related.length,
+                  consumableMatches.related.length,
+                )
+              }
+            >
               <summary>
                 관련 결과 더 보기
                 <span>
