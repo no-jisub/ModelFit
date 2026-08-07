@@ -20,7 +20,12 @@ const { showSearch = true } = Astro.props;
       <a href="/guide">가이드</a>
       <a href="/methodology">검증 기준</a>
     </nav>
-    <a class="button button-secondary button-compact desktop-report" href="/report">정보 수정 제보</a>
+    <a class="button button-secondary button-compact desktop-report" href="/report"
+      >정보 수정 제보</a
+    >
+    <a class="mobile-search-link" href="/find" aria-label="소모품 검색">
+      <span aria-hidden="true">⌕</span>
+    </a>
     <details class="mobile-menu">
       <summary aria-label="메뉴 열기"><span></span><span></span><span></span></summary>
       <nav aria-label="모바일 메뉴">
