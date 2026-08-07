@@ -74,6 +74,22 @@ describe("data validation", () => {
     ).toBe(true);
   });
 
+  it("157개 소모품 모두 제조사 공식 출처와 확인일을 제공한다", () => {
+    expect(consumables).toHaveLength(157);
+    expect(
+      consumables.every(
+        (part) =>
+          part.sources.length > 0 &&
+          part.sources.every(
+            (source) =>
+              source.url.startsWith("https://") &&
+              !Number.isNaN(Date.parse(source.checkedAt)) &&
+              ["manufacturer", "official-manual", "official-store"].includes(source.sourceType),
+          ),
+      ),
+    ).toBe(true);
+  });
+
   it("2차 검증 소모품은 둘 이상의 공식 근거와 최신 확인일을 제공한다", () => {
     const secondPassIds = [
       "irobot-clean-base-autowash-dust-bag",

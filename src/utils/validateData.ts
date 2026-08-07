@@ -5,6 +5,29 @@ export interface ValidationResult {
   warnings: string[];
 }
 
+const officialSourceDomains: Record<string, string[]> = {
+  lg: ["lge.co.kr"],
+  coway: ["coway.com"],
+  winix: ["winix.com"],
+  cuckoo: ["cuckoo.co.kr"],
+  dyson: ["dyson.co.kr"],
+  xiaomi: ["mi.com"],
+  skmagic: ["skmagic.com"],
+  blueair: ["blueair.com"],
+  roborock: ["roborock.com"],
+  dreame: ["dreametech.com"],
+  ecovacs: ["ecovacs.com"],
+  narwal: ["narwal.com"],
+  irobot: ["irobot.com"],
+  everybot: ["everybotmall.com"],
+  eufy: ["eufy.com"],
+  wells: ["kyowonwells.com"],
+};
+
+function isAllowedOfficialHost(hostname: string, domains: string[]) {
+  return domains.some((domain) => hostname === domain || hostname.endsWith(`.${domain}`));
+}
+
 export function validateData(
   brands: Brand[],
   models: ApplianceModel[],
@@ -62,6 +85,12 @@ export function validateData(
   }
 
   for (const part of consumables) {
+    const partBrandIds = new Set(
+      part.compatibleModelIds
+        .map((modelId) => models.find((model) => model.id === modelId)?.brandId)
+        .filter((brandId): brandId is string => Boolean(brandId)),
+    );
+
     for (const modelId of part.compatibleModelIds) {
       if (!modelIds.has(modelId)) errors.push(`${part.id}: 없는 모델 ${modelId}`);
       const model = models.find((item) => item.id === modelId);
@@ -71,6 +100,31 @@ export function validateData(
     }
     if (part.verificationStatus === "official" && part.sources.length === 0) {
       errors.push(`${part.id}: 공식 확인 소모품에 출처가 없습니다.`);
+    }
+    for (const source of part.sources) {
+      if (Number.isNaN(Date.parse(source.checkedAt))) {
+        errors.push(`${part.id}: invalid source check date ${source.checkedAt}.`);
+      }
+
+      try {
+        const url = new URL(source.url);
+        if (url.protocol !== "https:") {
+          errors.push(`${part.id}: source must use HTTPS ${source.url}.`);
+        }
+
+        if (["manufacturer", "official-manual", "official-store"].includes(source.sourceType)) {
+          for (const brandId of partBrandIds) {
+            const domains = officialSourceDomains[brandId] ?? [];
+            if (!isAllowedOfficialHost(url.hostname, domains)) {
+              errors.push(
+                `${part.id}: source is outside the ${brandId} official domains ${source.url}.`,
+              );
+            }
+          }
+        }
+      } catch {
+        errors.push(`${part.id}: invalid source URL ${source.url}.`);
+      }
     }
     if (part.partNumberStatus === "confirmed" && !part.genuinePartNumber?.trim()) {
       errors.push(`${part.id}: confirmed part number status requires a genuine part number.`);

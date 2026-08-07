@@ -1101,12 +1101,12 @@ const consumableRecords: ConsumableRecord[] = [
     displayName: "블루에어 Classic Pro CP9i 메인 필터",
     compatibleProductName: "CP9i Main Filter 3개 구성",
     modelIds: ["blueair-cp9i"],
-    sourceTitle: "블루에어 공식 Classic Pro CP7i·CP9i 사용설명서",
-    sourceUrl:
-      "https://www.blueair.com/on/demandware.static/-/Library-Sites-blueair-us-content-library/default/dw0772a0f7/support/User%20Manual%20Classic%20Pro_CP7i_CP9i%20Series.pdf",
-    sourceType: "official-manual",
+    sourceTitle: "블루에어 공식 Classic Pro CP9i 제품 정보 — 3중 필터 구성",
+    sourceUrl: "https://www.blueair.com/en-kr/products/classic-pro-cp9i",
+    sourceType: "manufacturer",
     searchKeyword: "블루에어 CP9i 정품 메인 필터",
     regional: true,
+    verifiedAt: "2026-08-07",
   }),
   researchedPart({
     id: "blueair-3410-particle-carbon-filter",
@@ -1367,9 +1367,9 @@ const consumableRecords: ConsumableRecord[] = [
       displayName,
       modelIds: ["everybot-q3-turbo-plus"],
       sourceTitle: "에브리봇 공식몰 — Q3·Q3 Plus 정품 액세서리",
-      sourceUrl:
-        "https://everybotmall.com/product/%EC%97%90%EB%B8%8C%EB%A6%AC%EB%B4%87-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0-q3/154/category/58/display/1/",
+      sourceUrl: "https://everybotmall.com/category/q3-q3q3-plus/139/",
       searchKeyword: `${displayName} 정품`,
+      verifiedAt: "2026-08-07",
     }),
   ),
   researchedPart({
@@ -1442,10 +1442,11 @@ const consumableRecords: ConsumableRecord[] = [
       type,
       displayName,
       modelIds: ["eufy-omni-s1-pro"],
-      sourceTitle: "eufy 공식 S1 Pro 정품 액세서리 키트",
-      sourceUrl: "https://us.eufy.com/products/t29c2001",
+      sourceTitle: "eufy 공식 S1 Pro 정품 액세서리 목록",
+      sourceUrl: "https://www.eufy.com/collections/accessory-for-floor-washing-robot",
       searchKeyword: `${displayName} 정품`,
       regional: true,
+      verifiedAt: "2026-08-07",
     }),
   ),
   researchedPart({
