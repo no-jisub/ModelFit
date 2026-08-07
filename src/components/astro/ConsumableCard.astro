@@ -6,6 +6,10 @@ import PartNumberBadge from "./PartNumberBadge.astro";
 import VerificationBadge from "./VerificationBadge.astro";
 
 const { part } = Astro.props as { part: ConsumableCompatibility };
+const officialSource =
+  part.sources.find((source) => source.sourceType === "official-store") ?? part.sources[0];
+const officialSourceLabel =
+  officialSource?.sourceType === "official-store" ? "제조사 공식몰 확인" : "제조사 공식 정보 확인";
 ---
 
 <article class="consumable-card card">
@@ -31,6 +35,20 @@ const { part } = Astro.props as { part: ConsumableCompatibility };
     <a class="button button-primary part-detail-link" href={`/part/${part.slug}`}
       >호환 근거 확인하기 →</a
     >
+    {
+      officialSource && (
+        <a
+          class="button button-secondary official-source-button"
+          href={officialSource.url}
+          rel="noopener noreferrer"
+          target="_blank"
+          data-source-type={officialSource.sourceType}
+          data-part-id={part.id}
+        >
+          {officialSourceLabel} <span aria-hidden="true">↗</span>
+        </a>
+      )
+    }
     <AffiliateButton
       keyword={part.affiliate.searchKeyword}
       kind="genuine"

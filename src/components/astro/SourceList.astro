@@ -2,6 +2,23 @@
 import type { SourceReference } from "@/types";
 
 const { sources } = Astro.props as { sources: SourceReference[] };
+const sourceTypeLabels: Record<SourceReference["sourceType"], string> = {
+  manufacturer: "제조사",
+  "official-manual": "공식 매뉴얼",
+  "official-store": "공식몰",
+  seller: "판매처",
+  other: "기타",
+};
+const sourcePriority: Record<SourceReference["sourceType"], number> = {
+  manufacturer: 0,
+  "official-manual": 1,
+  "official-store": 2,
+  seller: 3,
+  other: 4,
+};
+const orderedSources = [...sources].sort(
+  (left, right) => sourcePriority[left.sourceType] - sourcePriority[right.sourceType],
+);
 ---
 
 <section class="source-list" aria-labelledby="source-title">
@@ -9,12 +26,20 @@ const { sources } = Astro.props as { sources: SourceReference[] };
   {
     sources.length > 0 ? (
       <ul>
-        {sources.map((source) => (
+        {orderedSources.map((source) => (
           <li>
-            <a href={source.url} rel="noopener noreferrer" target="_blank">
+            <span class={`source-type is-${source.sourceType}`}>
+              {sourceTypeLabels[source.sourceType]}
+            </span>
+            <a
+              href={source.url}
+              rel="noopener noreferrer"
+              target="_blank"
+              data-source-type={source.sourceType}
+            >
               {source.title}
             </a>
-            <span>{source.checkedAt} 확인</span>
+            <span class="source-checked-at">{source.checkedAt} 확인</span>
           </li>
         ))}
       </ul>

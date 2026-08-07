@@ -66,7 +66,7 @@ const researchedPart = ({
     url: string;
     sourceType?: SourceReference["sourceType"];
   }>;
-}): ConsumableCompatibility => ({
+}): ConsumableRecord => ({
   id,
   slug: id,
   type,
