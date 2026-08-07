@@ -72,6 +72,15 @@ export function validateData(
     if (part.verificationStatus === "official" && part.sources.length === 0) {
       errors.push(`${part.id}: 공식 확인 소모품에 출처가 없습니다.`);
     }
+    if (part.partNumberStatus === "confirmed" && !part.genuinePartNumber?.trim()) {
+      errors.push(`${part.id}: confirmed part number status requires a genuine part number.`);
+    }
+    if (part.genuinePartNumber?.trim() && part.partNumberStatus !== "confirmed") {
+      errors.push(`${part.id}: genuine part number must use confirmed status.`);
+    }
+    if (part.partNumberStatus === "not-listed" && part.sources.length === 0) {
+      errors.push(`${part.id}: not-listed part number status requires a source.`);
+    }
     if (part.affiliate.enabled && !part.affiliate.directUrl) {
       errors.push(`${part.id}: 활성화된 구매 링크 URL이 없습니다.`);
     }
@@ -106,7 +115,9 @@ export function validateData(
         errors.push(`${part.id}: 잘못된 구매 링크 ${part.affiliate.directUrl}`);
       }
     }
-    if (!part.genuinePartNumber) warnings.push(`${part.id}: 정품 부품번호 정보 없음`);
+    if (part.partNumberStatus === "researching") {
+      warnings.push(`${part.id}: 정품 부품번호 추가 조사 필요`);
+    }
   }
 
   return { errors, warnings };

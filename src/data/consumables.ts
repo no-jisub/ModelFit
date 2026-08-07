@@ -87,7 +87,11 @@ const researchedPart = ({
   affiliate: affiliate(searchKeyword, undefined, verifiedAt),
 });
 
-export const consumables: ConsumableCompatibility[] = [
+type ConsumableRecord = Omit<ConsumableCompatibility, "partNumberStatus"> & {
+  partNumberStatus?: ConsumableCompatibility["partNumberStatus"];
+};
+
+const consumableRecords: ConsumableRecord[] = [
   {
     id: "lg-puricare-m-filter",
     slug: "lg-puricare-m-filter-adq30041405",
@@ -1707,3 +1711,9 @@ export const consumables: ConsumableCompatibility[] = [
     ],
   }),
 ];
+
+export const consumables: ConsumableCompatibility[] = consumableRecords.map((part) => ({
+  ...part,
+  partNumberStatus:
+    part.partNumberStatus ?? (part.genuinePartNumber?.trim() ? "confirmed" : "not-listed"),
+}));

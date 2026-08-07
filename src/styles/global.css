@@ -1207,9 +1207,14 @@ h3 {
   color: var(--color-primary-700);
 }
 
-.part-number-badge.is-not-available {
+.part-number-badge.is-not-listed {
   background: var(--color-neutral-100);
   color: var(--color-neutral-600);
+}
+
+.part-number-badge.is-researching {
+  background: #fffbeb;
+  color: #92400e;
 }
 
 .info-steps {

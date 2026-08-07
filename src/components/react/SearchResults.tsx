@@ -287,10 +287,14 @@ export default function SearchResults({ initialQuery = "" }: Props) {
                       </h3>
                       <p className="model-code">{part.genuinePartNumber ?? "정보 없음"}</p>
                       <span
-                        className={`part-number-badge is-${getPartNumberStatus(part.genuinePartNumber)}`}
+                        className={`part-number-badge is-${getPartNumberStatus(part.genuinePartNumber, part.partNumberStatus)}`}
                       >
                         <span aria-hidden="true">{part.genuinePartNumber ? "✓" : "—"}</span>
-                        {partNumberStatusLabels[getPartNumberStatus(part.genuinePartNumber)]}
+                        {
+                          partNumberStatusLabels[
+                            getPartNumberStatus(part.genuinePartNumber, part.partNumberStatus)
+                          ]
+                        }
                       </span>
                       <div className="compatible-model-links">
                         <strong>공식 호환 모델</strong>
@@ -392,10 +396,14 @@ export default function SearchResults({ initialQuery = "" }: Props) {
                           </h3>
                           <p className="model-code">{part.genuinePartNumber ?? "정보 없음"}</p>
                           <span
-                            className={`part-number-badge is-${getPartNumberStatus(part.genuinePartNumber)}`}
+                            className={`part-number-badge is-${getPartNumberStatus(part.genuinePartNumber, part.partNumberStatus)}`}
                           >
                             <span aria-hidden="true">{part.genuinePartNumber ? "✓" : "—"}</span>
-                            {partNumberStatusLabels[getPartNumberStatus(part.genuinePartNumber)]}
+                            {
+                              partNumberStatusLabels[
+                                getPartNumberStatus(part.genuinePartNumber, part.partNumberStatus)
+                              ]
+                            }
                           </span>
                           <a className="text-link" href={`/part/${part.slug}`}>
                             호환 근거 보기 →

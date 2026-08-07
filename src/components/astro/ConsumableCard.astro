@@ -21,7 +21,9 @@ const { part } = Astro.props as { part: ConsumableCompatibility };
         </dd>
       </div>
       <div>
-        <dt>부품번호 상태</dt><dd><PartNumberBadge partNumber={part.genuinePartNumber} /></dd>
+        <dt>부품번호 상태</dt><dd>
+          <PartNumberBadge partNumber={part.genuinePartNumber} status={part.partNumberStatus} />
+        </dd>
       </div>
     </dl>
   </div>

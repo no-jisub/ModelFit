@@ -2,6 +2,8 @@ export type ApplianceCategory = "air-purifier" | "robot-vacuum";
 
 export type VerificationStatus = "official" | "seller-confirmed" | "user-reported" | "unverified";
 
+export type PartNumberStatus = "confirmed" | "not-listed" | "researching";
+
 export type ConsumableType =
   | "hepa-filter"
   | "deodorizing-filter"
@@ -36,6 +38,7 @@ export interface ConsumableCompatibility {
   type: ConsumableType;
   displayName: string;
   genuinePartNumber?: string;
+  partNumberStatus: PartNumberStatus;
   compatibleProductName?: string;
   compatibleModelIds: string[];
   searchKeywords: string[];

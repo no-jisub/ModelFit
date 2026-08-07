@@ -1,16 +1,20 @@
 ---
+import type { PartNumberStatus } from "@/types";
 import { getPartNumberStatus, partNumberStatusLabels } from "@/utils/labels";
 
 interface Props {
   partNumber?: string;
+  status?: PartNumberStatus;
 }
 
-const { partNumber } = Astro.props;
-const status = getPartNumberStatus(partNumber);
+const { partNumber, status: explicitStatus } = Astro.props;
+const status = getPartNumberStatus(partNumber, explicitStatus);
 const label = partNumberStatusLabels[status];
 ---
 
 <span class:list={["part-number-badge", `is-${status}`]} title={partNumber ?? label}>
-  <span aria-hidden="true">{status === "confirmed" ? "✓" : "—"}</span>
+  <span aria-hidden="true"
+    >{status === "confirmed" ? "✓" : status === "researching" ? "…" : "—"}</span
+  >
   {label}
 </span>

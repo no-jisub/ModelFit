@@ -24,8 +24,10 @@ describe("data validation", () => {
 
   it("부품번호 유무를 검증 상태와 별도로 표시한다", () => {
     expect(getPartNumberStatus("ADQ30041405")).toBe("confirmed");
-    expect(getPartNumberStatus()).toBe("not-available");
-    expect(partNumberStatusLabels["not-available"]).toBe("부품번호 정보 없음");
+    expect(getPartNumberStatus()).toBe("researching");
+    expect(getPartNumberStatus(undefined, "not-listed")).toBe("not-listed");
+    expect(partNumberStatusLabels["not-listed"]).toBe("공식 자료에 번호 미표기");
+    expect(consumables.every((part) => Boolean(part.partNumberStatus))).toBe(true);
   });
 
   it("활성화된 구매 링크는 HTTPS 쿠팡 주소만 사용한다", () => {

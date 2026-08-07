@@ -1,4 +1,9 @@
-import type { ApplianceCategory, ConsumableType, VerificationStatus } from "@/types";
+import type {
+  ApplianceCategory,
+  ConsumableType,
+  PartNumberStatus,
+  VerificationStatus,
+} from "@/types";
 
 export const categoryLabels: Record<ApplianceCategory, string> = {
   "air-purifier": "공기청정기",
@@ -24,15 +29,17 @@ export function getVerificationLabel(
   return statusLabels.official;
 }
 
-export type PartNumberStatus = "confirmed" | "not-available";
-
 export const partNumberStatusLabels: Record<PartNumberStatus, string> = {
   confirmed: "부품번호 확인",
-  "not-available": "부품번호 정보 없음",
+  "not-listed": "공식 자료에 번호 미표기",
+  researching: "부품번호 추가 조사 중",
 };
 
-export function getPartNumberStatus(partNumber?: string): PartNumberStatus {
-  return partNumber?.trim() ? "confirmed" : "not-available";
+export function getPartNumberStatus(
+  partNumber?: string,
+  explicitStatus?: PartNumberStatus,
+): PartNumberStatus {
+  return explicitStatus ?? (partNumber?.trim() ? "confirmed" : "researching");
 }
 
 export const partTypeLabels: Record<ConsumableType, string> = {
