@@ -5,11 +5,7 @@ function escapeRegExp(value: string) {
 }
 
 export function getModelDisplayName(model: ApplianceModel) {
-  const brandAliases = [
-    model.brandName,
-    model.brandNameEn ?? "",
-    ...model.brandName.split(/\s+/),
-  ]
+  const brandAliases = [model.brandName, model.brandNameEn ?? "", ...model.brandName.split(/\s+/)]
     .map((value) => value.trim())
     .filter((value) => value.length >= 2)
     .filter((value, index, values) => values.indexOf(value) === index)

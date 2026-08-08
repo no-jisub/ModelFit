@@ -6,6 +6,7 @@ export interface ValidationResult {
 }
 
 const officialSourceDomains: Record<string, string[]> = {
+  samsung: ["samsung.com"],
   lg: ["lge.co.kr"],
   coway: ["coway.com"],
   winix: ["winix.com"],
@@ -57,6 +58,29 @@ export function validateData(
 
   for (const model of models) {
     if (!brandIds.has(model.brandId)) errors.push(`${model.id}: 없는 브랜드 ${model.brandId}`);
+    for (const source of model.sources) {
+      if (Number.isNaN(Date.parse(source.checkedAt))) {
+        errors.push(`${model.id}: invalid source check date ${source.checkedAt}.`);
+      }
+
+      try {
+        const url = new URL(source.url);
+        if (url.protocol !== "https:") {
+          errors.push(`${model.id}: source must use HTTPS ${source.url}.`);
+        }
+
+        if (["manufacturer", "official-manual", "official-store"].includes(source.sourceType)) {
+          const domains = officialSourceDomains[model.brandId] ?? [];
+          if (!isAllowedOfficialHost(url.hostname, domains)) {
+            errors.push(
+              `${model.id}: source is outside the ${model.brandId} official domains ${source.url}.`,
+            );
+          }
+        }
+      } catch {
+        errors.push(`${model.id}: invalid source URL ${source.url}.`);
+      }
+    }
     for (const partId of model.consumableIds) {
       if (!partIds.has(partId)) errors.push(`${model.id}: 없는 소모품 ${partId}`);
       const part = consumables.find((item) => item.id === partId);

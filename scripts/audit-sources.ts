@@ -1,8 +1,10 @@
 import { consumables } from "../src/data/consumables";
+import { models } from "../src/data/models";
 
 interface SourceAuditTarget {
   url: string;
-  partIds: string[];
+  itemIds: string[];
+  kind: "official-source" | "direct-purchase";
 }
 
 interface SourceAuditResult extends SourceAuditTarget {
@@ -12,16 +14,40 @@ interface SourceAuditResult extends SourceAuditTarget {
   error?: string;
 }
 
-const targets = [
-  ...consumables
-    .flatMap((part) => part.sources.map((source) => ({ url: source.url, partId: part.id })))
+const officialSourceTypes = new Set(["manufacturer", "official-manual", "official-store"]);
+const sourceItems = [
+  ...models.flatMap((model) =>
+    model.sources
+      .filter((source) => officialSourceTypes.has(source.sourceType))
+      .map((source) => ({ url: source.url, itemId: model.id })),
+  ),
+  ...consumables.flatMap((part) =>
+    part.sources
+      .filter((source) => officialSourceTypes.has(source.sourceType))
+      .map((source) => ({ url: source.url, itemId: part.id })),
+  ),
+];
+const directPurchaseItems = consumables
+  .filter((part) => part.affiliate.status === "direct-product" && part.affiliate.directUrl)
+  .map((part) => ({ url: part.affiliate.directUrl as string, itemId: part.id }));
+
+const collectTargets = (
+  items: Array<{ url: string; itemId: string }>,
+  kind: SourceAuditTarget["kind"],
+) => [
+  ...items
     .reduce((entries, item) => {
-      const existing = entries.get(item.url) ?? { url: item.url, partIds: [] };
-      existing.partIds.push(item.partId);
+      const existing = entries.get(item.url) ?? { url: item.url, itemIds: [], kind };
+      existing.itemIds.push(item.itemId);
       entries.set(item.url, existing);
       return entries;
     }, new Map<string, SourceAuditTarget>())
     .values(),
+];
+
+const targets = [
+  ...collectTargets(sourceItems, "official-source"),
+  ...collectTargets(directPurchaseItems, "direct-purchase"),
 ];
 
 async function auditSource(target: SourceAuditTarget): Promise<SourceAuditResult> {
@@ -78,12 +104,14 @@ const counts = results.reduce(
 );
 
 console.log(
-  `공식 출처 접근 감사: 전체 ${results.length}, 정상 ${counts.ok}, 접근 차단 ${counts.blocked}, 실패 ${counts.failed}`,
+  `외부 링크 접근 감사: 전체 ${results.length}, 정상 ${counts.ok}, 접근 차단 ${counts.blocked}, 실패 ${counts.failed}`,
 );
 
 for (const result of results.filter((item) => item.status !== "ok")) {
   const detail = result.httpStatus ? `HTTP ${result.httpStatus}` : result.error;
-  console.log(`[${result.status}] ${detail} ${result.url} (${result.partIds.length}개 항목)`);
+  console.log(
+    `[${result.status}] ${result.kind} ${detail} ${result.url} (${result.itemIds.length}개 항목)`,
+  );
 }
 
 if (counts.failed > 0) process.exitCode = 1;

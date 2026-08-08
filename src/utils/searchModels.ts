@@ -46,11 +46,7 @@ function scoreModel(model: ApplianceModel, query: string): number {
   if ((q.includes(brandKo) || q.includes(brandEn)) && values.some((value) => value.includes(q))) {
     return 50;
   }
-  if (
-    values.some(
-      (value) => value.includes(q) || (value.length >= 3 && q.includes(value)),
-    )
-  ) {
+  if (values.some((value) => value.includes(q) || (value.length >= 3 && q.includes(value)))) {
     return 30;
   }
 

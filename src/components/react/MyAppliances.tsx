@@ -94,9 +94,7 @@ export default function MyAppliances() {
               <span className="category-chip">{categoryLabels[model.category]}</span>
               <p className="model-brand-label">{model.brandName}</p>
               <h2>
-                <a href={`/model/${model.brandId}/${model.slug}`}>
-                  {getModelDisplayName(model)}
-                </a>
+                <a href={`/model/${model.brandId}/${model.slug}`}>{getModelDisplayName(model)}</a>
               </h2>
               <p className="model-code">{model.modelCode}</p>
               <p>{model.shortDescription}</p>

@@ -150,7 +150,8 @@ npm run build
 npm run check
 ```
 
-`npm run check`는 lint, 데이터 검증, 단위 테스트, 타입 검사와 정적 빌드를 순서대로 실행합니다.
+`npm run check`는 포맷, lint, 데이터 검증, 단위 테스트, 타입 검사와 정적 빌드를 순서대로 실행합니다.
+`audit-links.yml`은 매주 공식 출처와 등록된 상품 상세 링크의 접근 상태를 확인합니다.
 
 ## SEO 운영
 

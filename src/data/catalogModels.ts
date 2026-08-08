@@ -22,11 +22,11 @@ const checkedAt = "2026-07-27";
 const entries: CatalogEntry[] = [
   // 삼성전자
   ...[
-    ["Infinite AI 공기청정기 (100㎡, 리유저블 필터)", "AP90H10198EDD"],
-    ["Infinite AI 공기청정기 (100㎡, 리유저블 필터)", "AP90H10198UDD"],
-    ["Infinite AI 공기청정기 (33㎡, 리유저블 필터)", "AP90H03193EGD"],
-    ["Infinite AI 공기청정기 (33㎡, 리유저블 필터)", "AP90H03193UGD"],
-    ["Infinite AI 공기청정기 (100㎡, 리유저블 필터)", "AP90H10198MDD"],
+    ["Infinite AI 공기청정기", "AP90H10198EDD"],
+    ["Infinite AI 공기청정기", "AP90H10198UDD"],
+    ["Infinite AI 공기청정기", "AP90H03193EGD"],
+    ["Infinite AI 공기청정기", "AP90H03193UGD"],
+    ["Infinite AI 공기청정기", "AP90H10198MDD"],
   ].map(([modelName, modelCode]) => ({
     brandId: "samsung",
     brandName: "삼성",
@@ -247,8 +247,8 @@ const entries: CatalogEntry[] = [
     modelName,
     modelCode,
     series: modelName.split(" ")[0],
-    sourceUrl: "https://www.blueair.com/ko-kr/collections/shop-all",
-    sourceTitle: "블루에어 코리아 공식 제품 목록",
+    sourceUrl: "https://www.blueair.com/collections/air-purifiers",
+    sourceTitle: "블루에어 공식 공기청정기 목록",
     sourceType: "official-store" as const,
   })),
 
@@ -299,7 +299,7 @@ const entries: CatalogEntry[] = [
     ["DEEBOT X9", "DEEBOT X9"],
     ["DEEBOT T80", "DEEBOT T80"],
     ["DEEBOT N20 PRO PLUS", "DEEBOT N20 PRO PLUS"],
-  ].map(([modelName, modelCode], index) => ({
+  ].map(([modelName, modelCode]) => ({
     brandId: "ecovacs",
     brandName: "에코백스",
     brandNameEn: "ECOVACS",
@@ -307,10 +307,7 @@ const entries: CatalogEntry[] = [
     modelName,
     modelCode,
     series: modelName.split(" ")[1] ?? "DEEBOT",
-    sourceUrl:
-      index === 4
-        ? "https://www.ecovacs.com/kr/deebot-robotic-vacuum-cleaner/deebot-n20-pro-plus-white"
-        : "https://www.ecovacs.com/kr/deebot-robotic-vacuum-cleaner?page=0",
+    sourceUrl: "https://www.ecovacs.com/kr/deebot-robotic-vacuum-cleaner?page=0",
     sourceTitle: "에코백스 코리아 공식 DEEBOT 제품 목록",
   })),
 
