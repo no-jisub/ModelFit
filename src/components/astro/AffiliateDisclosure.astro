@@ -1,7 +1,9 @@
 ---
-const text =
-  import.meta.env.PUBLIC_AFFILIATE_DISCLOSURE_TEXT ||
-  "현재 쿠팡 링크는 일반 상품·검색 링크이며 모델핏은 수수료를 받지 않습니다. 상품명만으로 정품을 단정하지 말고 부품번호, 판매자와 제조사 표기를 확인하세요.";
+const hasConfiguredAffiliateBase = Boolean(import.meta.env.PUBLIC_COUPANG_BASE_URL?.trim());
+const defaultText = hasConfiguredAffiliateBase
+  ? "이 페이지의 쿠팡 링크 중 일부는 제휴 링크일 수 있으며 구매 시 모델핏이 수수료를 받을 수 있습니다. 상품명만으로 정품을 단정하지 말고 부품번호, 판매자와 제조사 표기를 확인하세요."
+  : "현재 쿠팡 링크는 일반 상품·검색 링크이며 모델핏은 수수료를 받지 않습니다. 상품명만으로 정품을 단정하지 말고 부품번호, 판매자와 제조사 표기를 확인하세요.";
+const text = import.meta.env.PUBLIC_AFFILIATE_DISCLOSURE_TEXT?.trim() || defaultText;
 ---
 
 <p class="affiliate-disclosure"><span aria-hidden="true">ⓘ</span> {text}</p>
