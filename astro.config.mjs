@@ -7,7 +7,8 @@ const productionEnv = loadEnv("production", process.cwd(), "");
 
 export default defineConfig({
   output: "static",
-  site: process.env.PUBLIC_SITE_URL || productionEnv.PUBLIC_SITE_URL || "https://modelfit.example",
+  site:
+    process.env.PUBLIC_SITE_URL || productionEnv.PUBLIC_SITE_URL || "https://modelfit-kr.web.app",
   integrations: [react(), sitemap()],
   trailingSlash: "never",
 });

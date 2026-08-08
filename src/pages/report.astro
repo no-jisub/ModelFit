@@ -2,8 +2,8 @@
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
-const externalFormUrl = import.meta.env.PUBLIC_REPORT_FORM_URL;
-const reportEmail = import.meta.env.PUBLIC_REPORT_EMAIL || "hello@modelfit.example";
+const externalFormUrl = import.meta.env.PUBLIC_REPORT_FORM_URL?.trim();
+const reportEmail = import.meta.env.PUBLIC_REPORT_EMAIL?.trim();
 const brand = Astro.url.searchParams.get("brand") ?? "";
 const model = Astro.url.searchParams.get("model") ?? "";
 ---
@@ -29,14 +29,20 @@ const model = Astro.url.searchParams.get("model") ?? "";
         <div>
           <strong
             >{
-              externalFormUrl ? "외부 제보 폼으로 연결됩니다." : "현재는 이메일 제보 방식입니다."
+              externalFormUrl
+                ? "외부 제보 폼으로 연결됩니다."
+                : reportEmail
+                  ? "현재는 이메일 제보 방식입니다."
+                  : "제보 채널을 준비 중입니다."
             }</strong
           >
           <p>
             {
               externalFormUrl
                 ? "아래 버튼을 누르면 설정된 외부 폼이 새 창에서 열립니다."
-                : "제출하면 기본 메일 앱에 입력 내용이 채워집니다. 이 사이트가 내용을 저장하지 않습니다."
+                : reportEmail
+                  ? "제출하면 기본 메일 앱에 입력 내용이 채워집니다. 이 사이트가 내용을 저장하지 않습니다."
+                  : "운영 제보 채널이 연결되기 전까지는 공식 출처를 통한 재확인을 권장합니다."
             }
           </p>
         </div>
@@ -52,7 +58,7 @@ const model = Astro.url.searchParams.get("model") ?? "";
           >
             외부 제보 폼 열기 ↗
           </a>
-        ) : (
+        ) : reportEmail ? (
           <form class="form-card card" id="report-form" data-report-email={reportEmail}>
             <div class="form-grid">
               <div class="field">
@@ -106,6 +112,14 @@ const model = Astro.url.searchParams.get("model") ?? "";
               </>
             </div>
           </form>
+        ) : (
+          <div class="empty-inline">
+            <span aria-hidden="true">!</span>
+            <p>
+              <strong>현재 온라인 제보 접수는 비활성화되어 있습니다.</strong> 제보 채널이 준비되면
+              이 페이지에서 안내하겠습니다.
+            </p>
+          </div>
         )
       }
     </div>
@@ -133,7 +147,8 @@ const model = Astro.url.searchParams.get("model") ?? "";
         `근거 URL: ${data.get("evidence") || "없음"}`,
         `회신 이메일: ${data.get("email") || "없음"}`,
       ].join("\n");
-      const reportEmail = form.dataset.reportEmail || "hello@modelfit.example";
+      const reportEmail = form.dataset.reportEmail;
+      if (!reportEmail) return;
       window.location.href = `mailto:${reportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     });
   </script>

@@ -36,13 +36,14 @@ npm run preview
 | ---------------------------------- | ------------------------------------------------ |
 | `PUBLIC_SITE_URL`                  | canonical, sitemap 기준 URL                      |
 | `PUBLIC_SITE_NAME`                 | 사이트 이름                                      |
-| `PUBLIC_REPORT_FORM_URL`           | 외부 오류 제보 폼. 비어 있으면 mailto 방식       |
-| `PUBLIC_REPORT_EMAIL`              | mailto 방식에서 제보를 받을 이메일 주소          |
+| `PUBLIC_REPORT_FORM_URL`           | 외부 오류 제보 폼                                |
+| `PUBLIC_REPORT_EMAIL`              | 폼이 없을 때 mailto 제보를 받을 공개 이메일      |
 | `PUBLIC_COUPANG_BASE_URL`          | 제휴 검색 기본 URL. 비어 있으면 구매 버튼 비활성 |
 | `PUBLIC_AFFILIATE_DISCLOSURE_TEXT` | 제휴 고지 문구                                   |
 | `PUBLIC_GA_MEASUREMENT_ID`         | GA4 측정 ID. 비어 있으면 스크립트 미삽입         |
 
 배포 전 `public/robots.txt`의 sitemap URL도 실제 도메인으로 변경합니다.
+제보 폼과 이메일이 모두 비어 있으면 제보 입력 폼은 안전하게 비활성화됩니다.
 
 ## 데이터 구조와 추가 방법
 

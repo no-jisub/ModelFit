@@ -8,6 +8,13 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    env:
+      PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL || 'https://modelfit-kr.web.app' }}
+      PUBLIC_SITE_NAME: ${{ vars.PUBLIC_SITE_NAME || '모델핏' }}
+      PUBLIC_REPORT_FORM_URL: ${{ vars.PUBLIC_REPORT_FORM_URL }}
+      PUBLIC_REPORT_EMAIL: ${{ vars.PUBLIC_REPORT_EMAIL }}
+      PUBLIC_COUPANG_BASE_URL: ${{ vars.PUBLIC_COUPANG_BASE_URL }}
+      PUBLIC_AFFILIATE_DISCLOSURE_TEXT: ${{ vars.PUBLIC_AFFILIATE_DISCLOSURE_TEXT }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
