@@ -14,6 +14,7 @@ interface CatalogEntry {
   sourceType?: SourceReference["sourceType"];
   releaseDate?: string;
   releaseSourceUrl?: string;
+  verifiedAt?: string;
 }
 
 const checkedAt = "2026-07-27";
@@ -21,11 +22,11 @@ const checkedAt = "2026-07-27";
 const entries: CatalogEntry[] = [
   // 삼성전자
   ...[
-    ["Bespoke AI 공기청정기", "AP90H10198EDD"],
-    ["Bespoke AI 공기청정기", "AP90H10198UDD"],
-    ["Bespoke AI 공기청정기", "AP90H03193EGD"],
-    ["Bespoke AI 공기청정기", "AP90H03193UGD"],
-    ["Bespoke AI 공기청정기", "AP90H10198MDD"],
+    ["Infinite AI 공기청정기 (100㎡, 리유저블 필터)", "AP90H10198EDD"],
+    ["Infinite AI 공기청정기 (100㎡, 리유저블 필터)", "AP90H10198UDD"],
+    ["Infinite AI 공기청정기 (33㎡, 리유저블 필터)", "AP90H03193EGD"],
+    ["Infinite AI 공기청정기 (33㎡, 리유저블 필터)", "AP90H03193UGD"],
+    ["Infinite AI 공기청정기 (100㎡, 리유저블 필터)", "AP90H10198MDD"],
   ].map(([modelName, modelCode]) => ({
     brandId: "samsung",
     brandName: "삼성",
@@ -33,10 +34,14 @@ const entries: CatalogEntry[] = [
     category: "air-purifier" as const,
     modelName,
     modelCode,
-    series: "Bespoke AI",
-    sourceUrl: "https://www.samsung.com/sec/event/air-cleaner/",
-    sourceTitle: "삼성전자 공기청정기 공식 제품 안내",
+    series: "Infinite AI",
+    sourceUrl: `https://www.samsung.com/sec/air-cleaner/${
+      modelCode.includes("H101") ? "air-purifier-ap90h10198dd-d2c" : "air-purifier-ap90h03193gd-d2c"
+    }/${modelCode}/`,
+    sourceTitle: "삼성전자 공식 제품 정보 — 리유저블 필터",
+    sourceType: "official-store" as const,
     releaseDate: "2026-02",
+    verifiedAt: "2026-08-08",
     releaseSourceUrl: (
       {
         AP90H10198EDD: "https://prod.danawa.com/info/?cate=10356347&pcode=106704350",
@@ -429,7 +434,7 @@ export const catalogModels: ApplianceModel[] = entries.map((entry) => {
         title: entry.sourceTitle,
         url: entry.sourceUrl,
         sourceType: entry.sourceType ?? "manufacturer",
-        checkedAt,
+        checkedAt: entry.verifiedAt ?? checkedAt,
       },
       ...(entry.releaseSourceUrl
         ? [
@@ -437,12 +442,12 @@ export const catalogModels: ApplianceModel[] = entries.map((entry) => {
               title: "다나와 모델 등록월 정보",
               url: entry.releaseSourceUrl,
               sourceType: "other" as const,
-              checkedAt,
+              checkedAt: entry.verifiedAt ?? checkedAt,
             },
           ]
         : []),
     ],
-    lastVerifiedAt: checkedAt,
+    lastVerifiedAt: entry.verifiedAt ?? checkedAt,
     verificationStatus: "official",
     isDemo: false,
   };
