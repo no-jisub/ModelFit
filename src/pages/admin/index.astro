@@ -1,0 +1,26 @@
+---
+import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
+import AdminReports from "@/components/react/AdminReports";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="오류 제보 관리"
+  description="모델핏 관리자용 오류 제보 검토 화면입니다."
+  canonicalPath="/admin"
+  noindex
+>
+  <section class="page-hero admin-hero">
+    <div class="container admin-container">
+      <Breadcrumbs items={[{ label: "오류 제보 관리" }]} />
+      <div class="eyebrow">관리자 전용</div>
+      <h1>오류 제보 관리</h1>
+      <p>등록된 관리자 계정만 제보 내용을 확인하고 처리 상태를 변경할 수 있습니다.</p>
+    </div>
+  </section>
+  <section class="section admin-section">
+    <div class="container admin-container">
+      <AdminReports client:load />
+    </div>
+  </section>
+</BaseLayout>

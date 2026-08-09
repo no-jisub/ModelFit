@@ -58,3 +58,13 @@ test("모델 상세에서 개인정보 없는 오류 제보 화면으로 이동�
   await expect(page.getByText("개인정보를 수집하지 않습니다.")).toBeVisible();
   await expect(page.getByRole("button", { name: "오류 제보 보내기" })).toBeDisabled();
 });
+
+test("관리자 화면은 Firebase 설정 전 접근을 허용하지 않는다", async ({ page }) => {
+  await page.goto("/admin");
+
+  await expect(page.getByRole("heading", { name: "오류 제보 관리" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "관리자 인증 설정을 준비 중입니다" }),
+  ).toBeVisible();
+  await expect(page.getByText("Firebase 관리자 인증 설정이 필요합니다.")).toBeVisible();
+});
