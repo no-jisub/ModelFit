@@ -28,8 +28,9 @@ const sourceItems = [
   ),
 ];
 const directPurchaseItems = consumables
-  .filter((part) => part.affiliate.status === "direct-product" && part.affiliate.directUrl)
-  .map((part) => ({ url: part.affiliate.directUrl as string, itemId: part.id }));
+  .flatMap((part) => part.purchaseLinks)
+  .filter((link) => link.linkType === "direct-product")
+  .map((link) => ({ url: link.url, itemId: link.id }));
 
 const collectTargets = (
   items: Array<{ url: string; itemId: string }>,

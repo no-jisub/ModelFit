@@ -1,4 +1,5 @@
 import type { ConsumableCompatibility, SourceReference } from "@/types";
+import { createNonAffiliatePurchaseLinks } from "../utils/purchaseLinks";
 
 const checkedAt = "2026-07-29";
 const regionalWarning =
@@ -87,7 +88,7 @@ const researchedPart = ({
   affiliate: affiliate(searchKeyword, undefined, verifiedAt),
 });
 
-type ConsumableRecord = Omit<ConsumableCompatibility, "partNumberStatus"> & {
+type ConsumableRecord = Omit<ConsumableCompatibility, "partNumberStatus" | "purchaseLinks"> & {
   partNumberStatus?: ConsumableCompatibility["partNumberStatus"];
 };
 
@@ -1713,8 +1714,15 @@ const consumableRecords: ConsumableRecord[] = [
   }),
 ];
 
-export const consumables: ConsumableCompatibility[] = consumableRecords.map((part) => ({
-  ...part,
-  partNumberStatus:
-    part.partNumberStatus ?? (part.genuinePartNumber?.trim() ? "confirmed" : "not-listed"),
-}));
+export const consumables: ConsumableCompatibility[] = consumableRecords.map((part) => {
+  const normalizedPart = {
+    ...part,
+    partNumberStatus:
+      part.partNumberStatus ?? (part.genuinePartNumber?.trim() ? "confirmed" : "not-listed"),
+  };
+
+  return {
+    ...normalizedPart,
+    purchaseLinks: createNonAffiliatePurchaseLinks(normalizedPart),
+  };
+});

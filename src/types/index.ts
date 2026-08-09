@@ -59,6 +59,7 @@ export interface ConsumableCompatibility {
   verificationStatus: VerificationStatus;
   sources: SourceReference[];
   affiliate: AffiliateLinkData;
+  purchaseLinks: PurchaseLinkData[];
 }
 
 export interface ApplianceModel {

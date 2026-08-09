@@ -7,6 +7,10 @@ const officialSourceTypes = new Set<SourceReference["sourceType"]>([
   "official-store",
 ]);
 
+type PurchaseLinkSource = Pick<ConsumableCompatibility, "id" | "sources" | "affiliate"> & {
+  purchaseLinks?: PurchaseLinkData[];
+};
+
 function isSafeExternalUrl(value: string) {
   try {
     return new URL(value).protocol === "https:";
@@ -15,17 +19,14 @@ function isSafeExternalUrl(value: string) {
   }
 }
 
-function primaryOfficialSource(part: ConsumableCompatibility) {
+function primaryOfficialSource(part: PurchaseLinkSource) {
   return (
     part.sources.find((source) => source.sourceType === "official-store") ??
     part.sources.find((source) => officialSourceTypes.has(source.sourceType))
   );
 }
 
-export function getPurchaseLinks(
-  part: ConsumableCompatibility,
-  configuredCoupangBaseUrl?: string,
-): PurchaseLinkData[] {
+export function createNonAffiliatePurchaseLinks(part: PurchaseLinkSource): PurchaseLinkData[] {
   const links: PurchaseLinkData[] = [];
   const officialSource = primaryOfficialSource(part);
 
@@ -45,11 +46,10 @@ export function getPurchaseLinks(
   }
 
   const isDirectProduct = part.affiliate.status === "direct-product";
-  const configuredBase = configuredCoupangBaseUrl?.trim();
-  const generatedSearchUrl = buildAffiliateUrl(
-    configuredBase,
-    `${part.affiliate.searchKeyword} 정품`,
-  );
+  const searchKeyword = part.affiliate.searchKeyword.includes("정품")
+    ? part.affiliate.searchKeyword
+    : `${part.affiliate.searchKeyword} 정품`;
+  const generatedSearchUrl = buildAffiliateUrl(undefined, searchKeyword);
   const coupangUrl = isDirectProduct ? part.affiliate.directUrl : generatedSearchUrl;
 
   if (part.affiliate.enabled && coupangUrl && isSafeExternalUrl(coupangUrl)) {
@@ -59,7 +59,7 @@ export function getPurchaseLinks(
       url: coupangUrl,
       channel: "coupang",
       linkType: isDirectProduct ? "direct-product" : "search-results",
-      isAffiliate: !isDirectProduct && Boolean(configuredBase),
+      isAffiliate: false,
       checkedAt: part.affiliate.linkCheckedAt,
     });
   }
@@ -79,4 +79,25 @@ export function getPurchaseLinks(
   }
 
   return links;
+}
+
+export function getPurchaseLinks(
+  part: PurchaseLinkSource,
+  configuredCoupangBaseUrl?: string,
+): PurchaseLinkData[] {
+  const links = part.purchaseLinks ?? createNonAffiliatePurchaseLinks(part);
+  const configuredBase = configuredCoupangBaseUrl?.trim();
+  if (!configuredBase) return links;
+
+  const searchKeyword = part.affiliate.searchKeyword.includes("정품")
+    ? part.affiliate.searchKeyword
+    : `${part.affiliate.searchKeyword} 정품`;
+  const configuredUrl = buildAffiliateUrl(configuredBase, searchKeyword);
+  if (!configuredUrl) return links;
+
+  return links.map((link) =>
+    link.channel === "coupang" && link.linkType === "search-results"
+      ? { ...link, url: configuredUrl, isAffiliate: true }
+      : link,
+  );
 }

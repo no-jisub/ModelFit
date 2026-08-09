@@ -139,6 +139,8 @@ npm run preview
 
 코드에 실제 제휴 URL을 하드코딩하지 않습니다. `PUBLIC_COUPANG_BASE_URL`을 설정하면 검색어를 `q` 매개변수로 추가합니다. 모든 링크는 `rel="nofollow sponsored noopener noreferrer"`와 `target="_blank"`를 사용합니다. 실제 파트너스 URL 형식이 다르면 `src/utils/affiliate.ts`를 공급자 규격에 맞게 수정하세요.
 
+모든 소모품은 공식 호환 근거를 먼저 보여주고, 그다음 비제휴 쿠팡 직접 상품 또는 일반 검색 링크를 제공합니다. 데이터에는 제휴 URL을 저장하지 않으며, 제휴 계정이 준비된 뒤 배포 환경변수로만 검색 링크를 전환합니다.
+
 ## 테스트와 품질 검사
 
 ```bash

@@ -33,4 +33,30 @@ describe("getPurchaseLinks", () => {
     expect(coupangLink?.isAffiliate).toBe(false);
     expect(coupangLink?.url).toBe(directPart?.affiliate.directUrl);
   });
+
+  it("157개 모두 공식 사이트와 비제휴 쿠팡 경로를 순서대로 제공한다", () => {
+    expect(consumables).toHaveLength(157);
+    expect(
+      consumables.every(
+        (part) =>
+          part.purchaseLinks[0]?.channel === "official" &&
+          part.purchaseLinks[1]?.channel === "coupang" &&
+          part.purchaseLinks.every(
+            (link) =>
+              !link.isAffiliate &&
+              new URL(link.url).protocol === "https:" &&
+              !Number.isNaN(Date.parse(link.checkedAt)),
+          ),
+      ),
+    ).toBe(true);
+  });
+
+  it("직접 상품 5개와 일반 검색 152개를 구분한다", () => {
+    const coupangLinks = consumables.flatMap((part) =>
+      part.purchaseLinks.filter((link) => link.channel === "coupang"),
+    );
+
+    expect(coupangLinks.filter((link) => link.linkType === "direct-product")).toHaveLength(5);
+    expect(coupangLinks.filter((link) => link.linkType === "search-results")).toHaveLength(152);
+  });
 });

@@ -193,6 +193,39 @@ export function validateData(
         errors.push(`${part.id}: 잘못된 구매 링크 ${part.affiliate.directUrl}`);
       }
     }
+    if (part.purchaseLinks.length < 2) {
+      errors.push(`${part.id}: 공식·쿠팡 구매 경로가 모두 필요합니다.`);
+    }
+    if (part.purchaseLinks[0]?.channel !== "official") {
+      errors.push(`${part.id}: 첫 구매 경로는 공식 사이트여야 합니다.`);
+    }
+    if (part.purchaseLinks[1]?.channel !== "coupang") {
+      errors.push(`${part.id}: 두 번째 구매 경로는 쿠팡이어야 합니다.`);
+    }
+    const purchaseLinkIds = new Set<string>();
+    for (const link of part.purchaseLinks) {
+      if (purchaseLinkIds.has(link.id)) {
+        errors.push(`${part.id}: 중복 구매 링크 ID ${link.id}`);
+      }
+      purchaseLinkIds.add(link.id);
+      if (link.isAffiliate) {
+        errors.push(`${part.id}: 데이터에는 비제휴 링크만 저장해야 합니다.`);
+      }
+      if (Number.isNaN(Date.parse(link.checkedAt))) {
+        errors.push(`${part.id}: 구매 링크 확인일이 올바르지 않습니다.`);
+      }
+      try {
+        const url = new URL(link.url);
+        if (url.protocol !== "https:") {
+          errors.push(`${part.id}: 구매 링크는 HTTPS여야 합니다 ${link.url}`);
+        }
+        if (link.channel === "coupang" && !url.hostname.endsWith("coupang.com")) {
+          errors.push(`${part.id}: 쿠팡 외부 구매 링크 ${link.url}`);
+        }
+      } catch {
+        errors.push(`${part.id}: 잘못된 다중 구매 링크 ${link.url}`);
+      }
+    }
     if (part.partNumberStatus === "researching") {
       warnings.push(`${part.id}: 정품 부품번호 추가 조사 필요`);
     }
