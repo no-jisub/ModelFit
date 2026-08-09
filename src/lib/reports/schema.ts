@@ -27,10 +27,10 @@ export const REPORT_LIMITS = {
   evidenceUrl: 500,
 } as const;
 
-function isHttpUrl(value: string) {
+function isHttpsUrl(value: string) {
   try {
     const url = new URL(value);
-    return url.protocol === "https:" || url.protocol === "http:";
+    return url.protocol === "https:";
   } catch {
     return false;
   }
@@ -54,14 +54,15 @@ export function validateReportInput(input: ReportInput): string[] {
   if (!normalized.productName) errors.push("제품명을 입력해 주세요.");
   if (normalized.productName.length > REPORT_LIMITS.productName)
     errors.push(`제품명은 ${REPORT_LIMITS.productName}자 이하여야 합니다.`);
-  if (!isHttpUrl(normalized.pageUrl)) errors.push("오류가 있는 페이지 주소를 확인해 주세요.");
+  if (!isHttpsUrl(normalized.pageUrl))
+    errors.push("오류가 있는 HTTPS 페이지 주소를 확인해 주세요.");
   if (normalized.pageUrl.length > REPORT_LIMITS.pageUrl)
     errors.push(`페이지 주소는 ${REPORT_LIMITS.pageUrl}자 이하여야 합니다.`);
   if (!normalized.description) errors.push("오류 내용을 입력해 주세요.");
   if (normalized.description.length > REPORT_LIMITS.description)
     errors.push(`오류 내용은 ${REPORT_LIMITS.description}자 이하여야 합니다.`);
-  if (normalized.evidenceUrl && !isHttpUrl(normalized.evidenceUrl))
-    errors.push("참고 URL을 확인해 주세요.");
+  if (normalized.evidenceUrl && !isHttpsUrl(normalized.evidenceUrl))
+    errors.push("참고 HTTPS URL을 확인해 주세요.");
   if ((normalized.evidenceUrl?.length ?? 0) > REPORT_LIMITS.evidenceUrl)
     errors.push(`참고 URL은 ${REPORT_LIMITS.evidenceUrl}자 이하여야 합니다.`);
 

@@ -1,0 +1,93 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true;
+    }
+
+    function isValidReportCreate() {
+      let data = request.resource.data;
+      return data.keys().hasOnly([
+          'schemaVersion',
+          'category',
+          'productName',
+          'pageUrl',
+          'description',
+          'evidenceUrl',
+          'status',
+          'createdAt',
+          'updatedAt',
+          'expiresAt'
+        ])
+        && data.schemaVersion is int
+        && data.schemaVersion == 1
+        && data.category is string
+        && data.category in ['model', 'consumable', 'compatibility', 'other']
+        && data.productName is string
+        && data.productName.size() > 0
+        && data.productName.size() <= 120
+        && data.pageUrl is string
+        && data.pageUrl.size() > 0
+        && data.pageUrl.size() <= 500
+        && data.pageUrl.matches('https://.+')
+        && data.description is string
+        && data.description.size() > 0
+        && data.description.size() <= 2000
+        && data.evidenceUrl is string
+        && data.evidenceUrl.size() <= 500
+        && (data.evidenceUrl == '' || data.evidenceUrl.matches('https://.+'))
+        && data.status is string
+        && data.status == 'received'
+        && data.createdAt is timestamp
+        && data.createdAt == request.time
+        && data.updatedAt is timestamp
+        && data.updatedAt == request.time
+        && data.expiresAt is timestamp
+        && data.expiresAt >= request.time + duration.value(364, 'd')
+        && data.expiresAt <= request.time + duration.value(367, 'd');
+    }
+
+    function isValidAdminUpdate() {
+      let data = request.resource.data;
+      return data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt', 'resolvedAt'])
+        && data.keys().hasAll(['status', 'updatedAt', 'resolvedAt'])
+        && data.status is string
+        && data.status in ['received', 'reviewing', 'resolved', 'rejected']
+        && data.updatedAt is timestamp
+        && data.updatedAt == request.time
+        && (
+          ((data.status == 'resolved' || data.status == 'rejected')
+            && data.resolvedAt is timestamp
+            && data.resolvedAt == request.time)
+          || ((data.status == 'received' || data.status == 'reviewing')
+            && data.resolvedAt == null)
+        );
+    }
+
+    match /reports/{reportId} {
+      allow create: if isValidReportCreate();
+      allow get: if isAdmin();
+      allow list: if isAdmin()
+        && request.query.limit != null
+        && request.query.limit <= 100;
+      allow update: if isAdmin() && isValidAdminUpdate();
+      allow delete: if false;
+    }
+
+    match /admins/{uid} {
+      allow get: if isSignedIn() && request.auth.uid == uid;
+      allow list, create, update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

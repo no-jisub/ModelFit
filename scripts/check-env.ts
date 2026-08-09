@@ -1,8 +1,6 @@
 const publicEnv = {
   PUBLIC_SITE_URL: process.env.PUBLIC_SITE_URL?.trim(),
   PUBLIC_SITE_NAME: process.env.PUBLIC_SITE_NAME?.trim(),
-  PUBLIC_REPORT_FORM_URL: process.env.PUBLIC_REPORT_FORM_URL?.trim(),
-  PUBLIC_REPORT_EMAIL: process.env.PUBLIC_REPORT_EMAIL?.trim(),
   PUBLIC_COUPANG_BASE_URL: process.env.PUBLIC_COUPANG_BASE_URL?.trim(),
   PUBLIC_AFFILIATE_DISCLOSURE_TEXT: process.env.PUBLIC_AFFILIATE_DISCLOSURE_TEXT?.trim(),
   PUBLIC_GA_MEASUREMENT_ID: process.env.PUBLIC_GA_MEASUREMENT_ID?.trim(),
@@ -29,15 +27,7 @@ function checkHttpsUrl(name: keyof typeof publicEnv) {
 }
 
 checkHttpsUrl("PUBLIC_SITE_URL");
-checkHttpsUrl("PUBLIC_REPORT_FORM_URL");
 checkHttpsUrl("PUBLIC_COUPANG_BASE_URL");
-
-if (
-  publicEnv.PUBLIC_REPORT_EMAIL &&
-  !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(publicEnv.PUBLIC_REPORT_EMAIL)
-) {
-  errors.push("PUBLIC_REPORT_EMAIL이 올바른 이메일 형식이 아닙니다.");
-}
 
 if (
   publicEnv.PUBLIC_GA_MEASUREMENT_ID &&
