@@ -6,3 +6,5 @@ dist/
 !.env.example
 .firebase/
 firebase-debug.log
+playwright-report/
+test-results/
