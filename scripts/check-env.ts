@@ -1,0 +1,58 @@
+const publicEnv = {
+  PUBLIC_SITE_URL: process.env.PUBLIC_SITE_URL?.trim(),
+  PUBLIC_SITE_NAME: process.env.PUBLIC_SITE_NAME?.trim(),
+  PUBLIC_REPORT_FORM_URL: process.env.PUBLIC_REPORT_FORM_URL?.trim(),
+  PUBLIC_REPORT_EMAIL: process.env.PUBLIC_REPORT_EMAIL?.trim(),
+  PUBLIC_COUPANG_BASE_URL: process.env.PUBLIC_COUPANG_BASE_URL?.trim(),
+  PUBLIC_AFFILIATE_DISCLOSURE_TEXT: process.env.PUBLIC_AFFILIATE_DISCLOSURE_TEXT?.trim(),
+  PUBLIC_GA_MEASUREMENT_ID: process.env.PUBLIC_GA_MEASUREMENT_ID?.trim(),
+};
+
+const errors: string[] = [];
+
+function checkHttpsUrl(name: keyof typeof publicEnv) {
+  const value = publicEnv[name];
+  if (!value) return;
+
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "https:") errors.push(`${name}은 https:// URL이어야 합니다.`);
+  } catch {
+    errors.push(`${name}이 올바른 URL이 아닙니다.`);
+  }
+}
+
+checkHttpsUrl("PUBLIC_SITE_URL");
+checkHttpsUrl("PUBLIC_REPORT_FORM_URL");
+checkHttpsUrl("PUBLIC_COUPANG_BASE_URL");
+
+if (
+  publicEnv.PUBLIC_REPORT_EMAIL &&
+  !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(publicEnv.PUBLIC_REPORT_EMAIL)
+) {
+  errors.push("PUBLIC_REPORT_EMAIL이 올바른 이메일 형식이 아닙니다.");
+}
+
+if (
+  publicEnv.PUBLIC_GA_MEASUREMENT_ID &&
+  !/^G-[A-Z0-9]+$/.test(publicEnv.PUBLIC_GA_MEASUREMENT_ID)
+) {
+  errors.push("PUBLIC_GA_MEASUREMENT_ID는 G-로 시작하는 GA4 측정 ID여야 합니다.");
+}
+
+const unsafePublicNames = Object.keys(process.env).filter(
+  (name) =>
+    name.startsWith("PUBLIC_") &&
+    /(SECRET|PASSWORD|PRIVATE|SERVICE_ACCOUNT|API_KEY|TOKEN)/i.test(name),
+);
+if (unsafePublicNames.length > 0) {
+  errors.push(`공개 변수 이름에 비밀값 표기가 있습니다: ${unsafePublicNames.join(", ")}`);
+}
+
+if (errors.length > 0) {
+  console.error("환경변수 검사 실패:\n- " + errors.join("\n- "));
+  process.exitCode = 1;
+} else {
+  const configured = Object.values(publicEnv).filter(Boolean).length;
+  console.log(`환경변수 검사 통과: 공개 변수 ${configured}개 설정, 비밀값 노출 징후 없음`);
+}

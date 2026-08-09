@@ -14,10 +14,11 @@
     "test:e2e": "npm run build && playwright test",
     "test:a11y": "playwright test e2e/accessibility.spec.ts --project=desktop-chromium",
     "test:performance": "playwright test e2e/performance.spec.ts --project=desktop-chromium",
+    "check:env": "tsx scripts/check-env.ts",
     "validate:data": "tsx scripts/validate-data.ts",
     "audit:sources": "tsx scripts/audit-sources.ts",
     "audit:freshness": "tsx scripts/audit-freshness.ts",
-    "check": "npm run format && npm run lint && npm run validate:data && npm run test && npm run build"
+    "check": "npm run format && npm run lint && npm run check:env && npm run validate:data && npm run test && npm run build"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.2",

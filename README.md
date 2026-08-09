@@ -44,6 +44,7 @@ npm run preview
 
 배포 전 `public/robots.txt`의 sitemap URL도 실제 도메인으로 변경합니다.
 제보 폼과 이메일이 모두 비어 있으면 제보 입력 폼은 안전하게 비활성화됩니다.
+호스팅 전 변수·Secret 설정과 배포 점검 순서는 [`docs/OPERATIONS.md`](docs/OPERATIONS.md)를 따릅니다.
 
 ## 데이터 구조와 추가 방법
 
