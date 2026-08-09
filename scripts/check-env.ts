@@ -6,6 +6,12 @@ const publicEnv = {
   PUBLIC_COUPANG_BASE_URL: process.env.PUBLIC_COUPANG_BASE_URL?.trim(),
   PUBLIC_AFFILIATE_DISCLOSURE_TEXT: process.env.PUBLIC_AFFILIATE_DISCLOSURE_TEXT?.trim(),
   PUBLIC_GA_MEASUREMENT_ID: process.env.PUBLIC_GA_MEASUREMENT_ID?.trim(),
+  PUBLIC_FIREBASE_API_KEY: process.env.PUBLIC_FIREBASE_API_KEY?.trim(),
+  PUBLIC_FIREBASE_AUTH_DOMAIN: process.env.PUBLIC_FIREBASE_AUTH_DOMAIN?.trim(),
+  PUBLIC_FIREBASE_PROJECT_ID: process.env.PUBLIC_FIREBASE_PROJECT_ID?.trim(),
+  PUBLIC_FIREBASE_APP_ID: process.env.PUBLIC_FIREBASE_APP_ID?.trim(),
+  PUBLIC_FIREBASE_MESSAGING_SENDER_ID: process.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID?.trim(),
+  PUBLIC_FIREBASE_APP_CHECK_SITE_KEY: process.env.PUBLIC_FIREBASE_APP_CHECK_SITE_KEY?.trim(),
 };
 
 const errors: string[] = [];
@@ -40,9 +46,29 @@ if (
   errors.push("PUBLIC_GA_MEASUREMENT_ID는 G-로 시작하는 GA4 측정 ID여야 합니다.");
 }
 
+const firebaseRequired = [
+  publicEnv.PUBLIC_FIREBASE_API_KEY,
+  publicEnv.PUBLIC_FIREBASE_AUTH_DOMAIN,
+  publicEnv.PUBLIC_FIREBASE_PROJECT_ID,
+  publicEnv.PUBLIC_FIREBASE_APP_ID,
+];
+const configuredFirebaseValues = firebaseRequired.filter(Boolean).length;
+if (configuredFirebaseValues > 0 && configuredFirebaseValues < firebaseRequired.length) {
+  errors.push(
+    "Firebase 공개 설정은 API 키, 인증 도메인, 프로젝트 ID, 앱 ID를 함께 설정해야 합니다.",
+  );
+}
+if (
+  publicEnv.PUBLIC_FIREBASE_AUTH_DOMAIN &&
+  !/^[a-z0-9.-]+\.firebaseapp\.com$/i.test(publicEnv.PUBLIC_FIREBASE_AUTH_DOMAIN)
+) {
+  errors.push("PUBLIC_FIREBASE_AUTH_DOMAIN이 올바른 Firebase 인증 도메인이 아닙니다.");
+}
+
 const unsafePublicNames = Object.keys(process.env).filter(
   (name) =>
     name.startsWith("PUBLIC_") &&
+    name !== "PUBLIC_FIREBASE_API_KEY" &&
     /(SECRET|PASSWORD|PRIVATE|SERVICE_ACCOUNT|API_KEY|TOKEN)/i.test(name),
 );
 if (unsafePublicNames.length > 0) {

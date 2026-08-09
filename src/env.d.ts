@@ -8,6 +8,12 @@ interface ImportMetaEnv {
   readonly PUBLIC_COUPANG_BASE_URL?: string;
   readonly PUBLIC_AFFILIATE_DISCLOSURE_TEXT?: string;
   readonly PUBLIC_GA_MEASUREMENT_ID?: string;
+  readonly PUBLIC_FIREBASE_API_KEY?: string;
+  readonly PUBLIC_FIREBASE_AUTH_DOMAIN?: string;
+  readonly PUBLIC_FIREBASE_PROJECT_ID?: string;
+  readonly PUBLIC_FIREBASE_APP_ID?: string;
+  readonly PUBLIC_FIREBASE_MESSAGING_SENDER_ID?: string;
+  readonly PUBLIC_FIREBASE_APP_CHECK_SITE_KEY?: string;
 }
 
 interface ImportMeta {
