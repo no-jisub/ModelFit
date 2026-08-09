@@ -2577,13 +2577,26 @@ h3 {
 }
 
 .field input,
-.field textarea {
+.field textarea,
+.field select {
   width: 100%;
   min-height: 48px;
   border: 1px solid var(--color-neutral-300);
   border-radius: 12px;
   background: white;
   padding: 11px 13px;
+}
+
+.field select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--color-neutral-500) 50%),
+    linear-gradient(135deg, var(--color-neutral-500) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) 20px,
+    calc(100% - 13px) 20px;
+  background-repeat: no-repeat;
+  background-size: 5px 5px;
 }
 
 .field textarea {
@@ -2593,6 +2606,47 @@ h3 {
 
 .field small {
   color: var(--color-neutral-500);
+}
+
+.field-optional {
+  color: var(--color-neutral-500);
+  font-weight: 400;
+}
+
+.report-section {
+  padding-top: var(--space-8);
+}
+
+.report-privacy-notice {
+  margin-bottom: var(--space-5);
+}
+
+.report-form {
+  position: relative;
+}
+
+.report-honeypot {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form-message.is-success {
+  color: var(--color-success-700);
+  font-weight: 700;
+}
+
+.form-message.is-error {
+  color: var(--color-danger-700);
+  font-weight: 700;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
 }
 
 .form-actions {

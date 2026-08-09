@@ -47,3 +47,14 @@ test("검색 결과가 없을 때 재검색 안내를 제공한다", async ({ pa
     page.getByText("모델번호, 소모품 상품명 또는 정품 부품번호", { exact: false }),
   ).toBeVisible();
 });
+
+test("모델 상세에서 개인정보 없는 오류 제보 화면으로 이동한다", async ({ page }) => {
+  await page.goto("/model/lg/as355nsna");
+  await page.locator("main").getByRole("link", { name: "정보 수정 제보" }).first().click();
+
+  await expect(page).toHaveURL(/\/report\?.*model=AS355NSNA/);
+  await expect(page.getByRole("heading", { name: "잘못된 정보를 알려주세요" })).toBeVisible();
+  await expect(page.getByLabel("제품명 또는 모델명")).toHaveValue(/AS355NSNA/);
+  await expect(page.getByText("개인정보를 수집하지 않습니다.")).toBeVisible();
+  await expect(page.getByRole("button", { name: "오류 제보 보내기" })).toBeDisabled();
+});

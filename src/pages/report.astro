@@ -1,16 +1,12 @@
 ---
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
+import ReportForm from "@/components/react/ReportForm";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-
-const externalFormUrl = import.meta.env.PUBLIC_REPORT_FORM_URL?.trim();
-const reportEmail = import.meta.env.PUBLIC_REPORT_EMAIL?.trim();
-const brand = Astro.url.searchParams.get("brand") ?? "";
-const model = Astro.url.searchParams.get("model") ?? "";
 ---
 
 <BaseLayout
   title="잘못된 정보 제보"
-  description="모델핏에 등록된 모델명, 소모품 또는 호환 정보의 오류를 근거 URL과 함께 제보해 주세요."
+  description="모델핏에 등록된 모델명, 소모품 또는 호환 정보의 오류를 사이트에서 바로 제보해 주세요."
   canonicalPath="/report"
   noindex
 >
@@ -19,137 +15,22 @@ const model = Astro.url.searchParams.get("model") ?? "";
       <Breadcrumbs items={[{ label: "정보 수정 제보" }]} />
       <div class="eyebrow">정보 품질 개선</div>
       <h1>잘못된 정보를 알려주세요</h1>
-      <p>근거 URL을 함께 보내주시면 공식 자료를 우선 확인한 뒤 반영합니다.</p>
+      <p>로그인이나 이메일 없이 접수할 수 있으며, 관리자 검토 후 데이터에 반영합니다.</p>
     </div>
   </section>
-  <section class="section">
+  <section class="section report-section">
     <div class="container content-narrow">
-      <div class="notice-card" style="margin-bottom: 24px;">
-        <span aria-hidden="true">ⓘ</span>
+      <div class="notice-card report-privacy-notice">
+        <span aria-hidden="true">✓</span>
         <div>
-          <strong
-            >{
-              externalFormUrl
-                ? "외부 제보 폼으로 연결됩니다."
-                : reportEmail
-                  ? "현재는 이메일 제보 방식입니다."
-                  : "제보 채널을 준비 중입니다."
-            }</strong
-          >
+          <strong>개인정보를 수집하지 않습니다.</strong>
           <p>
-            {
-              externalFormUrl
-                ? "아래 버튼을 누르면 설정된 외부 폼이 새 창에서 열립니다."
-                : reportEmail
-                  ? "제출하면 기본 메일 앱에 입력 내용이 채워집니다. 이 사이트가 내용을 저장하지 않습니다."
-                  : "운영 제보 채널이 연결되기 전까지는 공식 출처를 통한 재확인을 권장합니다."
-            }
+            제보자 이름과 이메일은 받지 않습니다. 제출된 내용은 해결 여부 확인을 위해 최대 1년간
+            보관합니다.
           </p>
         </div>
       </div>
-      {
-        externalFormUrl ? (
-          <a
-            class="button button-primary"
-            href={externalFormUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-report-channel="external-form"
-          >
-            외부 제보 폼 열기 ↗
-          </a>
-        ) : reportEmail ? (
-          <form class="form-card card" id="report-form" data-report-email={reportEmail}>
-            <div class="form-grid">
-              <div class="field">
-                <>
-                  <label for="brand">브랜드</label>
-                  <input id="brand" name="brand" value={brand} required />
-                </>
-              </div>
-              <div class="field">
-                <>
-                  <label for="model">모델명</label>
-                  <input id="model" name="model" value={model} required />
-                </>
-              </div>
-              <div class="field field-full">
-                <>
-                  <label for="incorrect">잘못된 정보</label>
-                  <textarea id="incorrect" name="incorrect" required />
-                </>
-              </div>
-              <div class="field field-full">
-                <>
-                  <label for="correct">올바른 정보</label>
-                  <textarea id="correct" name="correct" required />
-                </>
-              </div>
-              <div class="field field-full">
-                <>
-                  <label for="evidence">근거 URL</label>
-                  <input id="evidence" name="evidence" type="url" placeholder="https://" />
-                </>
-              </div>
-              <div class="field field-full">
-                <>
-                  <label for="email">
-                    이메일 <span style="font-weight: 400;">(선택)</span>
-                  </label>
-                  <input id="email" name="email" type="email" />
-                  <small>추가 확인이 필요할 때만 사용합니다.</small>
-                </>
-              </div>
-            </div>
-            <div class="form-actions">
-              <>
-                <p aria-live="polite" id="report-status">
-                  입력 내용은 서버에 저장되지 않습니다.
-                </p>
-                <button class="button button-primary" type="submit">
-                  이메일 앱으로 제보하기
-                </button>
-              </>
-            </div>
-          </form>
-        ) : (
-          <div class="empty-inline">
-            <span aria-hidden="true">!</span>
-            <p>
-              <strong>현재 온라인 제보 접수는 비활성화되어 있습니다.</strong> 제보 채널이 준비되면
-              이 페이지에서 안내하겠습니다.
-            </p>
-          </div>
-        )
-      }
+      <ReportForm client:load />
     </div>
   </section>
-  <script>
-    import { analytics } from "@/utils/analytics";
-
-    const form = document.querySelector<HTMLFormElement>("#report-form");
-    form?.addEventListener("submit", (event) => {
-      event.preventDefault();
-      if (!form.reportValidity()) return;
-      analytics.trackReportSubmit("email");
-      const data = new FormData(form);
-      const subject = `[모델핏 정보 제보] ${data.get("brand")} ${data.get("model")}`;
-      const body = [
-        `브랜드: ${data.get("brand")}`,
-        `모델명: ${data.get("model")}`,
-        "",
-        "[잘못된 정보]",
-        data.get("incorrect"),
-        "",
-        "[올바른 정보]",
-        data.get("correct"),
-        "",
-        `근거 URL: ${data.get("evidence") || "없음"}`,
-        `회신 이메일: ${data.get("email") || "없음"}`,
-      ].join("\n");
-      const reportEmail = form.dataset.reportEmail;
-      if (!reportEmail) return;
-      window.location.href = `mailto:${reportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    });
-  </script>
 </BaseLayout>
