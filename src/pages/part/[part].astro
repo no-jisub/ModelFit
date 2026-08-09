@@ -1,10 +1,10 @@
 ---
-import AffiliateButton from "@/components/astro/AffiliateButton.astro";
 import AffiliateDisclosure from "@/components/astro/AffiliateDisclosure.astro";
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import ModelCard from "@/components/astro/ModelCard.astro";
 import PartNumberBadge from "@/components/astro/PartNumberBadge.astro";
 import ProductComparison from "@/components/astro/ProductComparison.astro";
+import PurchaseLinks from "@/components/astro/PurchaseLinks.astro";
 import SourceList from "@/components/astro/SourceList.astro";
 import VerificationBadge from "@/components/astro/VerificationBadge.astro";
 import { consumables } from "@/data/consumables";
@@ -20,13 +20,6 @@ const { part } = Astro.props;
 const compatibleModels = part.compatibleModelIds
   .map((id: string) => models.find((model) => model.id === id))
   .filter((model) => model !== undefined);
-const primarySource =
-  part.sources.find((source) => source.sourceType === "official-store") ?? part.sources[0];
-const retailerSources = part.sources.filter((source) => source.sourceType === "seller");
-const primarySourceLabel =
-  primarySource?.sourceType === "official-store"
-    ? "제조사 공식몰에서 확인"
-    : "제조사 공식 정보 확인";
 ---
 
 <BaseLayout
@@ -63,68 +56,7 @@ const primarySourceLabel =
         </div>
         <aside class="part-actions">
           <h2>구매처 확인 순서</h2>
-          {
-            primarySource && (
-              <div class="purchase-channel is-official">
-                <span class="purchase-channel-label">
-                  <b>1</b> 공식 사이트
-                </span>
-                <a
-                  class="button button-primary part-source-button"
-                  href={primarySource.url}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  data-source-type={primarySource.sourceType}
-                  data-part-id={part.id}
-                >
-                  {primarySourceLabel} <span aria-hidden="true">↗</span>
-                </a>
-              </div>
-            )
-          }
-          <p class="part-action-copy">
-            공식 사이트가 판매 페이지가 아닌 경우 호환 근거를 확인한 뒤 다음 구매처로 이동하세요.
-          </p>
-          <div class="purchase-channel is-coupang">
-            <span class="purchase-channel-label"><b>2</b> 쿠팡</span>
-            <AffiliateButton
-              keyword={part.affiliate.searchKeyword}
-              kind="genuine"
-              partId={part.id}
-              directUrl={part.affiliate.directUrl}
-              enabled={part.affiliate.enabled}
-              linkStatus={part.affiliate.status}
-              priceStatus={part.affiliate.priceStatus}
-              stockStatus={part.affiliate.stockStatus}
-              linkCheckedAt={part.affiliate.linkCheckedAt}
-            />
-            <AffiliateButton
-              keyword={part.affiliate.searchKeyword}
-              kind="compatible"
-              partId={part.id}
-            />
-          </div>
-          {
-            retailerSources.length > 0 && (
-              <div class="purchase-channel is-retailer">
-                <span class="purchase-channel-label">
-                  <b>3</b> 기타 판매처
-                </span>
-                {retailerSources.map((source) => (
-                  <a
-                    class="button button-secondary"
-                    href={source.url}
-                    rel="nofollow noopener noreferrer"
-                    target="_blank"
-                    data-source-type="seller"
-                    data-part-id={part.id}
-                  >
-                    {source.title} <span aria-hidden="true">↗</span>
-                  </a>
-                ))}
-              </div>
-            )
-          }
+          <PurchaseLinks part={part} />
           <AffiliateDisclosure />
         </aside>
       </div>

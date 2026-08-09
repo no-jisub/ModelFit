@@ -32,6 +32,18 @@ export interface AffiliateLinkData {
   linkCheckedAt: string;
 }
 
+export type PurchaseChannel = "official" | "coupang" | "other";
+
+export interface PurchaseLinkData {
+  id: string;
+  label: string;
+  url: string;
+  channel: PurchaseChannel;
+  linkType: "official-reference" | "direct-product" | "search-results";
+  isAffiliate: boolean;
+  checkedAt: string;
+}
+
 export interface ConsumableCompatibility {
   id: string;
   slug: string;
