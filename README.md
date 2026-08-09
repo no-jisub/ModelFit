@@ -151,10 +151,13 @@ npm run validate:data
 npm run build
 npm run check
 npm run test:e2e
+npm run test:a11y
+npm run test:performance
 ```
 
 `npm run check`는 포맷, lint, 데이터 검증, 단위 테스트, 타입 검사와 정적 빌드를 순서대로 실행합니다.
 `npm run test:e2e`는 빌드 결과를 Chromium으로 열어 데스크톱과 모바일의 검색, 상세, 구매 경로, 내 가전함 흐름을 검사합니다.
+접근성 검사는 주요 4개 화면의 WCAG A·AA 치명/중대 위반을, 성능 검사는 대표 화면의 전송량·요청 수·DOM 규모·로딩 시간을 예산으로 관리합니다. 두 검사는 GitHub Actions에서도 자동 실행됩니다.
 `audit-links.yml`은 매주 공식 출처와 등록된 상품 상세 링크의 접근 상태 및 데이터 확인일을 검사합니다. 확인 후 90일이 지나면 재확인 예정, 180일이 지나면 재확인 필요로 분류합니다.
 
 ## SEO 운영

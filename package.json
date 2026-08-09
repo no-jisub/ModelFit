@@ -12,6 +12,8 @@
     "format:write": "prettier --write .",
     "test": "vitest run",
     "test:e2e": "npm run build && playwright test",
+    "test:a11y": "playwright test e2e/accessibility.spec.ts --project=desktop-chromium",
+    "test:performance": "playwright test e2e/performance.spec.ts --project=desktop-chromium",
     "validate:data": "tsx scripts/validate-data.ts",
     "audit:sources": "tsx scripts/audit-sources.ts",
     "audit:freshness": "tsx scripts/audit-freshness.ts",
@@ -26,6 +28,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@axe-core/playwright": "^4.12.1",
     "@playwright/test": "^1.62.1",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
