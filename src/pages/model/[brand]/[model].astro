@@ -2,6 +2,7 @@
 import AffiliateDisclosure from "@/components/astro/AffiliateDisclosure.astro";
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import ConsumableCard from "@/components/astro/ConsumableCard.astro";
+import DataFreshnessBadge from "@/components/astro/DataFreshnessBadge.astro";
 import ModelCard from "@/components/astro/ModelCard.astro";
 import ModelNumberGuide from "@/components/astro/ModelNumberGuide.astro";
 import SourceList from "@/components/astro/SourceList.astro";
@@ -90,6 +91,7 @@ const breadcrumbJsonLd = {
           <p>{model.shortDescription}</p>
           <div class="model-meta">
             <VerificationBadge status={model.verificationStatus} context="model" />
+            <DataFreshnessBadge checkedAt={model.lastVerifiedAt} />
             <span>마지막 확인일 {model.lastVerifiedAt}</span>
             <span>·</span>
             <span>{formatModelReleaseDate(model.releaseDate)}</span>

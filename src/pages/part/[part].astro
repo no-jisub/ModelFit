@@ -1,6 +1,7 @@
 ---
 import AffiliateDisclosure from "@/components/astro/AffiliateDisclosure.astro";
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
+import DataFreshnessBadge from "@/components/astro/DataFreshnessBadge.astro";
 import ModelCard from "@/components/astro/ModelCard.astro";
 import PartNumberBadge from "@/components/astro/PartNumberBadge.astro";
 import ProductComparison from "@/components/astro/ProductComparison.astro";
@@ -11,12 +12,14 @@ import { consumables } from "@/data/consumables";
 import { models } from "@/data/models";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { partTypeLabels } from "@/utils/labels";
+import { getConsumableCheckedAt } from "@/utils/dataFreshness";
 
 export function getStaticPaths() {
   return consumables.map((part) => ({ params: { part: part.slug }, props: { part } }));
 }
 
 const { part } = Astro.props;
+const partCheckedAt = getConsumableCheckedAt(part);
 const compatibleModels = part.compatibleModelIds
   .map((id: string) => models.find((model) => model.id === id))
   .filter((model) => model !== undefined);
@@ -38,6 +41,7 @@ const compatibleModels = part.compatibleModelIds
           <h1>{part.displayName}</h1>
           <div class="model-meta">
             <VerificationBadge status={part.verificationStatus} context="compatibility" />
+            <DataFreshnessBadge checkedAt={partCheckedAt} />
             <PartNumberBadge partNumber={part.genuinePartNumber} status={part.partNumberStatus} />
             <span>호환 모델 {compatibleModels.length}개</span>
           </div>

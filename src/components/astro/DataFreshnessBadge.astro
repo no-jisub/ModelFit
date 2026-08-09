@@ -1,0 +1,19 @@
+---
+import { getDataFreshness } from "@/utils/dataFreshness";
+
+const { checkedAt } = Astro.props as { checkedAt: string };
+const freshness = getDataFreshness(checkedAt);
+const description =
+  freshness.ageDays === null
+    ? "확인일을 읽을 수 없습니다."
+    : `${checkedAt} 확인 · ${freshness.ageDays}일 경과`;
+---
+
+<span
+  class:list={["freshness-badge", `freshness-${freshness.status}`]}
+  title={description}
+  data-freshness={freshness.status}
+>
+  <span aria-hidden="true">{freshness.status === "stale" ? "!" : "◷"}</span>
+  {freshness.label}
+</span>

@@ -1399,6 +1399,37 @@ h3 {
   font-weight: 700;
 }
 
+.freshness-badge {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-full);
+  padding: 4px 9px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.freshness-current {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.freshness-review-soon {
+  border-color: #fde68a;
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.freshness-stale,
+.freshness-invalid {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
 .filter-bar select {
   min-height: 44px;
   border: 1px solid var(--color-neutral-300);
