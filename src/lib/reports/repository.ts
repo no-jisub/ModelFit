@@ -23,9 +23,10 @@ import {
 } from "./schema";
 
 const REPORTS_COLLECTION = "reports";
+const REPORTS_DATABASE_ID = "modelfit-reports";
 
 function database() {
-  return getFirestore(getFirebaseApp());
+  return getFirestore(getFirebaseApp(), REPORTS_DATABASE_ID);
 }
 
 export async function submitReport(input: ReportInput) {

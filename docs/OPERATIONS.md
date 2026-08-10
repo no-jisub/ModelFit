@@ -69,10 +69,11 @@ GitHub 저장소의 **Settings → Secrets and variables → Actions**에서 다
    연결합니다.
 4. GitHub 저장소 변수에 `.env.example`의 `PUBLIC_FIREBASE_*` 값을 등록합니다. 웹 API 키와 App
    Check 사이트 키는 브라우저에 공개되는 식별자이며, 서비스 계정 비밀키로 취급하지 않습니다.
-5. Firebase CLI 로그인 계정으로 다음 명령을 실행해 보안 규칙과 1년 TTL 정책을 배포합니다.
+5. Firebase CLI 로그인 계정으로 다음 명령을 실행해 보안 규칙을 배포합니다. Spark 요금제에서는
+   무료 할당량에 포함되지 않는 TTL 자동 삭제를 사용하지 않습니다.
 
    ```powershell
-   firebase deploy --only firestore:rules,firestore:indexes --project modelfit-kr
+   firebase deploy --only firestore:rules --project modelfit-kr
    ```
 
 6. 배포된 `/admin`에서 관리자 전용 Google 계정으로 한 번 로그인합니다. 화면에 표시된 UID를
@@ -85,8 +86,8 @@ GitHub 저장소의 **Settings → Secrets and variables → Actions**에서 다
 
 보안 규칙은 일반 사용자의 제보 생성만 허용하며 읽기·수정·삭제를 금지합니다. 활성 관리자만
 최대 100건씩 읽고 상태 필드만 변경할 수 있습니다. 관리자 등록 문서는 클라이언트에서 만들거나
-수정할 수 없습니다. `expiresAt` TTL이 적용된 제보는 만료 시점 이후 Firebase의 비동기 정리
-과정에서 자동 삭제됩니다.
+수정할 수 없습니다. 각 제보에는 1년 뒤의 `expiresAt`이 기록되며, 운영자는 관리자 화면의
+보관 만료일을 기준으로 Firebase Console에서 만료 문서를 수동 삭제합니다.
 
 ## 보안 원칙
 

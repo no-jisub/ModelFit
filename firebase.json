@@ -1,7 +1,10 @@
 {
   "firestore": {
     "rules": "firestore.rules",
-    "indexes": "firestore.indexes.json"
+    "indexes": "firestore.indexes.json",
+    "edition": "enterprise",
+    "database": "modelfit-reports",
+    "location": "asia-northeast3"
   },
   "hosting": {
     "public": "dist",
