@@ -14,6 +14,8 @@ export interface FirebaseClientConfig {
   appCheckSiteKey?: string;
 }
 
+const FIREBASE_HOSTING_AUTH_DOMAIN = "modelfit-kr.web.app";
+
 function clean(value?: string) {
   return value?.trim() || undefined;
 }
@@ -36,6 +38,12 @@ export function resolveFirebaseClientConfig(env: FirebasePublicEnv): FirebaseCli
     },
     appCheckSiteKey: clean(env.PUBLIC_FIREBASE_APP_CHECK_SITE_KEY),
   };
+}
+
+export function resolveFirebaseAuthDomain(configuredDomain: string, hostname?: string) {
+  return hostname === FIREBASE_HOSTING_AUTH_DOMAIN
+    ? FIREBASE_HOSTING_AUTH_DOMAIN
+    : configuredDomain;
 }
 
 export const firebaseClientConfig = resolveFirebaseClientConfig(import.meta.env);

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveFirebaseClientConfig } from "../src/lib/firebase/config";
+import { resolveFirebaseAuthDomain, resolveFirebaseClientConfig } from "../src/lib/firebase/config";
 
 describe("Firebase 공개 설정", () => {
   it("필수 식별자가 모두 있을 때만 활성화한다", () => {
@@ -12,5 +12,14 @@ describe("Firebase 공개 설정", () => {
         PUBLIC_FIREBASE_APP_ID: "web-app-id",
       })?.options.projectId,
     ).toBe("modelfit-kr");
+  });
+
+  it("Firebase Hosting에서는 같은 사이트 인증 도메인을 사용한다", () => {
+    expect(resolveFirebaseAuthDomain("modelfit-kr.firebaseapp.com", "modelfit-kr.web.app")).toBe(
+      "modelfit-kr.web.app",
+    );
+    expect(resolveFirebaseAuthDomain("modelfit-kr.firebaseapp.com", "localhost")).toBe(
+      "modelfit-kr.firebaseapp.com",
+    );
   });
 });

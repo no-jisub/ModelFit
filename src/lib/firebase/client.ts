@@ -1,6 +1,6 @@
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 import { getApp, getApps, initializeApp, type FirebaseApp } from "firebase/app";
-import { firebaseClientConfig } from "./config";
+import { firebaseClientConfig, resolveFirebaseAuthDomain } from "./config";
 
 let appCheckInitialized = false;
 
@@ -17,7 +17,14 @@ export function getFirebaseApp(): FirebaseApp {
     throw new Error("Firebase 웹 설정이 아직 완료되지 않았습니다.");
   }
 
-  const app = getApps().length > 0 ? getApp() : initializeApp(firebaseClientConfig.options);
+  const options = {
+    ...firebaseClientConfig.options,
+    authDomain: resolveFirebaseAuthDomain(
+      String(firebaseClientConfig.options.authDomain),
+      typeof window === "undefined" ? undefined : window.location.hostname,
+    ),
+  };
+  const app = getApps().length > 0 ? getApp() : initializeApp(options);
 
   if (
     typeof window !== "undefined" &&
