@@ -4,7 +4,7 @@ import {
   GoogleAuthProvider,
   onAuthStateChanged,
   setPersistence,
-  signInWithPopup,
+  signInWithRedirect,
   signOut,
   type Auth,
   type User,
@@ -31,7 +31,7 @@ export async function signInAdminWithGoogle() {
   const auth = await prepareAdminAuth();
   const provider = new GoogleAuthProvider();
   provider.setCustomParameters({ prompt: "select_account" });
-  return signInWithPopup(auth, provider);
+  return signInWithRedirect(auth, provider);
 }
 
 export async function signOutAdmin() {
