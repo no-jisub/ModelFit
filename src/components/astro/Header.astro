@@ -14,15 +14,10 @@ const { showSearch = true } = Astro.props;
     <Logo />
     {showSearch && <SearchBox header client:load />}
     <nav class="desktop-nav" aria-label="주요 메뉴">
+      <a href="/find">소모품 찾기</a>
       <a href="/my-appliances">내 가전함</a>
-      <a href="/category/air-purifier">카테고리</a>
-      <a href="/#brands">브랜드</a>
-      <a href="/guide">가이드</a>
-      <a href="/methodology">검증 기준</a>
+      <a href="/report">정보 제보</a>
     </nav>
-    <a class="button button-secondary button-compact desktop-report" href="/report"
-      >정보 수정 제보</a
-    >
     <a class="mobile-search-link" href="/find" aria-label="소모품 검색">
       <span aria-hidden="true">⌕</span>
     </a>
@@ -31,11 +26,7 @@ const { showSearch = true } = Astro.props;
       <nav aria-label="모바일 메뉴">
         <a href="/find">소모품 찾기</a>
         <a href="/my-appliances">내 가전함</a>
-        <a href="/category/air-purifier">공기청정기</a>
-        <a href="/category/robot-vacuum">로봇청소기</a>
-        <a href="/guide">가이드</a>
-        <a href="/methodology">검증 기준</a>
-        <a href="/report">정보 수정 제보</a>
+        <a href="/report">정보 제보</a>
       </nav>
     </details>
   </div>

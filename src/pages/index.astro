@@ -1,21 +1,12 @@
 ---
 import BrandCard from "@/components/astro/BrandCard.astro";
 import CategorySelector from "@/components/astro/CategorySelector.astro";
-import ModelCard from "@/components/astro/ModelCard.astro";
 import SearchBox from "@/components/react/SearchBox";
 import { brands } from "@/data/brands";
 import { consumables } from "@/data/consumables";
 import { models } from "@/data/models";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
-const popularModels = [
-  "samsung-ap90h10198edd",
-  "lg-as355nsna",
-  "roborock-saros-z70",
-  "dreame-x50s-pro-ultra",
-]
-  .map((id) => models.find((model) => model.id === id))
-  .filter((model) => model !== undefined);
 const featuredBrandIds = ["samsung", "lg", "roborock", "dreame", "coway", "xiaomi"];
 const featuredBrands = featuredBrandIds
   .map((id) => brands.find((brand) => brand.id === id))
@@ -56,6 +47,9 @@ const websiteJsonLd = [
         마지막 확인일까지 한눈에 정리합니다.
       </p>
       <SearchBox client:load />
+      <a class="hero-model-help" href="/guide/find-model-number">
+        모델번호를 모르시나요? 모델번호 찾는 방법 →
+      </a>
       <div class="hero-trust" aria-label="모델핏 데이터 현황">
         <span><strong>{models.length}</strong>개 공식 모델</span>
         <span><strong>{consumables.length}</strong>개 소모품</span>
@@ -76,26 +70,6 @@ const websiteJsonLd = [
     </div>
   </section>
 
-  <section class="section home-verification-section">
-    <div class="container">
-      <div class="verification-panel home-verification">
-        <div>
-          <div class="eyebrow">데이터 검증 방식</div>
-          <h2>호환 정보의 근거까지 확인합니다</h2>
-          <p>
-            모델 존재 여부와 소모품 호환 여부를 따로 검증하고, 확인한 출처와 날짜를 함께 공개합니다.
-          </p>
-          <a class="button button-primary" href="/methodology">검증 기준 자세히 보기</a>
-        </div>
-        <ol class="verification-list">
-          <li><strong>1</strong> 모델 정보를 공식 자료로 확인</li>
-          <li><strong>2</strong> 소모품 호환 관계를 별도 검증</li>
-          <li><strong>3</strong> 출처와 마지막 확인일 공개</li>
-        </ol>
-      </div>
-    </div>
-  </section>
-
   <section class="section home-section-tint" id="brands">
     <div class="container">
       <div class="section-header">
@@ -113,48 +87,6 @@ const websiteJsonLd = [
           {otherBrands.map((brand) => <BrandCard brand={brand} />)}
         </div>
       </details>
-    </div>
-  </section>
-
-  <section class="section home-models">
-    <div class="container">
-      <div class="section-header">
-        <div>
-          <div class="eyebrow">빠르게 찾기</div>
-          <h2>추천 공식 모델</h2>
-        </div>
-        <a class="text-link" href="/find">전체 모델 보기 →</a>
-      </div>
-      <div class="model-grid">
-        {popularModels.map((model) => <ModelCard model={model} />)}
-      </div>
-    </div>
-  </section>
-
-  <section class="section home-section-tint home-model-guide">
-    <div class="container">
-      <div class="section-header">
-        <div>
-          <div class="eyebrow">모델명 찾기</div>
-          <h2>정확한 모델 코드를 입력하세요</h2>
-          <p>제품군 이름보다 영문과 숫자가 포함된 모델 코드가 정확합니다.</p>
-        </div>
-        <a class="text-link" href="/guide/find-model-number">자세한 가이드 →</a>
-      </div>
-      <div class="info-steps">
-        <article class="step-card card">
-          <h3>정격 라벨 확인</h3>
-          <p>제품 뒷면, 바닥면 또는 필터 덮개 안쪽의 라벨을 찾습니다.</p>
-        </article>
-        <article class="step-card card">
-          <h3>모델명 구분</h3>
-          <p>제조번호가 아닌 ‘Model’ 또는 ‘모델명’ 항목을 확인합니다.</p>
-        </article>
-        <article class="step-card card">
-          <h3>그대로 검색</h3>
-          <p>공백과 하이픈은 달라도 괜찮지만 영문·숫자는 모두 입력하세요.</p>
-        </article>
-      </div>
     </div>
   </section>
 </BaseLayout>

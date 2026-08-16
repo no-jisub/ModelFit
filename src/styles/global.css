@@ -535,6 +535,18 @@ h3 {
   font-size: 13px;
 }
 
+.hero-model-help {
+  display: inline-block;
+  margin-top: var(--space-4);
+  color: var(--color-primary-700);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.hero-model-help:hover {
+  text-decoration: underline;
+}
+
 .hero-trust span {
   display: inline-flex;
   gap: 3px;
@@ -3030,8 +3042,7 @@ h3 {
     font-size: 24px;
   }
 
-  .desktop-nav,
-  .desktop-report {
+  .desktop-nav {
     display: none;
   }
 
