@@ -87,6 +87,18 @@ export default function MyAppliances() {
         const parts = model.consumableIds
           .map((id) => consumables.find((part) => part.id === id))
           .filter((part) => part !== undefined);
+        const reminderItems = parts.map((part) => {
+          const reminder = saved.reminders.find((item) => item.partId === part.id);
+          return {
+            part,
+            reminder,
+            defaultDays: getDefaultIntervalDays(part.type),
+            state: getReminderState(reminder),
+          };
+        });
+        const urgentReminderCount = reminderItems.filter(
+          ({ state }) => state === "soon" || state === "overdue",
+        ).length;
 
         return (
           <article className="cabinet-card card" key={model.id}>
@@ -118,20 +130,21 @@ export default function MyAppliances() {
                 </button>
               </div>
             </div>
-            <section className="reminder-panel" aria-labelledby={`reminder-${model.id}`}>
-              <div className="reminder-panel-heading">
+            <details className="reminder-panel" open={urgentReminderCount > 0 ? true : undefined}>
+              <summary className="reminder-panel-heading">
                 <div>
                   <span className="eyebrow">사이트 내부 알림</span>
                   <h3 id={`reminder-${model.id}`}>교체 일정</h3>
                 </div>
-                <span>이 브라우저에서만 표시</span>
-              </div>
+                <span>
+                  {urgentReminderCount > 0
+                    ? `${urgentReminderCount}개 확인 필요`
+                    : `${parts.length}개 소모품 · 일정 보기`}
+                </span>
+              </summary>
               {parts.length > 0 ? (
                 <div className="reminder-list">
-                  {parts.map((part) => {
-                    const reminder = saved.reminders.find((item) => item.partId === part.id);
-                    const defaultDays = getDefaultIntervalDays(part.type);
-                    const state = getReminderState(reminder);
+                  {reminderItems.map(({ part, reminder, defaultDays, state }) => {
                     const stateLabel = {
                       unset: "알림 설정 필요",
                       ok: "교체 전",
@@ -150,40 +163,7 @@ export default function MyAppliances() {
                               : `권장 기본값 ${defaultDays}일 · 사용 환경에 맞게 조정`}
                           </small>
                         </div>
-                        <div className="reminder-controls">
-                          <label>
-                            <span>마지막 교체일</span>
-                            <input
-                              type="date"
-                              value={reminder?.lastReplacedAt ?? ""}
-                              onChange={(event) => {
-                                if (!event.target.value) return;
-                                updateReminder(model.id, part.id, {
-                                  partId: part.id,
-                                  lastReplacedAt: event.target.value,
-                                  intervalDays: reminder?.intervalDays ?? defaultDays,
-                                });
-                              }}
-                            />
-                          </label>
-                          <label>
-                            <span>주기(일)</span>
-                            <input
-                              type="number"
-                              min="1"
-                              max="3650"
-                              value={reminder?.intervalDays ?? defaultDays}
-                              onChange={(event) => {
-                                const intervalDays = Number(event.target.value);
-                                if (!Number.isInteger(intervalDays) || intervalDays < 1) return;
-                                updateReminder(model.id, part.id, {
-                                  partId: part.id,
-                                  lastReplacedAt: reminder?.lastReplacedAt ?? getLocalDateValue(),
-                                  intervalDays,
-                                });
-                              }}
-                            />
-                          </label>
+                        <div className="reminder-item-actions">
                           <button
                             className="button button-secondary button-compact"
                             type="button"
@@ -195,8 +175,47 @@ export default function MyAppliances() {
                               })
                             }
                           >
-                            오늘 교체
+                            오늘 교체 완료
                           </button>
+                          <details className="reminder-settings">
+                            <summary>상세 설정</summary>
+                            <div className="reminder-controls">
+                              <label>
+                                <span>마지막 교체일</span>
+                                <input
+                                  type="date"
+                                  value={reminder?.lastReplacedAt ?? ""}
+                                  onChange={(event) => {
+                                    if (!event.target.value) return;
+                                    updateReminder(model.id, part.id, {
+                                      partId: part.id,
+                                      lastReplacedAt: event.target.value,
+                                      intervalDays: reminder?.intervalDays ?? defaultDays,
+                                    });
+                                  }}
+                                />
+                              </label>
+                              <label>
+                                <span>교체 주기(일)</span>
+                                <input
+                                  type="number"
+                                  min="1"
+                                  max="3650"
+                                  value={reminder?.intervalDays ?? defaultDays}
+                                  onChange={(event) => {
+                                    const intervalDays = Number(event.target.value);
+                                    if (!Number.isInteger(intervalDays) || intervalDays < 1) return;
+                                    updateReminder(model.id, part.id, {
+                                      partId: part.id,
+                                      lastReplacedAt:
+                                        reminder?.lastReplacedAt ?? getLocalDateValue(),
+                                      intervalDays,
+                                    });
+                                  }}
+                                />
+                              </label>
+                            </div>
+                          </details>
                         </div>
                       </div>
                     );
@@ -205,7 +224,7 @@ export default function MyAppliances() {
               ) : (
                 <p className="reminder-empty">알림을 설정할 교체형 소모품이 없습니다.</p>
               )}
-            </section>
+            </details>
           </article>
         );
       })}

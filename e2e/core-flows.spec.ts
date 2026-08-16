@@ -68,6 +68,11 @@ test("모델을 내 가전함에 저장하고 다시 확인한다", async ({ pag
   await expect(page.getByRole("heading", { name: "퓨리케어 360° 공기청정기" })).toBeVisible();
   await expect(page.getByText("AS355NSNA", { exact: true })).toBeVisible();
   await expect(page.getByText("브라우저에만 저장", { exact: false })).toBeVisible();
+  const reminderPanel = page.locator(".reminder-panel");
+  await expect(reminderPanel).not.toHaveAttribute("open", "");
+  await reminderPanel.locator(":scope > summary").click();
+  await expect(reminderPanel.getByRole("button", { name: "오늘 교체 완료" }).first()).toBeVisible();
+  await expect(reminderPanel.getByText("상세 설정").first()).toBeVisible();
 });
 
 test("검색 결과가 없을 때 재검색 안내를 제공한다", async ({ page }) => {
