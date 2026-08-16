@@ -8,6 +8,10 @@ test("검색에서 소모품 상세와 비제휴 구매 경로로 이동한다",
   await page.getByRole("button", { name: "소모품 찾기" }).click();
 
   await expect(page).toHaveURL(/\/find\?q=ADQ30041405/);
+  await expect(page.getByRole("tab", { name: /소모품 1/ })).toHaveAttribute(
+    "aria-selected",
+    "true",
+  );
   await expect(page.getByRole("heading", { name: "상품명과 부품번호가 일치합니다" })).toBeVisible();
   await page.getByRole("link", { name: "LG 퓨리탈취청정 M 필터", exact: true }).first().click();
 
@@ -22,6 +26,19 @@ test("검색에서 소모품 상세와 비제휴 구매 경로로 이동한다",
   const coupangLink = page.locator("a[data-purchase-channel='coupang']");
   await expect(coupangLink).toHaveAttribute("href", /coupang\.com/);
   await expect(coupangLink).not.toHaveAttribute("rel", /sponsored/);
+});
+
+test("통합검색 결과를 모델과 소모품 탭으로 전환한다", async ({ page }) => {
+  await page.goto("/find?q=필터");
+
+  const modelTab = page.getByRole("tab", { name: /모델/ });
+  const partTab = page.getByRole("tab", { name: /소모품/ });
+  await expect(partTab).toHaveAttribute("aria-selected", "true");
+
+  await modelTab.click();
+  await expect(page).toHaveURL(/type=models/);
+  await expect(modelTab).toHaveAttribute("aria-selected", "true");
+  await expect(page.getByRole("tabpanel", { name: /모델/ })).toBeVisible();
 });
 
 test("모델을 내 가전함에 저장하고 다시 확인한다", async ({ page }) => {
