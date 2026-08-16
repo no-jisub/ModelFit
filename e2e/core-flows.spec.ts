@@ -43,6 +43,20 @@ test("통합검색 결과를 모델과 소모품 탭으로 전환한다", async 
 
 test("모델을 내 가전함에 저장하고 다시 확인한다", async ({ page }) => {
   await page.goto("/model/lg/as355nsna");
+  const compatibleParts = page.getByRole("heading", { name: /이 모델에 연결된 소모품/ });
+  const officialSources = page.getByRole("heading", { name: "제조사 공식 출처" });
+  const modelNumberHelp = page.getByRole("heading", { name: "모델번호 확인" });
+  await expect(compatibleParts).toBeVisible();
+  await expect(officialSources).toBeVisible();
+  await expect(modelNumberHelp).toBeVisible();
+  const sectionHeadings = await page.locator("main h2").allTextContents();
+  const compatiblePartsHeading = await compatibleParts.textContent();
+  expect(sectionHeadings.indexOf(compatiblePartsHeading ?? "")).toBeLessThan(
+    sectionHeadings.indexOf("제조사 공식 출처"),
+  );
+  expect(sectionHeadings.indexOf("제조사 공식 출처")).toBeLessThan(
+    sectionHeadings.indexOf("모델번호 확인"),
+  );
   const saveButton = page.getByRole("button", { name: "내 가전함에 추가" });
   await saveButton.click();
   await expect(page.getByRole("button", { name: "내 가전함에서 빼기" })).toHaveAttribute(
