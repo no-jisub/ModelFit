@@ -2083,6 +2083,24 @@ h3 {
   font-size: 13px;
 }
 
+.alert-box {
+  margin-top: var(--space-6);
+  border-left: 3px solid var(--color-primary-600);
+  background: var(--color-primary-50);
+  padding: var(--space-5);
+  color: var(--color-neutral-700);
+}
+
+.alert-box h2 {
+  margin-bottom: var(--space-2);
+  font-size: 17px;
+}
+
+.alert-box p {
+  margin: 0;
+  font-size: 14px;
+}
+
 .part-trust-summary {
   display: flex;
   gap: var(--space-4);
@@ -3395,6 +3413,18 @@ h3 {
   .result-group-heading {
     align-items: flex-start;
     flex-direction: column;
+  }
+
+  .results-heading > span {
+    display: none;
+  }
+
+  .search-tabs {
+    gap: 0;
+  }
+
+  .search-tabs button {
+    flex: 1;
   }
 
   .model-title-line,
