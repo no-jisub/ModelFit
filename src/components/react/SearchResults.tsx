@@ -61,11 +61,7 @@ function ModelResultCard({
         </span>
       </div>
       <p className="model-brand-label">{model.brandName}</p>
-      <h3>
-        <a href={`/model/${model.brandId}/${model.slug}#compatible-parts`}>
-          {getModelDisplayName(model)}
-        </a>
-      </h3>
+      <h3>{getModelDisplayName(model)}</h3>
       <p className="model-series">
         {model.modelCode}
         {model.series ? ` · ${model.series}` : ""}
@@ -96,7 +92,7 @@ function ModelResultCard({
           aria-controls={panelId}
           onClick={onSelect}
         >
-          {selected ? "소모품 닫기 ↑" : "소모품 바로 보기 ↓"}
+          {selected ? "호환 소모품 닫기 ↑" : "호환 소모품 확인 ↓"}
         </button>
       </div>
       {selected && (
@@ -110,12 +106,6 @@ function ModelResultCard({
               <span className="eyebrow">공식 호환 소모품</span>
               <strong>{modelParts.length}개가 연결되어 있습니다</strong>
             </div>
-            <a
-              className="text-link"
-              href={`/model/${model.brandId}/${model.slug}#compatible-parts`}
-            >
-              전체 정보 →
-            </a>
           </div>
           {modelParts.length > 0 ? (
             <div className="model-inline-parts">

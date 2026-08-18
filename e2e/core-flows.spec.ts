@@ -41,6 +41,14 @@ test("통합검색 결과를 모델과 소모품 탭으로 전환한다", async 
   await expect(page.getByRole("tabpanel", { name: /모델/ })).toBeVisible();
 });
 
+test("모델 카드는 호환 소모품 확인 행동 하나를 제공한다", async ({ page }) => {
+  await page.goto("/category/air-purifier");
+
+  const modelCard = page.locator(".model-card").filter({ hasText: "노블 공기청정기" }).first();
+  await expect(modelCard.getByRole("link", { name: /호환 소모품 확인/ })).toHaveCount(1);
+  await expect(modelCard.getByRole("link", { name: /상세 보기/ })).toHaveCount(0);
+});
+
 test("모델을 내 가전함에 저장하고 다시 확인한다", async ({ page }) => {
   await page.goto("/model/lg/as355nsna");
   const compatibleParts = page.getByRole("heading", { name: /이 모델에 연결된 소모품/ });

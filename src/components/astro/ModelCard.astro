@@ -27,7 +27,7 @@ const consumableSummary =
     </span>
   </div>
   <p class="model-brand-label">{model.brandName}</p>
-  <h3><a href={`/model/${model.brandId}/${model.slug}`}>{displayName}</a></h3>
+  <h3>{displayName}</h3>
   <p class="model-series">{model.modelCode} {model.series ? `· ${model.series}` : ""}</p>
   <p class:list={["model-release-date", { "is-pending": !model.releaseDate }]}>
     <span aria-hidden="true">◷</span>
@@ -39,11 +39,11 @@ const consumableSummary =
   </div>
   <a
     class="model-card-action"
-    href={`/model/${model.brandId}/${model.slug}`}
-    aria-label={`${displayName} 상세 보기`}
+    href={`/model/${model.brandId}/${model.slug}#compatible-parts`}
+    aria-label={`${displayName} 호환 소모품 확인`}
   >
     <span>
-      <strong>모델 상세 보기</strong>
+      <strong>호환 소모품 확인</strong>
       <small>{model.modelCode} · {consumableSummary}</small>
     </span>
     <span class="model-card-action-arrow" aria-hidden="true">→</span>

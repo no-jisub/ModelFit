@@ -56,15 +56,18 @@ const isReleaseDatePending = releaseDates.size === 0;
   <details class="model-variant-picker">
     <summary>
       <span>
-        <strong>모델번호 선택</strong>
-        <small>{models.length}개 모델 · {consumableSummary}</small>
+        <strong>호환 소모품 확인</strong>
+        <small>모델번호 {models.length}개 중 선택 · {consumableSummary}</small>
       </span>
       <span class="model-variant-chevron" aria-hidden="true">⌄</span>
     </summary>
     <div class="model-variant-list">
       {
         models.map((model) => (
-          <a class="model-variant-option" href={`/model/${model.brandId}/${model.slug}`}>
+          <a
+            class="model-variant-option"
+            href={`/model/${model.brandId}/${model.slug}#compatible-parts`}
+          >
             <span>
               <strong>{model.modelCode}</strong>
               <small class:list={{ "is-pending": !model.releaseDate }}>
