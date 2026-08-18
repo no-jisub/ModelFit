@@ -49,6 +49,18 @@ test("모델 카드는 호환 소모품 확인 행동 하나를 제공한다", a
   await expect(modelCard.getByRole("link", { name: /상세 보기/ })).toHaveCount(0);
 });
 
+test("소모품 카드에서 구매처 영역으로 바로 이동한다", async ({ page }) => {
+  await page.goto("/model/lg/as355nsna");
+
+  const purchaseLink = page.getByRole("link", { name: "구매처 확인하기 →" }).first();
+  await expect(purchaseLink).toHaveAttribute("href", /#purchase-options$/);
+  await purchaseLink.click();
+
+  await expect(page).toHaveURL(/#purchase-options$/);
+  await expect(page.locator("#purchase-options")).toBeVisible();
+  await expect(page.getByRole("heading", { name: "구매처 확인 순서" })).toBeVisible();
+});
+
 test("모델을 내 가전함에 저장하고 다시 확인한다", async ({ page }) => {
   await page.goto("/model/lg/as355nsna");
   const compatibleParts = page.getByRole("heading", { name: /이 모델에 연결된 소모품/ });
