@@ -38,5 +38,9 @@ test("390px 모델 상세에서 주요 행동을 먼저 제공한다", async ({ 
 
   await expect(page.getByRole("button", { name: "내 가전함에 추가" })).toBeVisible();
   await expect(page.getByRole("link", { name: "정보 수정 제보" }).first()).toBeVisible();
+  const compatiblePartsCta = page.getByRole("link", { name: /호환 소모품 2개 보기/ });
+  await expect(compatiblePartsCta).toBeVisible();
+  await compatiblePartsCta.click();
+  await expect(page).toHaveURL(/#compatible-parts$/);
   await expect(page.getByRole("heading", { name: /이 모델에 연결된 소모품/ })).toBeVisible();
 });
