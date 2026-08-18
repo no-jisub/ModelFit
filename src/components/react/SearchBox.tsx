@@ -117,6 +117,8 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
       <form
         className="search-form"
         role="search"
+        action="/find"
+        method="get"
         onSubmit={(event) => {
           event.preventDefault();
           goToSearch();
@@ -130,6 +132,7 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
         </span>
         <input
           id={inputId}
+          name="q"
           type="search"
           value={query}
           placeholder={header ? "모델·소모품 검색" : "예: 로보락 S8 또는 ADQ30041405"}
