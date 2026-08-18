@@ -182,26 +182,43 @@ const breadcrumbJsonLd = {
     </section>
 
     <section class="detail-section">
-      <div class="section-header">
-        <div>
-          <div class="eyebrow">검증 근거</div>
-          <h2>제조사 공식 출처</h2>
+      <details class="detail-disclosure">
+        <summary>
+          <span>
+            <span class="eyebrow">검증 근거</span>
+            <strong>제조사 공식 출처</strong>
+          </span>
+        </summary>
+        <div class="detail-disclosure-content">
+          <SourceList sources={model.sources} />
         </div>
-      </div>
-      <SourceList sources={model.sources} />
+      </details>
     </section>
 
     <section class="detail-section">
-      <h2>모델번호 확인</h2>
-      <div class="info-card card">
-        <span class="info-icon" aria-hidden="true">i</span>
-        <div>
-          <h3>이 모델의 라벨 위치</h3>
-          <p>{model.modelNumberLocation ?? "제품의 뒷면 또는 바닥면 정격 라벨을 확인하세요."}</p>
-          <p class="model-code">검색 키워드: {[model.modelCode, ...model.aliases].join(" · ")}</p>
-          <a class="text-link" href="/guide/find-model-number">모델번호 찾는 방법 보기 →</a>
+      <details class="detail-disclosure">
+        <summary>
+          <span>
+            <span class="eyebrow">제품 라벨</span>
+            <strong>모델번호 확인</strong>
+          </span>
+        </summary>
+        <div class="detail-disclosure-content">
+          <div class="info-card card">
+            <span class="info-icon" aria-hidden="true">i</span>
+            <div>
+              <h3>이 모델의 라벨 위치</h3>
+              <p>
+                {model.modelNumberLocation ?? "제품의 뒷면 또는 바닥면 정격 라벨을 확인하세요."}
+              </p>
+              <p class="model-code">
+                검색 키워드: {[model.modelCode, ...model.aliases].join(" · ")}
+              </p>
+              <a class="text-link" href="/guide/find-model-number">모델번호 찾는 방법 보기 →</a>
+            </div>
+          </div>
         </div>
-      </div>
+      </details>
     </section>
 
     <section class="detail-section">

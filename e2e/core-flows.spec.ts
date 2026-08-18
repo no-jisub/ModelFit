@@ -52,19 +52,19 @@ test("모델 카드는 호환 소모품 확인 행동 하나를 제공한다", a
 test("모델을 내 가전함에 저장하고 다시 확인한다", async ({ page }) => {
   await page.goto("/model/lg/as355nsna");
   const compatibleParts = page.getByRole("heading", { name: /이 모델에 연결된 소모품/ });
-  const officialSources = page.getByRole("heading", { name: "제조사 공식 출처" });
-  const modelNumberHelp = page.getByRole("heading", { name: "모델번호 확인" });
+  const officialSources = page.locator(".detail-disclosure").filter({
+    hasText: "제조사 공식 출처",
+  });
+  const modelNumberHelp = page.locator(".detail-disclosure").filter({ hasText: "모델번호 확인" });
   await expect(compatibleParts).toBeVisible();
   await expect(officialSources).toBeVisible();
   await expect(modelNumberHelp).toBeVisible();
-  const sectionHeadings = await page.locator("main h2").allTextContents();
-  const compatiblePartsHeading = await compatibleParts.textContent();
-  expect(sectionHeadings.indexOf(compatiblePartsHeading ?? "")).toBeLessThan(
-    sectionHeadings.indexOf("제조사 공식 출처"),
-  );
-  expect(sectionHeadings.indexOf("제조사 공식 출처")).toBeLessThan(
-    sectionHeadings.indexOf("모델번호 확인"),
-  );
+  await expect(officialSources).not.toHaveAttribute("open", "");
+  await expect(modelNumberHelp).not.toHaveAttribute("open", "");
+  await officialSources.locator(":scope > summary").click();
+  await expect(officialSources.getByRole("heading", { name: "확인 출처" })).toBeVisible();
+  await modelNumberHelp.locator(":scope > summary").click();
+  await expect(modelNumberHelp.getByRole("link", { name: /모델번호 찾는 방법/ })).toBeVisible();
   const saveButton = page.getByRole("button", { name: "내 가전함에 추가" });
   await saveButton.click();
   await expect(page.getByRole("button", { name: "내 가전함에서 빼기" })).toHaveAttribute(
