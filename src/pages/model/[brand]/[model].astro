@@ -106,7 +106,6 @@ const breadcrumbJsonLd = {
         </div>
         <div class="model-primary-actions">
           <SaveApplianceButton modelId={model.id} client:load />
-          <a class="button button-danger" href={reportUrl}> 정보 수정 제보 </a>
         </div>
       </div>
       <div class="alert-box" role="alert">
@@ -245,6 +244,9 @@ const breadcrumbJsonLd = {
             }
           </p>
         </div>
+      </div>
+      <div class="model-report-link">
+        <a class="text-link" href={reportUrl}>정보 수정 제보하기 →</a>
       </div>
     </section>
   </div>

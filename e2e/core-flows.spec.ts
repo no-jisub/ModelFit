@@ -94,7 +94,10 @@ test("검색 결과가 없을 때 재검색 안내를 제공한다", async ({ pa
 
 test("모델 상세에서 개인정보 없는 오류 제보 화면으로 이동한다", async ({ page }) => {
   await page.goto("/model/lg/as355nsna");
-  await page.locator("main").getByRole("link", { name: "정보 수정 제보" }).first().click();
+  await expect(page.locator(".model-primary-actions").getByRole("link")).toHaveCount(0);
+  const reportLink = page.locator("main").getByRole("link", { name: "정보 수정 제보하기" });
+  await expect(reportLink).toBeVisible();
+  await reportLink.click();
 
   await expect(page).toHaveURL(/\/report\?.*model=AS355NSNA/);
   await expect(page.getByRole("heading", { name: "잘못된 정보를 알려주세요" })).toBeVisible();
