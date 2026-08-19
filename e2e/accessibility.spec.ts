@@ -5,7 +5,7 @@ const routes = [
   { name: "홈", path: "/" },
   { name: "검색", path: "/find?q=ADQ30041405" },
   { name: "모델 상세", path: "/model/lg/as355nsna" },
-  { name: "소모품 상세", path: "/part/lg-puricare-m-filter-adq30041405" },
+  { name: "내 가전함", path: "/my-appliances" },
 ];
 
 for (const route of routes) {

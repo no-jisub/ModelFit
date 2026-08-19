@@ -8,14 +8,12 @@ import VerificationBadge from "./VerificationBadge.astro";
 const { part } = Astro.props as { part: ConsumableCompatibility };
 const officialSource =
   part.sources.find((source) => source.sourceType === "official-store") ?? part.sources[0];
-const officialSourceLabel =
-  officialSource?.sourceType === "official-store" ? "제조사 공식몰 확인" : "제조사 공식 정보 확인";
 ---
 
 <article class="consumable-card card">
   <div class="consumable-info">
     <div class="eyebrow">{partTypeLabels[part.type]}</div>
-    <h3><a href={`/part/${part.slug}`}>{part.displayName}</a></h3>
+    <h3>{part.displayName}</h3>
     <dl class="detail-list">
       <div><dt>정품 부품번호</dt><dd>{part.genuinePartNumber ?? "정보 없음"}</dd></div>
       <div><dt>교체주기 참고</dt><dd>{part.replacementInterval ?? "제조사 안내 확인"}</dd></div>
@@ -32,23 +30,6 @@ const officialSourceLabel =
     </dl>
   </div>
   <div class="consumable-actions">
-    <a class="button button-primary part-detail-link" href={`/part/${part.slug}#purchase-options`}>
-      구매처 확인하기 →
-    </a>
-    {
-      officialSource && (
-        <a
-          class="button button-secondary official-source-button"
-          href={officialSource.url}
-          rel="noopener noreferrer"
-          target="_blank"
-          data-source-type={officialSource.sourceType}
-          data-part-id={part.id}
-        >
-          {officialSourceLabel} <span aria-hidden="true">↗</span>
-        </a>
-      )
-    }
     <AffiliateButton
       keyword={part.affiliate.searchKeyword}
       kind="genuine"
@@ -62,10 +43,20 @@ const officialSourceLabel =
       stockStatus={part.affiliate.stockStatus}
       linkCheckedAt={part.affiliate.linkCheckedAt}
     />
-    <AffiliateButton keyword={part.affiliate.searchKeyword} kind="compatible" partId={part.id} />
-    <details class="purchase-note is-compact">
-      <summary>구매 전 확인사항</summary>
-      <p>{part.purchaseWarning}</p>
-    </details>
+    {
+      officialSource && (
+        <a
+          class="button button-secondary official-source-button"
+          href={officialSource.url}
+          rel="noopener noreferrer"
+          target="_blank"
+          data-source-type={officialSource.sourceType}
+          data-part-id={part.id}
+        >
+          제조사 호환 근거 보기 <span aria-hidden="true">↗</span>
+        </a>
+      )
+    }
+    <p class="purchase-warning-inline">구매 전 확인: {part.purchaseWarning}</p>
   </div>
 </article>

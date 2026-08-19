@@ -1737,17 +1737,33 @@ h3 {
   padding-top: var(--space-4);
 }
 
-.compatible-model-links > strong {
-  display: block;
-  margin-bottom: var(--space-2);
+.compatible-model-links > summary {
+  cursor: pointer;
+  list-style: none;
   color: var(--color-neutral-800);
   font-size: 12px;
+  font-weight: 800;
+}
+
+.compatible-model-links > summary::-webkit-details-marker {
+  display: none;
+}
+
+.compatible-model-links > summary::after {
+  float: right;
+  color: var(--color-primary-600);
+  content: "펼치기 ↓";
+}
+
+.compatible-model-links[open] > summary::after {
+  content: "접기 ↑";
 }
 
 .compatible-model-links > div {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  margin-top: var(--space-3);
 }
 
 .compatible-model-links a,
@@ -1762,6 +1778,12 @@ h3 {
 .compatible-model-links a:hover {
   background: var(--color-primary-100);
   color: var(--color-primary-700);
+}
+
+.compatible-model-links > p {
+  margin: var(--space-3) 0 0;
+  color: var(--color-neutral-500);
+  font-size: 12px;
 }
 
 .compatible-parts-section {
@@ -2388,6 +2410,13 @@ h3 {
 .affiliate-button.is-disabled {
   opacity: 0.65;
   cursor: not-allowed;
+}
+
+.purchase-warning-inline {
+  margin: 0;
+  color: var(--color-neutral-500);
+  font-size: 11px;
+  line-height: 1.55;
 }
 
 .affiliate-disclosure {

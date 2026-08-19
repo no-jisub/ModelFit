@@ -155,7 +155,9 @@ export default function MyAppliances() {
                     return (
                       <div className="reminder-item" key={part.id}>
                         <div className="reminder-copy">
-                          <a href={`/part/${part.slug}`}>{part.displayName}</a>
+                          <a href={`/model/${model.brandId}/${model.slug}#compatible-parts`}>
+                            {part.displayName}
+                          </a>
                           <span className={`reminder-status reminder-${state}`}>{stateLabel}</span>
                           <small>
                             {reminder

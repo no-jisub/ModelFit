@@ -25,7 +25,7 @@ test("홈에서 화면 크기에 맞는 쿠팡 배너와 광고 고지를 제공
   );
 });
 
-test("검색에서 소모품 상세와 제휴 구매 경로로 이동한다", async ({ page }) => {
+test("검색에서 소모품의 공식 호환 모델을 펼쳐 모델 상세로 이동한다", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
   await page
     .getByRole("combobox", { name: "모델명, 상품명 또는 정품 부품번호" })
@@ -38,22 +38,22 @@ test("검색에서 소모품 상세와 제휴 구매 경로로 이동한다", as
     "true",
   );
   await expect(page.getByRole("heading", { name: "상품명과 부품번호가 일치합니다" })).toBeVisible();
-  await page.getByRole("link", { name: "LG 퓨리탈취청정 M 필터", exact: true }).first().click();
+  const partCard = page.locator(".search-part-card").filter({
+    hasText: "LG 퓨리탈취청정 M 필터",
+  });
+  const compatibleModels = partCard.getByText(/공식 호환 모델 2개 보기/);
+  await compatibleModels.click();
+  await partCard.getByRole("link", { name: "LG AS355NSNA" }).click();
 
-  await expect(page).toHaveURL(/\/part\/lg-puricare-m-filter-adq30041405/);
-  await expect(page.getByRole("heading", { name: "LG 퓨리탈취청정 M 필터" })).toBeVisible();
-  await expect(page.locator("[data-freshness='current']")).toBeVisible();
+  await expect(page).toHaveURL(/\/model\/lg\/as355nsna#compatible-parts$/);
+  await expect(page.locator("#compatible-parts")).toBeVisible();
+});
 
-  const channels = page.locator(".purchase-channel-label");
-  await expect(channels.nth(0)).toContainText("공식 사이트");
-  await expect(channels.nth(1)).toContainText("쿠팡");
+test("기존 소모품 주소는 호환 모델의 소모품 영역으로 이동한다", async ({ page }) => {
+  await page.goto("/part/lg-puricare-g-filter-adq30041403");
 
-  const coupangLink = page.locator("a[data-purchase-channel='coupang']");
-  await expect(coupangLink).toHaveAttribute("href", /link\.coupang\.com\/a\//);
-  await expect(coupangLink).toHaveAttribute("rel", /sponsored/);
-  await expect(page.locator(".affiliate-disclosure")).toContainText(
-    "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
-  );
+  await expect(page).toHaveURL(/\/model\/lg\/as355nsah#compatible-parts$/);
+  await expect(page.locator("#compatible-parts")).toBeVisible();
 });
 
 test("통합검색 결과를 모델과 소모품 탭으로 전환한다", async ({ page }) => {
@@ -77,16 +77,14 @@ test("모델 카드는 호환 소모품 확인 행동 하나를 제공한다", a
   await expect(modelCard.getByRole("link", { name: /상세 보기/ })).toHaveCount(0);
 });
 
-test("소모품 카드에서 구매처 영역으로 바로 이동한다", async ({ page }) => {
+test("소모품 카드는 정품 구매와 제조사 호환 근거 행동만 제공한다", async ({ page }) => {
   await page.goto("/model/lg/as355nsna");
 
-  const purchaseLink = page.getByRole("link", { name: "구매처 확인하기 →" }).first();
-  await expect(purchaseLink).toHaveAttribute("href", /#purchase-options$/);
-  await purchaseLink.click();
-
-  await expect(page).toHaveURL(/#purchase-options$/);
-  await expect(page.locator("#purchase-options")).toBeVisible();
-  await expect(page.getByRole("heading", { name: "구매처 확인 순서" })).toBeVisible();
+  const card = page.locator(".consumable-card").first();
+  await expect(card.getByRole("link", { name: /쿠팡에서 정품 구매하기/ })).toHaveCount(1);
+  await expect(card.getByRole("link", { name: /제조사 호환 근거 보기/ })).toHaveCount(1);
+  await expect(card.getByRole("link", { name: /구매처 확인하기/ })).toHaveCount(0);
+  await expect(card.getByRole("link", { name: /호환품 검색/ })).toHaveCount(0);
 });
 
 test("모델을 내 가전함에 저장하고 다시 확인한다", async ({ page }) => {

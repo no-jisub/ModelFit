@@ -3,8 +3,8 @@ import { expect, test } from "@playwright/test";
 const budgets = [
   { name: "홈", path: "/", maxResources: 30, maxTransferBytes: 750_000 },
   {
-    name: "소모품 상세",
-    path: "/part/lg-puricare-m-filter-adq30041405",
+    name: "모델 상세",
+    path: "/model/lg/as355nsna",
     maxResources: 30,
     maxTransferBytes: 750_000,
   },

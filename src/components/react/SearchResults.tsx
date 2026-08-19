@@ -110,7 +110,11 @@ function ModelResultCard({
           {modelParts.length > 0 ? (
             <div className="model-inline-parts">
               {modelParts.map((part) => (
-                <a className="model-inline-part" href={`/part/${part.slug}`} key={part.id}>
+                <a
+                  className="model-inline-part"
+                  href={`/model/${model.brandId}/${model.slug}#compatible-parts`}
+                  key={part.id}
+                >
                   <span>
                     <strong>{part.displayName}</strong>
                     <small>
@@ -133,25 +137,21 @@ function ModelResultCard({
 function PartResultCard({
   part,
   reason,
-  showCompatibleModels = true,
 }: {
   part: (typeof consumables)[number];
   reason: ConsumableMatchReason;
-  showCompatibleModels?: boolean;
 }) {
   const compatibleModels = part.compatibleModelIds
     .map((id) => models.find((model) => model.id === id))
     .filter((model) => model !== undefined);
 
   return (
-    <article className="search-part-card card">
+    <article className="search-part-card card" id={`part-${part.id}`}>
       <div className="search-part-card-top">
         <span className="category-chip">{partTypeLabels[part.type]}</span>
         <span className="match-reason">{matchReasonLabels[reason]}</span>
       </div>
-      <h3>
-        <a href={`/part/${part.slug}`}>{part.displayName}</a>
-      </h3>
+      <h3>{part.displayName}</h3>
       <p className="model-code">{part.genuinePartNumber ?? "정보 없음"}</p>
       <span
         className={`part-number-badge is-${getPartNumberStatus(part.genuinePartNumber, part.partNumberStatus)}`}
@@ -159,22 +159,20 @@ function PartResultCard({
         <span aria-hidden="true">{part.genuinePartNumber ? "✓" : "—"}</span>
         {partNumberStatusLabels[getPartNumberStatus(part.genuinePartNumber, part.partNumberStatus)]}
       </span>
-      {showCompatibleModels && (
-        <div className="compatible-model-links">
-          <strong>공식 호환 모델</strong>
+      <details className="compatible-model-links">
+        <summary>공식 호환 모델 {compatibleModels.length}개 보기</summary>
+        {compatibleModels.length > 0 ? (
           <div>
-            {compatibleModels.slice(0, 5).map((model) => (
+            {compatibleModels.map((model) => (
               <a href={`/model/${model.brandId}/${model.slug}#compatible-parts`} key={model.id}>
                 {model.brandName} {model.modelCode}
               </a>
             ))}
-            {compatibleModels.length > 5 && <span>외 {compatibleModels.length - 5}개</span>}
           </div>
-        </div>
-      )}
-      <a className="text-link" href={`/part/${part.slug}`}>
-        호환 근거와 구매 정보 보기 →
-      </a>
+        ) : (
+          <p>연결된 호환 모델을 확인 중입니다.</p>
+        )}
+      </details>
     </article>
   );
 }
@@ -461,12 +459,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
                   <div className="related-result-groups">
                     <div className="search-part-grid">
                       {consumableMatches.related.map(({ part, reason }) => (
-                        <PartResultCard
-                          part={part}
-                          reason={reason}
-                          showCompatibleModels={false}
-                          key={part.id}
-                        />
+                        <PartResultCard part={part} reason={reason} key={part.id} />
                       ))}
                     </div>
                   </div>

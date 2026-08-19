@@ -38,10 +38,10 @@ const isAffiliate = marketplaceUrl
 const label =
   kind === "genuine"
     ? linkStatus === "direct-product"
-      ? "쿠팡 상품 바로가기"
+      ? "쿠팡에서 정품 구매하기"
       : linkStatus === "search-results"
-        ? "쿠팡 검색 결과 보기"
-        : "쿠팡 판매 확인 안 됨"
+        ? "쿠팡에서 정품 검색하기"
+        : "쿠팡 정품 링크 준비 중"
     : "쿠팡에서 호환품 검색";
 const statusLabel =
   kind === "genuine"
@@ -77,7 +77,7 @@ const stockLabel =
   {
     url ? (
       <a
-        class="button button-secondary affiliate-button"
+        class="button button-primary affiliate-button"
         href={url}
         rel={
           isAffiliate ? "nofollow sponsored noopener noreferrer" : "nofollow noopener noreferrer"
@@ -92,7 +92,7 @@ const stockLabel =
       </a>
     ) : (
       <span
-        class="button button-secondary affiliate-button is-disabled"
+        class="button button-primary affiliate-button is-disabled"
         aria-disabled="true"
         title="확인된 쿠팡 링크가 없습니다."
       >

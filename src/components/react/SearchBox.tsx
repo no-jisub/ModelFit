@@ -47,7 +47,9 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
           part.genuinePartNumber ?? "부품번호 정보 없음"
         }`,
         status: reason === "part-number" ? "부품번호 일치" : "소모품",
-        url: `/part/${part.slug}`,
+        url: `/find?q=${encodeURIComponent(
+          part.genuinePartNumber ?? part.displayName,
+        )}&type=parts#part-${part.id}`,
         score,
       })),
     ].sort(
