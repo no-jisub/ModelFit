@@ -1,6 +1,7 @@
 ---
 import BrandCard from "@/components/astro/BrandCard.astro";
 import CategorySelector from "@/components/astro/CategorySelector.astro";
+import CoupangCategoryBanner from "@/components/astro/CoupangCategoryBanner.astro";
 import SearchBox from "@/components/react/SearchBox";
 import { brands } from "@/data/brands";
 import { consumables } from "@/data/consumables";
@@ -69,6 +70,8 @@ const websiteJsonLd = [
       <CategorySelector />
     </div>
   </section>
+
+  <CoupangCategoryBanner />
 
   <section class="section home-section-tint" id="brands">
     <div class="container">

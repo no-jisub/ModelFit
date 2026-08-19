@@ -1,5 +1,30 @@
 import { expect, test } from "@playwright/test";
 
+test("홈에서 화면 크기에 맞는 쿠팡 배너와 광고 고지를 제공한다", async ({ page }) => {
+  await page.goto("/");
+
+  const isMobile = (page.viewportSize()?.width ?? 0) <= 767;
+  const banner = page.locator("[data-coupang-category-banner]");
+  const expectedHref = isMobile
+    ? "https://link.coupang.com/a/glypBvXwVE"
+    : "https://link.coupang.com/a/glymSz5RDg";
+  const expectedImageId = isMobile ? "1019540" : "1019534";
+
+  await expect(banner).toBeVisible();
+  await expect(banner).toHaveAttribute("href", expectedHref);
+  await expect(banner).toHaveAttribute("rel", /sponsored/);
+  const imageSource = isMobile
+    ? banner.locator("source[media='(max-width: 767px)']")
+    : banner.locator("img");
+  await expect(imageSource).toHaveAttribute(
+    isMobile ? "srcset" : "src",
+    new RegExp(expectedImageId),
+  );
+  await expect(page.locator(".coupang-banner-inner .affiliate-disclosure")).toContainText(
+    "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+  );
+});
+
 test("검색에서 소모품 상세와 제휴 구매 경로로 이동한다", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
   await page

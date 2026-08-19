@@ -1,0 +1,58 @@
+---
+import AffiliateDisclosure from "./AffiliateDisclosure.astro";
+
+const desktopHref = "https://link.coupang.com/a/glymSz5RDg";
+const mobileHref = "https://link.coupang.com/a/glypBvXwVE";
+const desktopImage =
+  "https://ads-partners.coupang.com/banners/1019534?trackingCode=AF8213102&subId=&traceId=V0-301-5f9bd61900e673c0-I1019534&w=728&h=90";
+const mobileImage =
+  "https://ads-partners.coupang.com/banners/1019540?trackingCode=AF8213102&subId=&traceId=V0-301-5f9bd61900e673c0-I1019540&w=320&h=100";
+---
+
+<aside class="coupang-banner-section" aria-label="쿠팡 파트너스 광고">
+  <div class="container">
+    <div class="coupang-banner-inner">
+      <span class="coupang-banner-label">광고</span>
+      <a
+        class="coupang-category-banner"
+        href={desktopHref}
+        data-coupang-category-banner
+        data-desktop-href={desktopHref}
+        data-mobile-href={mobileHref}
+        target="_blank"
+        rel="sponsored nofollow noopener"
+        referrerpolicy="unsafe-url"
+        aria-label="쿠팡 로켓 가전·디지털 상품 보기(새 창)"
+      >
+        <picture>
+          <source media="(max-width: 767px)" srcset={mobileImage} />
+          <img
+            src={desktopImage}
+            width="728"
+            height="90"
+            loading="lazy"
+            alt="쿠팡 로켓 가전·디지털 상품 보기"
+          />
+        </picture>
+      </a>
+      <AffiliateDisclosure hasAffiliateLinks={true} />
+    </div>
+  </div>
+</aside>
+
+<script>
+  const mobileBannerQuery = window.matchMedia("(max-width: 767px)");
+
+  document.querySelectorAll<HTMLElement>("[data-coupang-category-banner]").forEach((banner) => {
+    const updateBannerHref = () => {
+      const href = mobileBannerQuery.matches
+        ? banner.dataset.mobileHref
+        : banner.dataset.desktopHref;
+
+      if (href) banner.setAttribute("href", href);
+    };
+
+    updateBannerHref();
+    mobileBannerQuery.addEventListener("change", updateBannerHref);
+  });
+</script>

@@ -2397,6 +2397,56 @@ h3 {
   line-height: 1.6;
 }
 
+.coupang-banner-section {
+  padding-bottom: 56px;
+}
+
+.coupang-banner-inner {
+  max-width: 1000px;
+  margin-inline: auto;
+  border-top: 1px solid var(--color-neutral-100);
+  padding-top: 32px;
+}
+
+.coupang-banner-label {
+  display: block;
+  width: min(100%, 728px);
+  margin: 0 auto 8px;
+  color: var(--color-neutral-500);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.coupang-category-banner {
+  display: block;
+  width: min(100%, 728px);
+  aspect-ratio: 728 / 90;
+  margin-inline: auto;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.coupang-category-banner picture,
+.coupang-category-banner img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.coupang-category-banner img {
+  object-fit: contain;
+}
+
+.coupang-category-banner:focus-visible {
+  outline: 3px solid var(--color-primary-300);
+  outline-offset: 4px;
+}
+
+.coupang-banner-inner .affiliate-disclosure {
+  width: min(100%, 728px);
+  margin-inline: auto;
+}
+
 .info-card {
   display: flex;
   gap: var(--space-4);
@@ -3630,6 +3680,24 @@ h3 {
 }
 
 @media (max-width: 480px) {
+  .coupang-banner-section {
+    padding-bottom: 48px;
+  }
+
+  .coupang-banner-inner {
+    padding-top: 24px;
+  }
+
+  .coupang-banner-label,
+  .coupang-category-banner,
+  .coupang-banner-inner .affiliate-disclosure {
+    width: min(100%, 320px);
+  }
+
+  .coupang-category-banner {
+    aspect-ratio: 320 / 100;
+  }
+
   .site-header .logo-copy {
     display: none;
   }
