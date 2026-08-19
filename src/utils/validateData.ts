@@ -164,7 +164,8 @@ export function validateData(
     }
     if (
       part.affiliate.status === "direct-product" &&
-      !part.affiliate.directUrl?.includes("/vp/products/")
+      !part.affiliate.directUrl?.includes("/vp/products/") &&
+      !part.affiliate.directUrl?.startsWith("https://link.coupang.com/a/")
     ) {
       errors.push(`${part.id}: 직접 상품 링크 상태이지만 쿠팡 상품 URL이 아닙니다.`);
     }
@@ -177,6 +178,9 @@ export function validateData(
     if (Number.isNaN(Date.parse(part.affiliate.linkCheckedAt))) {
       errors.push(`${part.id}: 구매 링크 확인일이 올바르지 않습니다.`);
     }
+    if (part.affiliate.restrictionNote && part.affiliate.isAffiliate) {
+      errors.push(`${part.id}: 생성 제한 상품을 제휴 링크로 표시할 수 없습니다.`);
+    }
     if (
       part.affiliate.priceStatus === "manual-check-required" &&
       part.affiliate.stockStatus !== "manual-check-required"
@@ -188,6 +192,12 @@ export function validateData(
         const url = new URL(part.affiliate.directUrl);
         if (url.protocol !== "https:" || !url.hostname.endsWith("coupang.com")) {
           errors.push(`${part.id}: 허용되지 않은 쿠팡 링크 ${part.affiliate.directUrl}`);
+        }
+        if (
+          part.affiliate.isAffiliate !==
+          (url.hostname === "link.coupang.com" && url.pathname.startsWith("/a/"))
+        ) {
+          errors.push(`${part.id}: 쿠팡 제휴 링크 여부와 URL이 일치하지 않습니다.`);
         }
       } catch {
         errors.push(`${part.id}: 잘못된 구매 링크 ${part.affiliate.directUrl}`);
@@ -208,9 +218,6 @@ export function validateData(
         errors.push(`${part.id}: 중복 구매 링크 ID ${link.id}`);
       }
       purchaseLinkIds.add(link.id);
-      if (link.isAffiliate) {
-        errors.push(`${part.id}: 데이터에는 비제휴 링크만 저장해야 합니다.`);
-      }
       if (Number.isNaN(Date.parse(link.checkedAt))) {
         errors.push(`${part.id}: 구매 링크 확인일이 올바르지 않습니다.`);
       }
@@ -221,6 +228,17 @@ export function validateData(
         }
         if (link.channel === "coupang" && !url.hostname.endsWith("coupang.com")) {
           errors.push(`${part.id}: 쿠팡 외부 구매 링크 ${link.url}`);
+        }
+        if (
+          link.isAffiliate &&
+          (link.channel !== "coupang" ||
+            url.hostname !== "link.coupang.com" ||
+            !url.pathname.startsWith("/a/"))
+        ) {
+          errors.push(`${part.id}: 잘못 표시된 제휴 구매 링크 ${link.url}`);
+        }
+        if (link.channel === "coupang" && link.isAffiliate !== part.affiliate.isAffiliate) {
+          errors.push(`${part.id}: 쿠팡 구매 링크의 제휴 상태가 원본 데이터와 다릅니다.`);
         }
       } catch {
         errors.push(`${part.id}: 잘못된 다중 구매 링크 ${link.url}`);

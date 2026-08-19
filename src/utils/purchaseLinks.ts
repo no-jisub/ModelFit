@@ -26,7 +26,7 @@ function primaryOfficialSource(part: PurchaseLinkSource) {
   );
 }
 
-export function createNonAffiliatePurchaseLinks(part: PurchaseLinkSource): PurchaseLinkData[] {
+export function createPurchaseLinks(part: PurchaseLinkSource): PurchaseLinkData[] {
   const links: PurchaseLinkData[] = [];
   const officialSource = primaryOfficialSource(part);
 
@@ -59,7 +59,7 @@ export function createNonAffiliatePurchaseLinks(part: PurchaseLinkSource): Purch
       url: coupangUrl,
       channel: "coupang",
       linkType: isDirectProduct ? "direct-product" : "search-results",
-      isAffiliate: false,
+      isAffiliate: part.affiliate.isAffiliate,
       checkedAt: part.affiliate.linkCheckedAt,
     });
   }
@@ -85,7 +85,7 @@ export function getPurchaseLinks(
   part: PurchaseLinkSource,
   configuredCoupangBaseUrl?: string,
 ): PurchaseLinkData[] {
-  const links = part.purchaseLinks ?? createNonAffiliatePurchaseLinks(part);
+  const links = part.purchaseLinks ?? createPurchaseLinks(part);
   const configuredBase = configuredCoupangBaseUrl?.trim();
   if (!configuredBase) return links;
 

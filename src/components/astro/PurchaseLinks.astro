@@ -33,6 +33,12 @@ const channels: Array<{
     channels.map((channel, index) => {
       const channelLinks = links.filter((link) => link.channel === channel.id);
       if (channelLinks.length === 0) return null;
+      const channelNote =
+        channel.id === "coupang" && part.affiliate.restrictionNote
+          ? `${part.affiliate.restrictionNote}으로 일반 상품 링크만 제공합니다.`
+          : channel.id === "coupang" && channelLinks.some((link) => link.isAffiliate)
+            ? "쿠팡 파트너스 제휴 링크이며 상품명만으로 정품이나 호환 여부를 단정하지 않습니다."
+            : channel.note;
 
       return (
         <section
@@ -61,7 +67,7 @@ const channels: Array<{
               {link.label} <span aria-hidden="true">↗</span>
             </a>
           ))}
-          <p class="part-action-copy">{channel.note}</p>
+          <p class="part-action-copy">{channelNote}</p>
           <small>링크 확인 {channelLinks[0]?.checkedAt}</small>
         </section>
       );

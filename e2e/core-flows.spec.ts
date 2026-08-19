@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
-test("검색에서 소모품 상세와 비제휴 구매 경로로 이동한다", async ({ page }) => {
-  await page.goto("/");
+test("검색에서 소모품 상세와 제휴 구매 경로로 이동한다", async ({ page }) => {
+  await page.goto("/", { waitUntil: "networkidle" });
   await page
     .getByRole("combobox", { name: "모델명, 상품명 또는 정품 부품번호" })
     .fill("ADQ30041405");
@@ -24,8 +24,11 @@ test("검색에서 소모품 상세와 비제휴 구매 경로로 이동한다",
   await expect(channels.nth(1)).toContainText("쿠팡");
 
   const coupangLink = page.locator("a[data-purchase-channel='coupang']");
-  await expect(coupangLink).toHaveAttribute("href", /coupang\.com/);
-  await expect(coupangLink).not.toHaveAttribute("rel", /sponsored/);
+  await expect(coupangLink).toHaveAttribute("href", /link\.coupang\.com\/a\//);
+  await expect(coupangLink).toHaveAttribute("rel", /sponsored/);
+  await expect(page.locator(".affiliate-disclosure")).toContainText(
+    "이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.",
+  );
 });
 
 test("통합검색 결과를 모델과 소모품 탭으로 전환한다", async ({ page }) => {

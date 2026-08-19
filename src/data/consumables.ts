@@ -1,5 +1,5 @@
 import type { ConsumableCompatibility, SourceReference } from "@/types";
-import { createNonAffiliatePurchaseLinks } from "../utils/purchaseLinks";
+import { createPurchaseLinks } from "../utils/purchaseLinks";
 
 const checkedAt = "2026-07-29";
 const regionalWarning =
@@ -17,16 +17,25 @@ const source = (
 const coupangSearch = (keyword: string) =>
   `https://www.coupang.com/np/search?q=${encodeURIComponent(keyword)}`;
 
-const affiliate = (searchKeyword: string, directUrl?: string, verifiedAt = checkedAt) => {
+const affiliate = (
+  searchKeyword: string,
+  directUrl?: string,
+  verifiedAt = checkedAt,
+  restrictionNote?: string,
+) => {
   const resolvedUrl = directUrl ?? coupangSearch(searchKeyword);
+  const isAffiliate = resolvedUrl.startsWith("https://link.coupang.com/a/");
 
   return {
     searchKeyword,
     directUrl: resolvedUrl,
+    isAffiliate,
+    restrictionNote,
     enabled: true,
-    status: resolvedUrl.includes("/vp/products/")
-      ? ("direct-product" as const)
-      : ("search-results" as const),
+    status:
+      resolvedUrl.includes("/vp/products/") || isAffiliate
+        ? ("direct-product" as const)
+        : ("search-results" as const),
     priceStatus: "manual-check-required" as const,
     stockStatus: "manual-check-required" as const,
     linkCheckedAt: verifiedAt,
@@ -113,7 +122,8 @@ const consumableRecords: ConsumableRecord[] = [
     ],
     affiliate: affiliate(
       "LG ADQ30041405 PFSALC01 정품 필터",
-      "https://www.coupang.com/vp/products/8763286247",
+      "https://link.coupang.com/a/gleYbpozKe",
+      "2026-08-19",
     ),
   },
   {
@@ -137,6 +147,8 @@ const consumableRecords: ConsumableRecord[] = [
     affiliate: affiliate(
       "LG ADQ30041403 PFSACC01 정품 필터",
       "https://www.coupang.com/vp/products/8941845170",
+      "2026-08-19",
+      "쿠팡 파트너스 링크 생성 제한 상품",
     ),
   },
   {
@@ -165,7 +177,8 @@ const consumableRecords: ConsumableRecord[] = [
     ],
     affiliate: affiliate(
       "LG ADQ75133511 PFPNNC06 정품 극세필터",
-      "https://www.coupang.com/vp/products/8946893297",
+      "https://link.coupang.com/a/gle4D3U4Ga",
+      "2026-08-19",
     ),
   },
   {
@@ -274,7 +287,8 @@ const consumableRecords: ConsumableRecord[] = [
     ],
     affiliate: affiliate(
       "쿠쿠 ACF-WMT10 정품 필터",
-      "https://www.coupang.com/vp/products/1919975207",
+      "https://link.coupang.com/a/gle6sSgGOa",
+      "2026-08-19",
     ),
   },
   {
@@ -315,7 +329,8 @@ const consumableRecords: ConsumableRecord[] = [
     ],
     affiliate: affiliate(
       "쿠쿠 ACF-TMT20 정품 필터",
-      "https://www.coupang.com/vp/products/7179000987",
+      "https://link.coupang.com/a/gle76e3jKC",
+      "2026-08-19",
     ),
   },
   {
@@ -1723,6 +1738,6 @@ export const consumables: ConsumableCompatibility[] = consumableRecords.map((par
 
   return {
     ...normalizedPart,
-    purchaseLinks: createNonAffiliatePurchaseLinks(normalizedPart),
+    purchaseLinks: createPurchaseLinks(normalizedPart),
   };
 });

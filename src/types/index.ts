@@ -25,6 +25,8 @@ export interface SourceReference {
 export interface AffiliateLinkData {
   searchKeyword: string;
   directUrl?: string;
+  isAffiliate: boolean;
+  restrictionNote?: string;
   enabled: boolean;
   status: "direct-product" | "search-results" | "unavailable";
   priceStatus: "manual-check-required" | "recently-checked";

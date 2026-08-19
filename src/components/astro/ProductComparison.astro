@@ -4,7 +4,9 @@ import type { ConsumableCompatibility } from "@/types";
 const { part } = Astro.props as { part: ConsumableCompatibility };
 const genuineLinkState =
   part.affiliate.status === "direct-product"
-    ? "쿠팡 직접 상품 링크 등록"
+    ? part.affiliate.isAffiliate
+      ? "쿠팡 제휴 상품 링크 등록"
+      : "쿠팡 일반 상품 링크 등록"
     : part.affiliate.status === "search-results"
       ? "쿠팡 검색 결과 링크 등록"
       : "등록된 쿠팡 링크 없음";

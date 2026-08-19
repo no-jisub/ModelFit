@@ -178,7 +178,13 @@ const breadcrumbJsonLd = {
           )
         }
       </div>
-      {parts.length > 0 && <AffiliateDisclosure />}
+      {
+        parts.length > 0 && (
+          <AffiliateDisclosure
+            hasAffiliateLinks={parts.some((part) => part.affiliate.isAffiliate)}
+          />
+        )
+      }
     </section>
 
     <section class="detail-section">
