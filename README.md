@@ -138,9 +138,11 @@ npm run preview
 
 ## 쿠팡·제휴 링크
 
-코드에 실제 제휴 URL을 하드코딩하지 않습니다. `PUBLIC_COUPANG_BASE_URL`을 설정하면 검색어를 `q` 매개변수로 추가합니다. 모든 링크는 `rel="nofollow sponsored noopener noreferrer"`와 `target="_blank"`를 사용합니다. 실제 파트너스 URL 형식이 다르면 `src/utils/affiliate.ts`를 공급자 규격에 맞게 수정하세요.
+쿠팡 파트너스에서 생성한 카테고리 배너와 검토가 끝난 일부 상품 링크만 등록합니다. 각 링크는 데이터의 `isAffiliate` 값으로 일반 링크와 구분하며, 제휴 링크에는 `rel="nofollow sponsored noopener noreferrer"`, 새 창 열기와 경제적 이해관계 고지를 함께 적용합니다.
 
-모든 소모품은 공식 호환 근거를 먼저 보여주고, 그다음 비제휴 쿠팡 직접 상품 또는 일반 검색 링크를 제공합니다. 데이터에는 제휴 URL을 저장하지 않으며, 제휴 계정이 준비된 뒤 배포 환경변수로만 검색 링크를 전환합니다.
+`PUBLIC_COUPANG_BASE_URL`은 승인 후 검색 링크 규격이 확정됐을 때만 사용합니다. API Access Key와 Secret Key는 브라우저 코드, `PUBLIC_` 환경변수 또는 저장소에 기록하지 않고 서버 측 비밀 저장소에서 관리해야 합니다.
+
+모든 소모품은 공식 호환 근거를 먼저 보여주고, 그다음 쿠팡 상품 또는 일반 검색 링크를 제공합니다. 특정 판매자의 상품을 정품·최저가·완전 호환으로 보증하지 않습니다. 심사 시 제출할 광고 위치, 형식과 운영 원칙은 [`docs/coupang-partners-review.md`](docs/coupang-partners-review.md)에 정리되어 있습니다.
 
 ## 테스트와 품질 검사
 

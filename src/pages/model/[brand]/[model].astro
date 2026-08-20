@@ -1,5 +1,4 @@
 ---
-import AffiliateDisclosure from "@/components/astro/AffiliateDisclosure.astro";
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import ConsumableCard from "@/components/astro/ConsumableCard.astro";
 import DataFreshnessBadge from "@/components/astro/DataFreshnessBadge.astro";
@@ -202,13 +201,6 @@ const breadcrumbJsonLd = {
           )
         }
       </div>
-      {
-        parts.length > 0 && (
-          <AffiliateDisclosure
-            hasAffiliateLinks={parts.some((part) => part.affiliate.isAffiliate)}
-          />
-        )
-      }
     </section>
 
     <section class="detail-section">

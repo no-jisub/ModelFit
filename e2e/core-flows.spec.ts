@@ -100,14 +100,29 @@ test("모델 상세에서 같은 제품군의 모델번호를 변경한다", asy
   await expect(page.locator("#compatible-parts")).toBeVisible();
 });
 
-test("소모품 카드는 정품 구매와 제조사 호환 근거 행동만 제공한다", async ({ page }) => {
+test("소모품 카드는 상품 확인과 제조사 호환 근거 행동만 제공한다", async ({ page }) => {
   await page.goto("/model/lg/as355nsna");
 
   const card = page.locator(".consumable-card").first();
-  await expect(card.getByRole("link", { name: /쿠팡에서 정품 구매하기/ })).toHaveCount(1);
+  const coupangLink = card.getByRole("link", { name: /쿠팡에서 상품 정보 확인하기/ });
+  await expect(coupangLink).toHaveCount(1);
+  await expect(coupangLink).toHaveAttribute("rel", /sponsored/);
   await expect(card.getByRole("link", { name: /제조사 호환 근거 보기/ })).toHaveCount(1);
+  await expect(card.locator(".affiliate-disclosure")).toContainText(
+    "이 포스팅은 쿠팡 파트너스 활동의 일환으로",
+  );
   await expect(card.getByRole("link", { name: /구매처 확인하기/ })).toHaveCount(0);
   await expect(card.getByRole("link", { name: /호환품 검색/ })).toHaveCount(0);
+});
+
+test("제휴 안내에서 광고 위치와 운영 연락처를 공개한다", async ({ page }) => {
+  await page.goto("/affiliate-disclosure");
+
+  await expect(page.getByRole("heading", { name: "모델핏과 쿠팡의 관계" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "현재 광고 위치와 형식" })).toBeVisible();
+  await expect(
+    page.locator("main").getByRole("link", { name: "shwltjq1@gmail.com" }),
+  ).toHaveAttribute("href", "mailto:shwltjq1@gmail.com");
 });
 
 test("모델을 내 가전함에 저장하고 다시 확인한다", async ({ page }) => {

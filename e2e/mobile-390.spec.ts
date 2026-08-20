@@ -7,6 +7,7 @@ const responsiveRoutes = [
   { name: "검색", path: "/find?q=ADQ30041405" },
   { name: "모델 상세", path: "/model/lg/as355nsna" },
   { name: "내 가전함", path: "/my-appliances" },
+  { name: "제휴 안내", path: "/affiliate-disclosure" },
 ];
 
 for (const route of responsiveRoutes) {

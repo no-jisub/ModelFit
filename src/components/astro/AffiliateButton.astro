@@ -1,5 +1,6 @@
 ---
 import { buildAffiliateUrl } from "@/utils/affiliate";
+import AffiliateDisclosure from "./AffiliateDisclosure.astro";
 
 const {
   keyword,
@@ -38,11 +39,11 @@ const isAffiliate = marketplaceUrl
 const label =
   kind === "genuine"
     ? linkStatus === "direct-product"
-      ? "쿠팡에서 정품 구매하기"
+      ? "쿠팡에서 상품 정보 확인하기"
       : linkStatus === "search-results"
-        ? "쿠팡에서 정품 검색하기"
-        : "쿠팡 정품 링크 준비 중"
-    : "쿠팡에서 호환품 검색";
+        ? "쿠팡에서 검색 결과 보기"
+        : "쿠팡 상품 링크 준비 중"
+    : "쿠팡에서 호환 후보 검색";
 const statusLabel =
   kind === "genuine"
     ? linkStatus === "direct-product"
@@ -101,6 +102,7 @@ const stockLabel =
     )
   }
   {statusLabel && <span class={`coupang-link-status ${statusClass}`}>{statusLabel}</span>}
+  {isAffiliate && <AffiliateDisclosure hasAffiliateLinks={true} />}
   <div class="commerce-status" aria-label="가격과 재고 확인 상태">
     <span>{priceLabel}</span>
     <span>{stockLabel}</span>
