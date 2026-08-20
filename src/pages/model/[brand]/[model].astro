@@ -13,6 +13,7 @@ import { models } from "@/data/models";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { categoryLabels } from "@/utils/labels";
 import { getModelFullName } from "@/utils/modelDisplayName";
+import { groupModelsByName } from "@/utils/modelGroups";
 import { formatModelReleaseDate } from "@/utils/modelReleaseDate";
 
 export function getStaticPaths() {
@@ -23,6 +24,9 @@ export function getStaticPaths() {
 }
 
 const { model } = Astro.props;
+const modelVariants = groupModelsByName(models).find(({ models: groupedModels }) =>
+  groupedModels.some((candidate) => candidate.id === model.id),
+)?.models ?? [model];
 const parts = model.consumableIds
   .map((id: string) => consumables.find((part) => part.id === id))
   .filter((part) => part !== undefined);
@@ -92,7 +96,27 @@ const breadcrumbJsonLd = {
             >{model.category === "air-purifier" ? "▤" : "◉"} {categoryLabel}</span
           >
           <h1>{fullModelName}</h1>
-          <div class="model-code">{model.modelCode} {model.series ? `· ${model.series}` : ""}</div>
+          {
+            modelVariants.length > 1 ? (
+              <label class="model-detail-selector">
+                <span>모델번호 선택</span>
+                <select data-model-detail-selector aria-label="모델번호 선택">
+                  {modelVariants.map((variant) => (
+                    <option
+                      value={`/model/${variant.brandId}/${variant.slug}#compatible-parts`}
+                      selected={variant.id === model.id}
+                    >
+                      {variant.modelCode} · {formatModelReleaseDate(variant.releaseDate)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            ) : (
+              <div class="model-code">
+                {model.modelCode} {model.series ? `· ${model.series}` : ""}
+              </div>
+            )
+          }
           <p>{model.shortDescription}</p>
           <div class="model-meta">
             <VerificationBadge status={model.verificationStatus} context="model" />
@@ -278,3 +302,11 @@ const breadcrumbJsonLd = {
     {parts.length > 0 ? `호환 소모품 ${parts.length}개 보기` : "호환 소모품 확인"}
   </a>
 </BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLSelectElement>("[data-model-detail-selector]").forEach((select) => {
+    select.addEventListener("change", () => {
+      if (select.value) window.location.assign(select.value);
+    });
+  });
+</script>

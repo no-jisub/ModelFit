@@ -53,31 +53,14 @@ const isReleaseDatePending = releaseDates.size === 0;
     <span>{lastVerifiedAt} 확인</span>
   </div>
 
-  <details class="model-variant-picker">
-    <summary>
-      <span>
-        <strong>호환 소모품 확인</strong>
-        <small>모델번호 {models.length}개 중 선택 · {consumableSummary}</small>
-      </span>
-      <span class="model-variant-chevron" aria-hidden="true">⌄</span>
-    </summary>
-    <div class="model-variant-list">
-      {
-        models.map((model) => (
-          <a
-            class="model-variant-option"
-            href={`/model/${model.brandId}/${model.slug}#compatible-parts`}
-          >
-            <span>
-              <strong>{model.modelCode}</strong>
-              <small class:list={{ "is-pending": !model.releaseDate }}>
-                {formatModelReleaseDate(model.releaseDate)}
-              </small>
-            </span>
-            <span aria-hidden="true">→</span>
-          </a>
-        ))
-      }
-    </div>
-  </details>
+  <a
+    class="model-card-action"
+    href={`/model/${representative.brandId}/${representative.slug}#compatible-parts`}
+  >
+    <span>
+      <strong>호환 소모품 확인</strong>
+      <small>{consumableSummary}</small>
+    </span>
+    <span class="model-card-action-arrow" aria-hidden="true">→</span>
+  </a>
 </article>

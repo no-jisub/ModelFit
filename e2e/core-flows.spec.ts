@@ -77,6 +77,29 @@ test("모델 카드는 호환 소모품 확인 행동 하나를 제공한다", a
   await expect(modelCard.getByRole("link", { name: /상세 보기/ })).toHaveCount(0);
 });
 
+test("묶인 모델 카드는 모델번호 선택 없이 대표 모델로 이동한다", async ({ page }) => {
+  await page.goto("/brand/lg");
+
+  const groupCard = page.locator(".model-group-card").first();
+  await expect(groupCard.locator("details")).toHaveCount(0);
+  await expect(groupCard.getByRole("link", { name: /호환 소모품 확인/ })).toHaveAttribute(
+    "href",
+    /\/model\/lg\/[^/]+#compatible-parts$/,
+  );
+});
+
+test("모델 상세에서 같은 제품군의 모델번호를 변경한다", async ({ page }) => {
+  await page.goto("/model/lg/as205ngja");
+
+  const selector = page.getByLabel("모델번호 선택");
+  await expect(selector.locator("option")).toHaveCount(5);
+  await expect(selector).toHaveValue("/model/lg/as205ngja#compatible-parts");
+  await selector.selectOption("/model/lg/as355nsna#compatible-parts");
+
+  await expect(page).toHaveURL(/\/model\/lg\/as355nsna#compatible-parts$/);
+  await expect(page.locator("#compatible-parts")).toBeVisible();
+});
+
 test("소모품 카드는 정품 구매와 제조사 호환 근거 행동만 제공한다", async ({ page }) => {
   await page.goto("/model/lg/as355nsna");
 

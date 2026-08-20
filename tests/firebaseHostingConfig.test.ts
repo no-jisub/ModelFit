@@ -24,4 +24,15 @@ describe("Firebase Hosting security headers", () => {
     expect(contentSecurityPolicy).toMatch(/frame-src[^;]*'self'/);
     expect(contentSecurityPolicy).toContain("frame-ancestors 'none'");
   });
+
+  it("allows Coupang banner redirects to its image CDN", () => {
+    const globalHeaders = config.hosting.headers.find(({ source }) => source === "**")?.headers;
+    const contentSecurityPolicy = globalHeaders?.find(
+      ({ key }) => key === "Content-Security-Policy",
+    )?.value;
+
+    expect(contentSecurityPolicy).toMatch(
+      /img-src[^;]*https:\/\/ads-partners\.coupang\.com[^;]*https:\/\/\*\.coupangcdn\.com/,
+    );
+  });
 });
