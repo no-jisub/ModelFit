@@ -2,7 +2,6 @@
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import ModelCard from "@/components/astro/ModelCard.astro";
 import ModelGroupCard from "@/components/astro/ModelGroupCard.astro";
-import SearchBox from "@/components/react/SearchBox";
 import { brands } from "@/data/brands";
 import { guides } from "@/data/guides";
 import { models } from "@/data/models";
@@ -28,35 +27,12 @@ const officialModels = brandModels.filter((model) => !model.isDemo);
   <section class="page-hero">
     <div class="container">
       <Breadcrumbs items={[{ label: "브랜드", href: "/#brands" }, { label: brand.name }]} />
-      <div class="eyebrow">브랜드</div>
       <h1>{brand.name} <span class="model-code">{brand.nameEn}</span></h1>
-      <p>
-        지원 카테고리: {
-          brand.supportedCategories.map((category) => categoryLabels[category]).join(" · ")
-        }
+      <p class="page-meta-inline">
+        {brand.supportedCategories.map((category) => categoryLabels[category]).join(" · ")} · {
+          officialModels.length
+        }개 모델
       </p>
-      <div class="stats-row">
-        <div class="stat-card card">
-          <strong>{officialModels.length}</strong><span>공식 모델</span>
-        </div>
-        <div class="stat-card card">
-          <strong>{brand.supportedCategories.length}</strong><span>지원 카테고리</span>
-        </div>
-        <div class="stat-card card"><strong>공식 출처</strong><span>모델 확인 기준</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="container">
-      <div class="content-narrow">
-        <div class="section-header">
-          <div>
-            <div class="eyebrow">브랜드 내 검색</div><h2>{brand.name} 모델명을 입력하세요</h2>
-          </div>
-        </div>
-        <SearchBox initialQuery={brand.name} compact client:load />
-      </div>
     </div>
   </section>
 
@@ -64,9 +40,7 @@ const officialModels = brandModels.filter((model) => !model.isDemo);
     <div class="container">
       <div class="section-header">
         <div>
-          <div class="eyebrow">모델 목록</div><h2>{brand.name} 등록 모델</h2><p>
-            같은 제품명은 하나로 묶어 표시합니다.
-          </p>
+          <h2>등록 모델</h2>
         </div>
       </div>
       <div class="model-grid">
@@ -86,7 +60,7 @@ const officialModels = brandModels.filter((model) => !model.isDemo);
   <section class="section">
     <div class="container">
       <div class="section-header">
-        <div><div class="eyebrow">관련 가이드</div><h2>모델 확인에 도움이 되는 글</h2></div>
+        <div><h2>모델 확인 가이드</h2></div>
       </div>
       <div class="related-grid">
         {

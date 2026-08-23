@@ -3,10 +3,7 @@ import { expect, test } from "@playwright/test";
 test("홈에서 화면 크기에 맞는 쿠팡 배너와 광고 고지를 제공한다", async ({ page }) => {
   await page.goto("/");
 
-  await expect(
-    page.getByRole("heading", { name: "어떤 제품의 소모품을 찾고 계신가요?" }),
-  ).toBeVisible();
-  await expect(page.getByText("모델번호로 호환 소모품 찾기", { exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "모델번호로 호환 소모품 찾기" })).toBeVisible();
   const isMobile = (page.viewportSize()?.width ?? 0) <= 767;
   const banner = page.locator("[data-coupang-category-banner]");
   const expectedHref = isMobile
@@ -103,11 +100,11 @@ test("검색에서 소모품의 공식 호환 모델을 펼쳐 모델 상세로 
   await header.getByRole("button", { name: "소모품 찾기" }).click();
 
   await expect(page).toHaveURL(/\/find\?q=ADQ30041405/);
-  await expect(page.getByRole("tab", { name: /소모품 1/ })).toHaveAttribute(
+  await expect(page.getByRole("tab", { name: "소모품", exact: true })).toHaveAttribute(
     "aria-selected",
     "true",
   );
-  await expect(page.getByRole("heading", { name: "상품명과 부품번호가 일치합니다" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "일치하는 소모품" })).toBeVisible();
   const partCard = page.locator(".search-part-card").filter({
     hasText: "LG 퓨리탈취청정 M 필터",
   });
@@ -172,6 +169,14 @@ test("통합검색 결과를 모델과 소모품 탭으로 전환한다", async 
   await expect(page.getByRole("tabpanel", { name: /모델/ })).toBeVisible();
 });
 
+test("검색 첫 화면은 모델을 나눠 표시하고 더 보기로 확장한다", async ({ page }) => {
+  await page.goto("/find");
+
+  const cards = page.getByRole("tabpanel", { name: "모델" }).locator(".model-card");
+  await expect(cards).toHaveCount(12);
+  await page.getByRole("button", { name: "모델 더 보기" }).click();
+  await expect(cards).toHaveCount(24);
+});
 test("모델 카드 전체를 클릭해 상세 페이지로 이동한다", async ({ page }) => {
   await page.goto("/category/air-purifier");
 
@@ -221,46 +226,10 @@ test("소모품 카드는 상품 확인과 제조사 호환 근거 행동만 제
   await expect(coupangLink).toHaveCount(1);
   await expect(coupangLink).toHaveAttribute("rel", /sponsored/);
   await expect(card.getByRole("link", { name: /공식 호환 근거/ })).toHaveCount(1);
-  const purchaseWarning = card.locator("details.purchase-warning-inline");
-  const purchaseWarningSummary = purchaseWarning.getByText("구매 전 확인", { exact: true });
-  await expect(purchaseWarningSummary).toBeVisible();
-  const sourceLink = card.getByRole("link", { name: /공식 호환 근거/ });
-  const actionTypography = await Promise.all(
-    [sourceLink, purchaseWarningSummary].map((locator) =>
-      locator.evaluate((element) => {
-        const style = window.getComputedStyle(element);
-        return {
-          color: style.color,
-          fontFamily: style.fontFamily,
-          fontSize: style.fontSize,
-          fontWeight: style.fontWeight,
-        };
-      }),
-    ),
-  );
-  expect(actionTypography[1]).toEqual(actionTypography[0]);
-  const sourceLinkBox = await sourceLink.boundingBox();
-  const purchaseWarningBox = await purchaseWarningSummary.boundingBox();
-  const purchaseWarningScrollY = await page.evaluate(() => window.scrollY);
-  expect(Math.abs((sourceLinkBox?.y ?? 0) - (purchaseWarningBox?.y ?? 0))).toBeLessThanOrEqual(1);
-  await expect(purchaseWarning).not.toHaveAttribute("open", "");
-  await purchaseWarningSummary.click();
-  await expect(purchaseWarning).toHaveAttribute("open", "");
-  const openedSourceLinkBox = await sourceLink.boundingBox();
-  const openedPurchaseWarningBox = await purchaseWarningSummary.boundingBox();
-  const openedPurchaseWarningScrollY = await page.evaluate(() => window.scrollY);
-  expect(openedSourceLinkBox?.x).toBeCloseTo(sourceLinkBox?.x ?? 0, 0);
-  const sourceLinkPositionShift = Math.abs(
-    (openedSourceLinkBox?.y ?? 0) +
-      openedPurchaseWarningScrollY -
-      ((sourceLinkBox?.y ?? 0) + purchaseWarningScrollY),
-  );
-  expect(sourceLinkPositionShift).toBeLessThanOrEqual(2);
-  expect(openedPurchaseWarningBox?.x).toBeCloseTo(purchaseWarningBox?.x ?? 0, 0);
-  expect((openedPurchaseWarningBox?.y ?? 0) + openedPurchaseWarningScrollY).toBeCloseTo(
-    (purchaseWarningBox?.y ?? 0) + purchaseWarningScrollY,
-    0,
-  );
+  await expect(card.locator("details.purchase-warning-inline")).toHaveCount(0);
+  const purchaseWarning = page.locator("details.purchase-warning-page");
+  await expect(purchaseWarning).toHaveCount(1);
+  await expect(purchaseWarning.getByText("구매 전 확인", { exact: true })).toBeVisible();
   await expect(card.getByText("교체주기 참고")).toHaveCount(0);
   await expect(card.getByText("부품번호 상태")).toHaveCount(0);
   await expect(card.getByText("검증 상태")).toHaveCount(0);

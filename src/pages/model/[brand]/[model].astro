@@ -24,6 +24,7 @@ const modelVariants = groupModelsByName(models).find(({ models: groupedModels })
 const parts = model.consumableIds
   .map((id: string) => consumables.find((part) => part.id === id))
   .filter((part) => part !== undefined);
+const purchaseWarnings = [...new Set(parts.map((part) => part.purchaseWarning).filter(Boolean))];
 const categoryLabel = categoryLabels[model.category];
 const fullModelName = getModelFullName(model);
 const title = `${fullModelName} 호환 소모품 찾기`;
@@ -151,6 +152,18 @@ const breadcrumbJsonLd = {
           )
         }
       </div>
+      {
+        purchaseWarnings.length > 0 && (
+          <details class="purchase-warning-page">
+            <summary>구매 전 확인</summary>
+            <ul>
+              {purchaseWarnings.map((warning) => (
+                <li>{warning}</li>
+              ))}
+            </ul>
+          </details>
+        )
+      }
     </section>
 
     <section class="detail-section model-reference-section" aria-label="모델 확인 자료">

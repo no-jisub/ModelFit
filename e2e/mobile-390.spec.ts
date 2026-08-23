@@ -74,11 +74,11 @@ test("390px 홈 카테고리 카드는 세로로 배치된다", async ({ page })
 test("390px 검색 화면에서 결과 탭의 우선순위가 분명하다", async ({ page }) => {
   await page.goto("/find?q=ADQ30041405");
 
-  const modelTab = page.getByRole("tab", { name: /모델 2/ });
-  const partTab = page.getByRole("tab", { name: /소모품 1/ });
+  const modelTab = page.getByRole("tab", { name: "모델", exact: true });
+  const partTab = page.getByRole("tab", { name: "소모품", exact: true });
   await expect(modelTab).toBeVisible();
   await expect(partTab).toHaveAttribute("aria-selected", "true");
-  await expect(page.getByRole("tabpanel", { name: /소모품 1/ })).toBeVisible();
+  await expect(page.getByRole("tabpanel", { name: "소모품", exact: true })).toBeVisible();
 });
 
 test("390px 모델 상세에서 주요 행동을 먼저 제공한다", async ({ page }) => {

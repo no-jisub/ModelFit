@@ -31,7 +31,6 @@ const articleJsonLd = {
   <section class="page-hero">
     <div class="container content-narrow">
       <Breadcrumbs items={[{ label: "가이드", href: "/guide" }, { label: guide.title }]} />
-      <div class="eyebrow">{guide.category} 가이드</div>
       <h1>{guide.title}</h1>
       <p>{guide.summary}</p>
     </div>
@@ -50,9 +49,7 @@ const articleJsonLd = {
         </nav>
         <article class="article-body">
           <section class="article-section" id="summary">
-            <div class="article-summary">
-              {guide.summary} 아래 순서를 따라가면 구매 전 확인할 핵심 항목을 빠뜨리지 않을 수 있습니다.
-            </div>
+            <div class="article-summary">아래 순서를 따라 구매 전에 확인할 항목을 점검하세요.</div>
           </section>
           <section class="article-section" id="steps">
             <h2>단계별 확인</h2>

@@ -26,6 +26,8 @@ interface Props {
 
 type SearchTab = "models" | "parts";
 
+const MODEL_PAGE_SIZE = 12;
+
 const matchReasonLabels: Record<ConsumableMatchReason, string> = {
   "part-number": "부품번호 일치",
   "product-name": "상품명 일치",
@@ -184,6 +186,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
   const [tabPreference, setTabPreference] = useState<SearchTab | null>(null);
   const [urlStateReady, setUrlStateReady] = useState(false);
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
+  const [visibleModelCount, setVisibleModelCount] = useState(MODEL_PAGE_SIZE);
   const results = useMemo(
     () =>
       searchCatalog(models, consumables, query, {
@@ -198,6 +201,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
   const modelResultCount = results.models.length + results.compatibleModels.length;
   const partResultCount = results.consumables.length;
   const modelMatches = splitStrongMatches(results.models);
+  const visibleModelMatches = modelMatches.primary.slice(0, visibleModelCount);
   const consumableMatches = splitStrongMatches(results.consumables);
   const preferredTab: SearchTab =
     query.trim() &&
@@ -225,6 +229,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
 
   useEffect(() => {
     setSelectedModelId(null);
+    setVisibleModelCount(MODEL_PAGE_SIZE);
   }, [query, category, brandId]);
 
   useEffect(() => {
@@ -289,16 +294,9 @@ export default function SearchResults({ initialQuery = "" }: Props) {
         </label>
       </div>
 
-      <div className="results-heading" aria-live="polite">
-        <h2>{query ? `‘${query}’ 통합검색` : "전체 모델"}</h2>
-        <span>
-          {query
-            ? `모델 ${results.models.length + results.compatibleModels.length} · 소모품 ${
-                results.consumables.length
-              }`
-            : `${results.models.length}개 모델`}
-        </span>
-      </div>
+      <p className="results-summary" aria-live="polite">
+        검색 결과 {activeTab === "models" ? modelResultCount : partResultCount}개
+      </p>
 
       {totalResults > 0 ? (
         <div>
@@ -311,7 +309,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
               id="model-results-tab"
               onClick={() => setTabPreference("models")}
             >
-              모델 <span>{modelResultCount}</span>
+              모델
             </button>
             <button
               type="button"
@@ -321,7 +319,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
               id="part-results-tab"
               onClick={() => setTabPreference("parts")}
             >
-              소모품 <span>{partResultCount}</span>
+              소모품
             </button>
           </div>
 
@@ -333,18 +331,14 @@ export default function SearchResults({ initialQuery = "" }: Props) {
               aria-labelledby="model-results-tab"
             >
               {modelMatches.primary.length > 0 && (
-                <section className="result-group" aria-labelledby="model-results-heading">
-                  <div className="result-group-heading">
-                    <div>
-                      <span className="eyebrow">모델 결과</span>
-                      <h2 id="model-results-heading">
-                        {query ? "검색어와 일치하는 모델입니다" : "등록된 전체 모델"}
-                      </h2>
+                <section className="result-group" aria-label="모델 검색 결과">
+                  {query && (
+                    <div className="result-group-heading">
+                      <h2>일치하는 모델</h2>
                     </div>
-                    <span>{modelMatches.primary.length}개</span>
-                  </div>
+                  )}
                   <div className="model-grid">
-                    {modelMatches.primary.map(({ model }) => (
+                    {visibleModelMatches.map(({ model }) => (
                       <ModelResultCard
                         model={model}
                         selected={selectedModelId === model.id}
@@ -353,17 +347,24 @@ export default function SearchResults({ initialQuery = "" }: Props) {
                       />
                     ))}
                   </div>
+                  {visibleModelMatches.length < modelMatches.primary.length && (
+                    <div className="search-load-more">
+                      <button
+                        className="button button-secondary"
+                        type="button"
+                        onClick={() => setVisibleModelCount((count) => count + MODEL_PAGE_SIZE)}
+                      >
+                        모델 더 보기
+                      </button>
+                    </div>
+                  )}
                 </section>
               )}
 
               {results.compatibleModels.length > 0 && (
                 <section className="result-group" aria-labelledby="compatible-models-heading">
                   <div className="result-group-heading">
-                    <div>
-                      <span className="eyebrow">소모품으로 찾은 모델</span>
-                      <h2 id="compatible-models-heading">이 소모품과 공식 연결된 모델입니다</h2>
-                    </div>
-                    <span>{results.compatibleModels.length}개</span>
+                    <h2 id="compatible-models-heading">소모품과 연결된 모델</h2>
                   </div>
                   <div className="model-grid">
                     {results.compatibleModels.map((association) => (
@@ -424,11 +425,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
               {consumableMatches.primary.length > 0 ? (
                 <section className="result-group" aria-labelledby="part-results-heading">
                   <div className="result-group-heading">
-                    <div>
-                      <span className="eyebrow">소모품 결과</span>
-                      <h2 id="part-results-heading">상품명과 부품번호가 일치합니다</h2>
-                    </div>
-                    <span>{consumableMatches.primary.length}개</span>
+                    <h2 id="part-results-heading">일치하는 소모품</h2>
                   </div>
                   <div className="search-part-grid">
                     {consumableMatches.primary.map(({ part, reason }) => (
@@ -483,7 +480,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
               모델명 찾는 방법
             </a>
             <a className="button button-secondary" href="/find">
-              전체 모델 보기
+              검색 초기화
             </a>
           </div>
         </section>
