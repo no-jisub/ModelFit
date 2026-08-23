@@ -54,7 +54,7 @@ export const lgConsumableRecords: ConsumableRecord[] = [
     id: "lg-360-micro-filter",
     slug: "lg-360-micro-filter-adq75133511",
     type: "pre-filter",
-    displayName: "LG 360° 극세필터 6개입",
+    displayName: "LG 360° 극세필터",
     genuinePartNumber: "ADQ75133511",
     compatibleProductName: "PFPNNC06",
     compatibleModelIds: [

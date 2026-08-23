@@ -11,7 +11,7 @@ export const roborockConsumableRecords: ConsumableRecord[] = [
     id: "roborock-saros-qrevo-s8-dust-bag",
     slug: "roborock-saros-qrevo-s8-dust-bag",
     type: "dust-bag",
-    displayName: "Roborock Saros·Qrevo Curv·S8 MaxV Ultra 먼지봉투 6개입",
+    displayName: "Roborock Saros·Qrevo Curv·S8 MaxV Ultra 먼지봉투",
     compatibleProductName: "Official Dust Bag 6-Pack",
     compatibleModelIds: [
       "roborock-saros-z70",
@@ -70,13 +70,13 @@ export const roborockConsumableRecords: ConsumableRecord[] = [
       [
         "roborock-saros-z70-filter",
         "dust-bin-filter",
-        "Roborock Saros Z70 세척형 필터 2개입",
+        "Roborock Saros Z70 세척형 필터",
         "Washable Filter 2-Pack",
       ],
       [
         "roborock-saros-z70-mop-cloth",
         "mop-pad",
-        "Roborock Saros Z70 물걸레 패드 4개입",
+        "Roborock Saros Z70 물걸레 패드",
         "Mop Cloth 4-Pack",
       ],
     ] as const

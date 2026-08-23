@@ -1,6 +1,6 @@
 import {
   affiliate,
-  coupangSearch,
+  unavailableAffiliate,
   domesticWarning,
   researchedPart,
   source,
@@ -48,7 +48,7 @@ export const cuckooConsumableRecords: ConsumableRecord[] = [
         "https://www.cuckoo.co.kr/searchWord?searchWord=ACF-AHMT10",
       ),
     ],
-    affiliate: affiliate("쿠쿠 ACF-AHMT10 정품 필터", coupangSearch("쿠쿠 정품 ACF-AHMT10")),
+    affiliate: unavailableAffiliate("쿠쿠 ACF-AHMT10 정품 필터"),
   },
   {
     id: "cuckoo-acf-tmt20-filter",
@@ -81,6 +81,7 @@ export const cuckooConsumableRecords: ConsumableRecord[] = [
     sourceTitle: "쿠쿠 공식몰 — AC-23AH10FNW 토탈케어 청정필터 시스템",
     sourceUrl: "https://www.cuckoo.co.kr/mall/productView?productNo=8691",
     searchKeyword: "쿠쿠 AC-23AH10FNW 정품 필터",
+    purchaseUnavailable: true,
   }),
   researchedPart({
     id: "cuckoo-ac14-total-care-filter",
@@ -90,5 +91,6 @@ export const cuckooConsumableRecords: ConsumableRecord[] = [
     sourceTitle: "쿠쿠 공식 렌탈몰 — AC-14L10FEW 토탈케어 안심필터",
     sourceUrl: "https://www.cuckoo.co.kr/rental/productView?cateUid=31&idx=860",
     searchKeyword: "쿠쿠 AC-14L10FEW 정품 필터",
+    purchaseUnavailable: true,
   }),
 ];

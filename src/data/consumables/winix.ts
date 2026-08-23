@@ -1,5 +1,5 @@
 import {
-  affiliate,
+  unavailableAffiliate,
   domesticWarning,
   researchedPart,
   source,
@@ -20,7 +20,7 @@ export const winixConsumableRecords: ConsumableRecord[] = [
     sources: [
       source("위닉스 공식몰 — 타워프라임 플러스 일체형 필터", "https://www.winix.com/product/1668"),
     ],
-    affiliate: affiliate("위닉스 ATTM115-MWK 정품 일체형 필터"),
+    affiliate: unavailableAffiliate("위닉스 ATTM115-MWK 정품 일체형 필터"),
   },
   researchedPart({
     id: "winix-zero-s-replacement-filter",
@@ -31,6 +31,7 @@ export const winixConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://www.winix.com/product/843",
     sourceType: "manufacturer",
     searchKeyword: "위닉스 AZSE430-JWK 정품 필터",
+    purchaseUnavailable: true,
   }),
   researchedPart({
     id: "winix-tower-edge-all-in-one-filter",
@@ -41,6 +42,8 @@ export const winixConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://www.winix.com/product/1538",
     sourceType: "manufacturer",
     searchKeyword: "위닉스 AT8E430-MWK 정품 올인원 필터",
+    directUrl: "https://www.coupang.com/vp/products/7368403017",
+    verifiedAt: "2026-08-23",
   }),
   researchedPart({
     id: "winix-tower-prime-all-in-one-filter",
@@ -51,6 +54,8 @@ export const winixConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://www.winix.com/product/1211",
     sourceType: "manufacturer",
     searchKeyword: "위닉스 APRM833-JWK 정품 올인원 필터",
+    directUrl: "https://www.coupang.com/vp/products/8692963466",
+    verifiedAt: "2026-08-23",
   }),
   researchedPart({
     id: "winix-master-s-all-in-one-filter",
@@ -61,5 +66,6 @@ export const winixConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://www.winix.com/product/852",
     sourceType: "manufacturer",
     searchKeyword: "위닉스 AMSH993-JSK 정품 올인원 필터",
+    purchaseUnavailable: true,
   }),
 ];

@@ -1,5 +1,5 @@
 import {
-  affiliate,
+  unavailableAffiliate,
   domesticWarning,
   researchedPart,
   source,
@@ -29,7 +29,7 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
         "official-manual",
       ),
     ],
-    affiliate: affiliate("코웨이 AP-2021A AP-1521B 정품 4D 프리필터"),
+    affiliate: unavailableAffiliate("코웨이 AP-2021A AP-1521B 정품 4D 프리필터"),
   },
   {
     id: "coway-4d-dimensional-filter",
@@ -53,7 +53,7 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
         "official-manual",
       ),
     ],
-    affiliate: affiliate("코웨이 AP-2021A AP-1521B 정품 4D 입체필터"),
+    affiliate: unavailableAffiliate("코웨이 AP-2021A AP-1521B 정품 4D 입체필터"),
   },
   {
     id: "coway-air-matching-filter",
@@ -77,7 +77,7 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
         "official-manual",
       ),
     ],
-    affiliate: affiliate("코웨이 AP-2021A AP-1521B 정품 에어매칭필터"),
+    affiliate: unavailableAffiliate("코웨이 AP-2021A AP-1521B 정품 에어매칭필터"),
   },
   researchedPart({
     id: "coway-ap2219k-composite-filter",
@@ -89,5 +89,6 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://company.coway.com/ko/newsroom/press/154",
     sourceType: "manufacturer",
     searchKeyword: "코웨이 AP-2219K 정품 필터",
+    purchaseUnavailable: true,
   }),
 ];

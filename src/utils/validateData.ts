@@ -201,14 +201,24 @@ export function validateData(
         errors.push(`${part.id}: 잘못된 구매 링크 ${part.affiliate.directUrl}`);
       }
     }
-    if (part.purchaseLinks.length < 2) {
-      errors.push(`${part.id}: 공식·쿠팡 구매 경로가 모두 필요합니다.`);
+    const coupangPurchaseLinks = part.purchaseLinks.filter((link) => link.channel === "coupang");
+    if (part.affiliate.status === "unavailable") {
+      if (part.affiliate.enabled || part.affiliate.directUrl || part.affiliate.isAffiliate) {
+        errors.push(`${part.id}: 미확인 구매 링크는 비활성·비제휴 상태여야 합니다.`);
+      }
+      if (coupangPurchaseLinks.length > 0) {
+        errors.push(`${part.id}: 미확인 상품에는 쿠팡 구매 경로를 노출할 수 없습니다.`);
+      }
+    } else {
+      if (part.purchaseLinks.length < 2) {
+        errors.push(`${part.id}: 공식·쿠팡 구매 경로가 모두 필요합니다.`);
+      }
+      if (part.purchaseLinks[1]?.channel !== "coupang") {
+        errors.push(`${part.id}: 두 번째 구매 경로는 쿠팡이어야 합니다.`);
+      }
     }
     if (part.purchaseLinks[0]?.channel !== "official") {
       errors.push(`${part.id}: 첫 구매 경로는 공식 사이트여야 합니다.`);
-    }
-    if (part.purchaseLinks[1]?.channel !== "coupang") {
-      errors.push(`${part.id}: 두 번째 구매 경로는 쿠팡이어야 합니다.`);
     }
     const purchaseLinkIds = new Set<string>();
     for (const link of part.purchaseLinks) {

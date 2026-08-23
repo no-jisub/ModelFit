@@ -1,5 +1,5 @@
 import {
-  affiliate,
+  unavailableAffiliate,
   domesticWarning,
   researchedPart,
   source,
@@ -23,7 +23,7 @@ export const blueairConsumableRecords: ConsumableRecord[] = [
         "https://www.blueair.com/ko-kr/products/classic-pro-cp7i-pac-filter",
       ),
     ],
-    affiliate: affiliate("블루에어 CP7i 정품 PAC 필터"),
+    affiliate: unavailableAffiliate("블루에어 CP7i 정품 PAC 필터"),
   },
   {
     id: "blueair-dustmagnet-5200-combofilter",
@@ -42,7 +42,7 @@ export const blueairConsumableRecords: ConsumableRecord[] = [
         "https://www.blueair.com/ko-kr/products/dustmagnet-combofilter-5201",
       ),
     ],
-    affiliate: affiliate("블루에어 DustMagnet 5210i 5240i 정품 필터"),
+    affiliate: unavailableAffiliate("블루에어 DustMagnet 5210i 5240i 정품 필터"),
   },
   researchedPart({
     id: "blueair-cp9i-main-filter",
@@ -56,6 +56,7 @@ export const blueairConsumableRecords: ConsumableRecord[] = [
     searchKeyword: "블루에어 CP9i 정품 메인 필터",
     regional: true,
     verifiedAt: "2026-08-07",
+    purchaseUnavailable: true,
   }),
   researchedPart({
     id: "blueair-3410-particle-carbon-filter",
@@ -67,5 +68,6 @@ export const blueairConsumableRecords: ConsumableRecord[] = [
     sourceType: "manufacturer",
     searchKeyword: "블루에어 3410 정품 필터",
     replacementInterval: "약 6개월(사용 환경에 따라 다름)",
+    purchaseUnavailable: true,
   }),
 ];

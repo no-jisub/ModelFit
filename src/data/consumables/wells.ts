@@ -11,6 +11,7 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://m.kyowonwells.com/Product/Detail?grpIdx=47&productIdx=49",
     sourceType: "manufacturer",
     searchKeyword: "웰스 AL106 정품 필터",
+    purchaseUnavailable: true,
   }),
   researchedPart({
     id: "wells-tornado-allcare-filter",
@@ -22,6 +23,7 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://m.kyowonwells.com/Product/Detail?grpIdx=182&productIdx=373",
     sourceType: "manufacturer",
     searchKeyword: "웰스 AN730 AN734 정품 올케어 필터",
+    purchaseUnavailable: true,
   }),
   researchedPart({
     id: "wells-aq107-filter-set",
@@ -33,6 +35,7 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://www.kyowonwells.com/Product/Detail?grpIdx=1394&productIdx=926",
     sourceType: "manufacturer",
     searchKeyword: "웰스 AQ107 정품 필터",
+    purchaseUnavailable: true,
   }),
   researchedPart({
     id: "wells-am315-combi-filter",
@@ -44,5 +47,6 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://m.kyowonwells.com/Product/Detail?grpIdx=49&productIdx=54",
     sourceType: "manufacturer",
     searchKeyword: "웰스 AM315 정품 콤비 필터",
+    purchaseUnavailable: true,
   }),
 ];

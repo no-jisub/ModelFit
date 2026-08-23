@@ -52,13 +52,15 @@ describe("getPurchaseLinks", () => {
     );
   });
 
-  it("157개 모두 공식 사이트와 쿠팡 경로를 순서대로 제공한다", () => {
+  it("157개 모두 공식 사이트를 제공하고 확인된 상품만 쿠팡 경로를 제공한다", () => {
     expect(consumables).toHaveLength(157);
     expect(
       consumables.every(
         (part) =>
           part.purchaseLinks[0]?.channel === "official" &&
-          part.purchaseLinks[1]?.channel === "coupang" &&
+          (part.affiliate.status === "unavailable"
+            ? part.purchaseLinks.every((link) => link.channel !== "coupang")
+            : part.purchaseLinks[1]?.channel === "coupang") &&
           part.purchaseLinks.every(
             (link) =>
               new URL(link.url).protocol === "https:" && !Number.isNaN(Date.parse(link.checkedAt)),
@@ -67,13 +69,14 @@ describe("getPurchaseLinks", () => {
     ).toBe(true);
   });
 
-  it("직접 상품 5개와 일반 검색 152개를 구분한다", () => {
+  it("직접 상품 9개, 일반 검색 123개, 미확인 25개를 구분한다", () => {
     const coupangLinks = consumables.flatMap((part) =>
       part.purchaseLinks.filter((link) => link.channel === "coupang"),
     );
 
-    expect(coupangLinks.filter((link) => link.linkType === "direct-product")).toHaveLength(5);
-    expect(coupangLinks.filter((link) => link.linkType === "search-results")).toHaveLength(152);
+    expect(coupangLinks.filter((link) => link.linkType === "direct-product")).toHaveLength(9);
+    expect(coupangLinks.filter((link) => link.linkType === "search-results")).toHaveLength(123);
     expect(coupangLinks.filter((link) => link.isAffiliate)).toHaveLength(4);
+    expect(consumables.filter((part) => part.affiliate.status === "unavailable")).toHaveLength(25);
   });
 });

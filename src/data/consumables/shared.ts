@@ -41,6 +41,17 @@ export const affiliate = (
   };
 };
 
+export const unavailableAffiliate = (searchKeyword: string, verifiedAt = checkedAt) => ({
+  searchKeyword,
+  directUrl: undefined,
+  isAffiliate: false,
+  enabled: false,
+  status: "unavailable" as const,
+  priceStatus: "manual-check-required" as const,
+  stockStatus: "manual-check-required" as const,
+  linkCheckedAt: verifiedAt,
+});
+
 export const researchedPart = ({
   id,
   type,
@@ -56,6 +67,8 @@ export const researchedPart = ({
   regional = false,
   verifiedAt = checkedAt,
   secondarySources = [],
+  directUrl,
+  purchaseUnavailable = false,
 }: {
   id: string;
   type: ConsumableCompatibility["type"];
@@ -75,6 +88,8 @@ export const researchedPart = ({
     url: string;
     sourceType?: SourceReference["sourceType"];
   }>;
+  directUrl?: string;
+  purchaseUnavailable?: boolean;
 }): ConsumableRecord => ({
   id,
   slug: id,
@@ -93,7 +108,9 @@ export const researchedPart = ({
       source(item.title, item.url, item.sourceType ?? "official-store", verifiedAt),
     ),
   ],
-  affiliate: affiliate(searchKeyword, undefined, verifiedAt),
+  affiliate: purchaseUnavailable
+    ? unavailableAffiliate(searchKeyword, verifiedAt)
+    : affiliate(searchKeyword, directUrl, verifiedAt),
 });
 
 export type ConsumableRecord = Omit<

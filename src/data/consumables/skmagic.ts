@@ -1,5 +1,5 @@
 import {
-  affiliate,
+  unavailableAffiliate,
   domesticWarning,
   researchedPart,
   source,
@@ -23,7 +23,7 @@ export const skmagicConsumableRecords: ConsumableRecord[] = [
         "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000062559",
       ),
     ],
-    affiliate: affiliate("SK매직 ACL15C1ASKWH 정품 올인원 케어필터"),
+    affiliate: unavailableAffiliate("SK매직 ACL15C1ASKWH 정품 올인원 케어필터"),
   },
   researchedPart({
     id: "skmagic-acl131-filter",
@@ -34,6 +34,7 @@ export const skmagicConsumableRecords: ConsumableRecord[] = [
     sourceTitle: "SK매직 공식몰 — ACL131 공기청정기 필터",
     sourceUrl: "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000059559",
     searchKeyword: "SK매직 FLTACLP131WH 정품 필터",
+    purchaseUnavailable: true,
   }),
   researchedPart({
     id: "skmagic-acl20-all-in-one-care-filter",
@@ -43,6 +44,8 @@ export const skmagicConsumableRecords: ConsumableRecord[] = [
     sourceTitle: "SK매직 공식몰 — ACL20 구성품과 필터 안내",
     sourceUrl: "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000067380",
     searchKeyword: "SK매직 ACL20C1ASKWH 정품 올인원 케어필터",
+    directUrl: "https://www.coupang.com/vp/products/8673596944",
+    verifiedAt: "2026-08-23",
   }),
   researchedPart({
     id: "skmagic-acl25-all-in-one-care-filter",
@@ -52,6 +55,8 @@ export const skmagicConsumableRecords: ConsumableRecord[] = [
     sourceTitle: "SK매직 공식몰 — ACL25 제품 및 필터 안내",
     sourceUrl: "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000069683",
     searchKeyword: "SK매직 ACL25C1ASKCE 정품 올인원 케어필터",
+    directUrl: "https://www.coupang.com/vp/products/8785883201",
+    verifiedAt: "2026-08-23",
   }),
   researchedPart({
     id: "skmagic-acl130z-filter",
@@ -62,5 +67,6 @@ export const skmagicConsumableRecords: ConsumableRecord[] = [
     sourceTitle: "SK매직 공식몰 — ACL130P·ACL130Z 공기청정기 필터",
     sourceUrl: "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000056901",
     searchKeyword: "SK매직 FLTACL130PWH 정품 필터",
+    purchaseUnavailable: true,
   }),
 ];

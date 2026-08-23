@@ -1,4 +1,4 @@
-import { affiliate, domesticWarning, source, type ConsumableRecord } from "./shared";
+import { domesticWarning, source, unavailableAffiliate, type ConsumableRecord } from "./shared";
 
 export const dysonConsumableRecords: ConsumableRecord[] = [
   {
@@ -18,7 +18,7 @@ export const dysonConsumableRecords: ConsumableRecord[] = [
         "manufacturer",
       ),
     ],
-    affiliate: affiliate("다이슨 BP04 정품 K 카본 필터"),
+    affiliate: unavailableAffiliate("다이슨 BP04 정품 K 카본 필터"),
   },
   {
     id: "dyson-big-quiet-hepa-h13-filter",
@@ -37,7 +37,7 @@ export const dysonConsumableRecords: ConsumableRecord[] = [
         "manufacturer",
       ),
     ],
-    affiliate: affiliate("다이슨 BP03 BP04 정품 HEPA H13 필터"),
+    affiliate: unavailableAffiliate("다이슨 BP03 BP04 정품 HEPA H13 필터"),
   },
   {
     id: "dyson-bp03-activated-carbon-filter",
@@ -56,7 +56,7 @@ export const dysonConsumableRecords: ConsumableRecord[] = [
         "manufacturer",
       ),
     ],
-    affiliate: affiliate("다이슨 BP03 정품 활성 탄소 필터"),
+    affiliate: unavailableAffiliate("다이슨 BP03 정품 활성 탄소 필터"),
   },
   {
     id: "dyson-360-glass-hepa-carbon-filter",
@@ -75,6 +75,6 @@ export const dysonConsumableRecords: ConsumableRecord[] = [
         "manufacturer",
       ),
     ],
-    affiliate: affiliate("다이슨 HP09 TP09 PH04 정품 필터"),
+    affiliate: unavailableAffiliate("다이슨 HP09 TP09 PH04 정품 필터"),
   },
 ];

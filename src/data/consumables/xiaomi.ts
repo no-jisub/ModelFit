@@ -152,7 +152,7 @@ export const xiaomiConsumableRecords: ConsumableRecord[] = [
   researchedPart({
     id: "xiaomi-5-series-anti-tangle-side-brush",
     type: "side-brush",
-    displayName: "Xiaomi Robot Vacuum 5·5 Pro 엉킴 방지 사이드 브러시 2개입",
+    displayName: "Xiaomi Robot Vacuum 5·5 Pro 엉킴 방지 사이드 브러시",
     compatibleProductName: "Robot Vacuum 5/5 Pro Anti-tangle Side Brush",
     genuinePartNumber: "OV81GL-BS",
     modelIds: ["xiaomi-5", "xiaomi-5-pro"],

@@ -126,7 +126,7 @@ export const everybotConsumableRecords: ConsumableRecord[] = [
   researchedPart({
     id: "everybot-three-spin-disposable-sheet",
     type: "mop-pad",
-    displayName: "에브리봇 일회용 물걸레 청소포 30매",
+    displayName: "에브리봇 일회용 물걸레 청소포",
     compatibleProductName: "쓰리스핀용 중간패드에 부착하는 일회용 청소포",
     modelIds: ["everybot-ts402m"],
     sourceTitle: "에브리봇 공식몰 — 일회용 물걸레 청소포 30매",
