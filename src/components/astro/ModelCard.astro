@@ -4,7 +4,6 @@ import { categoryLabels } from "@/utils/labels";
 import { getModelDisplayName } from "@/utils/modelDisplayName";
 import CategoryIcon from "./CategoryIcon.astro";
 
-
 const { model } = Astro.props as { model: ApplianceModel };
 const displayName = getModelDisplayName(model);
 const detailPath = `/model/${model.brandId}/${model.slug}#compatible-parts`;
@@ -21,6 +20,4 @@ const detailPath = `/model/${model.brandId}/${model.slug}#compatible-parts`;
   <p class="model-brand-label">{model.brandName}</p>
   <h3>{displayName}</h3>
   <p class="model-series">{model.modelCode} {model.series ? `· ${model.series}` : ""}</p>
-
-
 </a>

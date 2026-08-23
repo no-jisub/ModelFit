@@ -7,7 +7,6 @@ import { analytics } from "@/utils/analytics";
 import {
   categoryLabels,
   getPartNumberStatus,
-
   partNumberStatusLabels,
   partTypeLabels,
 } from "@/utils/labels";

@@ -1111,7 +1111,6 @@ main:has(> #brands:last-child) + .site-footer {
   font-size: 14px;
 }
 
-
 .model-card-footer {
   margin-top: var(--space-5);
   padding-top: var(--space-4);
@@ -2034,7 +2033,6 @@ main:has(> .category-guides-section:last-child) + .site-footer {
   box-shadow: var(--shadow-focus);
 }
 
-
 .alert-box {
   margin-top: var(--space-6);
   border-left: 3px solid var(--color-primary-600);
@@ -2468,7 +2466,6 @@ main:has(.model-disclaimer-section:last-child) + .site-footer {
   gap: 6px 8px;
   margin-bottom: 8px;
 }
-
 
 .source-type {
   border-radius: var(--radius-full);
@@ -3526,7 +3523,6 @@ main:has(.model-disclaimer-section:last-child) + .site-footer {
   .home-category-heading p {
     font-size: 15px;
   }
-
 
   .search-widget {
     padding: 12px;

@@ -3,7 +3,6 @@ import type { ApplianceModel } from "@/types";
 import { categoryLabels } from "@/utils/labels";
 import { getModelDisplayName } from "@/utils/modelDisplayName";
 
-
 const { models } = Astro.props as { models: ApplianceModel[] };
 const representative = models[0];
 
@@ -24,12 +23,9 @@ const detailPath = `/model/${representative.brandId}/${representative.slug}#comp
       <span aria-hidden="true">{representative.category === "air-purifier" ? "▤" : "◉"}</span>
       {categoryLabels[representative.category]}
     </span>
-
   </div>
 
   <p class="model-brand-label">{representative.brandName}</p>
   <h3>{displayName}</h3>
   <p class="model-series">{representative.series ?? "제품군"}</p>
-
-
 </a>
