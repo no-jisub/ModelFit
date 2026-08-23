@@ -69,7 +69,14 @@ const websiteJsonLd = [
         {featuredBrands.map((brand) => <BrandCard brand={brand} />)}
       </div>
       <details class="brand-directory">
-        <summary>{brands.length}개 브랜드 전체 보기 <span aria-hidden="true">→</span></summary>
+        <summary>
+          <span class="brand-directory-expand">
+            {brands.length}개 브랜드 전체 보기 <span aria-hidden="true">↓</span>
+          </span>
+          <span class="brand-directory-collapse">
+            브랜드 목록 닫기 <span aria-hidden="true">↑</span>
+          </span>
+        </summary>
         <div class="brand-grid brand-grid-secondary">
           {otherBrands.map((brand) => <BrandCard brand={brand} />)}
         </div>

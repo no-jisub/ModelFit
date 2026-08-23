@@ -854,17 +854,49 @@ h3 {
   list-style: none;
 }
 
+.brand-directory summary > span {
+  align-items: center;
+  gap: 6px;
+}
+
+.brand-directory-expand {
+  display: inline-flex;
+}
+
+.brand-directory-collapse {
+  display: none;
+}
+
 .brand-directory summary::-webkit-details-marker {
   display: none;
 }
 
-.brand-directory[open] summary span {
-  display: inline-block;
-  transform: rotate(90deg);
+.brand-directory[open] {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--space-4);
+}
+
+.brand-directory[open] summary {
+  order: 2;
+  margin-top: var(--space-6);
+}
+
+.brand-directory[open] .brand-directory-expand {
+  display: none;
+}
+
+.brand-directory[open] .brand-directory-collapse {
+  display: inline-flex;
 }
 
 .brand-grid-secondary {
   margin-top: var(--space-5);
+}
+
+.brand-directory[open] .brand-grid-secondary {
+  order: 1;
+  margin-top: 0;
 }
 
 .brand-card {
@@ -3442,6 +3474,10 @@ h3 {
   #brands .brand-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-3);
+  }
+
+  #brands .brand-directory[open] {
+    margin-top: var(--space-3);
   }
 
   #brands .brand-card {

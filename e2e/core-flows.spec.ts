@@ -29,6 +29,30 @@ test("홈에서 화면 크기에 맞는 쿠팡 배너와 광고 고지를 제공
   );
 });
 
+test("홈 브랜드 전체 보기는 추가 브랜드를 이어 붙이고 닫기를 마지막에 둔다", async ({ page }) => {
+  await page.goto("/");
+
+  const directory = page.locator(".brand-directory");
+  const toggle = directory.locator("summary");
+  const featuredCards = page.locator("#brands > .container > .brand-grid > .brand-card");
+  const additionalCards = directory.locator(".brand-grid-secondary > .brand-card");
+
+  await toggle.click();
+  await expect(directory).toHaveAttribute("open", "");
+  await expect(toggle).toContainText("브랜드 목록 닫기");
+
+  const lastFeatured = await featuredCards.last().boundingBox();
+  const firstAdditional = await additionalCards.first().boundingBox();
+  const lastAdditional = await additionalCards.last().boundingBox();
+  const toggleBox = await toggle.boundingBox();
+  const expectedGap = (page.viewportSize()?.width ?? 0) <= 700 ? 12 : 16;
+  const actualGap =
+    (firstAdditional?.y ?? 0) - ((lastFeatured?.y ?? 0) + (lastFeatured?.height ?? 0));
+
+  expect(Math.abs(actualGap - expectedGap)).toBeLessThanOrEqual(1);
+  expect(toggleBox?.y).toBeGreaterThan((lastAdditional?.y ?? 0) + (lastAdditional?.height ?? 0));
+});
+
 test("검색에서 소모품의 공식 호환 모델을 펼쳐 모델 상세로 이동한다", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
   const header = page.locator("header");
