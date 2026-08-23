@@ -3,6 +3,10 @@ import { expect, test } from "@playwright/test";
 test("홈에서 화면 크기에 맞는 쿠팡 배너와 광고 고지를 제공한다", async ({ page }) => {
   await page.goto("/");
 
+  await expect(
+    page.getByRole("heading", { name: "어떤 제품의 소모품을 찾고 계신가요?" }),
+  ).toBeVisible();
+  await expect(page.getByText("모델번호로 호환 소모품 찾기", { exact: true })).toBeVisible();
   const isMobile = (page.viewportSize()?.width ?? 0) <= 767;
   const banner = page.locator("[data-coupang-category-banner]");
   const expectedHref = isMobile
@@ -27,10 +31,9 @@ test("홈에서 화면 크기에 맞는 쿠팡 배너와 광고 고지를 제공
 
 test("검색에서 소모품의 공식 호환 모델을 펼쳐 모델 상세로 이동한다", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
-  await page
-    .getByRole("combobox", { name: "모델명, 상품명 또는 정품 부품번호" })
-    .fill("ADQ30041405");
-  await page.getByRole("button", { name: "소모품 찾기" }).click();
+  const header = page.locator("header");
+  await header.getByRole("combobox", { name: "모델번호·부품번호 검색" }).fill("ADQ30041405");
+  await header.getByRole("button", { name: "소모품 찾기" }).click();
 
   await expect(page).toHaveURL(/\/find\?q=ADQ30041405/);
   await expect(page.getByRole("tab", { name: /소모품 1/ })).toHaveAttribute(
@@ -47,6 +50,18 @@ test("검색에서 소모품의 공식 호환 모델을 펼쳐 모델 상세로 
 
   await expect(page).toHaveURL(/\/model\/lg\/as355nsna#compatible-parts$/);
   await expect(page.locator("#compatible-parts")).toBeVisible();
+});
+
+test("검색 결과 화면에서도 헤더 검색으로 다시 검색한다", async ({ page }) => {
+  await page.goto("/find?q=필터");
+
+  const header = page.locator("header");
+  const searchInput = header.getByRole("combobox", { name: "모델번호·부품번호 검색" });
+  await expect(searchInput).toHaveAttribute("placeholder", "모델번호·부품번호 검색");
+  await searchInput.fill("AS355NSNA");
+  await header.getByRole("button", { name: "소모품 찾기" }).click();
+
+  await expect(page).toHaveURL(/\/find\?q=AS355NSNA/);
 });
 
 test("기존 소모품 주소는 호환 모델의 소모품 영역으로 이동한다", async ({ page }) => {

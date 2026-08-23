@@ -127,7 +127,7 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
         }}
       >
         <label className="sr-only" htmlFor={inputId}>
-          모델명, 상품명 또는 정품 부품번호
+          {header ? "모델번호·부품번호 검색" : "모델명, 상품명 또는 정품 부품번호"}
         </label>
         <span className="search-icon" aria-hidden="true">
           ⌕
@@ -137,7 +137,7 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
           name="q"
           type="search"
           value={query}
-          placeholder={header ? "모델·소모품 검색" : "예: 로보락 S8 또는 ADQ30041405"}
+          placeholder={header ? "모델번호·부품번호 검색" : "예: 로보락 S8 또는 ADQ30041405"}
           autoComplete="off"
           role="combobox"
           aria-autocomplete="list"
@@ -153,7 +153,7 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
           onKeyDown={onKeyDown}
         />
         <button className="button button-primary search-submit" type="submit">
-          {header ? "검색" : "소모품 찾기"}
+          소모품 찾기
         </button>
       </form>
       {open && query.trim() && (

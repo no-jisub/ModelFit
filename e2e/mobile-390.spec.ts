@@ -24,6 +24,43 @@ for (const route of responsiveRoutes) {
   });
 }
 
+test("390px 헤더는 검색과 검증 기준 메뉴를 두 줄로 제공한다", async ({ page }) => {
+  await page.goto("/");
+
+  const header = page.locator("header");
+  const searchInput = header.getByRole("combobox", { name: "모델번호·부품번호 검색" });
+  const searchButton = header.getByRole("button", { name: "소모품 찾기" });
+  const headerBox = await header.boundingBox();
+  const buttonBox = await searchButton.boundingBox();
+
+  expect(headerBox?.height).toBeGreaterThanOrEqual(110);
+  expect(headerBox?.height).toBeLessThanOrEqual(120);
+  await expect(searchInput).toHaveAttribute("placeholder", "모델번호·부품번호 검색");
+  await expect(searchInput).toBeVisible();
+  expect(buttonBox?.width).toBeGreaterThanOrEqual(88);
+
+  await searchInput.fill("AS355");
+  const autocomplete = header.locator(".autocomplete-panel");
+  await expect(autocomplete).toBeVisible();
+  const autocompleteBox = await autocomplete.boundingBox();
+  expect(autocompleteBox?.y).toBeGreaterThanOrEqual(headerBox?.height ?? 0);
+
+  await header.locator(".mobile-menu > summary").click();
+  await expect(header.getByRole("link", { name: "검증 기준" })).toBeVisible();
+});
+
+test("390px 홈 카테고리 카드는 세로로 배치된다", async ({ page }) => {
+  await page.goto("/");
+
+  const cards = page.locator(".home-category-section .category-card");
+  await expect(cards).toHaveCount(2);
+  const firstCard = await cards.nth(0).boundingBox();
+  const secondCard = await cards.nth(1).boundingBox();
+
+  expect(Math.abs((firstCard?.x ?? 0) - (secondCard?.x ?? 0))).toBeLessThanOrEqual(1);
+  expect(secondCard?.y).toBeGreaterThan((firstCard?.y ?? 0) + (firstCard?.height ?? 0));
+});
+
 test("390px 검색 화면에서 결과 탭의 우선순위가 분명하다", async ({ page }) => {
   await page.goto("/find?q=ADQ30041405");
 

@@ -316,11 +316,12 @@ h3 {
   display: flex;
   height: 64px;
   align-items: center;
-  gap: var(--space-5);
+  gap: var(--space-4);
 }
 
 .logo {
   display: inline-flex;
+  flex: none;
   align-items: center;
   gap: 10px;
   color: var(--color-neutral-900);
@@ -361,7 +362,7 @@ h3 {
 .desktop-nav {
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 22px;
   margin-left: auto;
   color: var(--color-neutral-600);
   font-size: 14px;
@@ -375,10 +376,6 @@ h3 {
 .mobile-menu {
   display: none;
   margin-left: auto;
-}
-
-.mobile-search-link {
-  display: none;
 }
 
 .mobile-menu summary {
@@ -488,91 +485,53 @@ h3 {
   font-size: 13px;
 }
 
-.hero {
-  overflow: hidden;
-  position: relative;
+.home-category-section {
   border-bottom: 1px solid var(--color-primary-100);
   background: var(--color-primary-50);
-  padding-block: 64px 72px;
-  text-align: center;
+  padding-block: 56px 64px;
 }
 
-.hero::before,
-.hero::after {
-  position: absolute;
-  border: 1px solid rgba(37, 99, 235, 0.09);
-  border-radius: 50%;
-  content: "";
+.home-category-inner,
+.home-category-heading {
+  min-width: 0;
 }
 
-.hero::before {
-  width: 360px;
-  height: 360px;
-  top: -220px;
-  left: -130px;
+.home-category-heading {
+  max-width: 760px;
+  margin-bottom: var(--space-8);
 }
 
-.hero::after {
-  width: 520px;
-  height: 520px;
-  right: -300px;
-  bottom: -380px;
+.home-category-heading h1 {
+  margin-bottom: var(--space-3);
 }
 
-.hero-inner {
-  position: relative;
-  z-index: 1;
-}
-
-.hero h1 {
-  max-width: 690px;
-  margin-inline: auto;
-  margin-bottom: var(--space-4);
-}
-
-.hero .hero-description {
-  max-width: 650px;
-  margin: 0 auto var(--space-8);
+.home-category-heading p {
+  margin: 0;
   color: var(--color-neutral-600);
-  font-size: 18px;
+  font-size: 17px;
 }
 
-.hero-trust {
-  display: flex;
-  justify-content: center;
-  gap: var(--space-5);
+.home-category-meta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: var(--space-4);
   align-items: center;
   margin-top: var(--space-5);
   color: var(--color-neutral-600);
   font-size: 13px;
 }
 
-.hero-model-help {
-  display: inline-block;
-  margin-top: var(--space-4);
+.home-category-meta a {
   color: var(--color-primary-700);
-  font-size: 13px;
   font-weight: 700;
 }
 
-.hero-model-help:hover {
+.home-category-meta a:hover {
   text-decoration: underline;
 }
 
-.hero-trust span {
-  display: inline-flex;
-  gap: 3px;
-  align-items: baseline;
-}
-
-.hero-trust strong {
-  color: var(--color-neutral-900);
-  font-size: 15px;
-}
-
-.hero-trust a {
-  color: var(--color-primary-700);
-  font-weight: 700;
+.home-category-meta a:last-child {
+  justify-self: end;
 }
 
 .search-widget {
@@ -596,7 +555,7 @@ h3 {
 }
 
 .search-widget.is-header {
-  width: min(300px, 27vw);
+  width: min(360px, 34vw);
   margin: 0;
   border: 0;
   border-radius: 0;
@@ -621,9 +580,9 @@ h3 {
 }
 
 .is-header .search-submit {
-  min-width: 54px;
+  min-width: 88px;
   height: 42px;
-  padding: 8px 10px;
+  padding: 8px 12px;
   font-size: 12px;
 }
 
@@ -815,6 +774,7 @@ h3 {
 .category-card {
   display: flex;
   position: relative;
+  min-width: 0;
   min-height: 170px;
   align-items: flex-start;
   gap: var(--space-5);
@@ -3227,7 +3187,7 @@ h3 {
 
 @media (max-width: 900px) {
   .search-widget.is-header {
-    width: min(240px, 29vw);
+    width: min(300px, 34vw);
   }
 
   .desktop-nav {
@@ -3299,52 +3259,50 @@ h3 {
     display: none;
   }
 
+  .site-header {
+    height: 116px;
+  }
+
   .mobile-menu {
     display: block;
-    margin-left: 0;
+    margin-left: auto;
+    order: 2;
   }
 
   .header-inner {
-    gap: var(--space-2);
+    height: 116px;
+    flex-wrap: wrap;
+    align-content: center;
+    column-gap: var(--space-3);
+    row-gap: 8px;
+  }
+
+  .header-inner .logo {
+    order: 1;
   }
 
   .search-widget.is-header {
-    display: none;
-  }
-
-  .mobile-search-link {
-    display: grid;
-    width: 42px;
-    height: 42px;
-    margin-left: auto;
-    place-items: center;
-    border: 1px solid var(--color-neutral-200);
-    border-radius: var(--radius-md);
-    color: var(--color-neutral-700);
-    font-size: 24px;
-    font-weight: 800;
-  }
-
-  .site-header.is-home .mobile-search-link {
-    display: none;
-  }
-
-  .site-header.is-home .mobile-menu {
-    margin-left: auto;
+    width: 100%;
+    flex: 0 0 100%;
+    order: 3;
   }
 
   .is-header .search-form {
+    width: 100%;
     flex-direction: row;
   }
 
   .is-header .search-form input {
-    width: 100%;
+    width: auto;
     height: 42px;
+    flex: 1 1 auto;
   }
 
   .is-header .search-submit {
-    width: 50px;
+    width: 88px;
+    min-width: 88px;
     height: 42px;
+    flex: 0 0 88px;
   }
 
   .is-header .search-icon {
@@ -3353,28 +3311,38 @@ h3 {
 
   .is-header .autocomplete-panel {
     position: fixed;
-    top: 64px;
+    top: 116px;
     right: 12px;
     left: 12px;
     width: auto;
+    max-height: min(420px, calc(100vh - 128px));
+    overflow-y: auto;
   }
 
-  .hero {
+  .mobile-menu nav {
+    top: 116px;
+  }
+
+  .home-category-section {
+    overflow: hidden;
     padding-block: 36px 44px;
   }
 
-  .hero .hero-description {
-    font-size: 16px;
+  .home-category-heading {
+    margin-bottom: var(--space-6);
   }
 
-  .hero-trust {
-    flex-wrap: wrap;
-    gap: 8px 16px;
-    margin-top: var(--space-4);
+  .home-category-heading p {
+    font-size: 15px;
   }
 
-  .hero-trust a {
-    flex-basis: 100%;
+  .home-category-meta {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .home-category-meta a:last-child {
+    justify-self: start;
   }
 
   .search-widget {
@@ -3491,6 +3459,10 @@ h3 {
   .category-card {
     min-height: 150px;
     padding: 20px;
+  }
+
+  .category-card > span:nth-child(2) {
+    min-width: 0;
   }
 
   .brand-card {
@@ -3705,22 +3677,9 @@ h3 {
     aspect-ratio: 320 / 100;
   }
 
-  .site-header .logo-copy {
-    display: none;
-  }
-
-  .site-header.is-home .logo-copy {
-    display: flex;
-  }
-
   .site-header .logo-mark {
     width: 36px;
     height: 36px;
-  }
-
-  .is-header .search-submit {
-    min-width: 46px;
-    width: 46px;
   }
 }
 
