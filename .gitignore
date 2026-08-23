@@ -6,6 +6,7 @@ dist/
 !.env.example
 .firebase/
 firebase-debug.log
+firestore-debug.log
 playwright-report/
 test-results/
 # Firebase CLI가 선택적으로 설치하는 로컬 에이전트 스킬 캐시

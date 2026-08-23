@@ -15,6 +15,11 @@ describe("data validation", () => {
     expect(validateData(brands, models, consumables).errors).toEqual([]);
   });
 
+  it("브랜드가 공식 출처 허용 도메인을 직접 소유한다", () => {
+    expect(brands.every((brand) => brand.officialDomains.length > 0)).toBe(true);
+    expect(brands.find((brand) => brand.id === "lg")?.officialDomains).toEqual(["lge.co.kr"]);
+  });
+
   it("모든 검증 상태 표시를 제공한다", () => {
     expect(statusLabels.official).toBe("공식 출처 확인");
     expect(getVerificationLabel("official", "model")).toBe("공식 모델 확인");

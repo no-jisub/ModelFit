@@ -7,6 +7,9 @@ export function getStaticPaths() {
 }
 
 const { part } = Astro.props;
+const destination = getConsumableModelPath(part);
+// Astro's type checker does not trace variable usage inside a top-level redirect return.
+void destination;
 
-return Astro.redirect(getConsumableModelPath(part), 301);
+return Astro.redirect(destination, 301);
 ---

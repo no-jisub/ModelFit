@@ -6,6 +6,16 @@
     "database": "modelfit-reports",
     "location": "asia-northeast3"
   },
+  "emulators": {
+    "firestore": {
+      "port": 8089,
+      "edition": "enterprise"
+    },
+    "ui": {
+      "enabled": false
+    },
+    "singleProjectMode": true
+  },
   "hosting": {
     "public": "dist",
     "cleanUrls": true,

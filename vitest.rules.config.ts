@@ -2,7 +2,7 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    include: ["tests/**/*.test.ts"],
-    exclude: ["tests/firestoreRules.emulator.test.ts"],
+    include: ["tests/firestoreRules.emulator.test.ts"],
+    fileParallelism: false,
   },
 });
