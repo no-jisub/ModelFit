@@ -53,6 +53,49 @@ test("홈 브랜드 전체 보기는 추가 브랜드를 이어 붙이고 닫기
   expect(toggleBox?.y).toBeGreaterThan((lastAdditional?.y ?? 0) + (lastAdditional?.height ?? 0));
 });
 
+test("카테고리에서 브랜드와 모델번호를 바로 필터링한다", async ({ page }) => {
+  await page.goto("/category/air-purifier");
+
+  await expect(page.getByRole("link", { name: "검색에서 필터링 →" })).toHaveCount(0);
+  const filter = page.locator("[data-category-model-filter]");
+  const result = filter.locator("[data-filter-result]");
+  await expect(result).toHaveText("45개 모델");
+  await expect(filter.getByText("소모품 연결", { exact: true })).toHaveCount(0);
+
+  const isOpen = await filter.evaluate((element) => (element as HTMLDetailsElement).open);
+  if (!isOpen) {
+    await filter.locator("summary").click();
+  }
+
+  if ((page.viewportSize()?.width ?? 0) > 700) {
+    const filterBox = await filter.boundingBox();
+    const brandLabelBox = await filter.locator(".category-filter-label").boundingBox();
+    const brandChipBox = await filter.locator(".category-filter-chips").first().boundingBox();
+    const brandLabelCenter = (brandLabelBox?.y ?? 0) + (brandLabelBox?.height ?? 0) / 2;
+    const brandChipCenter = (brandChipBox?.y ?? 0) + (brandChipBox?.height ?? 0) / 2;
+    expect(filterBox?.height).toBeLessThanOrEqual(160);
+    expect(brandChipBox?.height).toBeLessThanOrEqual(40);
+    expect(Math.abs(brandLabelCenter - brandChipCenter)).toBeLessThanOrEqual(1);
+  }
+
+  await filter.getByRole("button", { name: "LG", exact: true }).click();
+  await expect(filter.getByRole("button", { name: "LG", exact: true })).toHaveAttribute(
+    "aria-pressed",
+    "true",
+  );
+  const lgItems = page.locator(".category-model-filter-item:not([hidden])");
+  expect(await lgItems.count()).toBeGreaterThan(0);
+  const visibleBrandIds = await lgItems.evaluateAll((items) =>
+    items.map((item) => (item as HTMLElement).dataset.brandId),
+  );
+  expect(new Set(visibleBrandIds)).toEqual(new Set(["lg"]));
+
+  await filter.getByRole("searchbox", { name: "모델번호" }).fill("AS205NGJA");
+  await expect(result).toHaveText("5개 모델");
+
+  await filter.getByRole("searchbox", { name: "모델번호" }).fill("없는모델번호");
+  await expect(page.locator("[data-filter-empty]")).toBeVisible();
+});
 test("검색에서 소모품의 공식 호환 모델을 펼쳐 모델 상세로 이동한다", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
   const header = page.locator("header");
@@ -174,17 +217,90 @@ test("소모품 카드는 상품 확인과 제조사 호환 근거 행동만 제
   await page.goto("/model/lg/as355nsna");
 
   const card = page.locator(".consumable-card").first();
-  const coupangLink = card.getByRole("link", { name: /쿠팡에서 상품 정보 확인하기/ });
+  const coupangLink = card.getByRole("link", { name: /쿠팡 상품 보기/ });
   await expect(coupangLink).toHaveCount(1);
   await expect(coupangLink).toHaveAttribute("rel", /sponsored/);
-  await expect(card.getByRole("link", { name: /제조사 호환 근거 보기/ })).toHaveCount(1);
+  await expect(card.getByRole("link", { name: /공식 호환 근거/ })).toHaveCount(1);
+  const purchaseWarning = card.locator("details.purchase-warning-inline");
+  const purchaseWarningSummary = purchaseWarning.getByText("구매 전 확인", { exact: true });
+  await expect(purchaseWarningSummary).toBeVisible();
+  const sourceLink = card.getByRole("link", { name: /공식 호환 근거/ });
+  const actionTypography = await Promise.all(
+    [sourceLink, purchaseWarningSummary].map((locator) =>
+      locator.evaluate((element) => {
+        const style = window.getComputedStyle(element);
+        return {
+          color: style.color,
+          fontFamily: style.fontFamily,
+          fontSize: style.fontSize,
+          fontWeight: style.fontWeight,
+        };
+      }),
+    ),
+  );
+  expect(actionTypography[1]).toEqual(actionTypography[0]);
+  const sourceLinkBox = await sourceLink.boundingBox();
+  const purchaseWarningBox = await purchaseWarningSummary.boundingBox();
+  const purchaseWarningScrollY = await page.evaluate(() => window.scrollY);
+  expect(Math.abs((sourceLinkBox?.y ?? 0) - (purchaseWarningBox?.y ?? 0))).toBeLessThanOrEqual(1);
+  await expect(purchaseWarning).not.toHaveAttribute("open", "");
+  await purchaseWarningSummary.click();
+  await expect(purchaseWarning).toHaveAttribute("open", "");
+  const openedSourceLinkBox = await sourceLink.boundingBox();
+  const openedPurchaseWarningBox = await purchaseWarningSummary.boundingBox();
+  const openedPurchaseWarningScrollY = await page.evaluate(() => window.scrollY);
+  expect(openedSourceLinkBox?.x).toBeCloseTo(sourceLinkBox?.x ?? 0, 0);
+  const sourceLinkPositionShift = Math.abs(
+    (openedSourceLinkBox?.y ?? 0) +
+      openedPurchaseWarningScrollY -
+      ((sourceLinkBox?.y ?? 0) + purchaseWarningScrollY),
+  );
+  expect(sourceLinkPositionShift).toBeLessThanOrEqual(2);
+  expect(openedPurchaseWarningBox?.x).toBeCloseTo(purchaseWarningBox?.x ?? 0, 0);
+  expect((openedPurchaseWarningBox?.y ?? 0) + openedPurchaseWarningScrollY).toBeCloseTo(
+    (purchaseWarningBox?.y ?? 0) + purchaseWarningScrollY,
+    0,
+  );
+  await expect(card.getByText("교체주기 참고")).toHaveCount(0);
+  await expect(card.getByText("부품번호 상태")).toHaveCount(0);
+  await expect(card.getByText("검증 상태")).toHaveCount(0);
+  await expect(card.getByText(/가격:/)).toHaveCount(0);
+  await expect(card.getByText(/재고:/)).toHaveCount(0);
+  await expect(card.locator(".coupang-link-status")).toHaveCount(0);
   await expect(card.locator(".affiliate-disclosure")).toContainText(
     "이 포스팅은 쿠팡 파트너스 활동의 일환으로",
   );
+  await expect(card.getByText(/링크 확인 \d{4}-\d{2}-\d{2}/)).toHaveCount(0);
+  const affiliateDisclosureLineCount = await card
+    .locator(".affiliate-disclosure")
+    .evaluate((element) => {
+      const style = window.getComputedStyle(element);
+      return Math.round(
+        element.getBoundingClientRect().height / Number.parseFloat(style.lineHeight),
+      );
+    });
+  expect(affiliateDisclosureLineCount).toBeLessThanOrEqual(2);
   await expect(card.getByRole("link", { name: /구매처 확인하기/ })).toHaveCount(0);
   await expect(card.getByRole("link", { name: /호환품 검색/ })).toHaveCount(0);
 });
 
+test("모델 확인 자료는 면책 안내 바로 위에 간결하게 제공한다", async ({ page }) => {
+  await page.goto("/model/coway/ap-1521b");
+
+  const references = page.getByRole("region", { name: "모델 확인 자료" });
+  await expect(references.getByText("제조사 공식 출처")).toBeVisible();
+  await expect(references.getByText("모델번호 확인 위치")).toBeVisible();
+  await expect(page.getByText("같은 카테고리의 다른 모델")).toHaveCount(0);
+  await expect(page.getByText("구매 전 확인 가이드")).toHaveCount(0);
+
+  const sectionOrder = await page
+    .locator(".model-reference-section, .model-disclaimer-section")
+    .evaluateAll((sections) => sections.map((section) => section.className));
+  expect(sectionOrder).toEqual([
+    "detail-section model-reference-section",
+    "detail-section model-disclaimer-section",
+  ]);
+});
 test("제휴 안내에서 광고 위치와 운영 연락처를 공개한다", async ({ page }) => {
   await page.goto("/affiliate-disclosure");
 
@@ -193,40 +309,6 @@ test("제휴 안내에서 광고 위치와 운영 연락처를 공개한다", as
   await expect(
     page.locator("main").getByRole("link", { name: "shwltjq1@gmail.com" }),
   ).toHaveAttribute("href", "mailto:shwltjq1@gmail.com");
-});
-
-test("모델을 내 가전함에 저장하고 다시 확인한다", async ({ page }) => {
-  await page.goto("/model/lg/as355nsna");
-  const compatibleParts = page.getByRole("heading", { name: /이 모델에 연결된 소모품/ });
-  const officialSources = page.locator(".detail-disclosure").filter({
-    hasText: "제조사 공식 출처",
-  });
-  const modelNumberHelp = page.locator(".detail-disclosure").filter({ hasText: "모델번호 확인" });
-  await expect(compatibleParts).toBeVisible();
-  await expect(officialSources).toBeVisible();
-  await expect(modelNumberHelp).toBeVisible();
-  await expect(officialSources).not.toHaveAttribute("open", "");
-  await expect(modelNumberHelp).not.toHaveAttribute("open", "");
-  await officialSources.locator(":scope > summary").click();
-  await expect(officialSources.getByRole("heading", { name: "확인 출처" })).toBeVisible();
-  await modelNumberHelp.locator(":scope > summary").click();
-  await expect(modelNumberHelp.getByRole("link", { name: /모델번호 찾는 방법/ })).toBeVisible();
-  const saveButton = page.getByRole("button", { name: "내 가전함에 추가" });
-  await saveButton.click();
-  await expect(page.getByRole("button", { name: "내 가전함에서 빼기" })).toHaveAttribute(
-    "aria-pressed",
-    "true",
-  );
-
-  await page.goto("/my-appliances");
-  await expect(page.getByRole("heading", { name: "퓨리케어 360° 공기청정기" })).toBeVisible();
-  await expect(page.getByText("AS355NSNA", { exact: true })).toBeVisible();
-  await expect(page.getByText("브라우저에만 저장", { exact: false })).toBeVisible();
-  const reminderPanel = page.locator(".reminder-panel");
-  await expect(reminderPanel).not.toHaveAttribute("open", "");
-  await reminderPanel.locator(":scope > summary").click();
-  await expect(reminderPanel.getByRole("button", { name: "오늘 교체 완료" }).first()).toBeVisible();
-  await expect(reminderPanel.getByText("상세 설정").first()).toBeVisible();
 });
 
 test("검색 결과가 없을 때 재검색 안내를 제공한다", async ({ page }) => {
@@ -240,7 +322,6 @@ test("검색 결과가 없을 때 재검색 안내를 제공한다", async ({ pa
 
 test("모델 상세에서 개인정보 없는 오류 제보 화면으로 이동한다", async ({ page }) => {
   await page.goto("/model/lg/as355nsna");
-  await expect(page.locator(".model-primary-actions").getByRole("link")).toHaveCount(0);
   const reportLink = page.locator("main").getByRole("link", { name: "정보 수정 제보하기" });
   await expect(reportLink).toBeVisible();
   await reportLink.click();

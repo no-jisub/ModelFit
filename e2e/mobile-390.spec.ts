@@ -5,8 +5,8 @@ test.use({ viewport: { width: 390, height: 844 } });
 const responsiveRoutes = [
   { name: "홈", path: "/" },
   { name: "검색", path: "/find?q=ADQ30041405" },
+  { name: "공기청정기 카테고리", path: "/category/air-purifier" },
   { name: "모델 상세", path: "/model/lg/as355nsna" },
-  { name: "내 가전함", path: "/my-appliances" },
   { name: "제휴 안내", path: "/affiliate-disclosure" },
 ];
 
@@ -49,6 +49,16 @@ test("390px 헤더는 검색과 검증 기준 메뉴를 두 줄로 제공한다"
   await expect(header.getByRole("link", { name: "검증 기준" })).toBeVisible();
 });
 
+test("390px 카테고리 필터는 버튼으로 펼쳐진다", async ({ page }) => {
+  await page.goto("/category/air-purifier");
+
+  const filter = page.locator("[data-category-model-filter]");
+  await expect(filter).not.toHaveAttribute("open", "");
+  await filter.locator("summary").click();
+  await expect(filter).toHaveAttribute("open", "");
+  await expect(filter.getByRole("searchbox", { name: "모델번호" })).toBeVisible();
+  await expect(filter.getByRole("button", { name: "LG", exact: true })).toBeVisible();
+});
 test("390px 홈 카테고리 카드는 세로로 배치된다", async ({ page }) => {
   await page.goto("/");
 
@@ -74,11 +84,10 @@ test("390px 검색 화면에서 결과 탭의 우선순위가 분명하다", asy
 test("390px 모델 상세에서 주요 행동을 먼저 제공한다", async ({ page }) => {
   await page.goto("/model/lg/as355nsna");
 
-  await expect(page.getByRole("button", { name: "내 가전함에 추가" })).toBeVisible();
   await expect(page.getByRole("link", { name: "정보 수정 제보" }).first()).toBeVisible();
   const compatiblePartsCta = page.getByRole("link", { name: /호환 소모품 2개 보기/ });
   await expect(compatiblePartsCta).toBeVisible();
   await compatiblePartsCta.click();
   await expect(page).toHaveURL(/#compatible-parts$/);
-  await expect(page.getByRole("heading", { name: /이 모델에 연결된 소모품/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /^호환 소모품 \d+개$/ })).toBeVisible();
 });

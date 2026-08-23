@@ -38,15 +38,12 @@ const partTypes =
   description={`${label} 모델별 호환 소모품 정보를 찾고 필터, 브러시, 먼지봉투 등의 검증 상태를 확인하세요.`}
   canonicalPath={`/category/${category}`}
 >
-  <section class="page-hero">
+  <section class="page-hero category-page-hero">
     <div class="container">
       <Breadcrumbs items={[{ label }]} />
-      <span class="category-chip">{category === "air-purifier" ? "▤" : "◉"} {label}</span>
+
       <h1>{label} 소모품 찾기</h1>
-      <p>
-        정확한 모델 코드를 기준으로 호환 소모품을 확인하세요. 공식 모델 정보와 호환성 검증 상태를
-        분리해 표시합니다.
-      </p>
+      <p>모델 코드를 선택해 공식 확인된 호환 소모품을 확인하세요.</p>
       <div class="stats-row">
         <div class="stat-card card">
           <strong>{categoryModels.filter((model) => !model.isDemo).length}</strong><span
@@ -63,34 +60,97 @@ const partTypes =
     </div>
   </section>
 
-  <section class="section">
+  <section class="section category-models-section">
     <div class="container">
       <div class="section-header">
         <div>
-          <div class="eyebrow">모델 목록</div><h2>{label} 등록 모델</h2><p>
-            같은 제품명은 하나로 묶어 표시합니다.
+          <h2>{label} 등록 모델</h2><p>같은 제품명은 하나로 묶어 표시합니다.</p>
+        </div>
+      </div>
+      <details class="category-model-filter" open data-category-model-filter>
+        <summary>
+          <span>필터</span>
+          <span data-filter-summary>전체 {categoryModels.length}개</span>
+        </summary>
+        <div class="category-filter-content">
+          <label class="category-filter-search">
+            <span>모델번호</span>
+            <input
+              type="search"
+              placeholder="모델번호 검색"
+              autocomplete="off"
+              data-model-filter-query
+            />
+          </label>
+          <div
+            class="category-filter-group category-filter-brands"
+            role="group"
+            aria-labelledby="category-brand-filter-label"
+          >
+            <span id="category-brand-filter-label" class="category-filter-label">브랜드</span>
+            <div class="category-filter-chips">
+              <button type="button" class="is-active" aria-pressed="true" data-filter-brand="all">
+                전체
+              </button>
+              {
+                categoryBrands.map((brand) => (
+                  <button type="button" aria-pressed="false" data-filter-brand={brand.id}>
+                    {brand.name}
+                  </button>
+                ))
+              }
+            </div>
+          </div>
+          <p class="category-filter-result" role="status" aria-live="polite" data-filter-result>
+            {categoryModels.length}개 모델
           </p>
         </div>
-        <a class="text-link" href={`/find?category=${category}`}>검색에서 필터링 →</a>
-      </div>
-      <div class="model-grid">
+      </details>
+      <div class="model-grid" data-filter-model-grid>
         {
-          categoryModelGroups.map(({ models: groupedModels }) =>
-            groupedModels.length > 1 ? (
-              <ModelGroupCard models={groupedModels} />
-            ) : (
-              groupedModels[0] && <ModelCard model={groupedModels[0]} />
-            ),
-          )
+          categoryModelGroups.map(({ models: groupedModels }) => {
+            const representative = groupedModels[0];
+            if (!representative) return null;
+            const searchText = groupedModels
+              .flatMap((item) => [
+                item.brandName,
+                item.brandNameEn,
+                item.modelName,
+                item.modelCode,
+                item.series,
+                ...item.aliases,
+              ])
+              .filter(Boolean)
+              .join(" ");
+
+            return (
+              <div
+                class="category-model-filter-item"
+                data-brand-id={representative.brandId}
+                data-model-count={groupedModels.length}
+                data-search-text={searchText}
+              >
+                {groupedModels.length > 1 ? (
+                  <ModelGroupCard models={groupedModels} />
+                ) : (
+                  <ModelCard model={representative} />
+                )}
+              </div>
+            );
+          })
         }
+      </div>
+      <div class="empty-state card category-filter-empty" hidden data-filter-empty>
+        <span class="empty-icon" aria-hidden="true">⌕</span>
+        <h2>조건에 맞는 모델이 없습니다</h2>
+        <p>브랜드나 모델번호 조건을 바꿔 다시 확인해 보세요.</p>
       </div>
     </div>
   </section>
-
-  <section class="section">
+  <section class="section category-brands-section">
     <div class="container">
       <div class="section-header">
-        <div><div class="eyebrow">브랜드</div><h2>{label} 지원 브랜드</h2></div>
+        <div><h2>{label} 지원 브랜드</h2></div>
       </div>
       <div class="brand-grid">
         {categoryBrands.map((brand) => <BrandCard brand={brand} />)}
@@ -98,10 +158,10 @@ const partTypes =
     </div>
   </section>
 
-  <section class="section">
+  <section class="section category-guides-section">
     <div class="container">
       <div class="section-header">
-        <div><div class="eyebrow">관련 가이드</div><h2>구매 전 확인할 내용</h2></div>
+        <div><h2>구매 전 확인할 내용</h2></div>
       </div>
       <div class="related-grid">
         {
@@ -118,3 +178,65 @@ const partTypes =
     </div>
   </section>
 </BaseLayout>
+<script>
+  const normalizeFilterText = (value: string) => value.toLowerCase().replace(/[\s-]/g, "");
+
+  document.querySelectorAll<HTMLElement>("[data-category-model-filter]").forEach((filter) => {
+    const grid = filter.parentElement?.querySelector<HTMLElement>("[data-filter-model-grid]");
+    const items = Array.from(
+      grid?.querySelectorAll<HTMLElement>(".category-model-filter-item") ?? [],
+    );
+    const queryInput = filter.querySelector<HTMLInputElement>("[data-model-filter-query]");
+    const result = filter.querySelector<HTMLElement>("[data-filter-result]");
+    const summary = filter.querySelector<HTMLElement>("[data-filter-summary]");
+    const empty = filter.parentElement?.querySelector<HTMLElement>("[data-filter-empty]");
+    const mobileQuery = window.matchMedia("(max-width: 700px)");
+    let selectedBrand = "all";
+
+    const updateDisclosure = () => {
+      if (filter instanceof HTMLDetailsElement) filter.open = !mobileQuery.matches;
+    };
+
+    const updatePressed = (buttons: NodeListOf<HTMLButtonElement>, selectedValue: string) => {
+      buttons.forEach((button) => {
+        const value = button.dataset.filterBrand;
+        const active = value === selectedValue;
+        button.classList.toggle("is-active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+    };
+
+    const applyFilters = () => {
+      const query = normalizeFilterText(queryInput?.value ?? "");
+      let visibleModelCount = 0;
+
+      items.forEach((item) => {
+        const matchesBrand = selectedBrand === "all" || item.dataset.brandId === selectedBrand;
+        const matchesQuery = normalizeFilterText(item.dataset.searchText ?? "").includes(query);
+        const visible = matchesBrand && matchesQuery;
+        item.hidden = !visible;
+        if (visible) visibleModelCount += Number(item.dataset.modelCount ?? 1);
+      });
+
+      const countText = `${visibleModelCount}개 모델`;
+      if (result) result.textContent = countText;
+      if (summary) summary.textContent = countText;
+      if (empty) empty.hidden = visibleModelCount > 0;
+    };
+
+    const brandButtons = filter.querySelectorAll<HTMLButtonElement>("[data-filter-brand]");
+
+    brandButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        selectedBrand = button.dataset.filterBrand ?? "all";
+        updatePressed(brandButtons, selectedBrand);
+        applyFilters();
+      });
+    });
+
+    queryInput?.addEventListener("input", applyFilters);
+    mobileQuery.addEventListener("change", updateDisclosure);
+    updateDisclosure();
+    applyFilters();
+  });
+</script>
