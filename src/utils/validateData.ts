@@ -242,6 +242,43 @@ export function validateData(
         errors.push(`${part.id}: 잘못된 다중 구매 링크 ${link.url}`);
       }
     }
+    if (part.productOptions.length === 0) {
+      errors.push(`${part.id}: 소개할 상품 후보가 없습니다.`);
+    }
+    const productOptionIds = new Set<string>();
+    for (const option of part.productOptions) {
+      if (productOptionIds.has(option.id)) {
+        errors.push(`${part.id}: 중복 상품 후보 ID ${option.id}`);
+      }
+      productOptionIds.add(option.id);
+      if (option.kind === "genuine" && option.verification === "verified-compatible") {
+        errors.push(`${part.id}: 정품을 호환상품 검증 상태로 표시할 수 없습니다.`);
+      }
+      if (option.kind === "compatible" && option.verification === "official-genuine") {
+        errors.push(`${part.id}: 호환상품을 제조사 정품으로 표시할 수 없습니다.`);
+      }
+      if (option.purchaseLinks.some((link) => link.linkType === "search-results")) {
+        errors.push(`${part.id}: 검색 결과 링크를 특정 상품 후보로 소개할 수 없습니다.`);
+      }
+      for (const link of option.purchaseLinks) {
+        try {
+          const url = new URL(link.url);
+          if (url.protocol !== "https:") {
+            errors.push(`${part.id}: 상품 후보 링크는 HTTPS여야 합니다 ${link.url}`);
+          }
+        } catch {
+          errors.push(`${part.id}: 잘못된 상품 후보 링크 ${link.url}`);
+        }
+      }
+    }
+    if (
+      part.verificationStatus === "official" &&
+      !part.productOptions.some(
+        (option) => option.kind === "genuine" && option.verification === "official-genuine",
+      )
+    ) {
+      errors.push(`${part.id}: 공식 확인 소모품에는 정품 기준 상품이 필요합니다.`);
+    }
     if (part.partNumberStatus === "researching") {
       warnings.push(`${part.id}: 정품 부품번호 추가 조사 필요`);
     }

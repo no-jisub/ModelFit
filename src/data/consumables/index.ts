@@ -1,5 +1,6 @@
 import type { ConsumableCompatibility } from "@/types";
 import { createPurchaseLinks } from "../../utils/purchaseLinks";
+import { createProductOptions } from "../../utils/productOptions";
 import { lgConsumableRecords } from "./lg";
 import { cowayConsumableRecords } from "./coway";
 import { winixConsumableRecords } from "./winix";
@@ -217,8 +218,12 @@ export const consumables: ConsumableCompatibility[] = consumableRecords.map((par
       part.partNumberStatus ?? (part.genuinePartNumber?.trim() ? "confirmed" : "not-listed"),
   };
 
+  const purchaseLinks = createPurchaseLinks(normalizedPart);
+
   return {
     ...normalizedPart,
-    purchaseLinks: createPurchaseLinks(normalizedPart),
+    purchaseLinks,
+    productOptions:
+      normalizedPart.productOptions ?? createProductOptions(normalizedPart, purchaseLinks),
   };
 });

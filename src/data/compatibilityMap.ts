@@ -44,7 +44,7 @@ export const modelConsumableIds: Record<string, string[]> = {
   "cuckoo-ac-14l10few": ["cuckoo-ac14-total-care-filter"],
 
   "dyson-bp04": ["dyson-bp04-k-carbon-filter", "dyson-big-quiet-hepa-h13-filter"],
-  "dyson-bp03": ["dyson-big-quiet-hepa-h13-filter", "dyson-bp03-activated-carbon-filter"],
+  "dyson-bp03": ["dyson-bp03-activated-carbon-filter", "dyson-big-quiet-hepa-h13-filter"],
   "dyson-hp09": ["dyson-360-glass-hepa-carbon-filter"],
   "dyson-tp09": ["dyson-360-glass-hepa-carbon-filter"],
   "dyson-ph04": ["dyson-360-glass-hepa-carbon-filter"],

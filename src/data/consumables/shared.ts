@@ -98,7 +98,8 @@ export const researchedPart = ({
 
 export type ConsumableRecord = Omit<
   ConsumableCompatibility,
-  "partNumberStatus" | "purchaseLinks"
+  "partNumberStatus" | "purchaseLinks" | "productOptions"
 > & {
   partNumberStatus?: ConsumableCompatibility["partNumberStatus"];
+  productOptions?: ConsumableCompatibility["productOptions"];
 };

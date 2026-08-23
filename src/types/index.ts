@@ -46,6 +46,23 @@ export interface PurchaseLinkData {
   checkedAt: string;
 }
 
+export type ProductOptionKind = "genuine" | "compatible";
+
+export type ProductOptionVerification =
+  "official-genuine" | "verified-compatible" | "seller-claimed" | "unverified";
+
+export interface ConsumableProductOption {
+  id: string;
+  name: string;
+  kind: ProductOptionKind;
+  verification: ProductOptionVerification;
+  description: string;
+  partNumber?: string;
+  packageLabel?: string;
+  sources: SourceReference[];
+  purchaseLinks: PurchaseLinkData[];
+}
+
 export interface ConsumableCompatibility {
   id: string;
   slug: string;
@@ -62,6 +79,7 @@ export interface ConsumableCompatibility {
   sources: SourceReference[];
   affiliate: AffiliateLinkData;
   purchaseLinks: PurchaseLinkData[];
+  productOptions: ConsumableProductOption[];
 }
 
 export interface ApplianceModel {
