@@ -1,52 +1,94 @@
 ---
 import type { ConsumableCompatibility } from "@/types";
 import { partTypeLabels } from "@/utils/labels";
-import AffiliateButton from "./AffiliateButton.astro";
+import ProductOptionCard from "./ProductOptionCard.astro";
 import VerificationBadge from "./VerificationBadge.astro";
 
-const { part } = Astro.props as { part: ConsumableCompatibility };
-const officialSource =
-  part.sources.find((source) => source.sourceType === "official-store") ?? part.sources[0];
+const { part, itemNumber } = Astro.props as {
+  part: ConsumableCompatibility;
+  itemNumber: number;
+};
+const typeDescriptions = {
+  "hepa-filter": "공기 중 미세입자와 초미세먼지를 포집하는 필터입니다.",
+  "deodorizing-filter": "생활 냄새와 가스 성분을 흡착하는 필터입니다.",
+  "pre-filter": "큰 먼지와 털을 먼저 걸러 주는 전처리 필터입니다.",
+  "all-in-one-filter": "여러 필터 기능을 하나의 교체 구성으로 합친 필터입니다.",
+  "dust-bin-filter": "먼지통으로 들어온 미세먼지가 다시 배출되지 않도록 걸러 줍니다.",
+  "dust-bag": "수거된 먼지를 보관하며 가득 차면 새 제품으로 교체합니다.",
+  "main-brush": "바닥의 먼지와 이물질을 쓸어 흡입구로 보내는 메인 브러시입니다.",
+  "side-brush": "벽면과 모서리의 먼지를 중앙 흡입구 쪽으로 모아 줍니다.",
+  "mop-pad": "바닥 물걸레 청소에 사용하는 교체형 또는 세척형 패드입니다.",
+} as const;
+const compatibleOptionCount = part.productOptions.filter(
+  (option) => option.kind === "compatible",
+).length;
 ---
 
-<article class="consumable-card card">
-  <div class="consumable-info">
-    <div class="eyebrow">{partTypeLabels[part.type]}</div>
-    <h3>{part.displayName}</h3>
-    <dl class="detail-list">
-      <div><dt>정품 부품번호</dt><dd>{part.genuinePartNumber ?? "정보 없음"}</dd></div>
+<article class="consumable-group card">
+  <header class="consumable-group-heading">
+    <span class="consumable-group-number">{itemNumber}</span>
+    <div>
+      <div class="eyebrow">{itemNumber}번 소모품 · {partTypeLabels[part.type]}</div>
+      <h3>{part.displayName}</h3>
+      <p>{typeDescriptions[part.type]}</p>
+    </div>
+  </header>
+
+  <dl class="consumable-group-details">
+    <div>
+      <dt>정품 부품번호</dt>
+      <dd>{part.genuinePartNumber ?? "공식 자료에 번호 미표기"}</dd>
+    </div>
+    <div>
+      <dt>호환 검증</dt>
+      <dd><VerificationBadge status={part.verificationStatus} context="compatibility" /></dd>
+    </div>
+    {
+      part.replacementInterval && (
+        <div>
+          <dt>교체 주기</dt>
+          <dd>{part.replacementInterval}</dd>
+        </div>
+      )
+    }
+  </dl>
+
+  <section class="product-options-section" aria-labelledby={part.id + "-products"}>
+    <div class="product-options-heading">
       <div>
-        <dt class="sr-only">호환 검증</dt><dd>
-          <VerificationBadge status={part.verificationStatus} context="compatibility" />
-        </dd>
+        <span class="eyebrow">{itemNumber}번 소모품의 구매 선택지</span>
+        <h4 id={part.id + "-products"}>소개할 상품 {part.productOptions.length}개</h4>
       </div>
-    </dl>
-  </div>
-  <div class="consumable-actions">
-    <AffiliateButton
-      keyword={part.affiliate.searchKeyword}
-      kind="genuine"
-      partId={part.id}
-      directUrl={part.affiliate.directUrl}
-      affiliateLink={part.affiliate.isAffiliate}
-      enabled={part.affiliate.enabled}
-      linkStatus={part.affiliate.status}
-    />
-    <div class="consumable-secondary-actions">
+      <span class="product-options-count">
+        정품 {part.productOptions.filter((option) => option.kind === "genuine").length} · 호환상품 {
+          compatibleOptionCount
+        }
+      </span>
+    </div>
+
+    <div class="product-option-list">
       {
-        officialSource && (
-          <a
-            class="official-source-link"
-            href={officialSource.url}
-            rel="noopener noreferrer"
-            target="_blank"
-            data-source-type={officialSource.sourceType}
-            data-part-id={part.id}
-          >
-            공식 호환 근거 <span aria-hidden="true">↗</span>
-          </a>
-        )
+        part.productOptions.map((option, productIndex) => (
+          <ProductOptionCard
+            option={option}
+            partNumber={itemNumber}
+            productNumber={productIndex + 1}
+            partId={part.id}
+          />
+        ))
       }
     </div>
-  </div>
+
+    {
+      compatibleOptionCount === 0 && (
+        <div class="compatible-products-pending">
+          <strong>검증된 호환상품 추가 조사 중</strong>
+          <p>
+            판매자가 호환된다고 적은 것만으로는 등록하지 않습니다. 적용 모델, 크기와 결합부, 구성품
+            근거가 확인된 상품부터 {itemNumber}-2, {itemNumber}-3 순서로 추가합니다.
+          </p>
+        </div>
+      )
+    }
+  </section>
 </article>

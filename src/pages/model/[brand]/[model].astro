@@ -121,13 +121,13 @@ const breadcrumbJsonLd = {
     <section class="detail-section compatible-parts-section" id="compatible-parts">
       <div class="section-header">
         <div>
-          <h2>호환 소모품 {parts.length}개</h2>
+          <h2>교체 소모품 {parts.length}종</h2>
         </div>
       </div>
       <div class="consumable-list">
         {
           parts.length > 0 ? (
-            parts.map((part) => <ConsumableCard part={part} />)
+            parts.map((part, index) => <ConsumableCard part={part} itemNumber={index + 1} />)
           ) : model.consumableNote ? (
             <div class="empty-state card">
               <span class="empty-icon" aria-hidden="true">
@@ -216,7 +216,7 @@ const breadcrumbJsonLd = {
   </div>
 
   <a class="mobile-compatible-parts-cta" href="#compatible-parts">
-    {parts.length > 0 ? `호환 소모품 ${parts.length}개 보기` : "호환 소모품 확인"}
+    {parts.length > 0 ? `교체 소모품 ${parts.length}종 보기` : "교체 소모품 확인"}
   </a>
 </BaseLayout>
 

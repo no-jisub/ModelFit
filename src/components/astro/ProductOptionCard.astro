@@ -1,0 +1,87 @@
+---
+import type { ConsumableProductOption } from "@/types";
+
+const { option, partNumber, productNumber, partId } = Astro.props as {
+  option: ConsumableProductOption;
+  partNumber: number;
+  productNumber: number;
+  partId: string;
+};
+const optionNumber = String(partNumber) + "-" + String(productNumber);
+const headingId = option.id + "-heading";
+const kindLabel = option.kind === "genuine" ? "정품" : "호환상품";
+const verificationLabels = {
+  "official-genuine": "제조사 공식 근거 확인",
+  "verified-compatible": "호환 근거 확인",
+  "seller-claimed": "판매자 호환 표기",
+  unverified: "미검증",
+} as const;
+const hasDirectProduct = option.purchaseLinks.some((link) => link.linkType === "direct-product");
+---
+
+<article
+  class:list={["product-option-card", option.kind === "genuine" ? "is-genuine" : "is-compatible"]}
+  aria-labelledby={headingId}
+>
+  <div class="product-option-heading">
+    <span class="product-option-number">{optionNumber}</span>
+    <div>
+      <div class="product-option-badges">
+        <span class:list={["product-kind-badge", "is-" + option.kind]}>{kindLabel}</span>
+        <span class="product-verification-badge">
+          {verificationLabels[option.verification]}
+        </span>
+      </div>
+      <h5 id={headingId}>{option.name}</h5>
+    </div>
+  </div>
+
+  <p class="product-option-description">{option.description}</p>
+
+  <dl class="product-option-details">
+    <div>
+      <dt>부품번호</dt>
+      <dd>{option.partNumber ?? "공식 자료에 번호 미표기"}</dd>
+    </div>
+    <div>
+      <dt>구성</dt>
+      <dd>{option.packageLabel ?? "판매 페이지에서 구성 수량 확인"}</dd>
+    </div>
+  </dl>
+
+  <div class="product-option-links">
+    {
+      option.purchaseLinks.map((link) => (
+        <a
+          class:list={[
+            "button",
+            link.channel === "official" ? "button-secondary" : "button-primary",
+          ]}
+          href={link.url}
+          rel={
+            link.isAffiliate
+              ? "nofollow sponsored noopener noreferrer"
+              : link.channel === "official"
+                ? "noopener noreferrer"
+                : "nofollow noopener noreferrer"
+          }
+          target="_blank"
+          data-product-option-id={option.id}
+          data-purchase-channel={link.channel}
+          data-part-id={partId}
+          data-link-status={link.linkType}
+        >
+          {link.label} <span aria-hidden="true">↗</span>
+        </a>
+      ))
+    }
+  </div>
+
+  {
+    !hasDirectProduct && (
+      <p class="product-option-link-note">
+        검증된 상품 상세 링크는 준비 중입니다. 공식 근거만 먼저 확인할 수 있습니다.
+      </p>
+    )
+  }
+</article>
