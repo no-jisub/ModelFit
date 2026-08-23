@@ -5,28 +5,12 @@ export interface ValidationResult {
   warnings: string[];
 }
 
-const officialSourceDomains: Record<string, string[]> = {
-  samsung: ["samsung.com"],
-  lg: ["lge.co.kr"],
-  coway: ["coway.com"],
-  winix: ["winix.com"],
-  cuckoo: ["cuckoo.co.kr"],
-  dyson: ["dyson.co.kr"],
-  xiaomi: ["mi.com"],
-  skmagic: ["skmagic.com"],
-  blueair: ["blueair.com"],
-  roborock: ["roborock.com"],
-  dreame: ["dreametech.com"],
-  ecovacs: ["ecovacs.com"],
-  narwal: ["narwal.com"],
-  irobot: ["irobot.com"],
-  everybot: ["everybotmall.com"],
-  eufy: ["eufy.com"],
-  wells: ["kyowonwells.com"],
-};
-
 function isAllowedOfficialHost(hostname: string, domains: string[]) {
   return domains.some((domain) => hostname === domain || hostname.endsWith(`.${domain}`));
+}
+
+function isValidDomain(domain: string) {
+  return /^(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z]{2,}$/i.test(domain);
 }
 
 export function validateData(
@@ -37,6 +21,7 @@ export function validateData(
   const errors: string[] = [];
   const warnings: string[] = [];
   const brandIds = new Set(brands.map((brand) => brand.id));
+  const brandsById = new Map(brands.map((brand) => [brand.id, brand]));
   const modelIds = new Set(models.map((model) => model.id));
   const partIds = new Set(consumables.map((part) => part.id));
 
@@ -45,6 +30,19 @@ export function validateData(
 
   for (const slug of duplicates(brands.map((brand) => brand.slug))) {
     errors.push(`중복 브랜드 slug: ${slug}`);
+  }
+  for (const brand of brands) {
+    if (brand.officialDomains.length === 0) {
+      errors.push(`${brand.id}: 공식 출처 도메인이 없습니다.`);
+    }
+    for (const domain of brand.officialDomains) {
+      if (domain !== domain.toLowerCase() || !isValidDomain(domain)) {
+        errors.push(`${brand.id}: 올바르지 않은 공식 출처 도메인 ${domain}`);
+      }
+    }
+    for (const domain of duplicates(brand.officialDomains)) {
+      errors.push(`${brand.id}: 중복 공식 출처 도메인 ${domain}`);
+    }
   }
   for (const slug of duplicates(models.map((model) => model.slug))) {
     errors.push(`중복 모델 slug: ${slug}`);
@@ -70,7 +68,7 @@ export function validateData(
         }
 
         if (["manufacturer", "official-manual", "official-store"].includes(source.sourceType)) {
-          const domains = officialSourceDomains[model.brandId] ?? [];
+          const domains = brandsById.get(model.brandId)?.officialDomains ?? [];
           if (!isAllowedOfficialHost(url.hostname, domains)) {
             errors.push(
               `${model.id}: source is outside the ${model.brandId} official domains ${source.url}.`,
@@ -138,7 +136,7 @@ export function validateData(
 
         if (["manufacturer", "official-manual", "official-store"].includes(source.sourceType)) {
           for (const brandId of partBrandIds) {
-            const domains = officialSourceDomains[brandId] ?? [];
+            const domains = brandsById.get(brandId)?.officialDomains ?? [];
             if (!isAllowedOfficialHost(url.hostname, domains)) {
               errors.push(
                 `${part.id}: source is outside the ${brandId} official domains ${source.url}.`,

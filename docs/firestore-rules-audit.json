@@ -1,5 +1,5 @@
 {
   "score": 5,
-  "summary": "Public clients can only create strictly validated, size-limited reports. Report reads and status-only updates require an active server-managed admin UID document. Report deletion and all client-side admin ACL mutations are denied.",
+  "summary": "Emulator-backed red-team tests confirm that public clients can only create strictly validated, size-limited reports. Report reads and status-only updates require an active server-managed admin UID document. Report deletion, schema pollution, timestamp forgery, unbounded list queries, unknown paths, and all client-side admin ACL mutations are denied.",
   "findings": []
 }

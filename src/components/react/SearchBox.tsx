@@ -1,10 +1,32 @@
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { consumables } from "@/data/consumables";
-import { models } from "@/data/models";
-import { categoryLabels, partTypeLabels, statusLabels } from "@/utils/labels";
-import { getModelFullName } from "@/utils/modelDisplayName";
-import { searchCatalog, splitStrongMatches } from "@/utils/searchCatalog";
 import { analytics } from "@/utils/analytics";
+import { searchAutocomplete, type AutocompleteIndex } from "@/utils/autocomplete";
+
+let autocompleteIndexPromise: Promise<AutocompleteIndex> | undefined;
+
+function loadAutocompleteIndex() {
+  autocompleteIndexPromise ??= fetch("/search-index.json", {
+    headers: { Accept: "application/json" },
+  })
+    .then(async (response) => {
+      if (!response.ok) throw new Error(`검색 인덱스 요청 실패: ${response.status}`);
+      const index = (await response.json()) as Partial<AutocompleteIndex>;
+      if (
+        index.version !== 1 ||
+        !Array.isArray(index.models) ||
+        !Array.isArray(index.consumables)
+      ) {
+        throw new Error("검색 인덱스 형식이 올바르지 않습니다.");
+      }
+      return index as AutocompleteIndex;
+    })
+    .catch((error) => {
+      autocompleteIndexPromise = undefined;
+      throw error;
+    });
+
+  return autocompleteIndexPromise;
+}
 
 interface Props {
   initialQuery?: string;
@@ -18,48 +40,29 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
   const [query, setQuery] = useState(initialQuery);
   const [open, setOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [autocompleteIndex, setAutocompleteIndex] = useState<AutocompleteIndex | null>(null);
+  const [indexState, setIndexState] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const suggestions = useMemo(() => {
-    if (!query.trim()) return [];
-    const results = searchCatalog(models, consumables, query, {
-      modelLimit: 4,
-      consumableLimit: 4,
-      compatibleModelLimit: 0,
-    });
+  const requestVersion = useRef(0);
+  const suggestions = useMemo(
+    () => (autocompleteIndex ? searchAutocomplete(autocompleteIndex, query) : []),
+    [autocompleteIndex, query],
+  );
 
-    const ranked = [
-      ...results.models.map(({ model, score }) => ({
-        id: `model-${model.id}`,
-        entityId: model.id,
-        kind: "model" as const,
-        title: getModelFullName(model),
-        description: `${model.modelCode} · ${categoryLabels[model.category]}`,
-        status: statusLabels[model.verificationStatus],
-        url: `/model/${model.brandId}/${model.slug}#compatible-parts`,
-        score,
-      })),
-      ...results.consumables.map(({ part, score, reason }) => ({
-        id: `part-${part.id}`,
-        entityId: part.id,
-        kind: "part" as const,
-        title: part.displayName,
-        description: `${partTypeLabels[part.type]} · ${
-          part.genuinePartNumber ?? "부품번호 정보 없음"
-        }`,
-        status: reason === "part-number" ? "부품번호 일치" : "소모품",
-        url: `/find?q=${encodeURIComponent(
-          part.genuinePartNumber ?? part.displayName,
-        )}&type=parts#part-${part.id}`,
-        score,
-      })),
-    ].sort(
-      (a, b) =>
-        b.score - a.score ||
-        (a.kind === b.kind ? a.title.localeCompare(b.title, "ko") : a.kind === "model" ? -1 : 1),
-    );
-
-    return splitStrongMatches(ranked).primary.slice(0, 4);
-  }, [query]);
+  function ensureAutocompleteIndex() {
+    if (autocompleteIndex || indexState === "loading") return;
+    const version = ++requestVersion.current;
+    setIndexState("loading");
+    void loadAutocompleteIndex()
+      .then((index) => {
+        if (requestVersion.current !== version) return;
+        setAutocompleteIndex(index);
+        setIndexState("ready");
+      })
+      .catch(() => {
+        if (requestVersion.current === version) setIndexState("error");
+      });
+  }
 
   useEffect(() => {
     function close(event: MouseEvent) {
@@ -72,6 +75,13 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
   useEffect(() => {
     setQuery(initialQuery);
   }, [initialQuery]);
+
+  useEffect(
+    () => () => {
+      requestVersion.current += 1;
+    },
+    [],
+  );
 
   function goToSearch(value = query) {
     const normalized = value.trim();
@@ -127,7 +137,7 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
         }}
       >
         <label className="sr-only" htmlFor={inputId}>
-          모델명, 상품명 또는 정품 부품번호
+          {header ? "모델번호·부품번호 검색" : "모델명, 상품명 또는 정품 부품번호"}
         </label>
         <span className="search-icon" aria-hidden="true">
           ⌕
@@ -137,7 +147,7 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
           name="q"
           type="search"
           value={query}
-          placeholder={header ? "모델·소모품 검색" : "예: 로보락 S8 또는 ADQ30041405"}
+          placeholder={header ? "모델번호·부품번호 검색" : "예: 로보락 S8 또는 ADQ30041405"}
           autoComplete="off"
           role="combobox"
           aria-autocomplete="list"
@@ -148,17 +158,30 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
             setQuery(event.target.value);
             setOpen(true);
             setActiveIndex(-1);
+            if (event.target.value.trim()) ensureAutocompleteIndex();
           }}
-          onFocus={() => setOpen(true)}
+          onFocus={() => {
+            setOpen(true);
+            ensureAutocompleteIndex();
+          }}
           onKeyDown={onKeyDown}
         />
         <button className="button button-primary search-submit" type="submit">
-          {header ? "검색" : "소모품 찾기"}
+          소모품 찾기
         </button>
       </form>
       {open && query.trim() && (
         <div className="autocomplete-panel" id={listId} role="listbox" aria-label="모델 검색 제안">
-          {suggestions.length > 0 ? (
+          {indexState === "loading" || indexState === "idle" ? (
+            <div className="autocomplete-empty">
+              <strong>검색 데이터를 불러오는 중입니다.</strong>
+            </div>
+          ) : indexState === "error" ? (
+            <div className="autocomplete-empty">
+              <strong>자동완성을 불러오지 못했습니다.</strong>
+              <span>검색 버튼을 누르면 전체 결과를 확인할 수 있습니다.</span>
+            </div>
+          ) : suggestions.length > 0 ? (
             suggestions.map((suggestion, index) => (
               <button
                 type="button"

@@ -1,0 +1,71 @@
+import {
+  affiliate,
+  domesticWarning,
+  researchedPart,
+  source,
+  type ConsumableRecord,
+} from "./shared";
+
+export const blueairConsumableRecords: ConsumableRecord[] = [
+  {
+    id: "blueair-cp7i-pac-filter",
+    slug: "blueair-cp7i-pac-filter",
+    type: "all-in-one-filter",
+    displayName: "Blueair Classic Pro CP7i PAC 필터",
+    compatibleProductName: "Classic Pro CP7i PAC Filter",
+    compatibleModelIds: ["blueair-cp7i"],
+    searchKeywords: ["Blueair CP7i PAC Filter", "블루에어 CP7i 정품 필터"],
+    purchaseWarning: domesticWarning,
+    verificationStatus: "official",
+    sources: [
+      source(
+        "Blueair 코리아 공식몰 — Classic Pro CP7i PAC 필터",
+        "https://www.blueair.com/ko-kr/products/classic-pro-cp7i-pac-filter",
+      ),
+    ],
+    affiliate: affiliate("블루에어 CP7i 정품 PAC 필터"),
+  },
+  {
+    id: "blueair-dustmagnet-5200-combofilter",
+    slug: "blueair-dustmagnet-5200-combofilter",
+    type: "all-in-one-filter",
+    displayName: "Blueair DustMagnet 5200 시리즈 ComboFilter",
+    compatibleProductName: "DustMagnet ComboFilter 5200",
+    compatibleModelIds: ["blueair-5240i", "blueair-5210i"],
+    searchKeywords: ["Blueair DustMagnet ComboFilter 5200", "블루에어 5210i 5240i 필터"],
+    replacementInterval: "최대 9개월(제조사 안내, 사용 환경에 따라 달라짐)",
+    purchaseWarning: domesticWarning,
+    verificationStatus: "official",
+    sources: [
+      source(
+        "Blueair 코리아 공식몰 — DustMagnet ComboFilter 5200 적용 모델",
+        "https://www.blueair.com/ko-kr/products/dustmagnet-combofilter-5201",
+      ),
+    ],
+    affiliate: affiliate("블루에어 DustMagnet 5210i 5240i 정품 필터"),
+  },
+  researchedPart({
+    id: "blueair-cp9i-main-filter",
+    type: "all-in-one-filter",
+    displayName: "블루에어 Classic Pro CP9i 메인 필터",
+    compatibleProductName: "CP9i Main Filter 3개 구성",
+    modelIds: ["blueair-cp9i"],
+    sourceTitle: "블루에어 공식 Classic Pro CP9i 제품 정보 — 3중 필터 구성",
+    sourceUrl: "https://www.blueair.com/en-kr/products/classic-pro-cp9i",
+    sourceType: "manufacturer",
+    searchKeyword: "블루에어 CP9i 정품 메인 필터",
+    regional: true,
+    verifiedAt: "2026-08-07",
+  }),
+  researchedPart({
+    id: "blueair-3410-particle-carbon-filter",
+    type: "all-in-one-filter",
+    displayName: "블루에어 Blue 3410 Particle + Carbon 필터",
+    modelIds: ["blueair-3410"],
+    sourceTitle: "블루에어 코리아 공식 Blue 3410 제품 및 필터 안내",
+    sourceUrl: "https://www.blueair.com/ko-kr/products/blue-3410",
+    sourceType: "manufacturer",
+    searchKeyword: "블루에어 3410 정품 필터",
+    replacementInterval: "약 6개월(사용 환경에 따라 다름)",
+  }),
+];

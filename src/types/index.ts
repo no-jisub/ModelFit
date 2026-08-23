@@ -92,6 +92,7 @@ export interface Brand {
   name: string;
   nameEn?: string;
   supportedCategories: ApplianceCategory[];
+  officialDomains: string[];
 }
 
 export interface Guide {

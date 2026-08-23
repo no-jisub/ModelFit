@@ -7,6 +7,7 @@ export const brands: Brand[] = [
     name: "삼성",
     nameEn: "Samsung",
     supportedCategories: ["air-purifier", "robot-vacuum"],
+    officialDomains: ["samsung.com"],
   },
   {
     id: "lg",
@@ -14,6 +15,7 @@ export const brands: Brand[] = [
     name: "LG",
     nameEn: "LG",
     supportedCategories: ["air-purifier", "robot-vacuum"],
+    officialDomains: ["lge.co.kr"],
   },
   {
     id: "winix",
@@ -21,6 +23,7 @@ export const brands: Brand[] = [
     name: "위닉스",
     nameEn: "Winix",
     supportedCategories: ["air-purifier"],
+    officialDomains: ["winix.com"],
   },
   {
     id: "coway",
@@ -28,6 +31,7 @@ export const brands: Brand[] = [
     name: "코웨이",
     nameEn: "Coway",
     supportedCategories: ["air-purifier"],
+    officialDomains: ["coway.com"],
   },
   {
     id: "roborock",
@@ -35,6 +39,7 @@ export const brands: Brand[] = [
     name: "로보락",
     nameEn: "Roborock",
     supportedCategories: ["robot-vacuum"],
+    officialDomains: ["roborock.com"],
   },
   {
     id: "dreame",
@@ -42,6 +47,7 @@ export const brands: Brand[] = [
     name: "드리미",
     nameEn: "Dreame",
     supportedCategories: ["robot-vacuum"],
+    officialDomains: ["dreametech.com"],
   },
   {
     id: "cuckoo",
@@ -49,6 +55,7 @@ export const brands: Brand[] = [
     name: "쿠쿠",
     nameEn: "Cuckoo",
     supportedCategories: ["air-purifier"],
+    officialDomains: ["cuckoo.co.kr"],
   },
   {
     id: "dyson",
@@ -56,6 +63,7 @@ export const brands: Brand[] = [
     name: "다이슨",
     nameEn: "Dyson",
     supportedCategories: ["air-purifier"],
+    officialDomains: ["dyson.co.kr"],
   },
   {
     id: "xiaomi",
@@ -63,6 +71,7 @@ export const brands: Brand[] = [
     name: "샤오미",
     nameEn: "Xiaomi",
     supportedCategories: ["air-purifier", "robot-vacuum"],
+    officialDomains: ["mi.com"],
   },
   {
     id: "skmagic",
@@ -70,6 +79,7 @@ export const brands: Brand[] = [
     name: "SK매직",
     nameEn: "SK magic",
     supportedCategories: ["air-purifier"],
+    officialDomains: ["skmagic.com"],
   },
   {
     id: "wells",
@@ -77,6 +87,7 @@ export const brands: Brand[] = [
     name: "교원 웰스",
     nameEn: "Wells",
     supportedCategories: ["air-purifier"],
+    officialDomains: ["kyowonwells.com"],
   },
   {
     id: "blueair",
@@ -84,6 +95,7 @@ export const brands: Brand[] = [
     name: "블루에어",
     nameEn: "Blueair",
     supportedCategories: ["air-purifier"],
+    officialDomains: ["blueair.com"],
   },
   {
     id: "ecovacs",
@@ -91,6 +103,7 @@ export const brands: Brand[] = [
     name: "에코백스",
     nameEn: "ECOVACS",
     supportedCategories: ["robot-vacuum"],
+    officialDomains: ["ecovacs.com"],
   },
   {
     id: "narwal",
@@ -98,6 +111,7 @@ export const brands: Brand[] = [
     name: "나르왈",
     nameEn: "Narwal",
     supportedCategories: ["robot-vacuum"],
+    officialDomains: ["narwal.com"],
   },
   {
     id: "irobot",
@@ -105,6 +119,7 @@ export const brands: Brand[] = [
     name: "아이로봇",
     nameEn: "iRobot",
     supportedCategories: ["robot-vacuum"],
+    officialDomains: ["irobot.com"],
   },
   {
     id: "everybot",
@@ -112,6 +127,7 @@ export const brands: Brand[] = [
     name: "에브리봇",
     nameEn: "Everybot",
     supportedCategories: ["robot-vacuum"],
+    officialDomains: ["everybotmall.com"],
   },
   {
     id: "eufy",
@@ -119,5 +135,6 @@ export const brands: Brand[] = [
     name: "유피",
     nameEn: "eufy",
     supportedCategories: ["robot-vacuum"],
+    officialDomains: ["eufy.com"],
   },
 ];
