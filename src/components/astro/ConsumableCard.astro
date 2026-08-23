@@ -2,7 +2,6 @@
 import type { ConsumableCompatibility } from "@/types";
 import { partTypeLabels } from "@/utils/labels";
 import AffiliateButton from "./AffiliateButton.astro";
-import PartNumberBadge from "./PartNumberBadge.astro";
 import VerificationBadge from "./VerificationBadge.astro";
 
 const { part } = Astro.props as { part: ConsumableCompatibility };
@@ -16,15 +15,9 @@ const officialSource =
     <h3>{part.displayName}</h3>
     <dl class="detail-list">
       <div><dt>정품 부품번호</dt><dd>{part.genuinePartNumber ?? "정보 없음"}</dd></div>
-      <div><dt>교체주기 참고</dt><dd>{part.replacementInterval ?? "제조사 안내 확인"}</dd></div>
       <div>
-        <dt>검증 상태</dt><dd>
+        <dt class="sr-only">호환 검증</dt><dd>
           <VerificationBadge status={part.verificationStatus} context="compatibility" />
-        </dd>
-      </div>
-      <div>
-        <dt>부품번호 상태</dt><dd>
-          <PartNumberBadge partNumber={part.genuinePartNumber} status={part.partNumberStatus} />
         </dd>
       </div>
     </dl>
@@ -36,27 +29,28 @@ const officialSource =
       partId={part.id}
       directUrl={part.affiliate.directUrl}
       affiliateLink={part.affiliate.isAffiliate}
-      restrictionNote={part.affiliate.restrictionNote}
       enabled={part.affiliate.enabled}
       linkStatus={part.affiliate.status}
-      priceStatus={part.affiliate.priceStatus}
-      stockStatus={part.affiliate.stockStatus}
-      linkCheckedAt={part.affiliate.linkCheckedAt}
     />
-    {
-      officialSource && (
-        <a
-          class="button button-secondary official-source-button"
-          href={officialSource.url}
-          rel="noopener noreferrer"
-          target="_blank"
-          data-source-type={officialSource.sourceType}
-          data-part-id={part.id}
-        >
-          제조사 호환 근거 보기 <span aria-hidden="true">↗</span>
-        </a>
-      )
-    }
-    <p class="purchase-warning-inline">구매 전 확인: {part.purchaseWarning}</p>
+    <div class="consumable-secondary-actions">
+      {
+        officialSource && (
+          <a
+            class="official-source-link"
+            href={officialSource.url}
+            rel="noopener noreferrer"
+            target="_blank"
+            data-source-type={officialSource.sourceType}
+            data-part-id={part.id}
+          >
+            공식 호환 근거 <span aria-hidden="true">↗</span>
+          </a>
+        )
+      }
+      <details class="purchase-warning-inline">
+        <summary>구매 전 확인</summary>
+        <p>{part.purchaseWarning}</p>
+      </details>
+    </div>
   </div>
 </article>
