@@ -7,7 +7,7 @@ import { analytics } from "@/utils/analytics";
 import {
   categoryLabels,
   getPartNumberStatus,
-  getVerificationLabel,
+
   partNumberStatusLabels,
   partTypeLabels,
 } from "@/utils/labels";
@@ -58,9 +58,7 @@ function ModelResultCard({
         <span className="category-chip">
           {model.category === "air-purifier" ? "▤" : "◉"} {categoryLabels[model.category]}
         </span>
-        <span className="official-chip">
-          {association ? "소모품으로 찾은 모델" : "공식 모델 정보"}
-        </span>
+        {association && <span className="official-chip">소모품으로 찾은 모델</span>}
       </div>
       <p className="model-brand-label">{model.brandName}</p>
       <h3>{getModelDisplayName(model)}</h3>
@@ -79,12 +77,7 @@ function ModelResultCard({
             : ""}
         </p>
       )}
-      <div className="model-card-status">
-        <span className={`status-badge status-${model.verificationStatus}`}>
-          ✓ {getVerificationLabel(model.verificationStatus, "model")}
-        </span>
-        <span>{model.lastVerifiedAt} 확인</span>
-      </div>
+
       <div className="model-card-footer">
         <strong>호환 소모품 {model.consumableIds.length}개</strong>
         <button

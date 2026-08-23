@@ -2,8 +2,7 @@
 import type { ApplianceModel } from "@/types";
 import { categoryLabels } from "@/utils/labels";
 import { getModelDisplayName } from "@/utils/modelDisplayName";
-import { formatModelReleaseDate } from "@/utils/modelReleaseDate";
-import VerificationBadge from "./VerificationBadge.astro";
+
 
 const { models } = Astro.props as { models: ApplianceModel[] };
 const representative = models[0];
@@ -11,17 +10,7 @@ const representative = models[0];
 if (!representative) throw new Error("ModelGroupCard에는 모델이 한 개 이상 필요합니다.");
 
 const displayName = getModelDisplayName(representative);
-const lastVerifiedAt = models
-  .map((model) => model.lastVerifiedAt)
-  .sort((a, b) => b.localeCompare(a))[0];
-const releaseDates = new Set(models.map((model) => model.releaseDate).filter(Boolean));
-const releaseDateSummary =
-  releaseDates.size === 1 && models.every((model) => model.releaseDate)
-    ? formatModelReleaseDate(models[0]?.releaseDate)
-    : releaseDates.size > 0
-      ? "모델별 출시일 확인"
-      : formatModelReleaseDate(undefined);
-const isReleaseDatePending = releaseDates.size === 0;
+
 const detailPath = `/model/${representative.brandId}/${representative.slug}#compatible-parts`;
 ---
 
@@ -35,19 +24,12 @@ const detailPath = `/model/${representative.brandId}/${representative.slug}#comp
       <span aria-hidden="true">{representative.category === "air-purifier" ? "▤" : "◉"}</span>
       {categoryLabels[representative.category]}
     </span>
-    <span class="official-chip">공식 모델 정보</span>
+
   </div>
 
   <p class="model-brand-label">{representative.brandName}</p>
   <h3>{displayName}</h3>
   <p class="model-series">{representative.series ?? "제품군"}</p>
-  <p class:list={["model-release-date", { "is-pending": isReleaseDatePending }]}>
-    <span aria-hidden="true">◷</span>
-    {releaseDateSummary}
-  </p>
 
-  <div class="model-card-status">
-    <VerificationBadge status={representative.verificationStatus} context="model" />
-    <span>{lastVerifiedAt} 확인</span>
-  </div>
+
 </a>

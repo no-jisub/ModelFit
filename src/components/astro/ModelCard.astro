@@ -2,9 +2,8 @@
 import type { ApplianceModel } from "@/types";
 import { categoryLabels } from "@/utils/labels";
 import { getModelDisplayName } from "@/utils/modelDisplayName";
-import { formatModelReleaseDate } from "@/utils/modelReleaseDate";
 import CategoryIcon from "./CategoryIcon.astro";
-import VerificationBadge from "./VerificationBadge.astro";
+
 
 const { model } = Astro.props as { model: ApplianceModel };
 const displayName = getModelDisplayName(model);
@@ -17,19 +16,11 @@ const detailPath = `/model/${model.brandId}/${model.slug}#compatible-parts`;
       <CategoryIcon category={model.category} />
       {categoryLabels[model.category]}
     </span>
-    <span class={model.isDemo ? "demo-chip" : "official-chip"}>
-      {model.isDemo ? "데모 데이터" : "공식 모델 정보"}
-    </span>
+    {model.isDemo && <span class="demo-chip">데모 데이터</span>}
   </div>
   <p class="model-brand-label">{model.brandName}</p>
   <h3>{displayName}</h3>
   <p class="model-series">{model.modelCode} {model.series ? `· ${model.series}` : ""}</p>
-  <p class:list={["model-release-date", { "is-pending": !model.releaseDate }]}>
-    <span aria-hidden="true">◷</span>
-    {formatModelReleaseDate(model.releaseDate)}
-  </p>
-  <div class="model-card-status">
-    <VerificationBadge status={model.verificationStatus} context="model" />
-    <span>{model.lastVerifiedAt} 확인</span>
-  </div>
+
+
 </a>

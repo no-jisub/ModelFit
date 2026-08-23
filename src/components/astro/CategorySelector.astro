@@ -1,47 +1,34 @@
 ---
-import { brands } from "@/data/brands";
-import { models } from "@/data/models";
-import type { ApplianceCategory } from "@/types";
-import CategoryIcon from "./CategoryIcon.astro";
-
-const getStats = (category: ApplianceCategory) => {
-  const modelCount = models.filter((model) => model.category === category && !model.isDemo).length;
-  const brandCount = brands.filter((brand) => brand.supportedCategories.includes(category)).length;
-  return `${modelCount}개 공식 모델 · ${brandCount}개 브랜드`;
-};
-
 const cards = [
   {
     slug: "air-purifier",
     title: "공기청정기",
-    description: "집진 · HEPA · 탈취 · 프리필터",
-    stats: getStats("air-purifier"),
+    image: "/images/categories/air-purifier.webp",
   },
   {
     slug: "robot-vacuum",
     title: "로봇청소기",
-    description: "필터 · 먼지봉투 · 브러시 · 물걸레",
-    stats: getStats("robot-vacuum"),
+    image: "/images/categories/robot-vacuum.webp",
   },
 ];
 ---
 
-<div class="category-grid">
-  {
-    cards.map((card) => (
-      <a class="category-card card interactive-card" href={`/category/${card.slug}`}>
-        <span class="category-icon" aria-hidden="true">
-          <CategoryIcon category={card.slug as ApplianceCategory} />
-        </span>
-        <span>
+<div class="category-selector-shell">
+  <p class="category-selector-title">찾고 싶은 제품을 선택해 보세요</p>
+  <div class="category-grid">
+    {
+      cards.map((card) => (
+        <a class="category-card" href={`/category/${card.slug}`}>
+          <span class="category-visual">
+            <img src={card.image} width="512" height="512" alt="" loading="eager" />
+          </span>
           <strong>{card.title}</strong>
-          <small>{card.description}</small>
-          <span>{card.stats}</span>
-        </span>
-        <span class="card-arrow" aria-hidden="true">
-          →
-        </span>
-      </a>
-    ))
-  }
+        </a>
+      ))
+    }
+    <a class="category-card category-card-all" href="/find">
+      <span class="category-visual" aria-hidden="true"><span>+</span></span>
+      <strong>전체보기</strong>
+    </a>
+  </div>
 </div>

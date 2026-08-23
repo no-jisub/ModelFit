@@ -2,7 +2,7 @@
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import ConsumableCard from "@/components/astro/ConsumableCard.astro";
 import SourceList from "@/components/astro/SourceList.astro";
-import VerificationBadge from "@/components/astro/VerificationBadge.astro";
+
 import { consumables } from "@/data/consumables";
 import { models } from "@/data/models";
 import BaseLayout from "@/layouts/BaseLayout.astro";
@@ -98,10 +98,7 @@ const breadcrumbJsonLd = {
               </div>
             )
           }
-          <div class="model-meta">
-            <VerificationBadge status={model.verificationStatus} context="model" />
-            <span>마지막 확인 {model.lastVerifiedAt}</span>
-          </div>
+
         </div>
       </div>
       {
@@ -203,8 +200,8 @@ const breadcrumbJsonLd = {
           <p>
             {
               model.isDemo
-                ? "본 페이지는 정보 탐색용 데모입니다. 부품번호, 규격, 가격, 재고를 보증하지 않으며 구매 전 제조사 확인이 필요합니다."
-                : "모델명은 제조사 공식 출처에서 확인했지만, 부품번호·규격·가격·재고는 각 소모품의 검증 상태와 판매 페이지를 다시 확인해야 합니다."
+                ? "데모 페이지의 부품번호·규격·가격·재고는 구매 전 제조사에서 확인하세요."
+                : "부품번호·규격·가격·재고는 구매 전 소모품 검증 상태와 판매 페이지에서 다시 확인하세요."
             }
           </p>
         </div>

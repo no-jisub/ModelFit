@@ -3,11 +3,20 @@ import BrandCard from "@/components/astro/BrandCard.astro";
 import CategorySelector from "@/components/astro/CategorySelector.astro";
 import CoupangCategoryBanner from "@/components/astro/CoupangCategoryBanner.astro";
 import { brands } from "@/data/brands";
-import { consumables } from "@/data/consumables";
-import { models } from "@/data/models";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
-const featuredBrandIds = ["samsung", "lg", "roborock", "dreame", "coway", "xiaomi"];
+const featuredBrandIds = [
+  "samsung",
+  "lg",
+  "coway",
+  "winix",
+  "dyson",
+  "roborock",
+  "dreame",
+  "xiaomi",
+  "ecovacs",
+  "irobot",
+];
 const featuredBrands = featuredBrandIds
   .map((id) => brands.find((brand) => brand.id === id))
   .filter((brand) => brand !== undefined);
@@ -44,41 +53,100 @@ const websiteJsonLd = [
       <div class="home-category-heading">
         <h1>모델번호로 호환 소모품 찾기</h1>
       </div>
-      <CategorySelector />
-      <div class="home-category-meta" aria-label="모델핏 데이터 현황">
-        <a href="/guide/find-model-number">모델번호 찾는 방법 →</a>
-        <span>{models.length}개 공식 모델 · {consumables.length}개 소모품</span>
-        <a href="/methodology">검증 기준 보기 →</a>
+      <div class="home-discovery" data-home-discovery>
+        <div class="home-discovery-tabs" role="tablist" aria-label="찾기 방식 선택">
+          <button
+            id="product-discovery-tab"
+            type="button"
+            role="tab"
+            aria-selected="true"
+            aria-controls="product-discovery-panel"
+            data-discovery-tab="product"
+          >제품으로 찾기</button>
+          <button
+            id="brand-discovery-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="brands"
+            tabindex="-1"
+            data-discovery-tab="brand"
+          >브랜드로 찾기</button>
+        </div>
+        <section
+          id="product-discovery-panel"
+          role="tabpanel"
+          aria-labelledby="product-discovery-tab"
+          data-discovery-panel="product"
+        >
+          <CategorySelector />
+        </section>
+        <section
+          id="brands"
+          role="tabpanel"
+          aria-labelledby="brand-discovery-tab"
+          data-discovery-panel="brand"
+          hidden
+        >
+          <p class="category-selector-title">찾고 싶은 브랜드를 선택해 보세요</p>
+          <div class="brand-grid">
+            {featuredBrands.map((brand) => <BrandCard brand={brand} />)}
+          </div>
+          <details class="brand-directory">
+            <summary>
+              <span class="brand-directory-expand">
+                {brands.length}개 브랜드 전체 보기 <span aria-hidden="true">↓</span>
+              </span>
+              <span class="brand-directory-collapse">
+                브랜드 목록 닫기 <span aria-hidden="true">↑</span>
+              </span>
+            </summary>
+            <div class="brand-grid brand-grid-secondary">
+              {otherBrands.map((brand) => <BrandCard brand={brand} />)}
+            </div>
+          </details>
+        </section>
       </div>
     </div>
   </section>
 
   <CoupangCategoryBanner />
 
-  <section class="section home-section-tint" id="brands">
-    <div class="container">
-      <div class="section-header">
-        <div>
-          <div class="eyebrow">인기 브랜드</div>
-          <h2>브랜드별로 모델 찾기</h2>
-        </div>
-      </div>
-      <div class="brand-grid">
-        {featuredBrands.map((brand) => <BrandCard brand={brand} />)}
-      </div>
-      <details class="brand-directory">
-        <summary>
-          <span class="brand-directory-expand">
-            {brands.length}개 브랜드 전체 보기 <span aria-hidden="true">↓</span>
-          </span>
-          <span class="brand-directory-collapse">
-            브랜드 목록 닫기 <span aria-hidden="true">↑</span>
-          </span>
-        </summary>
-        <div class="brand-grid brand-grid-secondary">
-          {otherBrands.map((brand) => <BrandCard brand={brand} />)}
-        </div>
-      </details>
-    </div>
-  </section>
 </BaseLayout>
+
+<script>
+  const discovery = document.querySelector<HTMLElement>("[data-home-discovery]");
+
+  if (discovery) {
+    const tabs = [...discovery.querySelectorAll<HTMLButtonElement>("[data-discovery-tab]")];
+    const panels = [...discovery.querySelectorAll<HTMLElement>("[data-discovery-panel]")];
+
+    const activateTab = (nextTab: HTMLButtonElement, focus = false) => {
+      const target = nextTab.dataset.discoveryTab;
+      tabs.forEach((tab) => {
+        const active = tab === nextTab;
+        tab.setAttribute("aria-selected", String(active));
+        tab.tabIndex = active ? 0 : -1;
+      });
+      panels.forEach((panel) => {
+        panel.hidden = panel.dataset.discoveryPanel !== target;
+      });
+      if (focus) nextTab.focus();
+    };
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => activateTab(tab));
+      tab.addEventListener("keydown", (event) => {
+        if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+        event.preventDefault();
+        const offset = event.key === "ArrowRight" ? 1 : -1;
+        activateTab(tabs[(index + offset + tabs.length) % tabs.length], true);
+      });
+    });
+
+    if (window.location.hash === "#brands") {
+      const brandTab = tabs.find((tab) => tab.dataset.discoveryTab === "brand");
+      if (brandTab) activateTab(brandTab);
+    }
+  }
+</script>

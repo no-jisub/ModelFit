@@ -1,11 +1,7 @@
 ---
 import type { Brand } from "@/types";
-import { models } from "@/data/models";
-import { categoryLabels } from "@/utils/labels";
 
 const { brand } = Astro.props as { brand: Brand };
-const brandModels = models.filter((model) => model.brandId === brand.id);
-const officialCount = brandModels.filter((model) => !model.isDemo).length;
 ---
 
 <a class="brand-card card interactive-card" href={`/brand/${brand.slug}`}>
@@ -13,10 +9,5 @@ const officialCount = brandModels.filter((model) => !model.isDemo).length;
   <span>
     <strong>{brand.name}</strong>
     <small>{brand.nameEn}</small>
-  </span>
-  <span class="brand-meta">
-    {brand.supportedCategories.map((category) => categoryLabels[category]).join(" · ")}
-    <br />
-    {officialCount}개 공식 모델
   </span>
 </a>
