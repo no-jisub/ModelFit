@@ -11,13 +11,6 @@ const representative = models[0];
 if (!representative) throw new Error("ModelGroupCard에는 모델이 한 개 이상 필요합니다.");
 
 const displayName = getModelDisplayName(representative);
-const consumableCount = new Set(models.flatMap((model) => model.consumableIds)).size;
-const consumableSummary =
-  consumableCount > 0
-    ? `소모품 ${consumableCount}개`
-    : representative.consumableNote
-      ? "교체형 소모품 없음"
-      : "소모품 조사 중";
 const lastVerifiedAt = models
   .map((model) => model.lastVerifiedAt)
   .sort((a, b) => b.localeCompare(a))[0];
@@ -29,9 +22,14 @@ const releaseDateSummary =
       ? "모델별 출시일 확인"
       : formatModelReleaseDate(undefined);
 const isReleaseDatePending = releaseDates.size === 0;
+const detailPath = `/model/${representative.brandId}/${representative.slug}#compatible-parts`;
 ---
 
-<article class="model-card model-group-card card">
+<a
+  class="model-card model-group-card card"
+  href={detailPath}
+  aria-label={`${displayName} 모델 상세 보기`}
+>
   <div class="model-card-top">
     <span class="category-chip">
       <span aria-hidden="true">{representative.category === "air-purifier" ? "▤" : "◉"}</span>
@@ -52,15 +50,4 @@ const isReleaseDatePending = releaseDates.size === 0;
     <VerificationBadge status={representative.verificationStatus} context="model" />
     <span>{lastVerifiedAt} 확인</span>
   </div>
-
-  <a
-    class="model-card-action"
-    href={`/model/${representative.brandId}/${representative.slug}#compatible-parts`}
-  >
-    <span>
-      <strong>호환 소모품 확인</strong>
-      <small>{consumableSummary}</small>
-    </span>
-    <span class="model-card-action-arrow" aria-hidden="true">→</span>
-  </a>
-</article>
+</a>

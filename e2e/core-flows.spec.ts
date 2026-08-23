@@ -84,23 +84,31 @@ test("통합검색 결과를 모델과 소모품 탭으로 전환한다", async 
   await expect(page.getByRole("tabpanel", { name: /모델/ })).toBeVisible();
 });
 
-test("모델 카드는 호환 소모품 확인 행동 하나를 제공한다", async ({ page }) => {
+test("모델 카드 전체를 클릭해 상세 페이지로 이동한다", async ({ page }) => {
   await page.goto("/category/air-purifier");
 
   const modelCard = page.locator(".model-card").filter({ hasText: "노블 공기청정기" }).first();
-  await expect(modelCard.getByRole("link", { name: /호환 소모품 확인/ })).toHaveCount(1);
+  await expect(modelCard).toHaveRole("link");
+  await expect(modelCard).toHaveAccessibleName(/노블 공기청정기 모델 상세 보기/);
+  await expect(modelCard).toHaveAttribute("href", /\/model\/coway\/[^/]+#compatible-parts$/);
   await expect(modelCard.getByRole("link", { name: /상세 보기/ })).toHaveCount(0);
+
+  await modelCard.click({ position: { x: 20, y: 20 } });
+  await expect(page).toHaveURL(/\/model\/coway\/[^/]+#compatible-parts$/);
+  await expect(page.locator("#compatible-parts")).toBeVisible();
 });
 
-test("묶인 모델 카드는 모델번호 선택 없이 대표 모델로 이동한다", async ({ page }) => {
+test("묶인 모델 카드 전체를 클릭해 대표 모델로 이동한다", async ({ page }) => {
   await page.goto("/brand/lg");
 
   const groupCard = page.locator(".model-group-card").first();
   await expect(groupCard.locator("details")).toHaveCount(0);
-  await expect(groupCard.getByRole("link", { name: /호환 소모품 확인/ })).toHaveAttribute(
-    "href",
-    /\/model\/lg\/[^/]+#compatible-parts$/,
-  );
+  await expect(groupCard).toHaveRole("link");
+  await expect(groupCard).toHaveAttribute("href", /\/model\/lg\/[^/]+#compatible-parts$/);
+
+  await groupCard.click({ position: { x: 20, y: 20 } });
+  await expect(page).toHaveURL(/\/model\/lg\/[^/]+#compatible-parts$/);
+  await expect(page.locator("#compatible-parts")).toBeVisible();
 });
 
 test("모델 상세에서 같은 제품군의 모델번호를 변경한다", async ({ page }) => {

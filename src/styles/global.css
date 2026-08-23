@@ -920,7 +920,11 @@ h3 {
 }
 
 .model-card {
+  display: block;
   padding: 24px;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: none;
   transition:
     border-color var(--duration-normal) ease,
     box-shadow var(--duration-normal) ease;
@@ -929,6 +933,12 @@ h3 {
 .model-card:hover {
   border-color: var(--color-primary-200);
   box-shadow: var(--shadow-sm);
+}
+
+.model-card:focus-visible {
+  border-color: var(--color-primary-500);
+  outline: 3px solid var(--color-primary-200);
+  outline-offset: 3px;
 }
 
 .model-card-top,
@@ -1021,62 +1031,6 @@ h3 {
 .model-card-footer strong,
 .model-card-footer a {
   font-size: 14px;
-}
-
-.model-card-action {
-  margin-top: var(--space-5);
-  overflow: hidden;
-  border: 1px solid var(--color-neutral-200);
-  border-radius: var(--radius-md);
-  background: var(--color-neutral-50);
-}
-
-.model-card-action {
-  display: flex;
-  min-height: 64px;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-3);
-  padding: 12px 14px;
-  color: var(--color-neutral-800);
-  cursor: pointer;
-  list-style: none;
-}
-
-.model-card-action {
-  color: var(--color-neutral-800);
-}
-
-.model-card-action:hover {
-  background: var(--color-primary-50);
-}
-
-.model-card-action:focus-visible {
-  outline: 2px solid var(--color-primary-500);
-  outline-offset: -2px;
-}
-
-.model-card-action > span:first-child {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.model-card-action strong {
-  font-size: 14px;
-}
-
-.model-card-action small {
-  color: var(--color-neutral-500);
-  font-size: 12px;
-  line-height: 1.45;
-}
-
-.model-card-action-arrow {
-  color: var(--color-primary-600);
-  font-size: 20px;
-  font-weight: 800;
 }
 
 .status-badge {
@@ -3508,10 +3462,6 @@ h3 {
 
   .home-models .model-series {
     margin-bottom: var(--space-3);
-  }
-
-  .home-models .model-card-action {
-    margin-top: var(--space-3);
   }
 
   .home-models .model-grid {
