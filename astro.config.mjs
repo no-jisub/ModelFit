@@ -9,6 +9,11 @@ export default defineConfig({
   output: "static",
   site:
     process.env.PUBLIC_SITE_URL || productionEnv.PUBLIC_SITE_URL || "https://modelfit-kr.web.app",
-  integrations: [react(), sitemap({ filter: (page) => !page.includes("/part/") })],
+  integrations: [
+    react(),
+    sitemap({
+      filter: (page) => !page.includes("/part/") && !page.endsWith("/search-index.json"),
+    }),
+  ],
   trailingSlash: "never",
 });

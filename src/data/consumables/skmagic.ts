@@ -1,0 +1,66 @@
+import {
+  affiliate,
+  domesticWarning,
+  researchedPart,
+  source,
+  type ConsumableRecord,
+} from "./shared";
+
+export const skmagicConsumableRecords: ConsumableRecord[] = [
+  {
+    id: "skmagic-all-in-one-care-filter",
+    slug: "skmagic-all-in-one-care-filter",
+    type: "all-in-one-filter",
+    displayName: "SK매직 올인원 케어필터",
+    compatibleProductName: "올인원 케어필터 1SET",
+    compatibleModelIds: ["skmagic-acl15c1askwh"],
+    searchKeywords: ["ACL15C1ASKWH 올인원 케어필터", "SK매직 올클린 필터"],
+    purchaseWarning: domesticWarning,
+    verificationStatus: "official",
+    sources: [
+      source(
+        "SK매직 공식 제품 페이지 — ACL15C1ASKWH 기본 필터 구성",
+        "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000062559",
+      ),
+    ],
+    affiliate: affiliate("SK매직 ACL15C1ASKWH 정품 올인원 케어필터"),
+  },
+  researchedPart({
+    id: "skmagic-acl131-filter",
+    type: "all-in-one-filter",
+    displayName: "SK매직 ACL131 정품 필터",
+    genuinePartNumber: "FLTACLP131WH",
+    modelIds: ["skmagic-acl-131t0"],
+    sourceTitle: "SK매직 공식몰 — ACL131 공기청정기 필터",
+    sourceUrl: "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000059559",
+    searchKeyword: "SK매직 FLTACLP131WH 정품 필터",
+  }),
+  researchedPart({
+    id: "skmagic-acl20-all-in-one-care-filter",
+    type: "all-in-one-filter",
+    displayName: "SK매직 ACL20 올인원 케어필터",
+    modelIds: ["skmagic-acl20c1askwh"],
+    sourceTitle: "SK매직 공식몰 — ACL20 구성품과 필터 안내",
+    sourceUrl: "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000067380",
+    searchKeyword: "SK매직 ACL20C1ASKWH 정품 올인원 케어필터",
+  }),
+  researchedPart({
+    id: "skmagic-acl25-all-in-one-care-filter",
+    type: "all-in-one-filter",
+    displayName: "SK매직 ACL25 올인원 케어필터",
+    modelIds: ["skmagic-acl25c1askce"],
+    sourceTitle: "SK매직 공식몰 — ACL25 제품 및 필터 안내",
+    sourceUrl: "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000069683",
+    searchKeyword: "SK매직 ACL25C1ASKCE 정품 올인원 케어필터",
+  }),
+  researchedPart({
+    id: "skmagic-acl130z-filter",
+    type: "all-in-one-filter",
+    displayName: "SK매직 ACL130P·ACL130Z 정품 필터",
+    genuinePartNumber: "FLTACL130PWH",
+    modelIds: ["skmagic-acl130z0skpn"],
+    sourceTitle: "SK매직 공식몰 — ACL130P·ACL130Z 공기청정기 필터",
+    sourceUrl: "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000056901",
+    searchKeyword: "SK매직 FLTACL130PWH 정품 필터",
+  }),
+];

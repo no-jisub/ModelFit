@@ -1,0 +1,111 @@
+import {
+  affiliate,
+  regionalWarning,
+  researchedPart,
+  source,
+  type ConsumableRecord,
+} from "./shared";
+
+export const narwalConsumableRecords: ConsumableRecord[] = [
+  {
+    id: "narwal-freo-mop-pad",
+    slug: "narwal-freo-mop-pad",
+    type: "mop-pad",
+    displayName: "Narwal Freo 시리즈 물걸레 패드",
+    compatibleProductName: "Mop Pad",
+    compatibleModelIds: [
+      "narwal-freo-z10",
+      "narwal-freo-z-ultra",
+      "narwal-freo-x-ultra",
+      "narwal-freo",
+    ],
+    searchKeywords: ["Narwal Freo Mop Pad", "나르왈 Freo 물걸레 패드"],
+    purchaseWarning: regionalWarning,
+    verificationStatus: "official",
+    sources: [
+      source("Narwal 공식 Freo 액세서리 호환표", "https://us.narwal.com/pages/freo-product"),
+    ],
+    affiliate: affiliate("나르왈 Freo 정품 물걸레 패드"),
+  },
+  {
+    id: "narwal-freo-zero-tangle-roller",
+    slug: "narwal-freo-zero-tangle-roller",
+    type: "main-brush",
+    displayName: "Narwal Freo 제로 탱글 롤러 브러시",
+    compatibleProductName: "Zero-Tangling Roller Brush",
+    compatibleModelIds: ["narwal-freo-z10", "narwal-freo-z-ultra", "narwal-freo-x-ultra"],
+    searchKeywords: ["Narwal Zero-Tangling Roller Brush", "나르왈 Freo 롤러 브러시"],
+    purchaseWarning: regionalWarning,
+    verificationStatus: "official",
+    sources: [
+      source("Narwal 공식 Freo 액세서리 호환표", "https://us.narwal.com/pages/freo-product"),
+    ],
+    affiliate: affiliate("나르왈 Freo 정품 제로 탱글 롤러 브러시"),
+  },
+  {
+    id: "narwal-freo-dustbin-filter",
+    slug: "narwal-freo-dustbin-filter",
+    type: "dust-bin-filter",
+    displayName: "Narwal Freo 먼지통 필터",
+    compatibleProductName: "Dust Bin Filter",
+    compatibleModelIds: ["narwal-freo-z10", "narwal-freo-z-ultra", "narwal-freo-x-ultra"],
+    searchKeywords: ["Narwal Freo Dust Bin Filter", "나르왈 Freo 먼지통 필터"],
+    purchaseWarning: regionalWarning,
+    verificationStatus: "official",
+    sources: [
+      source("Narwal 공식 Freo 액세서리 호환표", "https://us.narwal.com/pages/freo-product"),
+    ],
+    affiliate: affiliate("나르왈 Freo 정품 먼지통 필터"),
+  },
+  {
+    id: "narwal-freo-side-brush",
+    slug: "narwal-freo-side-brush",
+    type: "side-brush",
+    displayName: "Narwal Freo 사이드 브러시",
+    compatibleProductName: "Side Brush",
+    compatibleModelIds: ["narwal-freo-z-ultra", "narwal-freo-x-ultra", "narwal-freo"],
+    searchKeywords: ["Narwal Freo Side Brush", "나르왈 Freo 사이드 브러시"],
+    purchaseWarning: regionalWarning,
+    verificationStatus: "official",
+    sources: [
+      source("Narwal 공식 Freo 액세서리 호환표", "https://us.narwal.com/pages/freo-product"),
+    ],
+    affiliate: affiliate("나르왈 Freo 정품 사이드 브러시"),
+  },
+  {
+    id: "narwal-freo-dust-bag",
+    slug: "narwal-freo-dust-bag",
+    type: "dust-bag",
+    displayName: "Narwal Freo Z Ultra·Z10 베이스 스테이션 먼지봉투",
+    compatibleProductName: "Base Station Dust Bag",
+    compatibleModelIds: ["narwal-freo-z10", "narwal-freo-z-ultra"],
+    searchKeywords: ["Narwal Freo Z10 Z Ultra Base Station Dust Bag"],
+    purchaseWarning: regionalWarning,
+    verificationStatus: "official",
+    sources: [
+      source("Narwal 공식 Freo 액세서리 호환표", "https://us.narwal.com/pages/freo-product"),
+    ],
+    affiliate: affiliate("나르왈 Freo Z10 Z Ultra 정품 먼지봉투"),
+  },
+  ...(
+    [
+      ["narwal-flow-dustbin-filter", "dust-bin-filter", "나르왈 Flow 먼지통 필터"],
+      ["narwal-flow-main-brush", "main-brush", "나르왈 Flow 제로탱글 플로팅 브러시"],
+      ["narwal-flow-side-brush", "side-brush", "나르왈 Flow 안티탱글 사이드 브러시"],
+      ["narwal-flow-track-mop", "mop-pad", "나르왈 Flow 크롤러 물걸레"],
+      ["narwal-flow-dust-bag", "dust-bag", "나르왈 Flow 베이스 스테이션 먼지봉투"],
+    ] as const
+  ).map(([id, type, displayName]) =>
+    researchedPart({
+      id,
+      type,
+      displayName,
+      modelIds: ["narwal-flow"],
+      sourceTitle: "나르왈 공식 Flow 액세서리 세트 구성",
+      sourceUrl: "https://jp.narwal.com/products/narwal-flow-accessories-set",
+      sourceType: "official-store",
+      searchKeyword: `${displayName} 정품`,
+      regional: true,
+    }),
+  ),
+];

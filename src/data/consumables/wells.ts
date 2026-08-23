@@ -1,0 +1,48 @@
+import { researchedPart, type ConsumableRecord } from "./shared";
+
+export const wellsConsumableRecords: ConsumableRecord[] = [
+  researchedPart({
+    id: "wells-al106-filter-set",
+    type: "all-in-one-filter",
+    displayName: "웰스 AL106 정품 필터 구성",
+    compatibleProductName: "프리·생활맞춤·탈취·제로클리어 HEPA H14",
+    modelIds: ["wells-al106"],
+    sourceTitle: "교원 웰스 공식 제품 정보 — AL106 필터 구성",
+    sourceUrl: "https://m.kyowonwells.com/Product/Detail?grpIdx=47&productIdx=49",
+    sourceType: "manufacturer",
+    searchKeyword: "웰스 AL106 정품 필터",
+  }),
+  researchedPart({
+    id: "wells-tornado-allcare-filter",
+    type: "all-in-one-filter",
+    displayName: "웰스 토네이도 올케어 필터",
+    compatibleProductName: "프리·생활맞춤·올케어 필터",
+    modelIds: ["wells-an730", "wells-an734"],
+    sourceTitle: "교원 웰스 공식 제품 정보 — AN730·AN734 필터 구성",
+    sourceUrl: "https://m.kyowonwells.com/Product/Detail?grpIdx=182&productIdx=373",
+    sourceType: "manufacturer",
+    searchKeyword: "웰스 AN730 AN734 정품 올케어 필터",
+  }),
+  researchedPart({
+    id: "wells-aq107-filter-set",
+    type: "all-in-one-filter",
+    displayName: "웰스 AQ107 정품 필터 구성",
+    compatibleProductName: "프리·생활맞춤·탈취·클리어 HEPA",
+    modelIds: ["wells-aq107"],
+    sourceTitle: "교원 웰스 공식 제품 정보 — AQ107 필터 구성",
+    sourceUrl: "https://www.kyowonwells.com/Product/Detail?grpIdx=1394&productIdx=926",
+    sourceType: "manufacturer",
+    searchKeyword: "웰스 AQ107 정품 필터",
+  }),
+  researchedPart({
+    id: "wells-am315-combi-filter",
+    type: "all-in-one-filter",
+    displayName: "웰스 AM315 콤비 필터",
+    compatibleProductName: "HEPA·탈취 콤비 필터",
+    modelIds: ["wells-am315"],
+    sourceTitle: "교원 웰스 공식 제품 정보 — AM315 필터 구성",
+    sourceUrl: "https://m.kyowonwells.com/Product/Detail?grpIdx=49&productIdx=54",
+    sourceType: "manufacturer",
+    searchKeyword: "웰스 AM315 정품 콤비 필터",
+  }),
+];

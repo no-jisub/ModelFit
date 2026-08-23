@@ -76,6 +76,27 @@ test("검색에서 소모품의 공식 호환 모델을 펼쳐 모델 상세로 
   await expect(page.locator("#compatible-parts")).toBeVisible();
 });
 
+test("헤더 검색 인덱스는 첫 상호작용 전에는 내려받지 않는다", async ({ page }) => {
+  const indexRequests: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().endsWith("/search-index.json")) indexRequests.push(request.url());
+  });
+  await page.goto("/", { waitUntil: "networkidle" });
+
+  expect(indexRequests).toHaveLength(0);
+  const responsePromise = page.waitForResponse(
+    (response) => response.url().endsWith("/search-index.json") && response.ok(),
+  );
+  await page
+    .locator("header")
+    .getByRole("combobox", { name: "모델번호·부품번호 검색" })
+    .fill("AS355NSNA");
+  await responsePromise;
+
+  await expect(page.locator("header").getByRole("option").first()).toContainText("AS355NSNA");
+  expect(indexRequests).toHaveLength(1);
+});
+
 test("검색 결과 화면에서도 헤더 검색으로 다시 검색한다", async ({ page }) => {
   await page.goto("/find?q=필터");
 
