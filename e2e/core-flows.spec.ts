@@ -116,6 +116,8 @@ test("모델 상세에서 같은 제품군의 모델번호를 변경한다", asy
 
   const selector = page.getByLabel("모델번호 선택");
   await expect(selector.locator("option")).toHaveCount(5);
+  const optionLabels = await selector.locator("option").allTextContents();
+  optionLabels.forEach((label) => expect(label.trim()).toMatch(/^[A-Z0-9-]+$/));
   await expect(selector).toHaveValue("/model/lg/as205ngja#compatible-parts");
   await selector.selectOption("/model/lg/as355nsna#compatible-parts");
 
