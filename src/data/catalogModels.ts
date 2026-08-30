@@ -20,39 +20,6 @@ interface CatalogEntry {
 const checkedAt = "2026-07-27";
 
 const entries: CatalogEntry[] = [
-  // 삼성전자
-  ...[
-    ["Infinite AI 공기청정기", "AP90H10198EDD"],
-    ["Infinite AI 공기청정기", "AP90H10198UDD"],
-    ["Infinite AI 공기청정기", "AP90H03193EGD"],
-    ["Infinite AI 공기청정기", "AP90H03193UGD"],
-    ["Infinite AI 공기청정기", "AP90H10198MDD"],
-  ].map(([modelName, modelCode]) => ({
-    brandId: "samsung",
-    brandName: "삼성",
-    brandNameEn: "Samsung",
-    category: "air-purifier" as const,
-    modelName,
-    modelCode,
-    series: "Infinite AI",
-    sourceUrl: `https://www.samsung.com/sec/air-cleaner/${
-      modelCode.includes("H101") ? "air-purifier-ap90h10198dd-d2c" : "air-purifier-ap90h03193gd-d2c"
-    }/${modelCode}/`,
-    sourceTitle: "삼성전자 공식 제품 정보 — 리유저블 필터",
-    sourceType: "official-store" as const,
-    releaseDate: "2026-02",
-    verifiedAt: "2026-08-08",
-    releaseSourceUrl: (
-      {
-        AP90H10198EDD: "https://prod.danawa.com/info/?cate=10356347&pcode=106704350",
-        AP90H10198UDD: "https://m.danawa.com/product/product.html?code=106704317",
-        AP90H03193EGD: "https://prod.danawa.com/info/?pcode=106484915",
-        AP90H03193UGD: "https://prod.danawa.com/info/?pcode=106481861",
-        AP90H10198MDD: "https://prod.danawa.com/info/?pcode=106512809",
-      } as Record<string, string>
-    )[modelCode],
-  })),
-
   // LG전자
   ...[
     ["LG 퓨리케어 360° 공기청정기", "AS355NSNA"],
@@ -420,10 +387,6 @@ export const catalogModels: ApplianceModel[] = entries.map((entry) => {
     ],
     series: entry.series,
     shortDescription: `제조사 공식 제품 또는 지원 자료에서 모델명이 확인된 ${entry.category === "air-purifier" ? "공기청정기" : "로봇청소기"}입니다.`,
-    consumableNote:
-      entry.brandId === "samsung" && entry.modelCode.startsWith("AP90H")
-        ? "삼성 공식 제품 안내상 이 모델은 주기적으로 교체하는 필터 대신 물세척으로 관리하는 리유저블 필터를 사용합니다."
-        : undefined,
     releaseDate: entry.releaseDate,
     consumableIds: modelConsumableIds[id] ?? [],
     sources: [

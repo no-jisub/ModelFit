@@ -2,14 +2,6 @@ import type { Brand } from "@/types";
 
 export const brands: Brand[] = [
   {
-    id: "samsung",
-    slug: "samsung",
-    name: "삼성",
-    nameEn: "Samsung",
-    supportedCategories: ["air-purifier", "robot-vacuum"],
-    officialDomains: ["samsung.com"],
-  },
-  {
     id: "lg",
     slug: "lg",
     name: "LG",

@@ -56,7 +56,7 @@ test("카테고리에서 브랜드와 모델번호를 바로 필터링한다", a
   await expect(page.getByRole("link", { name: "검색에서 필터링 →" })).toHaveCount(0);
   const filter = page.locator("[data-category-model-filter]");
   const result = filter.locator("[data-filter-result]");
-  await expect(result).toHaveText("45개 모델");
+  await expect(result).toHaveText("40개 모델");
   await expect(filter.getByText("소모품 연결", { exact: true })).toHaveCount(0);
 
   const isOpen = await filter.evaluate((element) => (element as HTMLDetailsElement).open);

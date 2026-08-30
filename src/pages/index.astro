@@ -6,7 +6,6 @@ import { brands } from "@/data/brands";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
 const featuredBrandIds = [
-  "samsung",
   "lg",
   "coway",
   "winix",
@@ -16,6 +15,7 @@ const featuredBrandIds = [
   "xiaomi",
   "ecovacs",
   "irobot",
+  "cuckoo",
 ];
 const featuredBrands = featuredBrandIds
   .map((id) => brands.find((brand) => brand.id === id))

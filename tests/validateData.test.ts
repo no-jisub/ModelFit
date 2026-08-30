@@ -83,13 +83,24 @@ describe("data validation", () => {
     ).toBe(true);
   });
 
-  it("모든 실제 모델은 공식 소모품 또는 비등록 사유를 제공한다", () => {
-    expect(
-      models.every(
-        (model) =>
-          model.isDemo || model.consumableIds.length > 0 || Boolean(model.consumableNote?.trim()),
-      ),
-    ).toBe(true);
+  it("공개 카탈로그에는 교체 소모품이 연결된 모델만 등록한다", () => {
+    expect(models).toHaveLength(80);
+    expect(models.every((model) => model.consumableIds.length > 0)).toBe(true);
+    expect(models.filter((model) => model.category === "air-purifier")).toHaveLength(40);
+    expect(models.filter((model) => model.category === "robot-vacuum")).toHaveLength(40);
+    expect(brands.every((brand) => models.some((model) => model.brandId === brand.id))).toBe(true);
+  });
+
+  it("정기 교체 필터가 없는 삼성 리유저블 모델은 제외한다", () => {
+    const excludedCodes = [
+      "AP90H10198EDD",
+      "AP90H10198UDD",
+      "AP90H03193EGD",
+      "AP90H03193UGD",
+      "AP90H10198MDD",
+    ];
+    expect(models.some((model) => excludedCodes.includes(model.modelCode))).toBe(false);
+    expect(brands.some((brand) => brand.id === "samsung")).toBe(false);
   });
 
   it("157개 소모품 모두 제조사 공식 출처와 확인일을 제공한다", () => {
