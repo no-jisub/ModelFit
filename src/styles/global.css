@@ -2309,11 +2309,9 @@ main:has(.model-disclaimer-section:last-child) + .site-footer {
 
 .affiliate-link-stack .affiliate-disclosure {
   margin: 0;
-  color: var(--color-neutral-500);
-  font-size: 9px;
-  line-height: 1.35;
-  letter-spacing: -0.045em;
-  text-align: center;
+  color: var(--color-neutral-600);
+  font-size: 12px;
+  line-height: 1.6;
 }
 .affiliate-button.is-disabled {
   opacity: 0.65;
@@ -2361,9 +2359,15 @@ main:has(.model-disclaimer-section:last-child) + .site-footer {
 
 .affiliate-disclosure {
   margin: var(--space-4) 0 0;
-  color: var(--color-neutral-500);
+  color: var(--color-neutral-600);
   font-size: 12px;
   line-height: 1.6;
+}
+
+.product-option-links .affiliate-disclosure {
+  flex-basis: 100%;
+  min-width: 0;
+  margin: 0;
 }
 
 .coupang-banner-section {

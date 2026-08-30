@@ -1,6 +1,7 @@
 ---
 import type { ConsumableCompatibility, PurchaseChannel } from "@/types";
 import { getPurchaseLinks } from "@/utils/purchaseLinks";
+import AffiliateDisclosure from "./AffiliateDisclosure.astro";
 
 const { part } = Astro.props as { part: ConsumableCompatibility };
 const configuredCoupangBaseUrl = import.meta.env.PUBLIC_COUPANG_BASE_URL?.trim();
@@ -49,23 +50,26 @@ const channels: Array<{
             <b>{index + 1}</b> {channel.label}
           </span>
           {channelLinks.map((link) => (
-            <a
-              class={`button ${channel.id === "official" ? "button-primary" : "button-secondary"}`}
-              href={link.url}
-              rel={
-                link.isAffiliate
-                  ? "nofollow sponsored noopener noreferrer"
-                  : channel.id === "official"
-                    ? "noopener noreferrer"
-                    : "nofollow noopener noreferrer"
-              }
-              target="_blank"
-              data-purchase-channel={link.channel}
-              data-part-id={part.id}
-              data-link-status={link.linkType}
-            >
-              {link.label} <span aria-hidden="true">↗</span>
-            </a>
+            <Fragment>
+              <a
+                class={`button ${channel.id === "official" ? "button-primary" : "button-secondary"}`}
+                href={link.url}
+                rel={
+                  link.isAffiliate
+                    ? "nofollow sponsored noopener noreferrer"
+                    : channel.id === "official"
+                      ? "noopener noreferrer"
+                      : "nofollow noopener noreferrer"
+                }
+                target="_blank"
+                data-purchase-channel={link.channel}
+                data-part-id={part.id}
+                data-link-status={link.linkType}
+              >
+                {link.label} <span aria-hidden="true">↗</span>
+              </a>
+              {link.channel === "coupang" && <AffiliateDisclosure hasAffiliateLinks={true} />}
+            </Fragment>
           ))}
           <p class="part-action-copy">{channelNote}</p>
         </section>

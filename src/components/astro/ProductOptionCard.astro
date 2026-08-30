@@ -1,5 +1,6 @@
 ---
 import type { ConsumableProductOption } from "@/types";
+import AffiliateDisclosure from "./AffiliateDisclosure.astro";
 
 const { option, partNumber, productNumber, partId } = Astro.props as {
   option: ConsumableProductOption;
@@ -52,27 +53,30 @@ const hasDirectProduct = option.purchaseLinks.some((link) => link.linkType === "
   <div class="product-option-links">
     {
       option.purchaseLinks.map((link) => (
-        <a
-          class:list={[
-            "button",
-            link.channel === "official" ? "button-secondary" : "button-primary",
-          ]}
-          href={link.url}
-          rel={
-            link.isAffiliate
-              ? "nofollow sponsored noopener noreferrer"
-              : link.channel === "official"
-                ? "noopener noreferrer"
-                : "nofollow noopener noreferrer"
-          }
-          target="_blank"
-          data-product-option-id={option.id}
-          data-purchase-channel={link.channel}
-          data-part-id={partId}
-          data-link-status={link.linkType}
-        >
-          {link.label} <span aria-hidden="true">↗</span>
-        </a>
+        <Fragment>
+          <a
+            class:list={[
+              "button",
+              link.channel === "official" ? "button-secondary" : "button-primary",
+            ]}
+            href={link.url}
+            rel={
+              link.isAffiliate
+                ? "nofollow sponsored noopener noreferrer"
+                : link.channel === "official"
+                  ? "noopener noreferrer"
+                  : "nofollow noopener noreferrer"
+            }
+            target="_blank"
+            data-product-option-id={option.id}
+            data-purchase-channel={link.channel}
+            data-part-id={partId}
+            data-link-status={link.linkType}
+          >
+            {link.label} <span aria-hidden="true">↗</span>
+          </a>
+          {link.channel === "coupang" && <AffiliateDisclosure hasAffiliateLinks={true} />}
+        </Fragment>
       ))
     }
   </div>
