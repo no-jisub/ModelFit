@@ -76,8 +76,8 @@ export const lgConsumableRecords: ConsumableRecord[] = [
     ],
     affiliate: affiliate(
       "LG ADQ75133511 PFPNNC06 정품 극세필터",
-      "https://link.coupang.com/a/gle4D3U4Ga",
-      "2026-08-19",
+      "https://link.coupang.com/a/gDv010uXdc",
+      "2026-08-30",
     ),
   },
 ];
