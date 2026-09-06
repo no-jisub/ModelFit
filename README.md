@@ -1,203 +1,122 @@
 # 모델핏(ModelFit)
 
-가전제품 브랜드와 모델명을 검색해 공기청정기 필터, 로봇청소기 브러시·먼지봉투·물걸레 패드 등 호환 소모품 정보를 찾는 정적 웹서비스 MVP입니다. 상품 판매보다 모델 코드, 검증 상태, 출처와 구매 전 주의사항을 먼저 보여줍니다.
+가전 모델번호로 교체 소모품의 공식 호환 근거와 구매 링크를 찾는 정적 웹서비스입니다.
+현재 공개 카탈로그는 **16개 브랜드, 80개 모델, 165개 소모품**입니다.
+사진 추가와 사이트 전체의 동적 전환은 현재 작업 범위에 포함하지 않습니다.
 
-> 공개 서비스에는 제조사 공식 자료에서 모델명이 확인된 85개 모델만 포함합니다.
-> 공식 소모품 호환 근거가 없는 모델에는 호환품을 연결하지 않습니다.
-
-## 기술 스택
-
-- Astro SSG + TypeScript strict mode
-- React: 검색창, 자동완성, 검색 결과 필터에만 선택적 hydration
-- 정적 TypeScript 데이터
-- Vitest, ESLint, Prettier, Astro Check
-- Firebase Hosting
-
-## 로컬 실행
+## 실행
 
 ```bash
-npm install
-cp .env.example .env
+npm ci
 npm run dev
-```
-
-프로덕션 빌드와 로컬 미리보기:
-
-```bash
 npm run build
 npm run preview
 ```
 
-## 환경변수
+Astro SSG, TypeScript strict, React를 사용합니다. 검색·자동완성·제보·관리자 화면에 React를 사용하며,
+카탈로그는 빌드 시 생성합니다. 기존 `/part/...` 주소는 해당 모델의 `#compatible-parts`로 이동합니다.
+Firebase Hosting으로 배포하며, 오류 제보는 별도 Firestore 데이터베이스에 저장합니다.
 
-`.env.example`을 `.env`로 복사해 설정합니다. 모든 값은 비어 있어도 로컬 개발과 빌드가 동작합니다.
+## 데이터 구조
 
-| 변수                               | 용도                                           |
-| ---------------------------------- | ---------------------------------------------- |
-| `PUBLIC_SITE_URL`                  | canonical, sitemap 기준 URL                    |
-| `PUBLIC_SITE_NAME`                 | 사이트 이름                                    |
-| `PUBLIC_REPORT_FORM_URL`           | 외부 오류 제보 폼                              |
-| `PUBLIC_REPORT_EMAIL`              | 폼이 없을 때 mailto 제보를 받을 공개 이메일    |
-| `PUBLIC_COUPANG_BASE_URL`          | 제휴 검색 기본 URL. 비어 있으면 일반 쿠팡 검색 |
-| `PUBLIC_AFFILIATE_DISCLOSURE_TEXT` | 제휴 고지 문구                                 |
-| `PUBLIC_GA_MEASUREMENT_ID`         | GA4 측정 ID. 비어 있으면 스크립트 미삽입       |
+| 파일                             | 역할                                    |
+| -------------------------------- | --------------------------------------- |
+| `src/data/brands.ts`             | 브랜드와 공식 출처 허용 도메인          |
+| `src/data/catalogModels.ts`      | 모델 원본과 화면용 모델 생성            |
+| `src/data/compatibilityMap.ts`   | 모델 ID별 소모품 ID 연결                |
+| `src/data/models.ts`             | 모델 목록 진입점                        |
+| `src/data/consumables/*.ts`      | 브랜드별 소모품 원본                    |
+| `src/data/consumables/shared.ts` | 출처·구매 링크 상태·공통 생성 함수      |
+| `src/data/consumables/index.ts`  | 소모품 정렬과 구매 선택지 생성          |
+| `src/utils/validateData.ts`      | 출처·ID·양방향 호환 연결·구매 링크 검증 |
 
-배포 전 `public/robots.txt`의 sitemap URL도 실제 도메인으로 변경합니다.
-제보 폼과 이메일이 모두 비어 있으면 제보 입력 폼은 안전하게 비활성화됩니다.
-호스팅 전 변수·Secret 설정과 배포 점검 순서는 [`docs/OPERATIONS.md`](docs/OPERATIONS.md)를 따릅니다.
+## 모델·소모품 추가
 
-## 데이터 구조와 추가 방법
+1. 공식 자료에서 모델번호와 적용 소모품을 확인합니다. 출처 URL과 실제 확인일을 기록합니다.
+2. 모델은 `catalogModels.ts`의 원본 목록에 추가합니다. 기존 모델 ID와 중복되지 않아야 합니다.
+3. 해당 브랜드 소모품 파일에 소모품을 추가하고 `compatibleModelIds`를 연결합니다.
+4. `compatibilityMap.ts`에 모델 → 소모품 연결을 추가합니다.
+5. `consumables/index.ts`의 `consumableOrder`에도 새 소모품 ID를 추가합니다.
+6. `npm run validate:data`, 관련 테스트, 빌드 결과를 확인합니다.
 
-데이터는 `src/data` 아래의 세 파일로 분리합니다.
+물리적으로 다른 교체 부품은 별도 소모품으로 등록합니다. 묶음 판매 수량은 소모품 이름에 섞지 않습니다.
+정기 교체가 아닌 청소용 필터와 추가 선택 필터는 구분합니다. 부품번호·교체 주기·HEPA 등급을 추정하지 않습니다.
+공식 제품 페이지가 존재한다는 사실만으로 특정 판매자의 상품을 정품으로 보증하지 않습니다.
 
-- `brands.ts`: 브랜드와 지원 카테고리
-- `models.ts`: 모델명, 코드, 별칭, 검증 상태, 연결된 소모품 ID
-- `consumables.ts`: 소모품 유형, 호환 모델 ID, 부품번호, 출처, 제휴 검색어
+## 구매 링크와 제휴 고지
 
-### 브랜드 추가
+- 쿠팡 검색 결과 URL은 카탈로그에 등록하지 않습니다.
+- 직접 상품 URL이 없으면 `unavailable` 상태로 공식 근거만 제공합니다.
+- 현재 등록된 쿠팡 상품 링크는 9개이며, 그중 파트너스 링크는 4개입니다.
+- 공식 호환 근거와 외부 판매 상품의 진품·구성 확인은 별개입니다.
+- 접근 차단 응답은 품절·링크 오류·상품 검증 완료를 뜻하지 않습니다. 판매 페이지는 사람이 재확인해야 합니다.
+- 모든 쿠팡 상품 링크 아래에는 아래 문구를 유지합니다.
 
-`src/data/brands.ts`에 고유한 `id`, URL용 `slug`, 한글·영문명과 지원 카테고리를 추가합니다.
+> 이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
 
-```ts
-{
-  id: "sample-brand",
-  slug: "sample-brand",
-  name: "샘플",
-  nameEn: "Sample",
-  supportedCategories: ["air-purifier"]
-}
-```
+제휴 링크는 `nofollow sponsored noopener noreferrer`와 새 창 열기를 적용합니다.
+`PUBLIC_COUPANG_BASE_URL`은 이전 검색 링크 기능용 설정이며 현재 카탈로그에서는 사용하지 않습니다.
 
-### 모델 추가
+## 환경변수와 제보
 
-1. `brandId`가 실제 브랜드 ID인지 확인합니다.
-2. `modelCode`를 정확히 입력하고 검색용 `aliases`를 추가합니다.
-3. 실제 출처가 없다면 `verificationStatus: "unverified"`, `sources: []`로 둡니다.
-4. 연결할 소모품 ID를 `consumableIds`에 추가합니다.
+`.env.example`을 참고합니다. 공개 변수의 실제 값과 서버 비밀값은 커밋하지 않습니다.
 
-```ts
-{
-  id: "sample-ap100",
-  slug: "ap100",
-  category: "air-purifier",
-  brandId: "sample-brand",
-  brandName: "샘플",
-  brandNameEn: "Sample",
-  modelName: "샘플 공기청정기",
-  modelCode: "AP100",
-  aliases: ["샘플 AP100", "Sample AP100"],
-  shortDescription: "공식 자료 확인 전 데이터",
-  modelNumberLocation: "제품 후면 라벨",
-  consumableIds: ["sample-filter"],
-  sources: [],
-  lastVerifiedAt: "2026-07-27",
-  verificationStatus: "unverified",
-  isDemo: false
-}
-```
+| 변수                                                     | 용도                                                       |
+| -------------------------------------------------------- | ---------------------------------------------------------- |
+| `PUBLIC_SITE_URL`, `PUBLIC_SITE_NAME`                    | 사이트 주소와 이름                                         |
+| `PUBLIC_REPORT_EMAIL`                                    | 이메일 제보 연락처. 비어 있으면 기존 공개 운영 이메일 사용 |
+| `PUBLIC_GA_MEASUREMENT_ID`                               | 선택적 GA4. 비어 있으면 스크립트 미삽입                    |
+| `PUBLIC_FIREBASE_API_KEY`, `PUBLIC_FIREBASE_AUTH_DOMAIN` | Firebase 공개 웹 설정                                      |
+| `PUBLIC_FIREBASE_PROJECT_ID`, `PUBLIC_FIREBASE_APP_ID`   | Firebase 프로젝트와 웹 앱                                  |
+| `PUBLIC_FIREBASE_MESSAGING_SENDER_ID`                    | 선택적 발신자 ID                                           |
+| `PUBLIC_FIREBASE_APP_CHECK_SITE_KEY`                     | reCAPTCHA Enterprise 공개 사이트 키                        |
 
-### 소모품 추가
+사이트 제보 제출은 Firebase 웹 설정과 App Check 사이트 키가 모두 있어야 활성화됩니다.
+운영에서는 App Check의 실제 강제 적용도 별도로 확인해야 합니다. 키 존재만으로 강제 적용을 검증할 수 없습니다.
+사이트 접수가 어려울 때 `/report`에서 이메일 제보 경로를 제공합니다.
+`PUBLIC_REPORT_FORM_URL`은 현재 제보 화면에서 사용하지 않는 이전 설정입니다.
 
-`compatibleModelIds`와 각 모델의 `consumableIds`를 양쪽에서 연결합니다. 부품번호를 추정하지 말고, 없으면 필드를 생략합니다.
+관리자는 Google 로그인 후 `modelfit-reports` 데이터베이스의 `admins/{uid}.active`가 true여야
+제보를 읽고 상태를 변경할 수 있습니다. 클라이언트에서는 관리자 권한을 부여할 수 없습니다.
+설정 절차는 [운영 문서](docs/OPERATIONS.md)를 참고합니다.
 
-```ts
-{
-  id: "sample-filter",
-  slug: "sample-filter",
-  type: "hepa-filter",
-  displayName: "샘플 집진 필터",
-  compatibleModelIds: ["sample-ap100"],
-  searchKeywords: ["샘플 AP100 필터"],
-  verificationStatus: "unverified",
-  sources: [],
-  affiliate: { searchKeyword: "샘플 AP100 필터", enabled: true }
-}
-```
-
-## 검증 상태 기준
-
-- `official`: 제조사 공식 설명서·지원·판매 페이지에서 모델과 소모품 연결을 확인했고 유효한 출처가 있음
-- `seller-confirmed`: 판매자 표기를 확인했으나 제조사 자료로 교차 검증하지 못함
-- `user-reported`: 근거가 포함된 사용자 제보를 접수했으나 운영 검토 중
-- `unverified`: 공식 근거가 없거나 확인 전
-
-`official` 상태에는 최소 1개의 출처가 반드시 있어야 합니다. `npm run validate:data`가 이 규칙과
-중복 slug, 중복 모델 코드, 끊어진 참조를 확인합니다.
-
-## 출처 작성 규칙
-
-- 제조사 공식 설명서 → 공식 지원 페이지 → 공식 판매 페이지 → 판매자 → 기타 순으로 우선합니다.
-- URL을 실제로 열어 모델 코드와 부품번호를 확인한 뒤 기록합니다.
-- 검색 결과 URL, 단축 URL, 존재하지 않는 예시 URL을 출처로 넣지 않습니다.
-- `checkedAt`은 실제로 확인한 날짜를 `YYYY-MM-DD` 형식으로 기록합니다.
-- 출처가 없으면 빈 배열을 유지하고 미검증 상태로 표시합니다.
-
-## 검색
-
-`normalizeSearch.ts`가 소문자 변환, 공백·하이픈·언더스코어 제거, 특수문자 제거와 한글 브랜드 별칭을 처리합니다. 우선순위는 모델 코드 완전 일치, 모델명 완전 일치, 별칭, 부분 일치, 브랜드+모델, 유사 일치 순입니다.
-
-## 쿠팡·제휴 링크
-
-쿠팡 파트너스에서 생성한 카테고리 배너와 검토가 끝난 일부 상품 링크만 등록합니다. 각 링크는 데이터의 `isAffiliate` 값으로 일반 링크와 구분하며, 제휴 링크에는 `rel="nofollow sponsored noopener noreferrer"`, 새 창 열기와 경제적 이해관계 고지를 함께 적용합니다.
-
-`PUBLIC_COUPANG_BASE_URL`은 승인 후 검색 링크 규격이 확정됐을 때만 사용합니다. API Access Key와 Secret Key는 브라우저 코드, `PUBLIC_` 환경변수 또는 저장소에 기록하지 않고 서버 측 비밀 저장소에서 관리해야 합니다.
-
-모든 소모품은 공식 호환 근거를 먼저 보여주고, 그다음 쿠팡 상품 또는 일반 검색 링크를 제공합니다. 특정 판매자의 상품을 정품·최저가·완전 호환으로 보증하지 않습니다. 심사 시 제출할 광고 위치, 형식과 운영 원칙은 [`docs/coupang-partners-review.md`](docs/coupang-partners-review.md)에 정리되어 있습니다.
-
-## 테스트와 품질 검사
+## 검사
 
 ```bash
-npm run lint
-npm run format
-npm run test
-npm run validate:data
-npm run build
 npm run check
 npm run test:e2e
-npm run test:a11y
-npm run test:performance
+npm audit --audit-level=high
+npm run audit:freshness
+npm run audit:sources
 ```
 
-`npm run check`는 포맷, lint, 데이터 검증, 단위 테스트, 타입 검사와 정적 빌드를 순서대로 실행합니다.
-`npm run test:e2e`는 빌드 결과를 Chromium으로 열어 데스크톱과 모바일의 검색, 상세, 구매 경로, 내 가전함 흐름을 검사합니다.
-접근성 검사는 주요 4개 화면의 WCAG A·AA 치명/중대 위반을, 성능 검사는 대표 화면의 전송량·요청 수·DOM 규모·로딩 시간을 예산으로 관리합니다. 두 검사는 GitHub Actions에서도 자동 실행됩니다.
-`audit-links.yml`은 매주 공식 출처와 등록된 상품 상세 링크의 접근 상태 및 데이터 확인일을 검사합니다. 확인 후 90일이 지나면 재확인 예정, 180일이 지나면 재확인 필요로 분류합니다.
+`check`는 포맷, ESLint, 환경변수, 데이터, 단위 테스트, Firestore Emulator, 타입 검사와 빌드를 실행합니다.
+Firestore Emulator에는 Java 21 이상이 필요합니다. 설치된 Java 21을 `JAVA_HOME`과 PATH에 지정하세요.
 
-## SEO 운영
+E2E는 데스크톱·모바일 Chromium에서 검색, 모델 전환, 소모품 구매 선택지, 제휴 고지, 제보 화면,
+접근성, 가로 넘침과 성능을 검사합니다. 운영 로그인·실제 제보 접수는 별도 확인 항목입니다.
+기본 포트 4322가 사용 중이면 다른 프로세스를 종료하지 않고 포트를 바꿉니다.
 
-- 카테고리, 브랜드, 모델, 소모품, 가이드는 빌드 시 정적 HTML로 생성됩니다.
-- `@astrojs/sitemap`이 sitemap을 만듭니다.
-- 각 페이지는 개별 title, description, canonical, Open Graph, Twitter 메타를 가집니다.
-- 검색 결과와 제보 페이지는 `noindex`입니다.
-- 홈은 `WebSite`, `Organization`; 모델은 `BreadcrumbList`; 가이드는 `Article` JSON-LD를 사용합니다.
-- 판매 가격과 재고가 없으므로 `Product` 구조화 데이터는 사용하지 않습니다.
-
-## Firebase Hosting 배포
-
-1. `.firebaserc.example`을 `.firebaserc`로 복사하고 프로젝트 ID를 바꿉니다.
-2. `PUBLIC_SITE_URL`과 `public/robots.txt`를 실제 도메인으로 변경합니다.
-3. Firebase CLI에서 로그인 후 빌드·배포합니다.
-
-```bash
-npm run build
-npx firebase-tools deploy --only hosting
+```powershell
+$env:MODELFIT_E2E_PORT = '4323'
+npm run test:e2e
 ```
 
-`firebase.json`에는 clean URL, 정적 자산 장기 캐시, HTML 짧은 캐시와 기본 보안 헤더가 포함됩니다. 전체 경로를 SPA로 rewrite하지 않습니다.
+## 배포
 
-## GitHub Actions
+`main` push 시 `.github/workflows/deploy.yml`이 전체 검사, 취약점 검사와 브라우저 검사를 모두 통과한
+빌드만 Firebase Hosting으로 배포합니다. 브라우저 검사는 빌드 결과를 재사용합니다.
+`quality.yml`은 공개 운영 설정 없이도 동작하는지 별도 검사합니다.
 
-`.github/workflows/deploy.yml`은 PR에서 `npm run check`를 실행하고 main push에서 Firebase Hosting을 배포합니다.
+- GitHub Secret: `FIREBASE_SERVICE_ACCOUNT_MODELFIT_KR`
+- GitHub Variable: `FIREBASE_PROJECT_ID`
+- 운영 사이트: <https://modelfit-kr.web.app/>
 
-- Secret: `FIREBASE_SERVICE_ACCOUNT`
-- Variable: `FIREBASE_PROJECT_ID`
+배포 승인 전에 변경 내역과 검사 결과를 확인합니다. 현재 작업 상태와 미완료 항목은
+[인수인계](docs/HANDOFF.md), [출시 점검](docs/RELEASE_REVIEW.md)을 참고하세요.
 
-저장소 정책에 맞춰 배포 브랜치와 승인 환경을 추가하는 것을 권장합니다.
+## SEO와 출처 관리
 
-## 실제 데이터 등록 시 주의사항
-
-- 모델명이나 부품번호를 추정하지 않습니다.
-- 한 소모품이 여러 모델과 호환돼도 제조사 근거가 없으면 공식 확인으로 표시하지 않습니다.
-- 동일 시리즈라도 출시 연도, 국가, 색상 접미사에 따라 규격이 달라질 수 있습니다.
-- 사용자 제보만으로 공식 확인 상태로 올리지 않습니다.
-- 데이터 변경 뒤 `npm run check`와 생성된 모델·소모품 페이지를 확인합니다.
+브랜드·모델·카테고리·가이드는 정적 HTML과 canonical을 제공합니다. 검색·제보·관리자 페이지는 noindex입니다.
+소모품의 이전 주소는 이동용이며 sitemap에서 제외합니다. 링크 접근 상태와 확인일은 매주 감사합니다.
+90일 이후 재확인 예정, 180일 이후 재확인 필요로 분류하며, HTTP 응답만으로 확인일을 갱신하지 않습니다.
