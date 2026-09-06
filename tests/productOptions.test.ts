@@ -80,6 +80,13 @@ describe("consumable product options", () => {
     expect(parts[0].genuinePartNumber).toBeUndefined();
     expect(parts[0].affiliate.enabled).toBe(false);
   });
+  it("쿠쿠 ACF-AHMT10은 공식 2개입 세트와 직접 상품 근거를 제공한다", () => {
+    const filter = consumables.find((part) => part.id === "cuckoo-acf-ahmt10-filter")!;
+
+    expect(filter.genuinePartNumber).toBe("ACF-AHMT10");
+    expect(filter.compatibleProductName).toContain("2개입 1세트");
+    expect(filter.sources[0].url).toContain("productNo=7461");
+  });
   it("에브리봇 걸레는 부품명과 판매 수량을 분리한다", () => {
     const parts = consumables.filter(
       (part) => part.id.startsWith("everybot-") && part.type === "mop-pad",
