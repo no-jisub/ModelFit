@@ -79,19 +79,24 @@ const breadcrumbJsonLd = {
           <h1>{fullModelName}</h1>
           {
             modelVariants.length > 1 ? (
-              <label class="model-detail-selector">
+              <div class="model-detail-selector">
                 <span>모델번호 선택</span>
-                <select data-model-detail-selector aria-label="모델번호 선택">
-                  {modelVariants.map((variant) => (
-                    <option
-                      value={`/model/${variant.brandId}/${variant.slug}#compatible-parts`}
-                      selected={variant.id === model.id}
-                    >
-                      {variant.modelCode}
-                    </option>
-                  ))}
-                </select>
-              </label>
+                <details data-model-detail-selector>
+                  <summary aria-label={`모델번호 선택, 현재 ${model.modelCode}`}>
+                    <span class="model-detail-current-code">{model.modelCode}</span>
+                  </summary>
+                  <nav class="model-detail-options" aria-label="모델번호 목록">
+                    {modelVariants.map((variant) => (
+                      <a
+                        href={`/model/${variant.brandId}/${variant.slug}#compatible-parts`}
+                        aria-current={variant.id === model.id ? "page" : undefined}
+                      >
+                        {variant.modelCode}
+                      </a>
+                    ))}
+                  </nav>
+                </details>
+              </div>
             ) : (
               <div class="model-code">
                 {model.modelCode} {model.series ? `· ${model.series}` : ""}
@@ -217,9 +222,24 @@ const breadcrumbJsonLd = {
 </BaseLayout>
 
 <script>
-  document.querySelectorAll<HTMLSelectElement>("[data-model-detail-selector]").forEach((select) => {
-    select.addEventListener("change", () => {
-      if (select.value) window.location.assign(select.value);
+  document
+    .querySelectorAll<HTMLDetailsElement>("[data-model-detail-selector]")
+    .forEach((details) => {
+      details.querySelector("summary")?.addEventListener("click", (event) => {
+        const selection = window.getSelection();
+        if (selection && !selection.isCollapsed) event.preventDefault();
+      });
+
+      details.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") details.open = false;
+      });
     });
+
+  document.addEventListener("click", (event) => {
+    document
+      .querySelectorAll<HTMLDetailsElement>("[data-model-detail-selector][open]")
+      .forEach((details) => {
+        if (!details.contains(event.target as Node)) details.open = false;
+      });
   });
 </script>

@@ -2,6 +2,8 @@
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import ReportForm from "@/components/react/ReportForm";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const reportEmail = import.meta.env.PUBLIC_REPORT_EMAIL?.trim() || "shwltjq1@gmail.com";
 ---
 
 <BaseLayout
@@ -22,14 +24,29 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
       <div class="notice-card report-privacy-notice">
         <span aria-hidden="true">✓</span>
         <div>
-          <strong>개인정보를 수집하지 않습니다.</strong>
+          <strong>사이트 제보 양식은 이름과 이메일을 받지 않습니다.</strong>
           <p>
-            제보자 이름과 이메일은 받지 않습니다. 제출된 내용은 해결 여부 확인을 위해 최대 1년간
-            보관합니다.
+            이름, 연락처 등 개인정보를 제보 내용에 적지 마세요. 제출된 내용은 해결 여부 확인을 위해
+            최대 1년간 보관합니다.
           </p>
         </div>
       </div>
       <ReportForm client:load />
+      <aside class="notice-card" aria-label="이메일 제보 안내">
+        <div>
+          <strong>사이트 접수가 어려우신가요?</strong>
+          <p>
+            <a
+              class="text-link"
+              href={`mailto:${reportEmail}?subject=${encodeURIComponent("모델핏 정보 수정 제보")}`}
+              >이메일로 제보하기</a
+            >
+          </p>
+          <p>
+            모델번호와 잘못된 내용을 보내주세요. 이메일 제보 시 발신 주소도 운영자에게 전달됩니다.
+          </p>
+        </div>
+      </aside>
     </div>
   </section>
 </BaseLayout>

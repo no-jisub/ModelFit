@@ -29,9 +29,10 @@ test("홈에서 화면 크기에 맞는 쿠팡 배너와 광고 고지를 제공
 test("홈 브랜드 전체 보기는 추가 브랜드를 이어 붙이고 닫기를 마지막에 둔다", async ({ page }) => {
   await page.goto("/");
 
+  await page.getByRole("tab", { name: "브랜드로 찾기" }).click();
   const directory = page.locator(".brand-directory");
   const toggle = directory.locator("summary");
-  const featuredCards = page.locator("#brands > .container > .brand-grid > .brand-card");
+  const featuredCards = page.locator("#brands > .brand-grid > .brand-card");
   const additionalCards = directory.locator(".brand-grid-secondary > .brand-card");
 
   await toggle.click();
@@ -207,12 +208,16 @@ test("묶인 모델 카드 전체를 클릭해 대표 모델로 이동한다", a
 test("모델 상세에서 같은 제품군의 모델번호를 변경한다", async ({ page }) => {
   await page.goto("/model/lg/as205ngja");
 
-  const selector = page.getByLabel("모델번호 선택");
-  await expect(selector.locator("option")).toHaveCount(5);
-  const optionLabels = await selector.locator("option").allTextContents();
+  const selector = page.locator("[data-model-detail-selector]");
+  await expect(selector.locator("summary")).toContainText("AS205NGJA");
+  await selector.locator("summary").click();
+  await expect(selector).toHaveAttribute("open", "");
+
+  const optionLinks = selector.getByRole("link");
+  await expect(optionLinks).toHaveCount(5);
+  const optionLabels = await optionLinks.allTextContents();
   optionLabels.forEach((label) => expect(label.trim()).toMatch(/^[A-Z0-9-]+$/));
-  await expect(selector).toHaveValue("/model/lg/as205ngja#compatible-parts");
-  await selector.selectOption("/model/lg/as355nsna#compatible-parts");
+  await selector.getByRole("link", { name: "AS355NSNA", exact: true }).click();
 
   await expect(page).toHaveURL(/\/model\/lg\/as355nsna#compatible-parts$/);
   await expect(page.locator("#compatible-parts")).toBeVisible();
@@ -221,8 +226,8 @@ test("모델 상세에서 같은 제품군의 모델번호를 변경한다", asy
 test("소모품 카드는 상품 확인과 제조사 호환 근거 행동만 제공한다", async ({ page }) => {
   await page.goto("/model/lg/as355nsna");
 
-  const card = page.locator(".consumable-card").first();
-  const coupangLink = card.getByRole("link", { name: /쿠팡 상품 보기/ });
+  const card = page.locator(".consumable-group").first();
+  const coupangLink = card.getByRole("link", { name: /쿠팡 상품 확인/ });
   await expect(coupangLink).toHaveCount(1);
   await expect(coupangLink).toHaveAttribute("rel", /sponsored/);
   await expect(card.getByRole("link", { name: /공식 호환 근거/ })).toHaveCount(1);
@@ -298,16 +303,24 @@ test("모델 상세에서 개인정보 없는 오류 제보 화면으로 이동�
   await expect(page).toHaveURL(/\/report\?.*model=AS355NSNA/);
   await expect(page.getByRole("heading", { name: "잘못된 정보를 알려주세요" })).toBeVisible();
   await expect(page.getByLabel("제품명 또는 모델명")).toHaveValue(/AS355NSNA/);
-  await expect(page.getByText("개인정보를 수집하지 않습니다.")).toBeVisible();
-  await expect(page.getByRole("button", { name: "오류 제보 보내기" })).toBeDisabled();
+  await expect(page.getByText("사이트 제보 양식은 이름과 이메일을 받지 않습니다.")).toBeVisible();
+  await expect(page.getByRole("link", { name: "이메일로 제보하기" })).toHaveAttribute(
+    "href",
+    /^mailto:/,
+  );
+  if (!process.env.PUBLIC_FIREBASE_APP_CHECK_SITE_KEY) {
+    await expect(page.getByRole("button", { name: "오류 제보 보내기" })).toBeDisabled();
+  }
 });
 
-test("관리자 화면은 Firebase 설정 전 접근을 허용하지 않는다", async ({ page }) => {
+test("로그인하지 않은 방문자에게 관리자 제보 목록을 노출하지 않는다", async ({ page }) => {
   await page.goto("/admin");
-
   await expect(page.getByRole("heading", { name: "오류 제보 관리" })).toBeVisible();
+  const configured = Boolean(process.env.PUBLIC_FIREBASE_API_KEY);
   await expect(
-    page.getByRole("heading", { name: "관리자 인증 설정을 준비 중입니다" }),
+    page.getByRole("heading", {
+      name: configured ? "관리자 로그인" : "관리자 인증 설정을 준비 중입니다",
+    }),
   ).toBeVisible();
-  await expect(page.getByText("Firebase 관리자 인증 설정이 필요합니다.")).toBeVisible();
+  await expect(page.locator(".admin-reports-table, .admin-report-card")).toHaveCount(0);
 });
