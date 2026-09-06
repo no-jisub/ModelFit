@@ -13,6 +13,19 @@ describe("consumable product options", () => {
     expect(option.description).toContain("추가 확인이 필요");
     expect(option.description).not.toContain("공식 자료에서 확인한");
   });
+  it("LG 360 공기청정기는 모델별 필터 필요 수량과 관리 방식을 구분한다", () => {
+    const mFilter = consumables.find((part) => part.id === "lg-puricare-m-filter")!;
+    const gFilter = consumables.find((part) => part.id === "lg-puricare-g-filter")!;
+    const preFilter = consumables.find((part) => part.id === "lg-360-micro-filter")!;
+
+    expect(mFilter.compatibleProductName).toContain("1회 교체 시 2개 필요");
+    expect(gFilter.compatibleProductName).toContain("AS355NSAH는 2개");
+    expect(gFilter.compatibleProductName).toContain("AS205NSJA/NGJA는 1개");
+    expect(mFilter.replacementInterval).toMatch(/^약 1년/);
+    expect(gFilter.purchaseWarning).toContain("물로 세척하지 마세요");
+    expect(preFilter.compatibleProductName).toContain("6개입");
+    expect(preFilter.purchaseWarning).toContain("한 달마다");
+  });
   it("웰스는 주기가 다른 교체 필터를 구분하고 미확인 부품번호를 추정하지 않는다", () => {
     const al106 = models.find((model) => model.id === "wells-al106")!;
     const aq107 = models.find((model) => model.id === "wells-aq107")!;
