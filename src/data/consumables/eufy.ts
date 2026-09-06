@@ -1,6 +1,5 @@
 import {
   affiliate,
-  coupangSearch,
   regionalWarning,
   researchedPart,
   source,
@@ -22,10 +21,7 @@ export const eufyConsumableRecords: ConsumableRecord[] = [
     sources: [
       source("eufy 공식몰 — Omni C20 호환 먼지봉투", "https://www.eufy.com/products/t290a110"),
     ],
-    affiliate: affiliate(
-      "eufy T290A110 Omni C20 정품 먼지봉투",
-      coupangSearch("eufy 정품 T290A110 Omni C20 먼지봉투"),
-    ),
+    affiliate: affiliate("eufy T290A110 Omni C20 정품 먼지봉투"),
   },
   ...(
     [

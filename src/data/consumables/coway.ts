@@ -82,13 +82,22 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
   researchedPart({
     id: "coway-ap2219k-composite-filter",
     type: "all-in-one-filter",
-    displayName: "코웨이 AP-2219K 복합 필터",
-    compatibleProductName: "프리필터·맞춤형·탈취·HEPA 필터 구성",
+    displayName: "코웨이 AP-2219K 일체형 복합필터",
+    compatibleProductName: "탈취필터와 초미세먼지 집진필터가 결합된 교체 필터",
     modelIds: ["coway-ap-2219k"],
-    sourceTitle: "코웨이 공식 보도자료 — AP-2219K 4단계 듀얼 필터 구성",
-    sourceUrl: "https://company.coway.com/ko/newsroom/press/154",
-    sourceType: "manufacturer",
-    searchKeyword: "코웨이 AP-2219K 정품 필터",
+    sourceTitle: "코웨이 AP-1818C·AP-2219K 공식 사용설명서 — 필터 구성·교환 방법 (11·21~22쪽)",
+    sourceUrl: "https://www.coway.com/core/product/fmanual/download/122",
+    sourceType: "official-manual",
+    searchKeyword: "코웨이 AP-2219K 정품 일체형 복합필터",
+    replacementInterval: "12개월 (하루 8시간, 풍량 3단 사용 기준이며 사용 환경에 따라 달라짐)",
+    verifiedAt: "2026-09-06",
+    secondarySources: [
+      {
+        title: "코웨이 공식 필터·소모품 목록 — AP-1818C·AP-2219K 전용 일체형 복합필터",
+        url: "https://www.coway.com/product/filters-supplies/all/all",
+        sourceType: "official-store",
+      },
+    ],
     purchaseUnavailable: true,
   }),
 ];

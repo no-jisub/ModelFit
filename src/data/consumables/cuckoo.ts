@@ -21,8 +21,8 @@ export const cuckooConsumableRecords: ConsumableRecord[] = [
     verificationStatus: "official",
     sources: [
       source(
-        "쿠쿠 공식몰 — 공기청정기 필터 ACF-WMT10 적용 모델",
-        "https://www.cuckoo.co.kr/searchWord?searchWord=ACF-WMT10",
+        "쿠쿠 공식몰 — ACF-WMT10 및 AC-24W·AC-25W·W70 계열 호환 안내",
+        "https://www.cuckoo.co.kr/mall/productView?productNo=4547",
       ),
     ],
     affiliate: affiliate(
@@ -59,12 +59,15 @@ export const cuckooConsumableRecords: ConsumableRecord[] = [
     compatibleProductName: "AC-T 계열용 필터",
     compatibleModelIds: ["cuckoo-ac-17t20fwh"],
     searchKeywords: ["ACF-TMT20", "AC-17T20FWH", "쿠쿠 정품 필터"],
-    purchaseWarning: domesticWarning,
+    replacementInterval: "약 1년 (사용 환경에 따라 달라짐)",
+    purchaseWarning:
+      domesticWarning +
+      " 프리필터는 훼손되지 않았다면 청소·세척해 사용하며 ACF-TMT20 교체 필터와 구분하세요.",
     verificationStatus: "official",
     sources: [
       source(
-        "쿠쿠 공식몰 — 공기청정기 필터 ACF-TMT20 적용 모델",
-        "https://www.cuckoo.co.kr/searchWord?searchWord=ACF-TMT20",
+        "쿠쿠 공식몰 — ACF-TMT20 및 AC-T 계열 호환 안내",
+        "https://www.cuckoo.co.kr/mall/productView?productNo=4623",
       ),
     ],
     affiliate: affiliate(

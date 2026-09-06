@@ -201,6 +201,9 @@ export function validateData(
         errors.push(`${part.id}: 잘못된 구매 링크 ${part.affiliate.directUrl}`);
       }
     }
+    if (part.affiliate.status === "search-results") {
+      errors.push(`${part.id}: 검색 결과 대신 확인된 상품 상세 링크만 등록하세요.`);
+    }
     const coupangPurchaseLinks = part.purchaseLinks.filter((link) => link.channel === "coupang");
     if (part.affiliate.status === "unavailable") {
       if (part.affiliate.enabled || part.affiliate.directUrl || part.affiliate.isAffiliate) {

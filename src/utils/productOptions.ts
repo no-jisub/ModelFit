@@ -32,7 +32,9 @@ export function createProductOptions(
       kind: "genuine",
       verification,
       description:
-        "제조사 공식 자료에서 이 소모품과 모델의 호환 관계를 확인한 정품 기준 상품입니다." +
+        (part.verificationStatus === "official"
+          ? "제조사 공식 자료에서 확인한 소모품의 규격·호환 정보입니다. 외부 판매 상품의 진품 여부는 판매자와 적용 모델을 별도로 확인하세요."
+          : "이 소모품의 정품 여부와 모델 호환 관계는 추가 확인이 필요합니다.") +
         partNumberDescription,
       partNumber: part.genuinePartNumber,
       packageLabel:

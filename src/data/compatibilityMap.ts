@@ -31,7 +31,7 @@ export const modelConsumableIds: Record<string, string[]> = {
     "coway-air-matching-filter",
   ],
 
-  "winix-azse430-jwk": ["winix-zero-s-replacement-filter"],
+  "winix-azse430-jwk": ["winix-zero-s-dust-filter", "winix-zero-s-deodorizing-filter"],
   "winix-at8e430-mwk": ["winix-tower-edge-all-in-one-filter"],
   "winix-aprm833-jwk": ["winix-tower-prime-all-in-one-filter"],
   "winix-attm115-mwk": ["winix-tower-prime-plus-all-in-one-filter"],
@@ -78,10 +78,27 @@ export const modelConsumableIds: Record<string, string[]> = {
   "skmagic-acl25c1askce": ["skmagic-acl25-all-in-one-care-filter"],
   "skmagic-acl130z0skpn": ["skmagic-acl130z-filter"],
 
-  "wells-al106": ["wells-al106-filter-set"],
-  "wells-an730": ["wells-tornado-allcare-filter"],
-  "wells-an734": ["wells-tornado-allcare-filter"],
-  "wells-aq107": ["wells-aq107-filter-set"],
+  "wells-al106": [
+    "wells-al106-custom-filter",
+    "wells-al106-deodorizing-filter",
+    "wells-al106-hepa-filter",
+  ],
+  "wells-an730": [
+    "wells-tornado-pre-filter",
+    "wells-tornado-custom-filter",
+    "wells-tornado-allcare-filter",
+  ],
+  "wells-an734": [
+    "wells-tornado-pre-filter",
+    "wells-tornado-custom-filter",
+    "wells-tornado-allcare-filter",
+  ],
+  "wells-aq107": [
+    "wells-aq107-pre-filter",
+    "wells-aq107-custom-filter",
+    "wells-aq107-deodorizing-filter",
+    "wells-aq107-hepa-filter",
+  ],
   "wells-am315": ["wells-am315-combi-filter"],
 
   "blueair-cp7i": ["blueair-cp7i-pac-filter"],

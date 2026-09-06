@@ -12,7 +12,7 @@ const optionNumber = String(partNumber) + "-" + String(productNumber);
 const headingId = option.id + "-heading";
 const kindLabel = option.kind === "genuine" ? "정품" : "호환상품";
 const verificationLabels = {
-  "official-genuine": "제조사 공식 근거 확인",
+  "official-genuine": "공식 규격·호환 근거 확인",
   "verified-compatible": "호환 근거 확인",
   "seller-claimed": "판매자 호환 표기",
   unverified: "미검증",
@@ -84,7 +84,7 @@ const hasDirectProduct = option.purchaseLinks.some((link) => link.linkType === "
   {
     !hasDirectProduct && (
       <p class="product-option-link-note">
-        검증된 상품 상세 링크는 준비 중입니다. 공식 근거만 먼저 확인할 수 있습니다.
+        외부 판매 상품 링크는 준비 중입니다. 위의 공식 사이트에서 소모품 정보를 확인하세요.
       </p>
     )
   }

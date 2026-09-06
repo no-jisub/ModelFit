@@ -44,8 +44,10 @@ export function getPartNumberStatus(
 
 export const partTypeLabels: Record<ConsumableType, string> = {
   "hepa-filter": "HEPA 필터",
+  "dust-filter": "집진 필터",
   "deodorizing-filter": "탈취 필터",
   "pre-filter": "프리필터",
+  "custom-filter": "생활맞춤 필터",
   "all-in-one-filter": "일체형 필터",
   "dust-bin-filter": "먼지통 필터",
   "dust-bag": "먼지봉투",

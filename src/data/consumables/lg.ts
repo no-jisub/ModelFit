@@ -21,8 +21,8 @@ export const lgConsumableRecords: ConsumableRecord[] = [
     ],
     affiliate: affiliate(
       "LG ADQ30041405 PFSALC01 정품 필터",
-      "https://link.coupang.com/a/gleYbpozKe",
-      "2026-08-19",
+      "https://link.coupang.com/a/gDwSqU3CAC",
+      "2026-08-30",
     ),
   },
   {

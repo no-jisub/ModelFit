@@ -22,17 +22,46 @@ export const winixConsumableRecords: ConsumableRecord[] = [
     ],
     affiliate: unavailableAffiliate("위닉스 ATTM115-MWK 정품 일체형 필터"),
   },
-  researchedPart({
-    id: "winix-zero-s-replacement-filter",
-    type: "hepa-filter",
-    displayName: "위닉스 제로 S 교체 필터 세트",
-    modelIds: ["winix-azse430-jwk"],
-    sourceTitle: "위닉스 공식 제로 S 제품 및 필터 찾기",
-    sourceUrl: "https://www.winix.com/product/843",
-    sourceType: "manufacturer",
-    searchKeyword: "위닉스 AZSE430-JWK 정품 필터",
-    purchaseUnavailable: true,
-  }),
+  ...[
+    {
+      id: "winix-zero-s-dust-filter",
+      type: "dust-filter" as const,
+      name: "마이크로 집진필터",
+      number: "CAF-I0H3",
+      url: "https://www.winix.com/product/4",
+    },
+    {
+      id: "winix-zero-s-deodorizing-filter",
+      type: "deodorizing-filter" as const,
+      name: "탈취필터",
+      number: "CAF-I0D1",
+      url: "https://www.winix.com/product/2",
+    },
+  ].map(({ id, type, name, number, url }) => ({
+    ...researchedPart({
+      id,
+      type,
+      displayName: "위닉스 제로 S " + name,
+      genuinePartNumber: number,
+      modelIds: ["winix-azse430-jwk"],
+      sourceTitle: "위닉스 공식몰 — 제로 S " + name,
+      sourceUrl: url,
+      searchKeyword: "위닉스 AZSE430-JWK " + number + " 정품 필터",
+      replacementInterval: "약 6~12개월 (하루 24시간 사용 기준, 사용 환경에 따라 달라짐)",
+      verifiedAt: "2026-09-06",
+      secondarySources: [
+        {
+          title: "위닉스 AZSE430 시리즈 공식 설명서 — 교체 필터와 관리 방법 (16~20쪽)",
+          url: "https://cdn.winix.com/uploadData/manual/3609084973/818120381773378.pdf",
+          sourceType: "official-manual",
+        },
+      ],
+      purchaseUnavailable: true,
+    }),
+    purchaseWarning:
+      domesticWarning +
+      " 집진필터와 탈취필터는 각각 교체하는 부품이며 물세척하면 안 됩니다. 프리필터는 반영구 사용하며 월 2회 청소합니다. 세트 상품 구매 시 두 교체 필터의 포함 여부를 확인하세요.",
+  })),
   researchedPart({
     id: "winix-tower-edge-all-in-one-filter",
     type: "all-in-one-filter",

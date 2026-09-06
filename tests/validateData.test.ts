@@ -103,8 +103,8 @@ describe("data validation", () => {
     expect(brands.some((brand) => brand.id === "samsung")).toBe(false);
   });
 
-  it("157개 소모품 모두 제조사 공식 출처와 확인일을 제공한다", () => {
-    expect(consumables).toHaveLength(157);
+  it("165개 소모품 모두 제조사 공식 출처와 확인일을 제공한다", () => {
+    expect(consumables).toHaveLength(165);
     expect(
       consumables.every(
         (part) =>

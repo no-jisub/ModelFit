@@ -1,6 +1,5 @@
 import {
   affiliate,
-  coupangSearch,
   regionalWarning,
   researchedPart,
   source,
@@ -25,7 +24,7 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
         "https://www.irobot.com/en_US/high-efficiency-filter%252c-3-pack-for-roomba-combo-j-series/4785883.html",
       ),
     ],
-    affiliate: affiliate("아이로봇 4785883 정품 필터", coupangSearch("iRobot 정품 4785883 필터")),
+    affiliate: affiliate("아이로봇 4785883 정품 필터"),
   },
   {
     id: "irobot-i-e-j-high-efficiency-filter",
@@ -44,7 +43,7 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
         "https://www.irobot.com/en_US/high-efficiency-filter%252c-3-pack-for-roomba-combo-and-roomba-i%252c-e%252c-and-j-series/4639161.html?cgid=us",
       ),
     ],
-    affiliate: affiliate("아이로봇 4639161 정품 필터", coupangSearch("iRobot 정품 4639161 필터")),
+    affiliate: affiliate("아이로봇 4639161 정품 필터"),
   },
   {
     id: "irobot-105-filter",
@@ -63,7 +62,7 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
         "https://www.irobot.com/en_US/filter-3-pack/4837321.html",
       ),
     ],
-    affiliate: affiliate("아이로봇 4837321 정품 필터", coupangSearch("iRobot 정품 4837321 필터")),
+    affiliate: affiliate("아이로봇 4837321 정품 필터"),
   },
   ...(
     [

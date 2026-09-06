@@ -13,16 +13,14 @@ export const source = (
   verifiedAt = checkedAt,
 ): SourceReference => ({ title, url, sourceType, checkedAt: verifiedAt });
 
-export const coupangSearch = (keyword: string) =>
-  `https://www.coupang.com/np/search?q=${encodeURIComponent(keyword)}`;
-
 export const affiliate = (
   searchKeyword: string,
   directUrl?: string,
   verifiedAt = checkedAt,
   restrictionNote?: string,
 ) => {
-  const resolvedUrl = directUrl ?? coupangSearch(searchKeyword);
+  if (!directUrl) return unavailableAffiliate(searchKeyword, verifiedAt);
+  const resolvedUrl = directUrl;
   const isAffiliate = resolvedUrl.startsWith("https://link.coupang.com/a/");
 
   return {

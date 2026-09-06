@@ -6,8 +6,10 @@ export type PartNumberStatus = "confirmed" | "not-listed" | "researching";
 
 export type ConsumableType =
   | "hepa-filter"
+  | "dust-filter"
   | "deodorizing-filter"
   | "pre-filter"
+  | "custom-filter"
   | "all-in-one-filter"
   | "dust-bin-filter"
   | "dust-bag"
