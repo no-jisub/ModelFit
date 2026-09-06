@@ -1,15 +1,19 @@
+import { loadEnv } from "vite";
+
+const env = { ...loadEnv("production", process.cwd(), ""), ...process.env };
+
 const publicEnv = {
-  PUBLIC_SITE_URL: process.env.PUBLIC_SITE_URL?.trim(),
-  PUBLIC_SITE_NAME: process.env.PUBLIC_SITE_NAME?.trim(),
-  PUBLIC_COUPANG_BASE_URL: process.env.PUBLIC_COUPANG_BASE_URL?.trim(),
-  PUBLIC_AFFILIATE_DISCLOSURE_TEXT: process.env.PUBLIC_AFFILIATE_DISCLOSURE_TEXT?.trim(),
-  PUBLIC_GA_MEASUREMENT_ID: process.env.PUBLIC_GA_MEASUREMENT_ID?.trim(),
-  PUBLIC_FIREBASE_API_KEY: process.env.PUBLIC_FIREBASE_API_KEY?.trim(),
-  PUBLIC_FIREBASE_AUTH_DOMAIN: process.env.PUBLIC_FIREBASE_AUTH_DOMAIN?.trim(),
-  PUBLIC_FIREBASE_PROJECT_ID: process.env.PUBLIC_FIREBASE_PROJECT_ID?.trim(),
-  PUBLIC_FIREBASE_APP_ID: process.env.PUBLIC_FIREBASE_APP_ID?.trim(),
-  PUBLIC_FIREBASE_MESSAGING_SENDER_ID: process.env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID?.trim(),
-  PUBLIC_FIREBASE_APP_CHECK_SITE_KEY: process.env.PUBLIC_FIREBASE_APP_CHECK_SITE_KEY?.trim(),
+  PUBLIC_SITE_URL: env.PUBLIC_SITE_URL?.trim(),
+  PUBLIC_SITE_NAME: env.PUBLIC_SITE_NAME?.trim(),
+  PUBLIC_COUPANG_BASE_URL: env.PUBLIC_COUPANG_BASE_URL?.trim(),
+  PUBLIC_AFFILIATE_DISCLOSURE_TEXT: env.PUBLIC_AFFILIATE_DISCLOSURE_TEXT?.trim(),
+  PUBLIC_GA_MEASUREMENT_ID: env.PUBLIC_GA_MEASUREMENT_ID?.trim(),
+  PUBLIC_FIREBASE_API_KEY: env.PUBLIC_FIREBASE_API_KEY?.trim(),
+  PUBLIC_FIREBASE_AUTH_DOMAIN: env.PUBLIC_FIREBASE_AUTH_DOMAIN?.trim(),
+  PUBLIC_FIREBASE_PROJECT_ID: env.PUBLIC_FIREBASE_PROJECT_ID?.trim(),
+  PUBLIC_FIREBASE_APP_ID: env.PUBLIC_FIREBASE_APP_ID?.trim(),
+  PUBLIC_FIREBASE_MESSAGING_SENDER_ID: env.PUBLIC_FIREBASE_MESSAGING_SENDER_ID?.trim(),
+  PUBLIC_FIREBASE_APP_CHECK_SITE_KEY: env.PUBLIC_FIREBASE_APP_CHECK_SITE_KEY?.trim(),
 };
 
 const errors: string[] = [];
@@ -55,7 +59,7 @@ if (
   errors.push("PUBLIC_FIREBASE_AUTH_DOMAIN이 올바른 Firebase 인증 도메인이 아닙니다.");
 }
 
-const unsafePublicNames = Object.keys(process.env).filter(
+const unsafePublicNames = Object.keys(env).filter(
   (name) =>
     name.startsWith("PUBLIC_") &&
     name !== "PUBLIC_FIREBASE_API_KEY" &&

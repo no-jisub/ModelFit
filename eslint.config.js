@@ -13,7 +13,7 @@ export default [
     },
   },
   {
-    ignores: ["dist/**", ".astro/**", "node_modules/**"],
+    ignores: ["dist/**", ".astro/**", "node_modules/**", "outputs/**", "test-results/**"],
     rules: {
       "no-console": ["warn", { allow: ["warn", "error"] }],
     },

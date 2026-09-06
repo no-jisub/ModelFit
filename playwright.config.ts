@@ -1,6 +1,6 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const e2eOrigin = "http://127.0.0.1:4322";
+const e2eOrigin = `http://127.0.0.1:${process.env.MODELFIT_E2E_PORT || "4322"}`;
 
 export default defineConfig({
   testDir: "./e2e",

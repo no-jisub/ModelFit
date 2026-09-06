@@ -4,7 +4,7 @@ const server = await preview({
   root: process.cwd(),
   server: {
     host: "127.0.0.1",
-    port: 4322,
+    port: Number(process.env.MODELFIT_E2E_PORT || "4322"),
   },
 });
 
