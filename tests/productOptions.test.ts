@@ -138,6 +138,21 @@ describe("consumable product options", () => {
       "다이슨 빅+콰이엇 HEPA H13 필터",
     ]);
     expect(parts?.every((part) => part?.productOptions[0]?.kind === "genuine")).toBe(true);
+    expect(parts?.[0]?.replacementInterval).toBeUndefined();
+    expect(parts?.[0]?.purchaseWarning).toContain("서로 다른 교체 부품");
+    expect(parts?.[1]?.replacementInterval).toMatch(/^최대 5년/);
+    expect(parts?.[1]?.purchaseWarning).toContain("별도 부품");
+  });
+
+  it("다이슨 HP09·TP09·PH04에 결합형 360° 필터를 연결한다", () => {
+    const part = consumables.find((item) => item.id === "dyson-360-glass-hepa-carbon-filter");
+
+    expect(part?.compatibleModelIds).toEqual(["dyson-hp09", "dyson-tp09", "dyson-ph04"]);
+    expect(part?.replacementInterval).toBeUndefined();
+    expect(part?.purchaseWarning).toContain("단일 교체 필터");
+    expect(part?.sources[0]?.url).toBe(
+      "https://www.dyson.co.kr/support/replacement-parts/air-treatment/tp04",
+    );
   });
 
   it("검증된 직접 상품 링크는 해당 정품 후보 안에서 제공한다", () => {
