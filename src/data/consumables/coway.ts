@@ -31,7 +31,6 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
         "official-manual",
       ),
     ],
-    verifiedAt: "2026-09-06",
     affiliate: unavailableAffiliate("코웨이 AP-2021A AP-1521B 정품 4D 프리필터"),
   },
   {
@@ -58,7 +57,6 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
         "official-manual",
       ),
     ],
-    verifiedAt: "2026-09-06",
     affiliate: unavailableAffiliate("코웨이 AP-2021A AP-1521B 정품 4D 입체필터"),
   },
   {
@@ -85,7 +83,6 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
         "official-manual",
       ),
     ],
-    verifiedAt: "2026-09-06",
     affiliate: unavailableAffiliate("코웨이 AP-2021A AP-1521B 정품 에어매칭필터"),
   },
   researchedPart({
@@ -99,7 +96,6 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
     sourceType: "official-manual",
     searchKeyword: "코웨이 AP-2219K 정품 일체형 복합필터",
     replacementInterval: "12개월 (하루 8시간, 풍량 3단 사용 기준이며 사용 환경에 따라 달라짐)",
-    verifiedAt: "2026-09-06",
     secondarySources: [
       {
         title: "코웨이 공식 필터·소모품 목록 — AP-1818C·AP-2219K 전용 일체형 복합필터",

@@ -20,7 +20,6 @@ export const lgConsumableRecords: ConsumableRecord[] = [
         "manufacturer",
       ),
     ],
-    verifiedAt: "2026-09-06",
     affiliate: affiliate(
       "LG ADQ30041405 PFSALC01 정품 필터",
       "https://link.coupang.com/a/gDwSqU3CAC",
@@ -46,7 +45,6 @@ export const lgConsumableRecords: ConsumableRecord[] = [
         "manufacturer",
       ),
     ],
-    verifiedAt: "2026-09-06",
     affiliate: affiliate(
       "LG ADQ30041403 PFSACC01 정품 필터",
       "https://www.coupang.com/vp/products/8941845170",
@@ -80,7 +78,6 @@ export const lgConsumableRecords: ConsumableRecord[] = [
         "manufacturer",
       ),
     ],
-    verifiedAt: "2026-09-06",
     affiliate: affiliate(
       "LG ADQ75133511 PFPNNC06 정품 극세필터",
       "https://link.coupang.com/a/gDv010uXdc",
