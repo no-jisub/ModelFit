@@ -15,7 +15,9 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
     compatibleProductName: "4D 프리필터 2개",
     compatibleModelIds: ["coway-ap-4025d", "coway-ap-3024h", "coway-ap-2021a", "coway-ap-1521b"],
     searchKeywords: ["코웨이 AP-4025D AP-3024H AP-2021A AP-1521B 4D 프리필터"],
-    purchaseWarning: domesticWarning,
+    purchaseWarning:
+      domesticWarning +
+      " 4D 프리필터는 교체 주기가 정해진 필터가 아니라 2주마다 진공청소기 또는 물로 세척해 재사용하는 부품입니다.",
     verificationStatus: "official",
     sources: [
       source(
@@ -29,6 +31,7 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
         "official-manual",
       ),
     ],
+    verifiedAt: "2026-09-06",
     affiliate: unavailableAffiliate("코웨이 AP-2021A AP-1521B 정품 4D 프리필터"),
   },
   {
@@ -39,7 +42,9 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
     compatibleProductName: "4D 입체필터 2개",
     compatibleModelIds: ["coway-ap-4025d", "coway-ap-3024h", "coway-ap-2021a", "coway-ap-1521b"],
     searchKeywords: ["코웨이 AP-4025D AP-3024H AP-2021A AP-1521B 4D 입체필터"],
-    purchaseWarning: domesticWarning,
+    replacementInterval: "12개월 (최대 풍량으로 하루 8시간 사용 기준이며 환경에 따라 달라짐)",
+    purchaseWarning:
+      domesticWarning + " 탈취강화필터와 4D 에어클린 V 케어필터가 합쳐진 복합형 필터입니다.",
     verificationStatus: "official",
     sources: [
       source(
@@ -53,6 +58,7 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
         "official-manual",
       ),
     ],
+    verifiedAt: "2026-09-06",
     affiliate: unavailableAffiliate("코웨이 AP-2021A AP-1521B 정품 4D 입체필터"),
   },
   {
@@ -63,7 +69,9 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
     compatibleProductName: "에어매칭필터 4개",
     compatibleModelIds: ["coway-ap-4025d", "coway-ap-3024h", "coway-ap-2021a", "coway-ap-1521b"],
     searchKeywords: ["코웨이 AP-4025D AP-3024H AP-2021A AP-1521B 에어매칭필터"],
-    purchaseWarning: domesticWarning,
+    replacementInterval: "4개월 또는 6개월 (요금제와 사용 환경에 따라 달라짐)",
+    purchaseWarning:
+      domesticWarning + " 에어매칭필터는 생활 환경에 맞춰 6종 중 2종을 선택해 장착하는 필터입니다.",
     verificationStatus: "official",
     sources: [
       source(
@@ -77,6 +85,7 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
         "official-manual",
       ),
     ],
+    verifiedAt: "2026-09-06",
     affiliate: unavailableAffiliate("코웨이 AP-2021A AP-1521B 정품 에어매칭필터"),
   },
   researchedPart({

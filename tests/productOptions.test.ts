@@ -57,6 +57,18 @@ describe("consumable product options", () => {
     );
     expect(parts.every((part) => !part.affiliate.enabled)).toBe(true);
   });
+  it("코웨이 노블은 세척 프리필터와 주기가 다른 교체 필터를 구분한다", () => {
+    const preFilter = consumables.find((part) => part.id === "coway-4d-pre-filter")!;
+    const dimensional = consumables.find((part) => part.id === "coway-4d-dimensional-filter")!;
+    const matching = consumables.find((part) => part.id === "coway-air-matching-filter")!;
+
+    expect(preFilter.replacementInterval).toBeUndefined();
+    expect(preFilter.purchaseWarning).toContain("2주마다");
+    expect(dimensional.replacementInterval).toMatch(/^12개월/);
+    expect(dimensional.purchaseWarning).toContain("복합형 필터");
+    expect(matching.replacementInterval).toMatch(/^4개월 또는 6개월/);
+    expect(matching.purchaseWarning).toContain("6종 중 2종");
+  });
   it("AP-2219K는 탈취와 집진 기능이 결합된 복합필터 한 개로 안내한다", () => {
     const model = models.find((item) => item.id === "coway-ap-2219k")!;
     const parts = model.consumableIds.map((id) => consumables.find((part) => part.id === id)!);
