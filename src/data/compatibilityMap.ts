@@ -76,7 +76,7 @@ export const modelConsumableIds: Record<string, string[]> = {
   "skmagic-acl15c1askwh": ["skmagic-all-in-one-care-filter"],
   "skmagic-acl20c1askwh": ["skmagic-acl20-all-in-one-care-filter"],
   "skmagic-acl25c1askce": ["skmagic-acl25-all-in-one-care-filter"],
-  "skmagic-acl130z0skpn": ["skmagic-acl130z-filter"],
+  "skmagic-acl130z0skpn": ["skmagic-acl130z-deodorizing-filter", "skmagic-acl130z-dust-filter"],
 
   "wells-al106": [
     "wells-al106-custom-filter",

@@ -119,6 +119,18 @@ describe("consumable product options", () => {
     expect(parts.every((part) => !part.displayName.includes("개입"))).toBe(true);
   });
 
+  it("SK매직 ACL130Z는 탈취·집진을 분리하고 세트 번호를 개별 부품번호로 표시하지 않는다", () => {
+    const model = models.find((item) => item.id === "skmagic-acl130z0skpn")!;
+    const parts = model.consumableIds.map((id) => consumables.find((part) => part.id === id)!);
+    expect(parts.map((part) => part.type)).toEqual(["deodorizing-filter", "dust-filter"]);
+    expect(parts.every((part) => part.replacementInterval?.startsWith("12개월"))).toBe(true);
+    expect(parts.every((part) => part.genuinePartNumber === undefined)).toBe(true);
+    expect(
+      parts.every((part) => part.productOptions[0].packageLabel?.includes("FLTACL130PWH 세트")),
+    ).toBe(true);
+    expect(parts.every((part) => part.purchaseWarning?.includes("세트 한 개"))).toBe(true);
+  });
+
   it("SK매직 ACL20은 공식 일체형 필터 부품번호와 주기를 제공한다", () => {
     const model = models.find((item) => item.id === "skmagic-acl20c1askwh")!;
     const parts = model.consumableIds.map((id) => consumables.find((part) => part.id === id)!);

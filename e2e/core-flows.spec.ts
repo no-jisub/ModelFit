@@ -157,6 +157,14 @@ test("기존 소모품 주소는 호환 모델의 소모품 영역으로 이동�
   await expect(page.locator("#compatible-parts")).toBeVisible();
 });
 
+test("SK매직 기존 세트 주소에서 분리된 두 교체 필터를 확인한다", async ({ page }) => {
+  await page.goto("/part/skmagic-acl130z-filter");
+  await expect(page).toHaveURL(/\/model\/skmagic\/acl130z0skpn#compatible-parts$/);
+  const parts = page.locator("#compatible-parts");
+  await expect(parts.getByRole("heading", { name: /활성탄 탈취필터/, level: 3 })).toBeVisible();
+  await expect(parts.getByRole("heading", { name: /초미세먼지 집진필터/, level: 3 })).toBeVisible();
+});
+
 test("통합검색 결과를 모델과 소모품 탭으로 전환한다", async ({ page }) => {
   await page.goto("/find?q=필터");
 

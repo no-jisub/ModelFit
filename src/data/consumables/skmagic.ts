@@ -11,7 +11,7 @@ export const skmagicConsumableRecords: ConsumableRecord[] = [
     id: "skmagic-all-in-one-care-filter",
     slug: "skmagic-all-in-one-care-filter",
     type: "all-in-one-filter",
-    displayName: "SK매직 올인원 케어필터",
+    displayName: "SK매직 ACL15 올인원 케어필터",
     compatibleProductName: "올인원 케어필터 1SET",
     compatibleModelIds: ["skmagic-acl15c1askwh"],
     searchKeywords: ["ACL15C1ASKWH 올인원 케어필터", "SK매직 올클린 필터"],
@@ -28,7 +28,8 @@ export const skmagicConsumableRecords: ConsumableRecord[] = [
   researchedPart({
     id: "skmagic-acl131-filter",
     type: "all-in-one-filter",
-    displayName: "SK매직 ACL131 정품 필터",
+    displayName: "SK매직 ACL131 올인원 케어필터",
+    compatibleProductName: "FLTACLP131WH · 코어 360° 공기청정기용",
     genuinePartNumber: "FLTACLP131WH",
     modelIds: ["skmagic-acl-131t0"],
     sourceTitle: "SK매직 공식몰 — ACL131 공기청정기 필터",
@@ -61,15 +62,38 @@ export const skmagicConsumableRecords: ConsumableRecord[] = [
     directUrl: "https://www.coupang.com/vp/products/8785883201",
     verifiedAt: "2026-08-23",
   }),
-  researchedPart({
-    id: "skmagic-acl130z-filter",
-    type: "all-in-one-filter",
-    displayName: "SK매직 ACL130P·ACL130Z 정품 필터",
-    genuinePartNumber: "FLTACL130PWH",
-    modelIds: ["skmagic-acl130z0skpn"],
-    sourceTitle: "SK매직 공식몰 — ACL130P·ACL130Z 공기청정기 필터",
-    sourceUrl: "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000056901",
-    searchKeyword: "SK매직 FLTACL130PWH 정품 필터",
-    purchaseUnavailable: true,
-  }),
+  ...[
+    {
+      id: "skmagic-acl130z-deodorizing-filter",
+      type: "deodorizing-filter" as const,
+      name: "활성탄 탈취필터",
+    },
+    {
+      id: "skmagic-acl130z-dust-filter",
+      type: "dust-filter" as const,
+      name: "초미세먼지 집진필터",
+    },
+  ].map(({ id, type, name }) => ({
+    ...researchedPart({
+      id,
+      type,
+      displayName: `SK매직 ACL130P·ACL130Z ${name}`,
+      compatibleProductName: "FLTACL130PWH 세트 상품 · 탈취필터 1개 + 집진필터 1개",
+      modelIds: ["skmagic-acl130z0skpn"],
+      sourceTitle: "SK매직 공식몰 — ACL130P·ACL130Z 탈취·집진 필터 패키지",
+      sourceUrl: "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000056901",
+      searchKeyword: `SK매직 ACL130Z ${name} FLTACL130PWH 세트`,
+      replacementInterval: "12개월 (사용 환경과 오염 상태에 따라 달라질 수 있음)",
+      verifiedAt: "2026-09-09",
+      secondarySources: [
+        {
+          title: "SK매직 공식 상세 안내 — 분리된 탈취·집진 필터 각 1개 및 권장 교체 주기",
+          url: "https://static.skmagic.com/image/editor/goods_desc/201909/1567476627829392.jpg",
+          sourceType: "manufacturer",
+        },
+      ],
+      purchaseUnavailable: true,
+    }),
+    purchaseWarning: `${domesticWarning} 탈취필터와 집진필터는 각각 교체하는 별도 부품입니다. FLTACL130PWH는 두 필터가 포함된 세트 상품번호이며, 세트 한 개로 두 소모품을 함께 교체할 수 있습니다.`,
+  })),
 ];

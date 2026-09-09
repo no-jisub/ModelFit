@@ -16,6 +16,7 @@ export default defineConfig({
     }),
   ],
   redirects: {
+    "/part/skmagic-acl130z-filter": "/model/skmagic/acl130z0skpn#compatible-parts",
     "/part/wells-aq107-filter-set": "/model/wells/aq107#compatible-parts",
     "/part/wells-al106-filter-set": "/model/wells/al106#compatible-parts",
     "/part/winix-zero-s-replacement-filter": "/model/winix/azse430-jwk#compatible-parts",
