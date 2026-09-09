@@ -97,6 +97,28 @@ describe("consumable product options", () => {
     expect(packagedParts.every((part) => !part.displayName.match(/[23]장/))).toBe(true);
   });
 
+  it("샤오미 X10+와 X20+의 물걸레 및 먼지봉투 주기를 혼용하지 않는다", () => {
+    const find = (id: string) => consumables.find((part) => part.id === id)!;
+    expect(find("xiaomi-x10-plus-mop-pad").replacementInterval).toMatch(/^1~3개월/);
+    expect(find("xiaomi-x20-plus-mop-pad").replacementInterval).toMatch(/^3~6개월/);
+    expect(find("xiaomi-x10-plus-dust-bag").replacementInterval).toContain("4~6주");
+    expect(find("xiaomi-x20-plus-dust-bag").replacementInterval).toMatch(/^약 2.5개월/);
+    expect(find("xiaomi-x10-plus-filter").sources[0].url).toContain("KA-11678");
+  });
+
+  it("샤오미 S20은 부품별 공식 번호를 제공하고 판매 수량을 부품명과 분리한다", () => {
+    const model = models.find((item) => item.id === "xiaomi-s20")!;
+    const parts = model.consumableIds.map((id) => consumables.find((part) => part.id === id)!);
+    expect(parts.map((part) => part.genuinePartNumber).sort()).toEqual([
+      "B106GL-BX",
+      "B112-CH",
+      "B112-ZS",
+      "D106-TB",
+    ]);
+    expect(parts.every((part) => part.compatibleProductName?.includes("개입"))).toBe(true);
+    expect(parts.every((part) => !part.displayName.includes("개입"))).toBe(true);
+  });
+
   it("SK매직 ACL20은 공식 일체형 필터 부품번호와 주기를 제공한다", () => {
     const model = models.find((item) => item.id === "skmagic-acl20c1askwh")!;
     const parts = model.consumableIds.map((id) => consumables.find((part) => part.id === id)!);
