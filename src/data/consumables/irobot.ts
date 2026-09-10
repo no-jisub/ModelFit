@@ -66,16 +66,42 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
   },
   ...(
     [
-      ["irobot-205-filter", "dust-bin-filter", "아이로봇 Roomba 205 DustCompactor 필터"],
-      ["irobot-205-main-brush", "main-brush", "아이로봇 Roomba 205 멀티서피스 러버 브러시"],
-      ["irobot-205-side-brush", "side-brush", "아이로봇 Roomba 205 엣지 스위핑 브러시"],
-      ["irobot-205-mop-pad", "mop-pad", "아이로봇 Roomba 205 세척형 물걸레 패드"],
+      [
+        "irobot-205-filter",
+        "dust-bin-filter",
+        "아이로봇 Roomba 205 DustCompactor 필터",
+        "Filter for Roomba 200 DustCompactor Series, 3-Pack",
+        "4849957",
+      ],
+      [
+        "irobot-205-main-brush",
+        "main-brush",
+        "아이로봇 Roomba 205 멀티서피스 러버 브러시",
+        "Multi-Surface Rubber Brush, 1개",
+        "4849902",
+      ],
+      [
+        "irobot-205-side-brush",
+        "side-brush",
+        "아이로봇 Roomba 205 엣지 스위핑 브러시",
+        "Edge-Sweeping Brush, 3-Pack",
+        "4837322",
+      ],
+      [
+        "irobot-205-mop-pad",
+        "mop-pad",
+        "아이로봇 Roomba 205 세척형 물걸레 패드",
+        "Washable Mop Pads, 3-Pack",
+        "4849958",
+      ],
     ] as const
-  ).map(([id, type, displayName]) =>
+  ).map(([id, type, displayName, compatibleProductName, genuinePartNumber]) =>
     researchedPart({
       id,
       type,
       displayName,
+      compatibleProductName,
+      genuinePartNumber,
       modelIds: ["irobot-205-dustcompactor"],
       sourceTitle: "iRobot 공식 Roomba 200 DustCompactor 액세서리 목록",
       sourceUrl:
@@ -83,6 +109,7 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
       sourceType: "official-store",
       searchKeyword: `${displayName} 정품`,
       regional: true,
+      verifiedAt: "2026-09-10",
     }),
   ),
   researchedPart({
@@ -97,7 +124,7 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
       "https://www.irobot.com/en_US/replacement-dirt-disposal-bags%252c-3-pack/4640235.html",
     searchKeyword: "iRobot 4640235 정품 먼지봉투",
     regional: true,
-    verifiedAt: "2026-08-04",
+    verifiedAt: "2026-09-10",
     secondarySources: [
       {
         title: "iRobot 공식 Combo 10 Max 시리즈 액세서리 호환표",
@@ -121,7 +148,7 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
       "https://www.irobot.com/en_US/dual-multi-surface-rubber-brushes-for-roomba-combo-and-roomba-e%2C-i%2C-and-j-series-and-roomba-combo-10-max/4639309.html",
     searchKeyword: "iRobot 4639309 정품 듀얼 고무 브러시",
     regional: true,
-    verifiedAt: "2026-08-04",
+    verifiedAt: "2026-09-10",
     secondarySources: [
       {
         title: "iRobot 공식 Combo 10 Max 시리즈 액세서리 호환표",
@@ -149,7 +176,7 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
       "https://www.irobot.com/en_US/edge-sweeping-brush-3-pack-for-roomba-combo-and-roomba-i%2C-e-and-j-series-and-roomba-combo-10-max/4757625.html",
     searchKeyword: "iRobot 4757625 정품 엣지 브러시",
     regional: true,
-    verifiedAt: "2026-08-04",
+    verifiedAt: "2026-09-10",
     secondarySources: [
       {
         title: "iRobot 공식 Combo 10 Max 시리즈 액세서리 호환표",
@@ -170,12 +197,14 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
     type: "mop-pad",
     displayName: "iRobot Roomba Combo j9+ 세척형 물걸레 패드",
     compatibleProductName: "Washable Cleaning Pad, 2-Pack",
+    genuinePartNumber: "4785885",
     modelIds: ["irobot-combo-j9-plus"],
     sourceTitle: "iRobot 공식 Combo j9 시리즈 — 세척형 클리닝 패드",
-    sourceUrl: "https://www.irobot.com/en_US/roomba-combo-j9plus",
+    sourceUrl:
+      "https://www.irobot.com/en_US/roomba-combo-j-series-washable-cleaning-pad%252c-2-pack/4785885.html",
     searchKeyword: "iRobot Roomba Combo j9+ 정품 물걸레 패드",
     regional: true,
-    verifiedAt: "2026-08-04",
+    verifiedAt: "2026-09-10",
     secondarySources: [
       {
         title: "iRobot 공식 전체 액세서리 목록 — Combo j9+ 세척형 패드",
@@ -187,14 +216,15 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
     id: "irobot-combo-i5-mopping-kit",
     type: "mop-pad",
     displayName: "iRobot Roomba Combo i5 물걸레 보충 키트",
-    compatibleProductName: "Roomba Combo j5 & i5 Mopping Replenishment Kit",
+    compatibleProductName: "Roomba Combo j5 & i5 Mopping Replenishment Kit (패드 2개·심지 4개)",
+    genuinePartNumber: "4822643",
     modelIds: ["irobot-combo-i5"],
     sourceTitle: "iRobot 공식 Combo i5 시리즈 — 물걸레 보충 키트",
     sourceUrl:
       "https://www.irobot.com/en_US/us/robot-vacuum-plus-mop-accessories/roomba-combo-i5-series",
     searchKeyword: "iRobot Roomba Combo i5 정품 물걸레 키트",
     regional: true,
-    verifiedAt: "2026-08-04",
+    verifiedAt: "2026-09-10",
     secondarySources: [
       {
         title: "iRobot 공식 전체 액세서리 목록 — Combo i5 보충 키트",

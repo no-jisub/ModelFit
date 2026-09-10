@@ -87,6 +87,15 @@ describe("consumable product options", () => {
     expect(filter.compatibleProductName).toContain("2개입 1세트");
     expect(filter.sources[0].url).toContain("productNo=7461");
   });
+  it("아이로봇 205와 Combo 물걸레 부품은 공식 수량과 부품번호를 제공한다", () => {
+    const find = (id: string) => consumables.find((part) => part.id === id)!;
+    expect(find("irobot-205-filter").compatibleProductName).toContain("3-Pack");
+    expect(find("irobot-205-main-brush").compatibleProductName).toContain("1개");
+    expect(find("irobot-205-side-brush").genuinePartNumber).toBe("4837322");
+    expect(find("irobot-205-mop-pad").genuinePartNumber).toBe("4849958");
+    expect(find("irobot-combo-j9-washable-mop-pad").genuinePartNumber).toBe("4785885");
+    expect(find("irobot-combo-i5-mopping-kit").compatibleProductName).toContain("심지 4개");
+  });
   it("에브리봇 걸레는 부품명과 판매 수량을 분리한다", () => {
     const parts = consumables.filter(
       (part) => part.id.startsWith("everybot-") && part.type === "mop-pad",
