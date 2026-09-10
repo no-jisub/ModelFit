@@ -129,6 +129,19 @@ describe("consumable product options", () => {
     ]);
     expect([...q11, ...q9].every((part) => part.sources[0].checkedAt === "2026-09-10")).toBe(true);
   });
+  it("유피 C20·X10 Pro·C28·S2는 공식 키트 수량과 모델별 교체 주기를 분리한다", () => {
+    const find = (id: string) => consumables.find((part) => part.id === id)!;
+    expect(find("eufy-c20-dust-bag").compatibleProductName).toContain("6-Pack");
+    expect(find("eufy-c20-washable-filter").compatibleProductName).toContain("필터 2개");
+    expect(find("eufy-x10-pro-side-brush").genuinePartNumber).toBe("T29A1031");
+    expect(find("eufy-x10-pro-filter").replacementInterval).toMatch(/^약 3개월/);
+    expect(find("eufy-x10-pro-main-brush").replacementInterval).toMatch(/^약 6개월/);
+    expect(find("eufy-x10-pro-dust-bag").compatibleProductName).toContain("6개입");
+    expect(find("eufy-c28-dust-bag").compatibleProductName).toContain("3개");
+    expect(find("eufy-c28-roller-mop").replacementInterval).toMatch(/^약 6개월/);
+    expect(find("eufy-s2-side-brush").compatibleProductName).toContain("2쌍");
+    expect(find("eufy-s2-filter").sources[0].url).toContain("t291n110");
+  });
   it("샤오미 X10+와 X20+의 물걸레 및 먼지봉투 주기를 혼용하지 않는다", () => {
     const find = (id: string) => consumables.find((part) => part.id === id)!;
     expect(find("xiaomi-x10-plus-mop-pad").replacementInterval).toMatch(/^1~3개월/);
