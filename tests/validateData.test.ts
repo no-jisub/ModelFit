@@ -149,7 +149,7 @@ describe("data validation", () => {
           part?.verificationStatus === "official" &&
           part.sources.length >= 2 &&
           part.sources.every(
-            (source) => source.url.startsWith("https://") && source.checkedAt === "2026-08-04",
+            (source) => source.url.startsWith("https://") && source.checkedAt >= "2026-08-04",
           ),
       ),
     ).toBe(true);

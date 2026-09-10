@@ -1,3 +1,12 @@
+# 2026-09-10 로보락 후속 검증
+
+- 대상 모델 5종: Saros Z70, S10 MaxV Ultra, S8 MaxV Ultra, Qrevo Curv 2 Flow, Qrevo Curv.
+- Saros·Qrevo Curv·S8 MaxV Ultra 공용 공식 먼지봉투는 6개입으로 표시했다.
+- Saros Z70은 공식 제품 페이지에서 메인 브러시 1개, 세척형 필터 2개입, 물걸레 4개입 및 Saros 계열 사이드 브러시를 확인했다.
+- S10 MaxV Ultra는 국내 공식 제품 페이지에서 DuoDivide 메인 브러시, FlexiArm 아크 사이드 브러시, VibraRise 5.0 물걸레, RockDock 먼지봉투 명칭만 확인했다. 별도 판매 수량과 교체 주기는 추정하지 않고 구매 링크를 준비 중으로 유지한다.
+
+---
+
 # 2026-09-10 블루에어 후속 검증
 
 - 대상 모델 5종: Classic Pro CP7i·CP9i, DustMagnet 5210i·5240i, Blue 3410.

@@ -166,6 +166,20 @@ describe("consumable product options", () => {
     expect(blue3410.replacementInterval).toMatch(/^약 6개월/);
     expect(blue3410.purchaseWarning).toContain("패브릭 프리필터");
   });
+  it("로보락은 공용 먼지봉투와 Saros Z70 교체품 수량을 구분한다", () => {
+    const dustBag = consumables.find((part) => part.id === "roborock-saros-qrevo-s8-dust-bag")!;
+    const saros = models.find((model) => model.id === "roborock-saros-z70")!;
+    const parts = saros.consumableIds.map((id) => consumables.find((part) => part.id === id)!);
+
+    expect(dustBag.compatibleProductName).toContain("6개입");
+    expect(dustBag.compatibleModelIds).toHaveLength(4);
+    expect(parts.find((part) => part.id.endsWith("-filter"))?.compatibleProductName).toContain(
+      "2개입",
+    );
+    expect(parts.find((part) => part.id.endsWith("-mop-cloth"))?.compatibleProductName).toContain(
+      "4개입",
+    );
+  });
   it("모든 소모품에 최소 한 개의 정품 기준 상품을 제공한다", () => {
     expect(
       consumables.every(
