@@ -45,41 +45,44 @@ export const everybotConsumableRecords: ConsumableRecord[] = [
   },
   ...(
     [
-      ["everybot-q11-filter", "dust-bin-filter", "에브리봇 Q11 HEPA 필터"],
-      ["everybot-q11-main-brush", "main-brush", "에브리봇 Q11 메인 브러시"],
-      ["everybot-q11-side-brush", "side-brush", "에브리봇 Q11 사이드 브러시"],
-      ["everybot-q11-mop-pad", "mop-pad", "에브리봇 Q11 전용 걸레"],
-      ["everybot-q11-dust-bag", "dust-bag", "에브리봇 Q11 먼지봉투"],
+      ["everybot-q11-filter", "dust-bin-filter", "에브리봇 Q11 HEPA 필터", "HEPA필터 2개입"],
+      ["everybot-q11-main-brush", "main-brush", "에브리봇 Q11 메인 브러시", "메인브러시 1개"],
+      ["everybot-q11-side-brush", "side-brush", "에브리봇 Q11 사이드 브러시", "사이드브러시 2개입"],
+      ["everybot-q11-mop-pad", "mop-pad", "에브리봇 Q11 전용 걸레", "전용 걸레 4매입"],
+      ["everybot-q11-dust-bag", "dust-bag", "에브리봇 Q11 먼지봉투", "먼지봉투 3개입"],
     ] as const
-  ).map(([id, type, displayName]) =>
+  ).map(([id, type, displayName, compatibleProductName]) =>
     researchedPart({
       id,
       type,
       displayName,
+      compatibleProductName,
       modelIds: ["everybot-q11"],
       sourceTitle: "에브리봇 공식몰 — Q11 정품 추가 구성품",
-      sourceUrl: "https://everybotmall.com/product/%241/295/",
+      sourceUrl: "https://everybotmall.com/category/q11/161/",
       searchKeyword: `${displayName} 정품`,
+      verifiedAt: "2026-09-10",
     }),
   ),
   ...(
     [
-      ["everybot-q9-filter", "dust-bin-filter", "에브리봇 Q9 HEPA 필터"],
-      ["everybot-q9-main-brush", "main-brush", "에브리봇 Q9 메인 브러시"],
-      ["everybot-q9-side-brush", "side-brush", "에브리봇 Q9 사이드 브러시"],
-      ["everybot-q9-mop-pad", "mop-pad", "에브리봇 Q9 전용 걸레"],
-      ["everybot-q9-dust-bag", "dust-bag", "에브리봇 Q9 먼지봉투"],
+      ["everybot-q9-filter", "dust-bin-filter", "에브리봇 Q9 HEPA 필터", "HEPA필터 2개입"],
+      ["everybot-q9-main-brush", "main-brush", "에브리봇 Q9 메인 브러시", "메인브러시 1개"],
+      ["everybot-q9-side-brush", "side-brush", "에브리봇 Q9 사이드 브러시", "사이드브러시 2개입"],
+      ["everybot-q9-mop-pad", "mop-pad", "에브리봇 Q9 전용 걸레", "전용 걸레 2세트(4매입)"],
+      ["everybot-q9-dust-bag", "dust-bag", "에브리봇 Q9 먼지봉투", "먼지봉투 3개입"],
     ] as const
-  ).map(([id, type, displayName]) =>
+  ).map(([id, type, displayName, compatibleProductName]) =>
     researchedPart({
       id,
       type,
       displayName,
+      compatibleProductName,
       modelIds: ["everybot-q9"],
       sourceTitle: "에브리봇 공식몰 — Q9 정품 추가 구성품",
-      sourceUrl:
-        "https://everybotmall.com/product/%EA%B0%95%EC%84%B8%EC%9D%BC-%EC%97%90%EB%B8%8C%EB%A6%AC%EB%B4%87-ai-%EC%98%AC%EC%9D%B8%EC%9B%90-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0-q9/231",
+      sourceUrl: "https://everybotmall.com/category/q9/135/",
       searchKeyword: `${displayName} 정품`,
+      verifiedAt: "2026-09-10",
     }),
   ),
   ...(

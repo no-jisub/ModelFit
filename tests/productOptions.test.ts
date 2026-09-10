@@ -100,12 +100,35 @@ describe("consumable product options", () => {
     const parts = consumables.filter(
       (part) => part.id.startsWith("everybot-") && part.type === "mop-pad",
     );
-    const packagedParts = parts.filter((part) => part.compatibleProductName?.match(/[23]장/));
+    const packagedParts = parts.filter((part) =>
+      part.compatibleProductName?.match(/[234](?:개입|매입|장|세트)/),
+    );
 
-    expect(packagedParts).toHaveLength(4);
-    expect(packagedParts.every((part) => !part.displayName.match(/[23]장/))).toBe(true);
+    expect(packagedParts).toHaveLength(6);
+    expect(
+      packagedParts.every((part) => !part.displayName.match(/[234](?:개입|매입|장|세트)/)),
+    ).toBe(true);
   });
 
+  it("에브리봇 Q11과 Q9는 공식 판매 구성 수량을 모델별로 제공한다", () => {
+    const q11 = consumables.filter((part) => part.id.startsWith("everybot-q11-"));
+    const q9 = consumables.filter((part) => part.id.startsWith("everybot-q9-"));
+    expect(q11.map((part) => part.compatibleProductName)).toEqual([
+      "HEPA필터 2개입",
+      "메인브러시 1개",
+      "사이드브러시 2개입",
+      "전용 걸레 4매입",
+      "먼지봉투 3개입",
+    ]);
+    expect(q9.map((part) => part.compatibleProductName)).toEqual([
+      "HEPA필터 2개입",
+      "메인브러시 1개",
+      "사이드브러시 2개입",
+      "전용 걸레 2세트(4매입)",
+      "먼지봉투 3개입",
+    ]);
+    expect([...q11, ...q9].every((part) => part.sources[0].checkedAt === "2026-09-10")).toBe(true);
+  });
   it("샤오미 X10+와 X20+의 물걸레 및 먼지봉투 주기를 혼용하지 않는다", () => {
     const find = (id: string) => consumables.find((part) => part.id === id)!;
     expect(find("xiaomi-x10-plus-mop-pad").replacementInterval).toMatch(/^1~3개월/);
