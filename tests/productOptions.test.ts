@@ -232,6 +232,38 @@ describe("consumable product options", () => {
     expect(sharedDustBag.compatibleProductName).toContain("6개입");
     expect(sharedDustBag.replacementInterval).toMatch(/^2~3개월/);
   });
+  it("나르왈 Freo는 Z10·Z Ultra와 X Ultra 먼지봉투 규격을 분리한다", () => {
+    const z10 = models.find((item) => item.id === "narwal-freo-z10")!;
+    const xUltra = models.find((item) => item.id === "narwal-freo-x-ultra")!;
+    const zSeriesBag = consumables.find((part) => part.id === "narwal-freo-dust-bag")!;
+    const xUltraBag = consumables.find((part) => part.id === "narwal-freo-x-ultra-dust-bag")!;
+
+    expect(z10.consumableIds).toContain("narwal-freo-z10-side-brush");
+    expect(xUltra.consumableIds).toContain("narwal-freo-x-ultra-dust-bag");
+    expect(zSeriesBag.compatibleProductName).toContain("2개입");
+    expect(xUltraBag.compatibleProductName).toContain("3개입");
+    expect(zSeriesBag.purchaseWarning).toContain("혼용하지 마세요");
+  });
+
+  it("나르왈 Flow는 공식 세트 수량과 부품별 교체 주기를 제공한다", () => {
+    const model = models.find((item) => item.id === "narwal-flow")!;
+    const parts = model.consumableIds.map((id) => consumables.find((part) => part.id === id)!);
+
+    expect(parts.map((part) => part.compatibleProductName)).toEqual([
+      "Flow Accessories Set · Dust Bin HEPA Filter · 2개",
+      "Flow Accessories Set · Zero-Tangling Roller Brush · 1개",
+      "Flow Accessories Set · Detangling Side Brush · 2개",
+      "Flow Accessories Set · Track Mop · 2개",
+      "Flow Accessories Set · Base Station Dust Bag · 3개",
+    ]);
+    expect(parts.map((part) => part.replacementInterval)).toEqual([
+      "3개월마다 (제조사 권장, 마모 상태에 따라 달라짐)",
+      "6개월마다 (제조사 권장, 마모 상태에 따라 달라짐)",
+      "3개월마다 (제조사 권장, 마모 상태에 따라 달라짐)",
+      "1~3개월마다 (제조사 권장, 마모 상태에 따라 달라짐)",
+      "최대 120일 (사용량과 봉투 상태에 따라 달라짐)",
+    ]);
+  });
   it("모든 소모품에 최소 한 개의 정품 기준 상품을 제공한다", () => {
     expect(
       consumables.every(

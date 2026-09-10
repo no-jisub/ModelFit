@@ -203,6 +203,7 @@ export const modelConsumableIds: Record<string, string[]> = {
     "narwal-freo-zero-tangle-roller",
     "narwal-freo-dustbin-filter",
     "narwal-freo-dust-bag",
+    "narwal-freo-z10-side-brush",
   ],
   "narwal-freo-z-ultra": [
     "narwal-freo-mop-pad",
@@ -216,6 +217,7 @@ export const modelConsumableIds: Record<string, string[]> = {
     "narwal-freo-zero-tangle-roller",
     "narwal-freo-dustbin-filter",
     "narwal-freo-side-brush",
+    "narwal-freo-x-ultra-dust-bag",
   ],
   "narwal-freo": ["narwal-freo-mop-pad", "narwal-freo-side-brush"],
 

@@ -74,6 +74,8 @@ const consumableOrder = [
   "narwal-freo-dustbin-filter",
   "narwal-freo-side-brush",
   "narwal-freo-dust-bag",
+  "narwal-freo-z10-side-brush",
+  "narwal-freo-x-ultra-dust-bag",
   "irobot-combo-j-high-efficiency-filter",
   "irobot-i-e-j-high-efficiency-filter",
   "irobot-105-filter",
