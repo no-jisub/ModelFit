@@ -175,12 +175,15 @@ export const modelConsumableIds: Record<string, string[]> = {
     "ecovacs-x9-t80-filter",
     "ecovacs-x9-t80-dust-bag",
     "ecovacs-x9-t80-roller-mop",
+    "ecovacs-x9-main-brush",
+    "ecovacs-x9-side-brush",
   ],
   "ecovacs-deebot-t80": [
     "ecovacs-x9-t80-filter",
     "ecovacs-x9-t80-dust-bag",
     "ecovacs-x9-t80-roller-mop",
     "ecovacs-t80-main-brush",
+    "ecovacs-t80-side-brush",
   ],
   "ecovacs-deebot-n20-pro-plus": [
     "ecovacs-n20-main-brush",

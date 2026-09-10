@@ -209,6 +209,29 @@ describe("consumable product options", () => {
       true,
     );
   });
+  it("에코백스 N20은 Buddy Kit의 부품별 수량을 표시한다", () => {
+    const model = models.find((item) => item.id === "ecovacs-deebot-n20-pro-plus")!;
+    const parts = model.consumableIds.map((id) => consumables.find((part) => part.id === id)!);
+
+    expect(parts.map((part) => part.compatibleProductName)).toEqual([
+      "N20 PRO PLUS Buddy Kit · Main Brush ×1",
+      "N20 PRO PLUS Buddy Kit · Side Brush ×4",
+      "N20 PRO PLUS Buddy Kit · Filter ×3",
+    ]);
+  });
+
+  it("에코백스 X9와 T80은 각 모델용 메인·사이드 브러시를 제공한다", () => {
+    const x9 = models.find((item) => item.id === "ecovacs-deebot-x9")!;
+    const t80 = models.find((item) => item.id === "ecovacs-deebot-t80")!;
+    const sharedDustBag = consumables.find((part) => part.id === "ecovacs-x9-t80-dust-bag")!;
+
+    expect(x9.consumableIds).toContain("ecovacs-x9-main-brush");
+    expect(x9.consumableIds).toContain("ecovacs-x9-side-brush");
+    expect(t80.consumableIds).toContain("ecovacs-t80-main-brush");
+    expect(t80.consumableIds).toContain("ecovacs-t80-side-brush");
+    expect(sharedDustBag.compatibleProductName).toContain("6개입");
+    expect(sharedDustBag.replacementInterval).toMatch(/^2~3개월/);
+  });
   it("모든 소모품에 최소 한 개의 정품 기준 상품을 제공한다", () => {
     expect(
       consumables.every(
