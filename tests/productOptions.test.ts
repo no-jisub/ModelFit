@@ -180,6 +180,35 @@ describe("consumable product options", () => {
       "4개입",
     );
   });
+  it("드리미 X40 Ultra는 공식 키트의 부품별 판매 수량을 표시한다", () => {
+    const model = models.find((item) => item.id === "dreame-x40-ultra")!;
+    const parts = model.consumableIds.map((id) => consumables.find((part) => part.id === id)!);
+
+    expect(parts.map((part) => part.compatibleProductName)).toEqual([
+      "X40 Ultra Accessory Cleaning Kit · Main Brush ×1",
+      "X40 Ultra Accessory Cleaning Kit · Side Brush ×2",
+      "X40 Ultra Accessory Cleaning Kit · Dust Collection Bag ×2",
+      "X40 Ultra Accessory Cleaning Kit · Dust Box Filter ×2",
+      "X40 Ultra Accessory Cleaning Kit · Wash-free Mop Pad ×6",
+    ]);
+    expect(parts.every((part) => part.purchaseWarning?.includes("키트 한 세트"))).toBe(true);
+  });
+
+  it("드리미 X50s Pro는 Master와 Ultra의 스테이션 차이를 안내한다", () => {
+    const parts = consumables.filter((part) => part.id.startsWith("dreame-x50s-"));
+
+    expect(parts).toHaveLength(5);
+    expect(
+      parts.every(
+        (part) =>
+          part.compatibleModelIds.includes("dreame-x50s-pro-master") &&
+          part.compatibleModelIds.includes("dreame-x50s-pro-ultra"),
+      ),
+    ).toBe(true);
+    expect(parts.every((part) => part.purchaseWarning?.includes("스테이션 형태가 다릅니다"))).toBe(
+      true,
+    );
+  });
   it("모든 소모품에 최소 한 개의 정품 기준 상품을 제공한다", () => {
     expect(
       consumables.every(

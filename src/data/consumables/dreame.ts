@@ -1,5 +1,6 @@
 import {
   affiliate,
+  domesticWarning,
   regionalWarning,
   researchedPart,
   source,
@@ -25,40 +26,73 @@ export const dreameConsumableRecords: ConsumableRecord[] = [
     slug: id,
     type,
     displayName,
-    compatibleProductName: `X40 Ultra Accessory Cleaning Kit 포함 ${compatibleProductName}`,
+    compatibleProductName: `X40 Ultra Accessory Cleaning Kit · ${compatibleProductName}`,
     compatibleModelIds: ["dreame-x40-ultra"],
     searchKeywords: ["Dreame X40 Ultra Accessory Cleaning Kit", displayName],
-    purchaseWarning: regionalWarning,
+    purchaseWarning: `${regionalWarning} 표시 수량은 X40 Ultra/L40 Ultra 공식 액세서리 키트 한 세트의 구성입니다.`,
     verificationStatus: "official" as const,
     sources: [
       source(
-        "Dreame 공식몰 — X40 Ultra 액세서리 클리닝 키트 구성과 호환 모델",
+        "Dreame 공식몰 — X40 Ultra/L40 Ultra 액세서리 키트 구성",
         "https://www.dreametech.com/products/x40-ultra-accessory-cleaning-kit",
+        "official-store",
+        "2026-09-10",
       ),
     ],
-    affiliate: affiliate(`${displayName} 정품`),
+    affiliate: affiliate(`${displayName} 정품`, undefined, "2026-09-10"),
   })),
   ...(
     [
-      ["dreame-x50s-main-brush", "main-brush", "드리미 X50s Pro 메인 브러시"],
-      ["dreame-x50s-side-brush", "side-brush", "드리미 X50s Pro 사이드 브러시"],
-      ["dreame-x50s-dust-box-filter", "dust-bin-filter", "드리미 X50s Pro 먼지통 필터"],
-      ["dreame-x50s-mop-pad", "mop-pad", "드리미 X50s Pro 물걸레 패드"],
-      ["dreame-x50s-dust-bag", "dust-bag", "드리미 X50s Pro 먼지봉투"],
+      [
+        "dreame-x50s-main-brush",
+        "main-brush",
+        "드리미 X50s Pro 메인 브러시",
+        "X50s Pro 메인 브러시",
+      ],
+      [
+        "dreame-x50s-side-brush",
+        "side-brush",
+        "드리미 X50s Pro 사이드 브러시",
+        "X50s Pro 사이드 브러시",
+      ],
+      [
+        "dreame-x50s-dust-box-filter",
+        "dust-bin-filter",
+        "드리미 X50s Pro 먼지통 필터",
+        "X50s Pro 먼지통 필터",
+      ],
+      ["dreame-x50s-mop-pad", "mop-pad", "드리미 X50s Pro 물걸레 패드", "X50s Pro 물걸레 패드"],
+      [
+        "dreame-x50s-dust-bag",
+        "dust-bag",
+        "드리미 X50s Pro 먼지봉투",
+        "X50s Pro 스테이션 먼지봉투",
+      ],
     ] as const
-  ).map(([id, type, displayName]) =>
-    researchedPart({
+  ).map(([id, type, displayName, compatibleProductName]) => ({
+    ...researchedPart({
       id,
       type,
       displayName,
+      compatibleProductName,
       modelIds: ["dreame-x50s-pro-master", "dreame-x50s-pro-ultra"],
-      sourceTitle: "드리미 코리아 공식 X50s Pro 제품 및 구성품 안내",
+      sourceTitle: "드리미 코리아 공식 X50s Pro Ultra 제품 및 구성품 안내",
       sourceUrl:
         "https://store.kr.dreametech.com/products/%EB%93%9C%EB%A6%AC%EB%AF%B8-x50s-pro-ultra-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0",
       sourceType: "manufacturer",
       searchKeyword: `${displayName} 정품`,
+      verifiedAt: "2026-09-10",
+      secondarySources: [
+        {
+          title: "드리미 코리아 공식 X50s Pro Master 제품 및 Master·Ultra 차이 안내",
+          url: "https://store.kr.dreametech.com/products/%EB%93%9C%EB%A6%AC%EB%AF%B8-x50s-pro-master-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0",
+          sourceType: "manufacturer",
+        },
+      ],
+      purchaseUnavailable: true,
     }),
-  ),
+    purchaseWarning: `${domesticWarning} X50s Pro Master와 Ultra는 로봇 본체 사양은 같지만 스테이션 형태가 다릅니다. 구매 직전 판매 페이지에 두 모델 중 사용하는 모델이 명시됐는지 확인하세요.`,
+  })),
   ...(
     [
       ["dreame-x40s-main-brush", "main-brush", "드리미 X40s Pro Ultra 메인 브러시"],
@@ -72,11 +106,14 @@ export const dreameConsumableRecords: ConsumableRecord[] = [
       id,
       type,
       displayName,
+      compatibleProductName: displayName.replace("드리미 ", ""),
       modelIds: ["dreame-x40s-pro-ultra"],
-      sourceTitle: "드리미 코리아 공식 X40s Pro Ultra 제품 안내",
+      sourceTitle: "드리미 코리아 공식 X40 시리즈 — X40s Pro Ultra 제품 안내",
       sourceUrl: "https://kr.dreametech.com/products?category=15",
       sourceType: "manufacturer",
       searchKeyword: `${displayName} 정품`,
+      verifiedAt: "2026-09-10",
+      purchaseUnavailable: true,
     }),
   ),
   ...(
@@ -91,12 +128,15 @@ export const dreameConsumableRecords: ConsumableRecord[] = [
       id,
       type,
       displayName,
+      compatibleProductName: displayName.replace("드리미 ", ""),
       modelIds: ["dreame-l10s-pro-ultra-heat"],
       sourceTitle: "드리미 공식 L10s Pro Ultra Heat 제품 구성",
       sourceUrl: "https://global.dreametech.com/products/l10s-pro-ultra",
       sourceType: "manufacturer",
       searchKeyword: `${displayName} 정품`,
       regional: true,
+      verifiedAt: "2026-09-10",
+      purchaseUnavailable: true,
     }),
   ),
 ];

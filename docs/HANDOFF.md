@@ -1,3 +1,12 @@
+# 2026-09-10 드리미 후속 검증
+
+- 대상 모델 5종: X50s Pro Master·Ultra, X40 Ultra, X40s Pro Ultra, L10s Pro Ultra Heat.
+- X40 Ultra 공식 액세서리 키트는 메인 브러시 1개, 사이드 브러시 2개, 먼지봉투 2개, 먼지통 필터 2개, 물걸레 패드 6개 구성으로 표시했다.
+- X50s Pro Master와 Ultra는 국내 공식 FAQ에서 로봇 본체 사양이 같고 스테이션 방식이 다름을 확인했다. 모든 구매 안내에 사용하는 세부 모델을 다시 확인하도록 표시했다.
+- X40s Pro Ultra와 L10s Pro Ultra Heat는 공식 제품 페이지에서 부품 종류만 확인했다. 공식 개별 판매 수량과 교체 주기는 추정하지 않고 구매 링크를 준비 중으로 유지한다.
+
+---
+
 # 2026-09-10 로보락 후속 검증
 
 - 대상 모델 5종: Saros Z70, S10 MaxV Ultra, S8 MaxV Ultra, Qrevo Curv 2 Flow, Qrevo Curv.
