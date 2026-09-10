@@ -141,6 +141,31 @@ describe("consumable product options", () => {
     expect(parts[0].replacementInterval).toMatch(/^12개월/);
     expect(parts[0].sources[0].url).toContain("goodsId=G000066078");
   });
+  it("블루에어 Classic Pro는 CP7i 2개입과 CP9i 3개 장착을 구분한다", () => {
+    const cp7 = consumables.find((part) => part.id === "blueair-cp7i-pac-filter")!;
+    const cp9 = consumables.find((part) => part.id === "blueair-cp9i-main-filter")!;
+
+    expect(cp7.compatibleProductName).toContain("2개입");
+    expect(cp7.replacementInterval).toMatch(/^최대 1년/);
+    expect(cp7.purchaseWarning).toContain("메인 필터 2개");
+    expect(cp9.compatibleProductName).toContain("3개 장착");
+    expect(cp9.replacementInterval).toMatch(/^최대 1년/);
+    expect(cp9.purchaseWarning).toContain("CP7i용 2개입");
+  });
+
+  it("블루에어 DustMagnet과 Blue 3410의 필터 수량·주기를 구분한다", () => {
+    const dustMagnet = consumables.find(
+      (part) => part.id === "blueair-dustmagnet-5200-combofilter",
+    )!;
+    const blue3410 = consumables.find((part) => part.id === "blueair-3410-particle-carbon-filter")!;
+
+    expect(dustMagnet.compatibleModelIds).toEqual(["blueair-5240i", "blueair-5210i"]);
+    expect(dustMagnet.compatibleProductName).toContain("교체 필터 1개");
+    expect(dustMagnet.replacementInterval).toMatch(/^최대 9개월/);
+    expect(blue3410.compatibleProductName).toContain("메인 필터 1개");
+    expect(blue3410.replacementInterval).toMatch(/^약 6개월/);
+    expect(blue3410.purchaseWarning).toContain("패브릭 프리필터");
+  });
   it("모든 소모품에 최소 한 개의 정품 기준 상품을 제공한다", () => {
     expect(
       consumables.every(
