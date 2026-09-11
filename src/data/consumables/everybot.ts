@@ -61,7 +61,7 @@ export const everybotConsumableRecords: ConsumableRecord[] = [
       sourceTitle: "에브리봇 공식몰 — Q11 정품 추가 구성품",
       sourceUrl: "https://everybotmall.com/category/q11/161/",
       searchKeyword: `${displayName} 정품`,
-      verifiedAt: "2026-09-10",
+      verifiedAt: "2026-09-11",
     }),
   ),
   ...(
@@ -82,7 +82,7 @@ export const everybotConsumableRecords: ConsumableRecord[] = [
       sourceTitle: "에브리봇 공식몰 — Q9 정품 추가 구성품",
       sourceUrl: "https://everybotmall.com/category/q9/135/",
       searchKeyword: `${displayName} 정품`,
-      verifiedAt: "2026-09-10",
+      verifiedAt: "2026-09-11",
     }),
   ),
   ...(
@@ -99,7 +99,7 @@ export const everybotConsumableRecords: ConsumableRecord[] = [
       sourceTitle: "에브리봇 공식몰 — Q3·Q3 Plus 정품 액세서리",
       sourceUrl: "https://everybotmall.com/category/q3-q3q3-plus/139/",
       searchKeyword: `${displayName} 정품`,
-      verifiedAt: "2026-08-07",
+      verifiedAt: "2026-09-11",
     }),
   ),
   researchedPart({
@@ -112,7 +112,7 @@ export const everybotConsumableRecords: ConsumableRecord[] = [
     sourceUrl:
       "https://everybotmall.com/product/%EC%97%90%EB%B8%8C%EB%A6%AC%EB%B4%87-%EB%AC%BC%EA%B1%B8%EB%A0%88-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0-%EA%B7%B9%EC%84%B8%EC%82%AC%EA%B1%B8%EB%A0%883%EC%9E%A5/219/",
     searchKeyword: "에브리봇 쓰리스핀 EVO 극세사 걸레 3장 정품",
-    verifiedAt: "2026-08-03",
+    verifiedAt: "2026-09-11",
   }),
   researchedPart({
     id: "everybot-three-spin-yarn-mop",
@@ -124,7 +124,7 @@ export const everybotConsumableRecords: ConsumableRecord[] = [
     sourceUrl:
       "https://everybotmall.com/product/%EC%97%90%EB%B8%8C%EB%A6%AC%EB%B4%87-%EB%AC%BC%EA%B1%B8%EB%A0%88-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0-%EB%B6%84%EC%84%AC%EC%82%AC%EA%B1%B8%EB%A0%883%EC%9E%A5/209/",
     searchKeyword: "에브리봇 쓰리스핀 EVO 분섬사 걸레 3장 정품",
-    verifiedAt: "2026-08-03",
+    verifiedAt: "2026-09-11",
   }),
   researchedPart({
     id: "everybot-three-spin-disposable-sheet",
@@ -136,6 +136,6 @@ export const everybotConsumableRecords: ConsumableRecord[] = [
     sourceUrl:
       "https://everybotmall.com/product/%EC%97%90%EB%B8%8C%EB%A6%AC%EB%B4%87-%EB%AC%BC%EA%B1%B8%EB%A0%88-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0-%EC%9D%BC%ED%9A%8C%EC%9A%A9-%EC%B2%AD%EC%86%8C%ED%8F%AC30%EB%A7%A4/93/",
     searchKeyword: "에브리봇 쓰리스핀 EVO 일회용 청소포 30매 정품",
-    verifiedAt: "2026-08-03",
+    verifiedAt: "2026-09-11",
   }),
 ];

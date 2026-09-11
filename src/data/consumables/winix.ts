@@ -48,7 +48,7 @@ export const winixConsumableRecords: ConsumableRecord[] = [
       sourceUrl: url,
       searchKeyword: "위닉스 AZSE430-JWK " + number + " 정품 필터",
       replacementInterval: "약 6~12개월 (하루 24시간 사용 기준, 사용 환경에 따라 달라짐)",
-      verifiedAt: "2026-09-06",
+      verifiedAt: "2026-09-11",
       secondarySources: [
         {
           title: "위닉스 AZSE430 시리즈 공식 설명서 — 교체 필터와 관리 방법 (16~20쪽)",
@@ -72,7 +72,7 @@ export const winixConsumableRecords: ConsumableRecord[] = [
     sourceType: "manufacturer",
     searchKeyword: "위닉스 AT8E430-MWK 정품 올인원 필터",
     directUrl: "https://www.coupang.com/vp/products/7368403017",
-    verifiedAt: "2026-08-23",
+    verifiedAt: "2026-09-11",
   }),
   researchedPart({
     id: "winix-tower-prime-all-in-one-filter",
@@ -85,7 +85,7 @@ export const winixConsumableRecords: ConsumableRecord[] = [
     sourceType: "official-store",
     searchKeyword: "위닉스 APRM833-JWK 정품 일체형 필터",
     directUrl: "https://www.coupang.com/vp/products/8692963466",
-    verifiedAt: "2026-09-06",
+    verifiedAt: "2026-09-11",
   }),
   researchedPart({
     id: "winix-master-s-all-in-one-filter",

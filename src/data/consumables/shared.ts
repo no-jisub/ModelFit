@@ -1,6 +1,6 @@
 import type { ConsumableCompatibility, SourceReference } from "@/types";
 
-const checkedAt = "2026-07-29";
+const checkedAt = "2026-09-11";
 export const regionalWarning =
   "제조사 공식 자료로 호환 모델을 확인했습니다. 국가별 판매 구성이나 부품 사양이 다를 수 있으므로 구매 직전 제품 라벨의 모델명과 판매 페이지의 적용 모델을 다시 대조하세요. 쿠팡 상품명만으로 정품을 단정하지 말고 판매자와 제조사 표기도 확인하세요.";
 export const domesticWarning =

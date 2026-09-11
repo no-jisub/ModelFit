@@ -81,7 +81,7 @@ export const dreameConsumableRecords: ConsumableRecord[] = [
         "https://store.kr.dreametech.com/products/%EB%93%9C%EB%A6%AC%EB%AF%B8-x50s-pro-ultra-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0",
       sourceType: "manufacturer",
       searchKeyword: `${displayName} 정품`,
-      verifiedAt: "2026-09-10",
+      verifiedAt: "2026-09-11",
       secondarySources: [
         {
           title: "드리미 코리아 공식 X50s Pro Master 제품 및 Master·Ultra 차이 안내",
@@ -112,7 +112,7 @@ export const dreameConsumableRecords: ConsumableRecord[] = [
       sourceUrl: "https://kr.dreametech.com/products?category=15",
       sourceType: "manufacturer",
       searchKeyword: `${displayName} 정품`,
-      verifiedAt: "2026-09-10",
+      verifiedAt: "2026-09-11",
       purchaseUnavailable: true,
     }),
   ),
@@ -135,7 +135,7 @@ export const dreameConsumableRecords: ConsumableRecord[] = [
       sourceType: "manufacturer",
       searchKeyword: `${displayName} 정품`,
       regional: true,
-      verifiedAt: "2026-09-10",
+      verifiedAt: "2026-09-11",
       purchaseUnavailable: true,
     }),
   ),

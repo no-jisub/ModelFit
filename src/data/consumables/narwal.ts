@@ -125,7 +125,7 @@ export const narwalConsumableRecords: ConsumableRecord[] = [
     searchKeyword: "나르왈 Freo Z10 정품 자동 엉킴 방지 사이드 브러시",
     replacementInterval: "3개월마다 (제조사 권장, 마모 상태에 따라 달라짐)",
     regional: true,
-    verifiedAt: "2026-09-10",
+    verifiedAt: "2026-09-11",
     purchaseUnavailable: true,
   }),
   researchedPart({
@@ -139,7 +139,7 @@ export const narwalConsumableRecords: ConsumableRecord[] = [
     sourceType: "official-store",
     searchKeyword: "나르왈 Freo X Ultra 정품 먼지봉투 3개입",
     regional: true,
-    verifiedAt: "2026-09-10",
+    verifiedAt: "2026-09-11",
     purchaseUnavailable: true,
   }),
   ...(
@@ -193,7 +193,7 @@ export const narwalConsumableRecords: ConsumableRecord[] = [
       searchKeyword: `${displayName} 정품`,
       replacementInterval,
       regional: true,
-      verifiedAt: "2026-09-10",
+      verifiedAt: "2026-09-11",
       secondarySources: [
         {
           title: "Narwal 공식 Flow Advanced Kit — 호환 모델과 구성 수량",

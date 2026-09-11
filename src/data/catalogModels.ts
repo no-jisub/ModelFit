@@ -17,7 +17,7 @@ interface CatalogEntry {
   verifiedAt?: string;
 }
 
-const checkedAt = "2026-07-27";
+const checkedAt = "2026-09-11";
 
 const entries: CatalogEntry[] = [
   // LG전자
@@ -35,9 +35,8 @@ const entries: CatalogEntry[] = [
     modelName,
     modelCode,
     series: "퓨리케어 360°",
-    sourceUrl:
-      "https://www.lge.co.kr/kr/ebook/2025/may/himart/catImage/552/202505_himart_catalogue.pdf",
-    sourceTitle: "LG전자 공식 제품 카탈로그",
+    sourceUrl: `https://www.lge.co.kr/support/product-${modelCode}`,
+    sourceTitle: "LG전자 공식 제품 지원",
     sourceType: "manufacturer" as const,
   })),
 

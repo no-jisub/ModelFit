@@ -109,7 +109,7 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
       sourceType: "official-store",
       searchKeyword: `${displayName} 정품`,
       regional: true,
-      verifiedAt: "2026-09-10",
+      verifiedAt: "2026-09-11",
     }),
   ),
   researchedPart({
@@ -124,7 +124,7 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
       "https://www.irobot.com/en_US/replacement-dirt-disposal-bags%252c-3-pack/4640235.html",
     searchKeyword: "iRobot 4640235 정품 먼지봉투",
     regional: true,
-    verifiedAt: "2026-09-10",
+    verifiedAt: "2026-09-11",
     secondarySources: [
       {
         title: "iRobot 공식 Combo 10 Max 시리즈 액세서리 호환표",
@@ -148,7 +148,7 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
       "https://www.irobot.com/en_US/dual-multi-surface-rubber-brushes-for-roomba-combo-and-roomba-e%2C-i%2C-and-j-series-and-roomba-combo-10-max/4639309.html",
     searchKeyword: "iRobot 4639309 정품 듀얼 고무 브러시",
     regional: true,
-    verifiedAt: "2026-09-10",
+    verifiedAt: "2026-09-11",
     secondarySources: [
       {
         title: "iRobot 공식 Combo 10 Max 시리즈 액세서리 호환표",
@@ -176,7 +176,7 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
       "https://www.irobot.com/en_US/edge-sweeping-brush-3-pack-for-roomba-combo-and-roomba-i%2C-e-and-j-series-and-roomba-combo-10-max/4757625.html",
     searchKeyword: "iRobot 4757625 정품 엣지 브러시",
     regional: true,
-    verifiedAt: "2026-09-10",
+    verifiedAt: "2026-09-11",
     secondarySources: [
       {
         title: "iRobot 공식 Combo 10 Max 시리즈 액세서리 호환표",
@@ -204,7 +204,7 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
       "https://www.irobot.com/en_US/roomba-combo-j-series-washable-cleaning-pad%252c-2-pack/4785885.html",
     searchKeyword: "iRobot Roomba Combo j9+ 정품 물걸레 패드",
     regional: true,
-    verifiedAt: "2026-09-10",
+    verifiedAt: "2026-09-11",
     secondarySources: [
       {
         title: "iRobot 공식 전체 액세서리 목록 — Combo j9+ 세척형 패드",
@@ -224,7 +224,7 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
       "https://www.irobot.com/en_US/us/robot-vacuum-plus-mop-accessories/roomba-combo-i5-series",
     searchKeyword: "iRobot Roomba Combo i5 정품 물걸레 키트",
     regional: true,
-    verifiedAt: "2026-09-10",
+    verifiedAt: "2026-09-11",
     secondarySources: [
       {
         title: "iRobot 공식 전체 액세서리 목록 — Combo i5 보충 키트",

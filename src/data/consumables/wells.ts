@@ -11,7 +11,7 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceType: "manufacturer",
     searchKeyword: "웰스 AL106 정품 생활맞춤형 필터",
     replacementInterval: "3개월 (공식 관리 안내 기준, 사용 환경에 따라 달라짐)",
-    verifiedAt: "2026-09-06",
+    verifiedAt: "2026-09-11",
     purchaseUnavailable: true,
   }),
   researchedPart({
@@ -24,7 +24,7 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceType: "manufacturer",
     searchKeyword: "웰스 AL106 정품 탈취필터",
     replacementInterval: "12개월 (공식 관리 안내 기준, 사용 환경에 따라 달라짐)",
-    verifiedAt: "2026-09-06",
+    verifiedAt: "2026-09-11",
     purchaseUnavailable: true,
   }),
   researchedPart({
@@ -37,7 +37,7 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceType: "manufacturer",
     searchKeyword: "웰스 AL106 정품 제로클리어 HEPA H14 필터",
     replacementInterval: "12개월 (공식 관리 안내 기준, 사용 환경에 따라 달라짐)",
-    verifiedAt: "2026-09-06",
+    verifiedAt: "2026-09-11",
     purchaseUnavailable: true,
   }),
   researchedPart({
@@ -50,7 +50,7 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceType: "manufacturer",
     searchKeyword: "웰스 토네이도 정품 프리필터",
     replacementInterval: "12개월 (공식 관리 안내 기준, 사용 환경에 따라 달라짐)",
-    verifiedAt: "2026-09-06",
+    verifiedAt: "2026-09-11",
     purchaseUnavailable: true,
   }),
   researchedPart({
@@ -63,7 +63,7 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceType: "manufacturer",
     searchKeyword: "웰스 토네이도 정품 생활맞춤형 필터",
     replacementInterval: "3개월 (공식 관리 안내 기준, 사용 환경에 따라 달라짐)",
-    verifiedAt: "2026-09-06",
+    verifiedAt: "2026-09-11",
     purchaseUnavailable: true,
   }),
   researchedPart({
@@ -76,7 +76,7 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceType: "manufacturer",
     searchKeyword: "웰스 토네이도 정품 올케어 필터",
     replacementInterval: "12개월 (공식 관리 안내 기준, 사용 환경에 따라 달라짐)",
-    verifiedAt: "2026-09-06",
+    verifiedAt: "2026-09-11",
     purchaseUnavailable: true,
   }),
   researchedPart({
@@ -89,7 +89,7 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceType: "manufacturer",
     searchKeyword: "웰스 AQ107 정품 프리필터",
     replacementInterval: "12개월 (공식 관리 안내 기준, 사용 환경에 따라 달라짐)",
-    verifiedAt: "2026-09-06",
+    verifiedAt: "2026-09-11",
     purchaseUnavailable: true,
   }),
   researchedPart({
@@ -103,7 +103,7 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceType: "manufacturer",
     searchKeyword: "웰스 AQ107 정품 생활맞춤형 필터",
     replacementInterval: "3개월 (공식 관리 안내 기준, 사용 환경에 따라 달라짐)",
-    verifiedAt: "2026-09-06",
+    verifiedAt: "2026-09-11",
     purchaseUnavailable: true,
   }),
   researchedPart({
@@ -115,7 +115,7 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://www.kyowonwells.com/Product/Detail?grpIdx=1394&productIdx=926",
     sourceType: "manufacturer",
     searchKeyword: "웰스 AQ107 정품 탈취필터",
-    verifiedAt: "2026-09-06",
+    verifiedAt: "2026-09-11",
     purchaseUnavailable: true,
   }),
   researchedPart({
@@ -127,7 +127,7 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://www.kyowonwells.com/Product/Detail?grpIdx=1394&productIdx=926",
     sourceType: "manufacturer",
     searchKeyword: "웰스 AQ107 정품 클리어 HEPA 필터",
-    verifiedAt: "2026-09-06",
+    verifiedAt: "2026-09-11",
     purchaseUnavailable: true,
   }),
   researchedPart({

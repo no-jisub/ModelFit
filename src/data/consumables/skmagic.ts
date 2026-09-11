@@ -49,7 +49,7 @@ export const skmagicConsumableRecords: ConsumableRecord[] = [
     searchKeyword: "SK매직 FLTA20C2ATWH 정품 필터",
     replacementInterval: "12개월 (사용 환경에 따라 달라질 수 있음)",
     directUrl: "https://www.coupang.com/vp/products/8673596944",
-    verifiedAt: "2026-09-06",
+    verifiedAt: "2026-09-11",
   }),
   researchedPart({
     id: "skmagic-acl25-all-in-one-care-filter",
@@ -60,7 +60,7 @@ export const skmagicConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000069683",
     searchKeyword: "SK매직 ACL25C1ASKCE 정품 올인원 케어필터",
     directUrl: "https://www.coupang.com/vp/products/8785883201",
-    verifiedAt: "2026-08-23",
+    verifiedAt: "2026-09-11",
   }),
   ...[
     {
@@ -84,7 +84,7 @@ export const skmagicConsumableRecords: ConsumableRecord[] = [
       sourceUrl: "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000056901",
       searchKeyword: `SK매직 ACL130Z ${name} FLTACL130PWH 세트`,
       replacementInterval: "12개월 (사용 환경과 오염 상태에 따라 달라질 수 있음)",
-      verifiedAt: "2026-09-09",
+      verifiedAt: "2026-09-11",
       secondarySources: [
         {
           title: "SK매직 공식 상세 안내 — 분리된 탈취·집진 필터 각 1개 및 권장 교체 주기",

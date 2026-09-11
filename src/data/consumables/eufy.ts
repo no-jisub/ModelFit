@@ -160,7 +160,7 @@ export const eufyConsumableRecords: ConsumableRecord[] = [
       searchKeyword: `${displayName} 정품`,
       replacementInterval: "약 6개월 (공식 키트 권장, 사용 빈도에 따라 조정)",
       regional: true,
-      verifiedAt: "2026-09-10",
+      verifiedAt: "2026-09-11",
     }),
   ),
   ...(
@@ -181,7 +181,7 @@ export const eufyConsumableRecords: ConsumableRecord[] = [
       sourceUrl: "https://www.eufy.com/collections/accessory-for-floor-washing-robot",
       searchKeyword: `${displayName} 정품`,
       regional: true,
-      verifiedAt: "2026-08-07",
+      verifiedAt: "2026-09-11",
     }),
   ),
   ...(
@@ -245,7 +245,7 @@ export const eufyConsumableRecords: ConsumableRecord[] = [
         sourceUrl,
         searchKeyword: `${displayName} 정품`,
         regional: true,
-        verifiedAt: "2026-09-10",
+        verifiedAt: "2026-09-11",
         secondarySources: [
           {
             title: "eufy 공식 X10 Pro Omni 반년 구독 서비스 — 부품별 교체 주기",
@@ -277,7 +277,7 @@ export const eufyConsumableRecords: ConsumableRecord[] = [
       sourceUrl: "https://www.eufy.com/products/t291var0",
       searchKeyword: `${displayName} 정품`,
       regional: true,
-      verifiedAt: "2026-09-10",
+      verifiedAt: "2026-09-11",
       secondarySources: [
         {
           title: "eufy 공식 Omni C28 제품 페이지 — DuoSpiral 브러시·롤러 물걸레",

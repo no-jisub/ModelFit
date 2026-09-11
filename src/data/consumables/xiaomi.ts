@@ -71,7 +71,7 @@ export const xiaomiConsumableRecords: ConsumableRecord[] = [
       sourceType: "manufacturer",
       searchKeyword: `${displayName} ${genuinePartNumber}`,
       regional: true,
-      verifiedAt: "2026-09-09",
+      verifiedAt: "2026-09-11",
       replacementInterval: `${interval} (사용 환경과 마모 상태에 따라 달라질 수 있음)`,
       secondarySources: [
         {
@@ -127,7 +127,7 @@ export const xiaomiConsumableRecords: ConsumableRecord[] = [
       sourceType: "manufacturer",
       searchKeyword,
       regional: true,
-      verifiedAt: "2026-09-09",
+      verifiedAt: "2026-09-11",
       replacementInterval: `${type === "main-brush" ? "6~12개월" : type === "dust-bag" ? "약 2.5개월" : "3~6개월"} (실제 사용량과 마모 상태에 따라 달라질 수 있음)`,
     }),
   ),
@@ -211,7 +211,7 @@ export const xiaomiConsumableRecords: ConsumableRecord[] = [
       "https://www.mi.com/global/product/xiaomi-robot-vacuum-anti-tangle-side-brush/specs/",
     searchKeyword: "Xiaomi OV81GL-BS 정품 사이드 브러시",
     regional: true,
-    verifiedAt: "2026-08-04",
+    verifiedAt: "2026-09-11",
     secondarySources: [
       {
         title: "Xiaomi Global 공식 5 Pro 사양 — 사이드 브러시 구성 확인",

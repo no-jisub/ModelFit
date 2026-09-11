@@ -70,7 +70,7 @@ export const roborockConsumableRecords: ConsumableRecord[] = [
       sourceUrl: "https://kr.roborock.com/pages/roborock-s10-maxv-ultra",
       sourceType: "manufacturer",
       searchKeyword: `${displayName} 정품`,
-      verifiedAt: "2026-09-10",
+      verifiedAt: "2026-09-11",
       purchaseUnavailable: true,
     }),
   ),
@@ -112,7 +112,7 @@ export const roborockConsumableRecords: ConsumableRecord[] = [
       sourceUrl: "https://us.roborock.com/products/roborock-saros-z70",
       searchKeyword: `${displayName} 정품`,
       regional: true,
-      verifiedAt: "2026-09-10",
+      verifiedAt: "2026-09-11",
       secondarySources: [
         {
           title: "Roborock 공식 액세서리 목록 — Saros Z70 호환 부품",
