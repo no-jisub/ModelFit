@@ -144,6 +144,8 @@ const directImages: Record<string, string> = {
     "https://cdn.shopify.com/s/files/1/0082/3666/2902/files/Vivian_C_Set_8b2a8492-7aa2-4230-9054-2877fd143711.jpg?v=1757903106",
   "dreame-x40s-pro-ultra":
     "https://kr.dreametech.com/data/dreame/files/product/45/image.png?m=1768741249",
+  "dreame-l10s-pro-ultra-heat":
+    "https://kr.dreametech.com/data/dreame/files/product/43/image.png?m=1768741056",
   "irobot-combo-10-max":
     "https://www.irobot.com/on/demandware.static/-/Sites-master-catalog-irobot/default/dwe55aefa6/images/large/combo/X085020_1.jpg",
   "irobot-205-dustcompactor":
@@ -171,6 +173,7 @@ const directImages: Record<string, string> = {
 };
 
 const excludedImageIds = new Set(["roborock-s10-maxv-ultra"]);
+const trimImageIds = new Set(["dreame-l10s-pro-ultra-heat"]);
 
 const outputDir = path.resolve("public/images/models");
 await mkdir(outputDir, { recursive: true });
@@ -221,12 +224,13 @@ for (const model of models) {
     if (!imageResponse.ok) throw new Error(`이미지 HTTP ${imageResponse.status}`);
     const input = Buffer.from(await imageResponse.arrayBuffer());
     const destination = path.join(outputDir, `${model.id}.webp`);
-    await sharp(input)
-      .rotate()
+    const image = sharp(input).rotate();
+    if (trimImageIds.has(model.id)) image.trim({ background: "#ffffff", threshold: 10 });
+    await image
       .resize(720, 720, {
         fit: "contain",
         background: { r: 248, g: 250, b: 252, alpha: 1 },
-        withoutEnlargement: true,
+        withoutEnlargement: !trimImageIds.has(model.id),
       })
       .webp({ quality: 82, effort: 5 })
       .toFile(destination);
