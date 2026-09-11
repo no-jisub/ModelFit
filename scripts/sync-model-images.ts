@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import prettier from "prettier";
 import sharp from "sharp";
 import { models } from "../src/data/models";
 
@@ -253,6 +254,10 @@ export const modelImages: Record<string, ModelImage> = ${JSON.stringify(
   2,
 )};
 `;
-await writeFile("src/data/modelImages.ts", generated, "utf8");
+await writeFile(
+  "src/data/modelImages.ts",
+  await prettier.format(generated, { parser: "typescript" }),
+  "utf8",
+);
 console.log(`모델 이미지 동기화: 성공 ${records.length}, 실패 ${failures.length}`);
 if (failures.length) console.log(JSON.stringify(failures, null, 2));
