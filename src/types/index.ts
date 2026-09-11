@@ -84,6 +84,13 @@ export interface ConsumableCompatibility {
   productOptions: ConsumableProductOption[];
 }
 
+export interface ModelImage {
+  src: string;
+  alt: string;
+  sourceUrl: string;
+  checkedAt: string;
+}
+
 export interface ApplianceModel {
   id: string;
   slug: string;
@@ -96,6 +103,7 @@ export interface ApplianceModel {
   aliases: string[];
   series?: string;
   shortDescription: string;
+  image?: ModelImage;
   consumableNote?: string;
   modelNumberLocation?: string;
   releaseDate?: string;

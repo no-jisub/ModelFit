@@ -127,7 +127,7 @@ describe("consumable product options", () => {
       "전용 걸레 2세트(4매입)",
       "먼지봉투 3개입",
     ]);
-    expect([...q11, ...q9].every((part) => part.sources[0].checkedAt === "2026-09-10")).toBe(true);
+    expect([...q11, ...q9].every((part) => part.sources[0].checkedAt === "2026-09-11")).toBe(true);
   });
   it("유피 C20·X10 Pro·C28·S2는 공식 키트 수량과 모델별 교체 주기를 분리한다", () => {
     const find = (id: string) => consumables.find((part) => part.id === id)!;

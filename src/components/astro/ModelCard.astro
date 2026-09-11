@@ -17,6 +17,13 @@ const detailPath = `/model/${model.brandId}/${model.slug}#compatible-parts`;
     </span>
     {model.isDemo && <span class="demo-chip">데모 데이터</span>}
   </div>
+  {
+    model.image && (
+      <div class="model-card-image">
+        <img src={model.image.src} alt={model.image.alt} width="720" height="720" loading="lazy" />
+      </div>
+    )
+  }
   <p class="model-brand-label">{model.brandName}</p>
   <h3>{displayName}</h3>
   <p class="model-series">{model.modelCode} {model.series ? `· ${model.series}` : ""}</p>

@@ -59,6 +59,17 @@ function ModelResultCard({
         </span>
         {association && <span className="official-chip">소모품으로 찾은 모델</span>}
       </div>
+      {model.image && (
+        <div className="model-card-image">
+          <img
+            src={model.image.src}
+            alt={model.image.alt}
+            width={720}
+            height={720}
+            loading="lazy"
+          />
+        </div>
+      )}
       <p className="model-brand-label">{model.brandName}</p>
       <h3>{getModelDisplayName(model)}</h3>
       <p className="model-series">

@@ -1087,6 +1087,22 @@ main:has(> #brands:last-child) + .site-footer {
   color: var(--color-success-700);
 }
 
+.model-card-image {
+  display: grid;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  place-items: center;
+  margin-top: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-neutral-50);
+}
+
+.model-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .model-brand-label {
   margin: var(--space-5) 0 3px;
   color: var(--color-primary-700);
@@ -1964,6 +1980,35 @@ main:has(> .category-guides-section:last-child) + .site-footer {
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-6);
+}
+
+.model-detail-image {
+  width: min(300px, 34vw);
+  flex: 0 0 auto;
+  margin: 0;
+}
+
+.model-detail-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: var(--radius-lg);
+  background: var(--color-neutral-50);
+  object-fit: contain;
+}
+
+.model-detail-image figcaption {
+  margin-top: var(--space-2);
+  color: var(--color-neutral-500);
+  font-size: 12px;
+  text-align: center;
+}
+
+.model-detail-image figcaption a {
+  color: var(--color-neutral-600);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .model-title-line h1 {
@@ -3846,6 +3891,11 @@ main:has(.model-disclaimer-section:last-child) + .site-footer {
   .part-hero-grid {
     grid-template-columns: 1fr;
     flex-direction: column;
+  }
+
+  .model-detail-image {
+    width: min(100%, 320px);
+    align-self: center;
   }
 
   .consumable-card {

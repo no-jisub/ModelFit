@@ -20,6 +20,7 @@
     "validate:data": "tsx scripts/validate-data.ts",
     "audit:sources": "tsx scripts/audit-sources.ts",
     "audit:freshness": "tsx scripts/audit-freshness.ts",
+    "sync:model-images": "tsx scripts/sync-model-images.ts",
     "check": "npm run format && npm run lint && npm run check:env && npm run validate:data && npm run test && npm run test:rules && npm run build"
   },
   "dependencies": {

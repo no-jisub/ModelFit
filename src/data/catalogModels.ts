@@ -1,5 +1,6 @@
 import type { ApplianceCategory, ApplianceModel, SourceReference } from "@/types";
 import { modelConsumableIds } from "./compatibilityMap";
+import { modelImages } from "./modelImages";
 
 interface CatalogEntry {
   brandId: string;
@@ -386,6 +387,7 @@ export const catalogModels: ApplianceModel[] = entries.map((entry) => {
     ],
     series: entry.series,
     shortDescription: `제조사 공식 제품 또는 지원 자료에서 모델명이 확인된 ${entry.category === "air-purifier" ? "공기청정기" : "로봇청소기"}입니다.`,
+    image: modelImages[id],
     releaseDate: entry.releaseDate,
     consumableIds: modelConsumableIds[id] ?? [],
     sources: [

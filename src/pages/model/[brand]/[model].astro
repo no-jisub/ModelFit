@@ -104,6 +104,25 @@ const breadcrumbJsonLd = {
             )
           }
         </div>
+        {
+          model.image && (
+            <figure class="model-detail-image">
+              <img
+                src={model.image.src}
+                alt={model.image.alt}
+                width="720"
+                height="720"
+                loading="eager"
+              />
+              <figcaption>
+                <a href={model.image.sourceUrl} target="_blank" rel="noopener noreferrer">
+                  제품 이미지 출처
+                </a>
+                <span> · {model.image.checkedAt} 확인</span>
+              </figcaption>
+            </figure>
+          )
+        }
       </div>
       {
         model.isDemo && (

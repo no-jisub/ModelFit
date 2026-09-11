@@ -1,0 +1,478 @@
+import type { ModelImage } from "@/types";
+
+export const modelImages: Record<string, ModelImage> = {
+  "lg-as355nsna": {
+    "src": "/images/models/lg-as355nsna.webp",
+    "alt": "LG AS355NSNA 제품 본체",
+    "sourceUrl": "https://www.lge.co.kr/air-purifier/as355nsna",
+    "checkedAt": "2026-09-11"
+  },
+  "lg-as355ngna": {
+    "src": "/images/models/lg-as355ngna.webp",
+    "alt": "LG AS355NGNA 제품 본체",
+    "sourceUrl": "https://www.lge.co.kr/air-purifier/as355ngna",
+    "checkedAt": "2026-09-11"
+  },
+  "lg-as355nsah": {
+    "src": "/images/models/lg-as355nsah.webp",
+    "alt": "LG AS355NSAH 제품 본체",
+    "sourceUrl": "https://www.lge.co.kr/air-purifier/as355nsah",
+    "checkedAt": "2026-09-11"
+  },
+  "lg-as205nsja": {
+    "src": "/images/models/lg-as205nsja.webp",
+    "alt": "LG AS205NSJA 제품 본체",
+    "sourceUrl": "https://www.lge.co.kr/air-purifier/as205nsja",
+    "checkedAt": "2026-09-11"
+  },
+  "lg-as205ngja": {
+    "src": "/images/models/lg-as205ngja.webp",
+    "alt": "LG AS205NGJA 제품 본체",
+    "sourceUrl": "https://www.lge.co.kr/air-purifier/as205ngja",
+    "checkedAt": "2026-09-11"
+  },
+  "coway-ap-4025d": {
+    "src": "/images/models/coway-ap-4025d.webp",
+    "alt": "코웨이 AP-4025D 제품 본체",
+    "sourceUrl": "https://www.coway.com/product/detail?prdno=1219",
+    "checkedAt": "2026-09-11"
+  },
+  "coway-ap-3024h": {
+    "src": "/images/models/coway-ap-3024h.webp",
+    "alt": "코웨이 AP-3024H 제품 본체",
+    "sourceUrl": "https://www.coway.com/product/detail?prdno=1186",
+    "checkedAt": "2026-09-11"
+  },
+  "coway-ap-2219k": {
+    "src": "/images/models/coway-ap-2219k.webp",
+    "alt": "코웨이 AP-2219K 제품 본체",
+    "sourceUrl": "https://prod.danawa.com/info/?pcode=10298868",
+    "checkedAt": "2026-09-11"
+  },
+  "coway-ap-2021a": {
+    "src": "/images/models/coway-ap-2021a.webp",
+    "alt": "코웨이 AP-2021A 제품 본체",
+    "sourceUrl": "https://www.cowayusa-shop.com/AP-2021A",
+    "checkedAt": "2026-09-11"
+  },
+  "coway-ap-1521b": {
+    "src": "/images/models/coway-ap-1521b.webp",
+    "alt": "코웨이 AP-1521B 제품 본체",
+    "sourceUrl": "https://prod.danawa.com/info/?pcode=14030744",
+    "checkedAt": "2026-09-11"
+  },
+  "winix-azse430-jwk": {
+    "src": "/images/models/winix-azse430-jwk.webp",
+    "alt": "위닉스 AZSE430-JWK 제품 본체",
+    "sourceUrl": "https://www.winix.com/product/843",
+    "checkedAt": "2026-09-11"
+  },
+  "winix-at8e430-mwk": {
+    "src": "/images/models/winix-at8e430-mwk.webp",
+    "alt": "위닉스 AT8E430-MWK 제품 본체",
+    "sourceUrl": "https://www.winix.com/product/1538",
+    "checkedAt": "2026-09-11"
+  },
+  "winix-aprm833-jwk": {
+    "src": "/images/models/winix-aprm833-jwk.webp",
+    "alt": "위닉스 APRM833-JWK 제품 본체",
+    "sourceUrl": "https://www.winix.com/product/1211",
+    "checkedAt": "2026-09-11"
+  },
+  "winix-attm115-mwk": {
+    "src": "/images/models/winix-attm115-mwk.webp",
+    "alt": "위닉스 ATTM115-MWK 제품 본체",
+    "sourceUrl": "https://www.winix.com/product/1669",
+    "checkedAt": "2026-09-11"
+  },
+  "winix-amsh993-jsk": {
+    "src": "/images/models/winix-amsh993-jsk.webp",
+    "alt": "위닉스 AMSH993-JSK 제품 본체",
+    "sourceUrl": "https://www.winix.com/product/852",
+    "checkedAt": "2026-09-11"
+  },
+  "cuckoo-ac-23ah10fnw": {
+    "src": "/images/models/cuckoo-ac-23ah10fnw.webp",
+    "alt": "쿠쿠 AC-23AH10FNW 제품 본체",
+    "sourceUrl": "https://www.cuckoo.co.kr/mall/productView?productNo=11307",
+    "checkedAt": "2026-09-11"
+  },
+  "cuckoo-ac-25w20fwh": {
+    "src": "/images/models/cuckoo-ac-25w20fwh.webp",
+    "alt": "쿠쿠 AC-25W20FWH 제품 본체",
+    "sourceUrl": "https://www.cuckoo.co.kr/mall/productView?productNo=7375",
+    "checkedAt": "2026-09-11"
+  },
+  "cuckoo-ac-28ahnl20fnw": {
+    "src": "/images/models/cuckoo-ac-28ahnl20fnw.webp",
+    "alt": "쿠쿠 AC-28AHNL20FNW 제품 본체",
+    "sourceUrl": "https://www.cuckoo.co.kr/mall/productView?productNo=9229",
+    "checkedAt": "2026-09-11"
+  },
+  "cuckoo-ac-17t20fwh": {
+    "src": "/images/models/cuckoo-ac-17t20fwh.webp",
+    "alt": "쿠쿠 AC-17T20FWH 제품 본체",
+    "sourceUrl": "https://www.cuckoo.co.kr/mall/productView?productNo=9226",
+    "checkedAt": "2026-09-11"
+  },
+  "cuckoo-ac-14l10few": {
+    "src": "/images/models/cuckoo-ac-14l10few.webp",
+    "alt": "쿠쿠 AC-14L10FEW 제품 본체",
+    "sourceUrl": "https://www.cuckoo.co.kr/rental/productView?idx=860",
+    "checkedAt": "2026-09-11"
+  },
+  "dyson-bp04": {
+    "src": "/images/models/dyson-bp04.webp",
+    "alt": "다이슨 BP04 제품 본체",
+    "sourceUrl": "https://www.dyson.co.kr/purifier-big-quiet-formaldehyde-nickel-blue",
+    "checkedAt": "2026-09-11"
+  },
+  "dyson-bp03": {
+    "src": "/images/models/dyson-bp03.webp",
+    "alt": "다이슨 BP03 제품 본체",
+    "sourceUrl": "https://www.dyson.co.kr/purifier-big-quiet-formaldehyde-nickel-blue",
+    "checkedAt": "2026-09-11"
+  },
+  "dyson-hp09": {
+    "src": "/images/models/dyson-hp09.webp",
+    "alt": "다이슨 HP09 제품 본체",
+    "sourceUrl": "https://www.dyson.co.kr/dyson-purifier-hot-cool-formaldehyde-white-nickel-gold",
+    "checkedAt": "2026-09-11"
+  },
+  "dyson-tp09": {
+    "src": "/images/models/dyson-tp09.webp",
+    "alt": "다이슨 TP09 제품 본체",
+    "sourceUrl": "https://www.dyson.co.kr/dyson-purifier-cool-formaldehyde-white-gold",
+    "checkedAt": "2026-09-11"
+  },
+  "dyson-ph04": {
+    "src": "/images/models/dyson-ph04.webp",
+    "alt": "다이슨 PH04 제품 본체",
+    "sourceUrl": "https://www.dyson.co.kr/dyson-purifier-humidify-cool-formaldehyde-white-gold",
+    "checkedAt": "2026-09-11"
+  },
+  "xiaomi-5-pro": {
+    "src": "/images/models/xiaomi-5-pro.webp",
+    "alt": "샤오미 5 PRO 제품 본체",
+    "sourceUrl": "https://www.mi.com/global/product/xiaomi-robot-vacuum-5-pro/",
+    "checkedAt": "2026-09-11"
+  },
+  "xiaomi-5": {
+    "src": "/images/models/xiaomi-5.webp",
+    "alt": "샤오미 5 제품 본체",
+    "sourceUrl": "https://www.mi.com/global/product/xiaomi-robot-vacuum-5/",
+    "checkedAt": "2026-09-11"
+  },
+  "xiaomi-x20-plus": {
+    "src": "/images/models/xiaomi-x20-plus.webp",
+    "alt": "샤오미 X20+ 제품 본체",
+    "sourceUrl": "https://www.mi.com/global/product/xiaomi-robot-vacuum-x20-plus/",
+    "checkedAt": "2026-09-11"
+  },
+  "xiaomi-x10-plus": {
+    "src": "/images/models/xiaomi-x10-plus.webp",
+    "alt": "샤오미 X10+ 제품 본체",
+    "sourceUrl": "https://www.mi.com/global/product/xiaomi-robot-vacuum-x10-plus/",
+    "checkedAt": "2026-09-11"
+  },
+  "xiaomi-s20": {
+    "src": "/images/models/xiaomi-s20.webp",
+    "alt": "샤오미 S20 제품 본체",
+    "sourceUrl": "https://www.mi.com/global/product/xiaomi-robot-vacuum-s20/",
+    "checkedAt": "2026-09-11"
+  },
+  "skmagic-acl-131t0": {
+    "src": "/images/models/skmagic-acl-131t0.webp",
+    "alt": "SK매직 ACL-131T0 제품 본체",
+    "sourceUrl": "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000069301",
+    "checkedAt": "2026-09-11"
+  },
+  "skmagic-acl15c1askwh": {
+    "src": "/images/models/skmagic-acl15c1askwh.webp",
+    "alt": "SK매직 ACL15C1ASKWH 제품 본체",
+    "sourceUrl": "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000062559",
+    "checkedAt": "2026-09-11"
+  },
+  "skmagic-acl20c1askwh": {
+    "src": "/images/models/skmagic-acl20c1askwh.webp",
+    "alt": "SK매직 ACL20C1ASKWH 제품 본체",
+    "sourceUrl": "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000069682",
+    "checkedAt": "2026-09-11"
+  },
+  "skmagic-acl25c1askce": {
+    "src": "/images/models/skmagic-acl25c1askce.webp",
+    "alt": "SK매직 ACL25C1ASKCE 제품 본체",
+    "sourceUrl": "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000069683",
+    "checkedAt": "2026-09-11"
+  },
+  "skmagic-acl130z0skpn": {
+    "src": "/images/models/skmagic-acl130z0skpn.webp",
+    "alt": "SK매직 ACL130Z0SKPN 제품 본체",
+    "sourceUrl": "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000069281",
+    "checkedAt": "2026-09-11"
+  },
+  "wells-al106": {
+    "src": "/images/models/wells-al106.webp",
+    "alt": "교원 웰스 AL106 제품 본체",
+    "sourceUrl": "https://m.kyowonwells.com/Product/Detail?grpIdx=47&productIdx=49",
+    "checkedAt": "2026-09-11"
+  },
+  "wells-an730": {
+    "src": "/images/models/wells-an730.webp",
+    "alt": "교원 웰스 AN730 제품 본체",
+    "sourceUrl": "https://m.kyowonwells.com/Product/Detail?grpIdx=182&productIdx=373",
+    "checkedAt": "2026-09-11"
+  },
+  "wells-an734": {
+    "src": "/images/models/wells-an734.webp",
+    "alt": "교원 웰스 AN734 제품 본체",
+    "sourceUrl": "https://m.kyowonwells.com/Product/Detail?grpIdx=182&productIdx=373",
+    "checkedAt": "2026-09-11"
+  },
+  "wells-aq107": {
+    "src": "/images/models/wells-aq107.webp",
+    "alt": "교원 웰스 AQ107 제품 본체",
+    "sourceUrl": "https://m.kyowonwells.com/Product/Detail?grpIdx=1394&productIdx=926",
+    "checkedAt": "2026-09-11"
+  },
+  "wells-am315": {
+    "src": "/images/models/wells-am315.webp",
+    "alt": "교원 웰스 AM315 제품 본체",
+    "sourceUrl": "https://m.kyowonwells.com/Product/Detail?grpIdx=49&productIdx=54",
+    "checkedAt": "2026-09-11"
+  },
+  "blueair-cp7i": {
+    "src": "/images/models/blueair-cp7i.webp",
+    "alt": "블루에어 CP7i 제품 본체",
+    "sourceUrl": "https://www.blueair.com/products/classic-pro-cp7i",
+    "checkedAt": "2026-09-11"
+  },
+  "blueair-cp9i": {
+    "src": "/images/models/blueair-cp9i.webp",
+    "alt": "블루에어 CP9i 제품 본체",
+    "sourceUrl": "https://www.blueair.com/en-kr/products/classic-pro-cp9i",
+    "checkedAt": "2026-09-11"
+  },
+  "blueair-5240i": {
+    "src": "/images/models/blueair-5240i.webp",
+    "alt": "블루에어 5240i 제품 본체",
+    "sourceUrl": "https://www.blueair.com/products/dustmagnet-5400-series",
+    "checkedAt": "2026-09-11"
+  },
+  "blueair-5210i": {
+    "src": "/images/models/blueair-5210i.webp",
+    "alt": "블루에어 5210i 제품 본체",
+    "sourceUrl": "https://www.blueair.com/products/dustmagnet-5400-series",
+    "checkedAt": "2026-09-11"
+  },
+  "blueair-3410": {
+    "src": "/images/models/blueair-3410.webp",
+    "alt": "블루에어 3410 제품 본체",
+    "sourceUrl": "https://www.blueair.com/ko-kr/products/blue-3410",
+    "checkedAt": "2026-09-11"
+  },
+  "roborock-saros-z70": {
+    "src": "/images/models/roborock-saros-z70.webp",
+    "alt": "로보락 SAROS Z70 제품 본체",
+    "sourceUrl": "https://kr.roborock.com/products/%EB%A1%9C%EB%B3%B4%EB%9D%BD-saros-z70-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0",
+    "checkedAt": "2026-09-11"
+  },
+  "roborock-s8-maxv-ultra": {
+    "src": "/images/models/roborock-s8-maxv-ultra.webp",
+    "alt": "로보락 S8 MAXV ULTRA 제품 본체",
+    "sourceUrl": "https://us.roborock.com/products/roborock-s8-maxv-ultra-with-refill-drainage-system",
+    "checkedAt": "2026-09-11"
+  },
+  "roborock-qrevo-curv-2-flow": {
+    "src": "/images/models/roborock-qrevo-curv-2-flow.webp",
+    "alt": "로보락 QREVO CURV 2 FLOW 제품 본체",
+    "sourceUrl": "https://us.roborock.com/products/roborock-qrevo-curv-2-flow",
+    "checkedAt": "2026-09-11"
+  },
+  "roborock-qrevo-curv": {
+    "src": "/images/models/roborock-qrevo-curv.webp",
+    "alt": "로보락 QREVO CURV 제품 본체",
+    "sourceUrl": "https://us.roborock.com/products/roborock-qrevo-curv-s5x",
+    "checkedAt": "2026-09-11"
+  },
+  "dreame-x50s-pro-master": {
+    "src": "/images/models/dreame-x50s-pro-master.webp",
+    "alt": "드리미 X50S PRO MASTER 제품 본체",
+    "sourceUrl": "https://store.kr.dreametech.com/products/%EB%93%9C%EB%A6%AC%EB%AF%B8-x50s-pro-master-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0",
+    "checkedAt": "2026-09-11"
+  },
+  "dreame-x50s-pro-ultra": {
+    "src": "/images/models/dreame-x50s-pro-ultra.webp",
+    "alt": "드리미 X50S PRO ULTRA 제품 본체",
+    "sourceUrl": "https://store.kr.dreametech.com/products/%EB%93%9C%EB%A6%AC%EB%AF%B8-x50s-pro-ultra-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0",
+    "checkedAt": "2026-09-11"
+  },
+  "dreame-x40-ultra": {
+    "src": "/images/models/dreame-x40-ultra.webp",
+    "alt": "드리미 X40 ULTRA 제품 본체",
+    "sourceUrl": "https://www.dreametech.com/products/dreametech-x40-ultra-robot-vacuum",
+    "checkedAt": "2026-09-11"
+  },
+  "dreame-x40s-pro-ultra": {
+    "src": "/images/models/dreame-x40s-pro-ultra.webp",
+    "alt": "드리미 X40S PRO ULTRA 제품 본체",
+    "sourceUrl": "https://kr.dreametech.com/products?category=15",
+    "checkedAt": "2026-09-11"
+  },
+  "dreame-l10s-pro-ultra-heat": {
+    "src": "/images/models/dreame-l10s-pro-ultra-heat.webp",
+    "alt": "드리미 L10S PRO ULTRA HEAT 제품 본체",
+    "sourceUrl": "https://global.dreametech.com/products/l10s-pro-ultra",
+    "checkedAt": "2026-09-11"
+  },
+  "ecovacs-deebot-x12": {
+    "src": "/images/models/ecovacs-deebot-x12.webp",
+    "alt": "에코백스 DEEBOT X12 제품 본체",
+    "sourceUrl": "https://www.ecovacs.com/us/shop/deebot-robotic-vacuum-cleaner/deebot-x12-omnicyclone",
+    "checkedAt": "2026-09-11"
+  },
+  "ecovacs-deebot-x11": {
+    "src": "/images/models/ecovacs-deebot-x11.webp",
+    "alt": "에코백스 DEEBOT X11 제품 본체",
+    "sourceUrl": "https://www.ecovacs.com/kr/deebot-robotic-vacuum-cleaner/deebot-x11-omnicyclone",
+    "checkedAt": "2026-09-11"
+  },
+  "ecovacs-deebot-x9": {
+    "src": "/images/models/ecovacs-deebot-x9.webp",
+    "alt": "에코백스 DEEBOT X9 제품 본체",
+    "sourceUrl": "https://www.ecovacs.com/us/shop/deebot-robotic-vacuum-cleaner/deebot-x9-pro-omni",
+    "checkedAt": "2026-09-11"
+  },
+  "ecovacs-deebot-t80": {
+    "src": "/images/models/ecovacs-deebot-t80.webp",
+    "alt": "에코백스 DEEBOT T80 제품 본체",
+    "sourceUrl": "https://www.ecovacs.com/kr/deebot-robotic-vacuum-cleaner/deebot-t80-omni-white",
+    "checkedAt": "2026-09-11"
+  },
+  "ecovacs-deebot-n20-pro-plus": {
+    "src": "/images/models/ecovacs-deebot-n20-pro-plus.webp",
+    "alt": "에코백스 DEEBOT N20 PRO PLUS 제품 본체",
+    "sourceUrl": "https://www.ecovacs.com/us/shop/deebot-robotic-vacuum-cleaner/n20-pro-plus",
+    "checkedAt": "2026-09-11"
+  },
+  "narwal-flow": {
+    "src": "/images/models/narwal-flow.webp",
+    "alt": "나르왈 FLOW 제품 본체",
+    "sourceUrl": "https://kr.narwal.com/products/narwal-flow-1",
+    "checkedAt": "2026-09-11"
+  },
+  "narwal-freo-z10": {
+    "src": "/images/models/narwal-freo-z10.webp",
+    "alt": "나르왈 FREO Z10 제품 본체",
+    "sourceUrl": "https://kr.narwal.com/products/freo-z10-ultra",
+    "checkedAt": "2026-09-11"
+  },
+  "narwal-freo-z-ultra": {
+    "src": "/images/models/narwal-freo-z-ultra.webp",
+    "alt": "나르왈 FREO Z ULTRA 제품 본체",
+    "sourceUrl": "https://us.narwal.com/products/freo-z-ultra-robot-vacuum-mop",
+    "checkedAt": "2026-09-11"
+  },
+  "narwal-freo-x-ultra": {
+    "src": "/images/models/narwal-freo-x-ultra.webp",
+    "alt": "나르왈 FREO X ULTRA 제품 본체",
+    "sourceUrl": "https://kr.narwal.com/products/narwal-%EB%82%98%EB%A5%B4%EC%99%88-freo-x-ultra-%EC%99%84%EC%84%B1%ED%98%95-%EC%98%AC%EC%9D%B8%EC%9B%90-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0",
+    "checkedAt": "2026-09-11"
+  },
+  "narwal-freo": {
+    "src": "/images/models/narwal-freo.webp",
+    "alt": "나르왈 FREO 제품 본체",
+    "sourceUrl": "https://kr.narwal.com/products/narwal-freo",
+    "checkedAt": "2026-09-11"
+  },
+  "irobot-combo-10-max": {
+    "src": "/images/models/irobot-combo-10-max.webp",
+    "alt": "아이로봇 COMBO 10 MAX 제품 본체",
+    "sourceUrl": "https://www.irobot.com/en_US/roomba-combo-10-max-robot-with-autowash-dock/X085020.html",
+    "checkedAt": "2026-09-11"
+  },
+  "irobot-205-dustcompactor": {
+    "src": "/images/models/irobot-205-dustcompactor.webp",
+    "alt": "아이로봇 205 DUSTCOMPACTOR 제품 본체",
+    "sourceUrl": "https://www.irobot.com/en_US/roomba-205-dustcompactor-combo-robot/L124020.html",
+    "checkedAt": "2026-09-11"
+  },
+  "irobot-105-vac": {
+    "src": "/images/models/irobot-105-vac.webp",
+    "alt": "아이로봇 105 VAC 제품 본체",
+    "sourceUrl": "https://www.irobot.com/en_US/us/products",
+    "checkedAt": "2026-09-11"
+  },
+  "irobot-combo-j9-plus": {
+    "src": "/images/models/irobot-combo-j9-plus.webp",
+    "alt": "아이로봇 COMBO J9+ 제품 본체",
+    "sourceUrl": "https://www.irobot.com/en_US/roomba-combo-j9plus-self-emptying-robot-vacuum-and-mop/C975020.html",
+    "checkedAt": "2026-09-11"
+  },
+  "irobot-combo-i5": {
+    "src": "/images/models/irobot-combo-i5.webp",
+    "alt": "아이로봇 COMBO I5 제품 본체",
+    "sourceUrl": "https://www.irobot.com/en_US/roomba-combo-i5-robot-vacuum-and-mop/I517020.html",
+    "checkedAt": "2026-09-11"
+  },
+  "everybot-q11": {
+    "src": "/images/models/everybot-q11.webp",
+    "alt": "에브리봇 Q11 제품 본체",
+    "sourceUrl": "https://everybotmall.com/product/공식몰-단독-26년-new-에브리봇-ai-올인원-로봇청소기-q11-먼지봉투3세정제/295/",
+    "checkedAt": "2026-09-11"
+  },
+  "everybot-q9": {
+    "src": "/images/models/everybot-q9.webp",
+    "alt": "에브리봇 Q9 제품 본체",
+    "sourceUrl": "https://everybotmall.com/category/q9/135/",
+    "checkedAt": "2026-09-11"
+  },
+  "everybot-q3-turbo-plus": {
+    "src": "/images/models/everybot-q3-turbo-plus.webp",
+    "alt": "에브리봇 Q3 TURBO PLUS 제품 본체",
+    "sourceUrl": "https://everybotmall.com/product/공식몰단독-에브리봇-q3-turbo-plus-로봇청소기/348/",
+    "checkedAt": "2026-09-11"
+  },
+  "everybot-rs350": {
+    "src": "/images/models/everybot-rs350.webp",
+    "alt": "에브리봇 RS350 제품 본체",
+    "sourceUrl": "https://everybotmall.com/product/%EC%97%90%EB%B8%8C%EB%A6%AC%EB%B4%87-%EC%97%A3%EC%A7%802-%EB%AC%BC%EA%B1%B8%EB%A0%88%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0-rs350/117/",
+    "checkedAt": "2026-09-11"
+  },
+  "everybot-ts402m": {
+    "src": "/images/models/everybot-ts402m.webp",
+    "alt": "에브리봇 TS402M 제품 본체",
+    "sourceUrl": "https://everybotmall.com/product/공식몰-단독스테디셀러-new-에브리봇-쓰리스핀-evo-물걸레-로봇청소기-ts40/332/",
+    "checkedAt": "2026-09-11"
+  },
+  "eufy-omni-s2": {
+    "src": "/images/models/eufy-omni-s2.webp",
+    "alt": "유피 OMNI S2 제품 본체",
+    "sourceUrl": "https://www.eufy.com/products/t2081111",
+    "checkedAt": "2026-09-11"
+  },
+  "eufy-omni-c28": {
+    "src": "/images/models/eufy-omni-c28.webp",
+    "alt": "유피 OMNI C28 제품 본체",
+    "sourceUrl": "https://www.eufy.com/au/products/eufy-robot-vacuum-omni-c28",
+    "checkedAt": "2026-09-11"
+  },
+  "eufy-x10-pro-omni": {
+    "src": "/images/models/eufy-x10-pro-omni.webp",
+    "alt": "유피 X10 PRO OMNI 제품 본체",
+    "sourceUrl": "https://www.eufy.com/products/t2351111",
+    "checkedAt": "2026-09-11"
+  },
+  "eufy-omni-s1-pro": {
+    "src": "/images/models/eufy-omni-s1-pro.webp",
+    "alt": "유피 OMNI S1 PRO 제품 본체",
+    "sourceUrl": "https://www.eufy.com/products/t2080111",
+    "checkedAt": "2026-09-11"
+  },
+  "eufy-omni-c20": {
+    "src": "/images/models/eufy-omni-c20.webp",
+    "alt": "유피 OMNI C20 제품 본체",
+    "sourceUrl": "https://www.eufy.com/products/t2280111",
+    "checkedAt": "2026-09-11"
+  }
+};

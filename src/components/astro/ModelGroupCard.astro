@@ -25,6 +25,20 @@ const detailPath = `/model/${representative.brandId}/${representative.slug}#comp
     </span>
   </div>
 
+  {
+    representative.image && (
+      <div class="model-card-image">
+        <img
+          src={representative.image.src}
+          alt={representative.image.alt}
+          width="720"
+          height="720"
+          loading="lazy"
+        />
+      </div>
+    )
+  }
+
   <p class="model-brand-label">{representative.brandName}</p>
   <h3>{displayName}</h3>
   <p class="model-series">{representative.series ?? "제품군"}</p>
