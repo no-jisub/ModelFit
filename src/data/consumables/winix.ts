@@ -56,7 +56,21 @@ export const winixConsumableRecords: ConsumableRecord[] = [
           sourceType: "official-manual",
         },
       ],
-      purchaseUnavailable: true,
+      directUrl:
+        id === "winix-zero-s-dust-filter" ? "https://link.coupang.com/a/g0AMuL3U4G" : undefined,
+      affiliateProductOption:
+        id === "winix-zero-s-dust-filter"
+          ? {
+              name: "CAF-I0H3 호환 집진필터",
+              kind: "compatible",
+              verification: "seller-claimed",
+              description:
+                "판매 페이지가 AZSE430 계열과 CAF-I0H3 호환을 표기한 타사 집진필터입니다. 위닉스 정품이 아닙니다.",
+              partNumber: "CAF-I0H3 호환",
+              packageLabel: "집진필터 1개",
+            }
+          : undefined,
+      purchaseUnavailable: id !== "winix-zero-s-dust-filter",
     }),
     purchaseWarning:
       domesticWarning +

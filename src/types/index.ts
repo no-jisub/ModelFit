@@ -29,6 +29,14 @@ export interface AffiliateLinkData {
   directUrl?: string;
   isAffiliate: boolean;
   restrictionNote?: string;
+  productOption?: {
+    name: string;
+    kind: ProductOptionKind;
+    verification: Exclude<ProductOptionVerification, "official-genuine">;
+    description: string;
+    partNumber?: string;
+    packageLabel?: string;
+  };
   enabled: boolean;
   status: "direct-product" | "search-results" | "unavailable";
   priceStatus: "manual-check-required" | "recently-checked";

@@ -14,9 +14,14 @@ const kindLabel = option.kind === "genuine" ? "정품" : "호환상품";
 const verificationLabels = {
   "official-genuine": "공식 규격·호환 근거 확인",
   "verified-compatible": "호환 근거 확인",
-  "seller-claimed": "판매자 호환 표기",
   unverified: "미검증",
 } as const;
+const verificationLabel =
+  option.verification === "seller-claimed"
+    ? option.kind === "genuine"
+      ? "판매자 정품 표기"
+      : "판매자 호환 표기"
+    : verificationLabels[option.verification];
 const hasDirectProduct = option.purchaseLinks.some((link) => link.linkType === "direct-product");
 ---
 
@@ -30,7 +35,7 @@ const hasDirectProduct = option.purchaseLinks.some((link) => link.linkType === "
       <div class="product-option-badges">
         <span class:list={["product-kind-badge", "is-" + option.kind]}>{kindLabel}</span>
         <span class="product-verification-badge">
-          {verificationLabels[option.verification]}
+          {verificationLabel}
         </span>
       </div>
       <h5 id={headingId}>{option.name}</h5>

@@ -64,7 +64,7 @@ describe("data validation", () => {
   it("제휴 링크는 쿠팡 파트너스 단축 URL로만 표시한다", () => {
     const affiliateParts = consumables.filter((part) => part.affiliate.isAffiliate);
 
-    expect(affiliateParts).toHaveLength(4);
+    expect(affiliateParts).toHaveLength(8);
     expect(
       affiliateParts.every((part) =>
         part.affiliate.directUrl?.startsWith("https://link.coupang.com/a/"),

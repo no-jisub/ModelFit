@@ -82,14 +82,14 @@ describe("getPurchaseLinks", () => {
     ).toBe(true);
   });
 
-  it("직접 상품 9개만 연결하고 나머지 162개는 공식 근거를 제공한다", () => {
+  it("직접 상품 13개를 연결하고 나머지 158개는 공식 근거를 제공한다", () => {
     const coupangLinks = consumables.flatMap((part) =>
       part.purchaseLinks.filter((link) => link.channel === "coupang"),
     );
 
-    expect(coupangLinks.filter((link) => link.linkType === "direct-product")).toHaveLength(9);
+    expect(coupangLinks.filter((link) => link.linkType === "direct-product")).toHaveLength(13);
     expect(coupangLinks.filter((link) => link.linkType === "search-results")).toHaveLength(0);
-    expect(coupangLinks.filter((link) => link.isAffiliate)).toHaveLength(4);
-    expect(consumables.filter((part) => part.affiliate.status === "unavailable")).toHaveLength(162);
+    expect(coupangLinks.filter((link) => link.isAffiliate)).toHaveLength(8);
+    expect(consumables.filter((part) => part.affiliate.status === "unavailable")).toHaveLength(158);
   });
 });

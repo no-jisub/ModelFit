@@ -1,6 +1,5 @@
 import {
   affiliate,
-  unavailableAffiliate,
   domesticWarning,
   researchedPart,
   source,
@@ -48,7 +47,21 @@ export const cuckooConsumableRecords: ConsumableRecord[] = [
         "https://www.cuckoo.co.kr/mall/productView?productNo=7461",
       ),
     ],
-    affiliate: unavailableAffiliate("쿠쿠 ACF-AHMT10 정품 필터"),
+    affiliate: affiliate(
+      "쿠쿠 ACF-AHMT10 호환 필터",
+      "https://link.coupang.com/a/g0AOOyyGB2",
+      "2026-09-13",
+      undefined,
+      {
+        name: "ACF-AHMT10 호환 복합필터",
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 AC-28AH 및 ACF-AHMT10 호환을 표기한 타사 필터입니다. 쿠쿠 정품이 아닙니다.",
+        partNumber: "ACF-AHMT10 호환",
+        packageLabel: "혼합 필터 세트 · 판매 페이지에서 구성 확인",
+      },
+    ),
   },
   {
     id: "cuckoo-acf-tmt20-filter",

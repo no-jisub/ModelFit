@@ -103,6 +103,15 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
         sourceType: "official-store",
       },
     ],
-    purchaseUnavailable: true,
+    directUrl: "https://link.coupang.com/a/g0ARHTxwd2",
+    verifiedAt: "2026-09-13",
+    affiliateProductOption: {
+      name: "AP-1818C·AP-2219K 호환 복합필터",
+      kind: "compatible",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 AP-1818C와 AP-2219K 호환을 표기한 타사 필터입니다. 코웨이 정품이 아닙니다.",
+      packageLabel: "프리필터+집진필터 구성 · 판매 페이지에서 확인",
+    },
   }),
 ];

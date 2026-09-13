@@ -8,6 +8,7 @@ type ProductOptionSource = Pick<
   | "genuinePartNumber"
   | "verificationStatus"
   | "sources"
+  | "affiliate"
 >;
 
 export function createProductOptions(
@@ -15,6 +16,13 @@ export function createProductOptions(
   purchaseLinks: PurchaseLinkData[],
 ): ConsumableProductOption[] {
   const productSpecificLinks = purchaseLinks.filter((link) => link.linkType !== "search-results");
+  const candidate = part.affiliate.productOption;
+  const candidateLinks = candidate
+    ? productSpecificLinks.filter((link) => link.channel === "coupang")
+    : [];
+  const genuineLinks = candidate
+    ? productSpecificLinks.filter((link) => link.channel !== "coupang")
+    : productSpecificLinks;
   const verification =
     part.verificationStatus === "official"
       ? ("official-genuine" as const)
@@ -25,7 +33,7 @@ export function createProductOptions(
     ? ` 정품 부품번호는 ${part.genuinePartNumber}입니다.`
     : "";
 
-  return [
+  const options: ConsumableProductOption[] = [
     {
       id: `${part.id}-genuine-option`,
       name: part.displayName,
@@ -42,7 +50,23 @@ export function createProductOptions(
           ? part.compatibleProductName
           : undefined,
       sources: part.sources,
-      purchaseLinks: productSpecificLinks,
+      purchaseLinks: genuineLinks,
     },
   ];
+
+  if (candidate && candidateLinks.length > 0) {
+    options.push({
+      id: `${part.id}-${candidate.kind}-candidate-option`,
+      name: candidate.name,
+      kind: candidate.kind,
+      verification: candidate.verification,
+      description: candidate.description,
+      partNumber: candidate.partNumber,
+      packageLabel: candidate.packageLabel,
+      sources: [],
+      purchaseLinks: candidateLinks,
+    });
+  }
+
+  return options;
 }

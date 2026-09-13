@@ -1,4 +1,4 @@
-import type { ConsumableCompatibility, SourceReference } from "@/types";
+import type { AffiliateLinkData, ConsumableCompatibility, SourceReference } from "@/types";
 
 const checkedAt = "2026-09-11";
 export const regionalWarning =
@@ -18,6 +18,7 @@ export const affiliate = (
   directUrl?: string,
   verifiedAt = checkedAt,
   restrictionNote?: string,
+  productOption?: AffiliateLinkData["productOption"],
 ) => {
   if (!directUrl) return unavailableAffiliate(searchKeyword, verifiedAt);
   const resolvedUrl = directUrl;
@@ -28,6 +29,7 @@ export const affiliate = (
     directUrl: resolvedUrl,
     isAffiliate,
     restrictionNote,
+    productOption,
     enabled: true,
     status:
       resolvedUrl.includes("/vp/products/") || isAffiliate
@@ -66,6 +68,7 @@ export const researchedPart = ({
   verifiedAt = checkedAt,
   secondarySources = [],
   directUrl,
+  affiliateProductOption,
   purchaseUnavailable = false,
 }: {
   id: string;
@@ -87,6 +90,7 @@ export const researchedPart = ({
     sourceType?: SourceReference["sourceType"];
   }>;
   directUrl?: string;
+  affiliateProductOption?: AffiliateLinkData["productOption"];
   purchaseUnavailable?: boolean;
 }): ConsumableRecord => ({
   id,
@@ -108,7 +112,7 @@ export const researchedPart = ({
   ],
   affiliate: purchaseUnavailable
     ? unavailableAffiliate(searchKeyword, verifiedAt)
-    : affiliate(searchKeyword, directUrl, verifiedAt),
+    : affiliate(searchKeyword, directUrl, verifiedAt, undefined, affiliateProductOption),
 });
 
 export type ConsumableRecord = Omit<

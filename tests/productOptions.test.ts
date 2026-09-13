@@ -55,7 +55,12 @@ describe("consumable product options", () => {
     expect(parts.every((part) => part.purchaseWarning?.includes("물세척하면 안 됩니다"))).toBe(
       true,
     );
-    expect(parts.every((part) => !part.affiliate.enabled)).toBe(true);
+    expect(parts.find((part) => part.id === "winix-zero-s-dust-filter")?.affiliate.enabled).toBe(
+      true,
+    );
+    expect(
+      parts.find((part) => part.id === "winix-zero-s-deodorizing-filter")?.affiliate.enabled,
+    ).toBe(false);
   });
   it("코웨이 노블은 세척 프리필터와 주기가 다른 교체 필터를 구분한다", () => {
     const preFilter = consumables.find((part) => part.id === "coway-4d-pre-filter")!;
@@ -78,7 +83,7 @@ describe("consumable product options", () => {
     expect(parts[0].replacementInterval).toMatch(/^12개월/);
     expect(parts[0].sources.some((source) => source.sourceType === "official-manual")).toBe(true);
     expect(parts[0].genuinePartNumber).toBeUndefined();
-    expect(parts[0].affiliate.enabled).toBe(false);
+    expect(parts[0].affiliate.enabled).toBe(true);
   });
   it("쿠쿠 ACF-AHMT10은 공식 2개입 세트와 직접 상품 근거를 제공한다", () => {
     const filter = consumables.find((part) => part.id === "cuckoo-acf-ahmt10-filter")!;
@@ -319,6 +324,37 @@ describe("consumable product options", () => {
           ),
       ),
     ).toBe(true);
+  });
+
+  it("쿠팡 판매 후보를 공식 정품 기준과 분리해 표시한다", () => {
+    const compatibleIds = [
+      "winix-zero-s-dust-filter",
+      "cuckoo-acf-ahmt10-filter",
+      "coway-ap2219k-composite-filter",
+    ];
+
+    for (const id of compatibleIds) {
+      const part = consumables.find((item) => item.id === id)!;
+      expect(part.productOptions[0]).toMatchObject({
+        kind: "genuine",
+        verification: "official-genuine",
+      });
+      expect(part.productOptions[1]).toMatchObject({
+        kind: "compatible",
+        verification: "seller-claimed",
+      });
+      expect(part.productOptions[1]?.purchaseLinks[0]?.isAffiliate).toBe(true);
+    }
+
+    const blueair = consumables.find((item) => item.id === "blueair-3410-particle-carbon-filter")!;
+    expect(blueair.productOptions[1]).toMatchObject({
+      name: "Blue 3410 교체 필터 106332",
+      kind: "genuine",
+      verification: "seller-claimed",
+    });
+    expect(blueair.productOptions[1]?.purchaseLinks[0]?.url).toBe(
+      "https://link.coupang.com/a/g0AWwsZXVs",
+    );
   });
 
   it("특정 상품 후보에 쿠팡 검색 결과 링크를 포함하지 않는다", () => {
