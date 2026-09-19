@@ -39,7 +39,21 @@ export const dreameConsumableRecords: ConsumableRecord[] = [
         "2026-09-10",
       ),
     ],
-    affiliate: affiliate(`${displayName} 정품`, undefined, "2026-09-10"),
+    affiliate: affiliate(
+      `${displayName} 정품`,
+      "https://link.coupang.com/a/g0DkSxFdC0",
+      "2026-09-13",
+      undefined,
+      {
+        name: `${displayName.replace("Dreame ", "")} 호환상품`,
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 Dreame X40 Ultra 적용을 표기한 5종 옵션형 호환상품입니다. 현재 소모품 종류와 구성 수량을 확인하세요.",
+        partNumber: "X40 Ultra 호환",
+        packageLabel: "선택 옵션의 구성 확인 필요",
+      },
+    ),
   })),
   ...(
     [
@@ -81,7 +95,6 @@ export const dreameConsumableRecords: ConsumableRecord[] = [
         "https://store.kr.dreametech.com/products/%EB%93%9C%EB%A6%AC%EB%AF%B8-x50s-pro-ultra-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0",
       sourceType: "manufacturer",
       searchKeyword: `${displayName} 정품`,
-      verifiedAt: "2026-09-11",
       secondarySources: [
         {
           title: "드리미 코리아 공식 X50s Pro Master 제품 및 Master·Ultra 차이 안내",
@@ -89,7 +102,16 @@ export const dreameConsumableRecords: ConsumableRecord[] = [
           sourceType: "manufacturer",
         },
       ],
-      purchaseUnavailable: true,
+      directUrl: "https://link.coupang.com/a/haA0FMhjFs",
+      affiliateProductOption: {
+        name: `X50s Pro Ultra ${compatibleProductName} 호환 옵션`,
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 드리미 X50s Pro Ultra용 필터·브러시·먼지봉투·물걸레 소모품 옵션을 제공하는 호환상품입니다. 사용하는 부품 종류와 구성 수량을 구매 전에 확인하세요.",
+        packageLabel: "선택 옵션의 구성 확인 필요",
+      },
+      verifiedAt: "2026-09-19",
     }),
     purchaseWarning: `${domesticWarning} X50s Pro Master와 Ultra는 로봇 본체 사양은 같지만 스테이션 형태가 다릅니다. 구매 직전 판매 페이지에 두 모델 중 사용하는 모델이 명시됐는지 확인하세요.`,
   })),
@@ -135,8 +157,17 @@ export const dreameConsumableRecords: ConsumableRecord[] = [
       sourceType: "manufacturer",
       searchKeyword: `${displayName} 정품`,
       regional: true,
-      verifiedAt: "2026-09-11",
-      purchaseUnavailable: true,
+      verifiedAt: "2026-09-13",
+      directUrl: "https://link.coupang.com/a/g0C5rFSf6W",
+      affiliateProductOption: {
+        name: `${displayName.replace("드리미 ", "")} 호환상품`,
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 L10s Pro Ultra Heat 적용을 표기한 옵션형 호환상품입니다. 현재 소모품 종류와 수량을 옵션에서 확인하세요.",
+        partNumber: "L10s Pro Ultra Heat 호환",
+        packageLabel: "선택 옵션의 구성 확인 필요",
+      },
     }),
   ),
 ];

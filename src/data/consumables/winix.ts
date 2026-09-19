@@ -1,5 +1,5 @@
 import {
-  unavailableAffiliate,
+  affiliate,
   domesticWarning,
   researchedPart,
   source,
@@ -20,7 +20,21 @@ export const winixConsumableRecords: ConsumableRecord[] = [
     sources: [
       source("위닉스 공식몰 — 타워프라임 플러스 일체형 필터", "https://www.winix.com/product/1668"),
     ],
-    affiliate: unavailableAffiliate("위닉스 ATTM115-MWK 정품 일체형 필터"),
+    affiliate: affiliate(
+      "위닉스 ATTM115-MWK 정품 일체형 필터",
+      "https://link.coupang.com/a/g0CvGZgpA4",
+      "2026-09-13",
+      undefined,
+      {
+        name: "ATTM115-MWK 호환 일체형 필터",
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 ATTM115-MWK 적용을 표기한 타사 일체형 필터입니다. 위닉스 정품이 아닙니다.",
+        partNumber: "CAF-N0P5 호환",
+        packageLabel: "일체형 필터 1개",
+      },
+    ),
   },
   ...[
     {
@@ -48,7 +62,6 @@ export const winixConsumableRecords: ConsumableRecord[] = [
       sourceUrl: url,
       searchKeyword: "위닉스 AZSE430-JWK " + number + " 정품 필터",
       replacementInterval: "약 6~12개월 (하루 24시간 사용 기준, 사용 환경에 따라 달라짐)",
-      verifiedAt: "2026-09-11",
       secondarySources: [
         {
           title: "위닉스 AZSE430 시리즈 공식 설명서 — 교체 필터와 관리 방법 (16~20쪽)",
@@ -57,7 +70,9 @@ export const winixConsumableRecords: ConsumableRecord[] = [
         },
       ],
       directUrl:
-        id === "winix-zero-s-dust-filter" ? "https://link.coupang.com/a/g0AMuL3U4G" : undefined,
+        id === "winix-zero-s-dust-filter"
+          ? "https://link.coupang.com/a/g0AMuL3U4G"
+          : "https://link.coupang.com/a/haKZJupa5k",
       affiliateProductOption:
         id === "winix-zero-s-dust-filter"
           ? {
@@ -69,8 +84,16 @@ export const winixConsumableRecords: ConsumableRecord[] = [
               partNumber: "CAF-I0H3 호환",
               packageLabel: "집진필터 1개",
             }
-          : undefined,
-      purchaseUnavailable: id !== "winix-zero-s-dust-filter",
+          : {
+              name: "위닉스 제로 S 프리미엄 골드 탈취필터 CAF-I0S3",
+              kind: "compatible",
+              verification: "seller-claimed",
+              description:
+                "판매 페이지가 위닉스 제로 S용 프리미엄 골드 탈취필터로 표기한 타사 상품입니다. 공식 부품번호 CAF-I0D1과 판매 상품의 표기가 다르므로 적용 모델을 구매 전에 확인하세요.",
+              partNumber: "CAF-I0S3",
+              packageLabel: "탈취필터 1개",
+            },
+      verifiedAt: "2026-09-19",
     }),
     purchaseWarning:
       domesticWarning +
@@ -110,6 +133,16 @@ export const winixConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://www.winix.com/product/852",
     sourceType: "manufacturer",
     searchKeyword: "위닉스 AMSH993-JSK 정품 올인원 필터",
-    purchaseUnavailable: true,
+    directUrl: "https://link.coupang.com/a/g1Xc7gwdWe",
+    affiliateProductOption: {
+      name: "위닉스 마스터·마스터 S 호환 필터",
+      kind: "compatible",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 AMSH993-JSK를 포함한 위닉스 마스터·마스터 S 호환 필터로 표기한 상품입니다. 위닉스 정품이 아닙니다.",
+      partNumber: "AMSH993-JSK 호환",
+      packageLabel: "집진·탈취 호환 필터 1세트",
+    },
+    verifiedAt: "2026-09-14",
   }),
 ];

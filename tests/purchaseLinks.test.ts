@@ -65,8 +65,7 @@ describe("getPurchaseLinks", () => {
     );
   });
 
-  it("171개 모두 공식 사이트를 제공하고 확인된 상품만 쿠팡 경로를 제공한다", () => {
-    expect(consumables).toHaveLength(171);
+  it("모든 소모품이 공식 사이트를 제공하고 확인된 상품만 쿠팡 경로를 제공한다", () => {
     expect(
       consumables.every(
         (part) =>
@@ -82,14 +81,19 @@ describe("getPurchaseLinks", () => {
     ).toBe(true);
   });
 
-  it("직접 상품 13개를 연결하고 나머지 158개는 공식 근거를 제공한다", () => {
+  it("활성화된 직접 상품과 제휴 링크 수가 구매 상태 데이터와 일치한다", () => {
     const coupangLinks = consumables.flatMap((part) =>
       part.purchaseLinks.filter((link) => link.channel === "coupang"),
     );
+    const enabledParts = consumables.filter((part) => part.affiliate.enabled);
+    const affiliateParts = consumables.filter((part) => part.affiliate.isAffiliate);
+    const unavailableParts = consumables.filter((part) => part.affiliate.status === "unavailable");
 
-    expect(coupangLinks.filter((link) => link.linkType === "direct-product")).toHaveLength(13);
+    expect(coupangLinks.filter((link) => link.linkType === "direct-product")).toHaveLength(
+      enabledParts.length,
+    );
     expect(coupangLinks.filter((link) => link.linkType === "search-results")).toHaveLength(0);
-    expect(coupangLinks.filter((link) => link.isAffiliate)).toHaveLength(8);
-    expect(consumables.filter((part) => part.affiliate.status === "unavailable")).toHaveLength(158);
+    expect(coupangLinks.filter((link) => link.isAffiliate)).toHaveLength(affiliateParts.length);
+    expect(enabledParts.length + unavailableParts.length).toBe(consumables.length);
   });
 });

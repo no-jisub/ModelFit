@@ -25,9 +25,19 @@ export const cuckooConsumableRecords: ConsumableRecord[] = [
       ),
     ],
     affiliate: affiliate(
-      "쿠쿠 ACF-WMT10 정품 필터",
-      "https://link.coupang.com/a/gle6sSgGOa",
-      "2026-08-19",
+      "쿠쿠 ACF-WMT10 호환 필터",
+      "https://link.coupang.com/a/g0Dn7O5fGu",
+      "2026-09-13",
+      undefined,
+      {
+        name: "ACF-WMT10 호환 집진·탈취 일체형 필터",
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 ACF-WMT10 호환을 표기한 타사 일체형 필터입니다. 쿠쿠 정품이 아닙니다.",
+        partNumber: "ACF-WMT10 호환",
+        packageLabel: "집진·탈취 일체형 필터 1개",
+      },
     ),
   },
   {
@@ -97,7 +107,17 @@ export const cuckooConsumableRecords: ConsumableRecord[] = [
     sourceTitle: "쿠쿠 공식몰 — AC-23AH10FNW 토탈케어 청정필터 시스템",
     sourceUrl: "https://www.cuckoo.co.kr/mall/productView?productNo=8691",
     searchKeyword: "쿠쿠 AC-23AH10FNW 정품 필터",
-    purchaseUnavailable: true,
+    directUrl: "https://link.coupang.com/a/haMeDL2YzQ",
+    affiliateProductOption: {
+      name: "쿠쿠 AC-23AH10FNW 호환 헤파·탈취 필터 세트",
+      kind: "compatible",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 AC-23AH10FNW 적용을 표기한 타사 헤파·탈취 필터 세트입니다. 사용하는 본체 모델과 세트 구성을 구매 전에 확인하세요.",
+      partNumber: "AC-23AH10FNW 호환",
+      packageLabel: "헤파·탈취 필터 세트",
+    },
+    verifiedAt: "2026-09-19",
   }),
   researchedPart({
     id: "cuckoo-ac14-total-care-filter",
@@ -107,6 +127,16 @@ export const cuckooConsumableRecords: ConsumableRecord[] = [
     sourceTitle: "쿠쿠 공식 렌탈몰 — AC-14L10FEW 토탈케어 안심필터",
     sourceUrl: "https://www.cuckoo.co.kr/rental/productView?cateUid=31&idx=860",
     searchKeyword: "쿠쿠 AC-14L10FEW 정품 필터",
-    purchaseUnavailable: true,
+    directUrl: "https://link.coupang.com/a/haDUrxSl5w",
+    affiliateProductOption: {
+      name: "쿠쿠 AC-14L10FEW 호환 공기청정기 필터",
+      kind: "compatible",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 쿠쿠 AC-14L10FEW 호환을 표기한 타사 필터입니다. 쿠쿠 정품이 아니므로 적용 모델을 구매 전에 확인하세요.",
+      partNumber: "AC-14L10FEW 호환",
+      packageLabel: "판매 페이지에서 구성 확인",
+    },
+    verifiedAt: "2026-09-19",
   }),
 ];

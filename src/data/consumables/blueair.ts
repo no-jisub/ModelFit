@@ -1,4 +1,5 @@
 import {
+  affiliate,
   unavailableAffiliate,
   domesticWarning,
   researchedPart,
@@ -47,7 +48,21 @@ export const blueairConsumableRecords: ConsumableRecord[] = [
         "2026-09-10",
       ),
     ],
-    affiliate: unavailableAffiliate("블루에어 DustMagnet 5210i 5240i 정품 필터"),
+    affiliate: affiliate(
+      "블루에어 DustMagnet 5210i 5240i 정품 필터",
+      "https://www.coupang.com/vp/products/8009915704",
+      "2026-09-13",
+      "파트너스 링크 생성 제한 상품",
+      {
+        name: "DustMagnet 5210i·5240i 호환 필터",
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 DustMagnet 5210i·5240i 적용을 표기한 타사 필터입니다. 파트너스 링크 생성이 제한되어 일반 상품 링크로 제공합니다.",
+        partNumber: "5200 시리즈 호환",
+        packageLabel: "콤비네이션 필터 1개",
+      },
+    ),
   },
   {
     ...researchedPart({

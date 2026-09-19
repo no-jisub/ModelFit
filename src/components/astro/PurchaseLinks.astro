@@ -68,7 +68,9 @@ const channels: Array<{
               >
                 {link.label} <span aria-hidden="true">↗</span>
               </a>
-              {link.channel === "coupang" && <AffiliateDisclosure hasAffiliateLinks={true} />}
+              {link.channel === "coupang" && (
+                <AffiliateDisclosure hasAffiliateLinks={link.isAffiliate} />
+              )}
             </Fragment>
           ))}
           <p class="part-action-copy">{channelNote}</p>

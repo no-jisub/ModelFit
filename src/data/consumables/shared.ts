@@ -68,6 +68,7 @@ export const researchedPart = ({
   verifiedAt = checkedAt,
   secondarySources = [],
   directUrl,
+  restrictionNote,
   affiliateProductOption,
   purchaseUnavailable = false,
 }: {
@@ -90,6 +91,7 @@ export const researchedPart = ({
     sourceType?: SourceReference["sourceType"];
   }>;
   directUrl?: string;
+  restrictionNote?: string;
   affiliateProductOption?: AffiliateLinkData["productOption"];
   purchaseUnavailable?: boolean;
 }): ConsumableRecord => ({
@@ -112,7 +114,7 @@ export const researchedPart = ({
   ],
   affiliate: purchaseUnavailable
     ? unavailableAffiliate(searchKeyword, verifiedAt)
-    : affiliate(searchKeyword, directUrl, verifiedAt, undefined, affiliateProductOption),
+    : affiliate(searchKeyword, directUrl, verifiedAt, restrictionNote, affiliateProductOption),
 });
 
 export type ConsumableRecord = Omit<

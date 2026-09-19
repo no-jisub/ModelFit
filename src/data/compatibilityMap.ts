@@ -24,6 +24,10 @@ export const modelConsumableIds: Record<string, string[]> = {
     "coway-4d-pre-filter",
     "coway-4d-dimensional-filter",
     "coway-air-matching-filter",
+    "coway-ap2021-compatible-4d-filter",
+    "coway-ap2021-pet-air-matching-filter",
+    "coway-ap2021-compatible-4d-dimensional-filter",
+    "coway-ap2021-compatible-complete-filter-set",
   ],
   "coway-ap-1521b": [
     "coway-4d-pre-filter",
@@ -49,8 +53,16 @@ export const modelConsumableIds: Record<string, string[]> = {
   "dyson-tp09": ["dyson-360-glass-hepa-carbon-filter"],
   "dyson-ph04": ["dyson-360-glass-hepa-carbon-filter"],
 
-  "xiaomi-5-pro": ["xiaomi-5-series-mop-pad", "xiaomi-5-series-anti-tangle-side-brush"],
-  "xiaomi-5": ["xiaomi-5-series-mop-pad", "xiaomi-5-series-anti-tangle-side-brush"],
+  "xiaomi-5-pro": [
+    "xiaomi-5-series-mop-pad",
+    "xiaomi-5-series-anti-tangle-main-brush",
+    "xiaomi-5-series-anti-tangle-side-brush",
+  ],
+  "xiaomi-5": [
+    "xiaomi-5-series-mop-pad",
+    "xiaomi-5-series-anti-tangle-main-brush",
+    "xiaomi-5-series-anti-tangle-side-brush",
+  ],
   "xiaomi-x20-plus": [
     "xiaomi-x20-plus-filter",
     "xiaomi-x20-plus-main-brush",
@@ -120,9 +132,15 @@ export const modelConsumableIds: Record<string, string[]> = {
     "roborock-s10-maxv-mop-pad",
     "roborock-s10-maxv-dust-bag",
   ],
-  "roborock-s8-maxv-ultra": ["roborock-saros-qrevo-s8-dust-bag"],
+  "roborock-s8-maxv-ultra": [
+    "roborock-saros-qrevo-s8-dust-bag",
+    "roborock-s8-qrevo-curv-compatible-dust-bag",
+  ],
   "roborock-qrevo-curv-2-flow": ["roborock-saros-qrevo-s8-dust-bag"],
-  "roborock-qrevo-curv": ["roborock-saros-qrevo-s8-dust-bag"],
+  "roborock-qrevo-curv": [
+    "roborock-saros-qrevo-s8-dust-bag",
+    "roborock-s8-qrevo-curv-compatible-dust-bag",
+  ],
 
   "dreame-x50s-pro-master": [
     "dreame-x50s-main-brush",

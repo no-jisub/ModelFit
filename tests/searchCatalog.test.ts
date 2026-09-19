@@ -46,7 +46,7 @@ describe("통합검색", () => {
 
     expect(modelMatches.primary.map(({ model }) => model.id)).toEqual(["roborock-s8-maxv-ultra"]);
     expect(partMatches.primary.map(({ part }) => part.id)).toEqual([
-      "roborock-saros-qrevo-s8-dust-bag",
+      "roborock-s8-qrevo-curv-compatible-dust-bag",
     ]);
     expect(modelMatches.related.length).toBeGreaterThan(0);
     expect(partMatches.related.length).toBeGreaterThan(0);

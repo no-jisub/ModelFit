@@ -63,7 +63,20 @@ export const eufyConsumableRecords: ConsumableRecord[] = [
         "2026-09-10",
       ),
     ],
-    affiliate: affiliate(`${displayName} 정품`),
+    affiliate: affiliate(
+      `${displayName} 정품`,
+      "https://www.coupang.com/vp/products/9266752405",
+      "2026-09-14",
+      "쿠팡 파트너스 링크 생성 제한 상품",
+      {
+        name: "Omni C20 공식 액세서리 키트 후보",
+        kind: "genuine",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 Omni C20용 공식 액세서리 키트로 표기한 상품입니다. 파트너스 링크 생성이 제한되어 일반 상품 링크로 제공합니다.",
+        packageLabel: compatibleProductName,
+      },
+    ),
   })),
   {
     id: "eufy-x10-pro-side-brush",
@@ -91,7 +104,20 @@ export const eufyConsumableRecords: ConsumableRecord[] = [
       ),
     ],
     replacementInterval: "약 3개월 (공식 구독 서비스 권장)",
-    affiliate: affiliate("eufy X10 Pro Omni 정품 사이드 브러시", undefined, "2026-09-10"),
+    affiliate: affiliate(
+      "eufy X10 Pro Omni 정품 사이드 브러시",
+      "https://link.coupang.com/a/haCqbKM5L2",
+      "2026-09-19",
+      undefined,
+      {
+        name: "eufy X10 Pro Omni 호환 사이드 브러시 옵션",
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 eufy X10 Pro Omni용 메인·사이드 브러시·필터·먼지봉투 옵션을 제공하는 호환상품입니다. 사이드 브러시 옵션과 구성 수량을 구매 전에 확인하세요.",
+        packageLabel: "사이드 브러시 옵션 선택",
+      },
+    ),
   },
   {
     id: "eufy-c28-filter",
@@ -160,7 +186,20 @@ export const eufyConsumableRecords: ConsumableRecord[] = [
       searchKeyword: `${displayName} 정품`,
       replacementInterval: "약 6개월 (공식 키트 권장, 사용 빈도에 따라 조정)",
       regional: true,
-      verifiedAt: "2026-09-11",
+      directUrl: id === "eufy-s2-dust-bag" ? "https://link.coupang.com/a/haL9euWAV2" : undefined,
+      affiliateProductOption:
+        id === "eufy-s2-dust-bag"
+          ? {
+              name: "eufy Omni S1·S1 Pro·S2 호환 먼지봉투",
+              kind: "compatible",
+              verification: "seller-claimed",
+              description:
+                "판매 페이지가 eufy Omni S1·S1 Pro·S2 적용을 표기한 타사 먼지봉투입니다. S2 호환 표기와 구성 수량을 구매 전에 확인하세요.",
+              partNumber: "Omni S2 호환",
+              packageLabel: "먼지봉투 12개",
+            }
+          : undefined,
+      verifiedAt: id === "eufy-s2-dust-bag" ? "2026-09-19" : "2026-09-11",
     }),
   ),
   ...(
@@ -180,8 +219,19 @@ export const eufyConsumableRecords: ConsumableRecord[] = [
       sourceTitle: "eufy 공식 S1 Pro 정품 액세서리 목록",
       sourceUrl: "https://www.eufy.com/collections/accessory-for-floor-washing-robot",
       searchKeyword: `${displayName} 정품`,
+      directUrl: "https://www.coupang.com/vp/products/8745220144",
+      restrictionNote: "쿠팡 파트너스 링크 생성 제한 상품",
+      affiliateProductOption: {
+        name: `eufy Omni S1 Pro 호환 ${displayName.replace("eufy Omni S1 Pro ", "")}`,
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 eufy Omni S1 Pro용 17종 소모품 세트로 표기한 타사 상품입니다. 파트너스 링크 생성이 제한되어 일반 상품 링크로 제공하며 재고와 구성을 구매 전에 확인하세요.",
+        partNumber: "Omni S1 Pro 호환",
+        packageLabel: "17종 세트 · 판매 페이지에서 옵션별 수량 확인",
+      },
       regional: true,
-      verifiedAt: "2026-09-11",
+      verifiedAt: "2026-09-19",
     }),
   ),
   ...(
@@ -245,13 +295,32 @@ export const eufyConsumableRecords: ConsumableRecord[] = [
         sourceUrl,
         searchKeyword: `${displayName} 정품`,
         regional: true,
-        verifiedAt: "2026-09-11",
+        verifiedAt: "2026-09-19",
         secondarySources: [
           {
             title: "eufy 공식 X10 Pro Omni 반년 구독 서비스 — 부품별 교체 주기",
             url: "https://www.eufy.com/products/bundle-t29a1031-1-t29e80w1-1-t29e90j1-3-t2351v11-81-1-t29e7031-4",
           },
         ],
+        directUrl:
+          id === "eufy-x10-pro-mop-cloth"
+            ? "https://www.coupang.com/vp/products/9319311624"
+            : "https://link.coupang.com/a/haCqbKM5L2",
+        restrictionNote:
+          id === "eufy-x10-pro-mop-cloth" ? "쿠팡 파트너스 링크 생성 제한 상품" : undefined,
+        affiliateProductOption: {
+          name: `eufy X10 Pro Omni ${compatibleProductName} 호환 옵션`,
+          kind: "compatible",
+          verification: "seller-claimed",
+          description:
+            id === "eufy-x10-pro-mop-cloth"
+              ? "판매 페이지가 eufy X10 Pro Omni용 물걸레 6개와 먼지봉투 8개 구성으로 표기한 호환상품입니다. 파트너스 링크 생성이 제한되어 일반 상품 링크로 제공합니다."
+              : "판매 페이지가 eufy X10 Pro Omni용 메인·사이드 브러시·필터·먼지봉투 옵션을 제공하는 호환상품입니다. 선택한 부품 종류와 구성 수량을 구매 전에 확인하세요.",
+          packageLabel:
+            id === "eufy-x10-pro-mop-cloth"
+              ? "물걸레 6개·먼지봉투 8개"
+              : "선택 옵션의 구성 확인 필요",
+        },
       }),
   ),
   ...(

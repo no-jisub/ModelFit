@@ -35,7 +35,17 @@ export const skmagicConsumableRecords: ConsumableRecord[] = [
     sourceTitle: "SK매직 공식몰 — ACL131 공기청정기 필터",
     sourceUrl: "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000059559",
     searchKeyword: "SK매직 FLTACLP131WH 정품 필터",
-    purchaseUnavailable: true,
+    directUrl: "https://link.coupang.com/a/g1XfiljlBI",
+    affiliateProductOption: {
+      name: "SK매직 ACL131 원형 호환 필터",
+      kind: "compatible",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 SK매직 ACL131 계열 호환 원형 필터로 표기한 상품입니다. 사용하는 모델을 구매 전에 확인하세요.",
+      partNumber: "ACL131 호환",
+      packageLabel: "원형 필터 1개",
+    },
+    verifiedAt: "2026-09-14",
   }),
   researchedPart({
     id: "skmagic-acl20-all-in-one-care-filter",
@@ -48,8 +58,16 @@ export const skmagicConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000066078",
     searchKeyword: "SK매직 FLTA20C2ATWH 정품 필터",
     replacementInterval: "12개월 (사용 환경에 따라 달라질 수 있음)",
-    directUrl: "https://www.coupang.com/vp/products/8673596944",
-    verifiedAt: "2026-09-11",
+    directUrl: "https://link.coupang.com/a/haMntuEnBs",
+    affiliateProductOption: {
+      name: "SK매직 ACL20 올인원플러스 일체형 필터",
+      kind: "genuine",
+      verification: "seller-claimed",
+      description: "판매 페이지의 ACL20 적용 모델과 필터 품번을 구매 전에 확인하세요.",
+      partNumber: "FLTA20C2ATWH",
+      packageLabel: "일체형 필터 1개",
+    },
+    verifiedAt: "2026-09-19",
   }),
   researchedPart({
     id: "skmagic-acl25-all-in-one-care-filter",

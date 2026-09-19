@@ -1,4 +1,10 @@
-import { domesticWarning, source, unavailableAffiliate, type ConsumableRecord } from "./shared";
+import {
+  affiliate,
+  domesticWarning,
+  source,
+  unavailableAffiliate,
+  type ConsumableRecord,
+} from "./shared";
 
 export const dysonConsumableRecords: ConsumableRecord[] = [
   {
@@ -18,7 +24,21 @@ export const dysonConsumableRecords: ConsumableRecord[] = [
         "manufacturer",
       ),
     ],
-    affiliate: unavailableAffiliate("다이슨 BP04 정품 K 카본 필터"),
+    affiliate: affiliate(
+      "다이슨 BP04 정품 K 카본 필터",
+      "https://link.coupang.com/a/haDNWmnGdU",
+      "2026-09-19",
+      undefined,
+      {
+        name: "BP02·BP03·BP04 호환 활성탄소 필터",
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 BP04 적용을 표기한 타사 활성탄소 필터입니다. 다이슨 정품 K-카본 필터가 아니므로 규격과 적용 모델을 구매 전에 확인하세요.",
+        partNumber: "BP02·BP03·BP04 호환",
+        packageLabel: "판매 페이지에서 구성 확인",
+      },
+    ),
   },
   {
     id: "dyson-big-quiet-hepa-h13-filter",
@@ -38,7 +58,21 @@ export const dysonConsumableRecords: ConsumableRecord[] = [
         "manufacturer",
       ),
     ],
-    affiliate: unavailableAffiliate("다이슨 BP03 BP04 정품 HEPA H13 필터"),
+    affiliate: affiliate(
+      "다이슨 BP03 BP04 정품 HEPA H13 필터",
+      "https://link.coupang.com/a/g0CDpsrYjs",
+      "2026-09-13",
+      undefined,
+      {
+        name: "BP03·BP04 호환 HEPA H13 필터",
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 BP03·BP04 적용을 표기한 타사 HEPA H13 필터입니다. 다이슨 정품이 아닙니다.",
+        partNumber: "BP03·BP04 호환",
+        packageLabel: "선택 옵션의 구성 확인 필요",
+      },
+    ),
   },
   {
     id: "dyson-bp03-activated-carbon-filter",
@@ -57,7 +91,21 @@ export const dysonConsumableRecords: ConsumableRecord[] = [
         "manufacturer",
       ),
     ],
-    affiliate: unavailableAffiliate("다이슨 BP03 정품 활성 탄소 필터"),
+    affiliate: affiliate(
+      "다이슨 BP03 정품 활성 탄소 필터",
+      "https://link.coupang.com/a/haDNWmnGdU",
+      "2026-09-19",
+      undefined,
+      {
+        name: "BP02·BP03·BP04 호환 활성탄소 필터",
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 BP03 적용을 표기한 타사 활성탄소 필터입니다. 다이슨 정품이 아니므로 규격과 적용 모델을 구매 전에 확인하세요.",
+        partNumber: "BP02·BP03·BP04 호환",
+        packageLabel: "판매 페이지에서 구성 확인",
+      },
+    ),
   },
   {
     id: "dyson-360-glass-hepa-carbon-filter",

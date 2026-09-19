@@ -50,7 +50,20 @@ export const narwalConsumableRecords: ConsumableRecord[] = [
         "2026-09-10",
       ),
     ],
-    affiliate: affiliate("나르왈 Freo 정품 제로 탱글 롤러 브러시", undefined, "2026-09-10"),
+    affiliate: affiliate(
+      "나르왈 Freo 정품 제로 탱글 롤러 브러시",
+      "https://link.coupang.com/a/g0DbewD9UW",
+      "2026-09-13",
+      undefined,
+      {
+        name: "Narwal Freo 제로 탱글 롤러 브러시",
+        kind: "genuine",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 Narwal Freo 시리즈용 제품으로 표기한 상품입니다. 적용 모델과 판매자를 구매 전에 확인하세요.",
+        packageLabel: "롤러 브러시 1개",
+      },
+    ),
   },
   {
     id: "narwal-freo-dustbin-filter",
@@ -70,7 +83,20 @@ export const narwalConsumableRecords: ConsumableRecord[] = [
         "2026-09-10",
       ),
     ],
-    affiliate: affiliate("나르왈 Freo 정품 먼지통 필터 2개입", undefined, "2026-09-10"),
+    affiliate: affiliate(
+      "나르왈 Freo 정품 먼지통 필터 2개입",
+      "https://link.coupang.com/a/g0DdMBYvLw",
+      "2026-09-13",
+      undefined,
+      {
+        name: "Narwal Freo 시리즈 먼지통 필터",
+        kind: "genuine",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 Narwal Freo 시리즈용 제품으로 표기한 상품입니다. 적용 모델과 판매자를 구매 전에 확인하세요.",
+        packageLabel: "먼지통 필터 2개",
+      },
+    ),
   },
   {
     id: "narwal-freo-side-brush",
@@ -90,7 +116,20 @@ export const narwalConsumableRecords: ConsumableRecord[] = [
         "2026-09-10",
       ),
     ],
-    affiliate: affiliate("나르왈 Freo 정품 사이드 브러시 2개입", undefined, "2026-09-10"),
+    affiliate: affiliate(
+      "나르왈 Freo 정품 사이드 브러시 2개입",
+      "https://link.coupang.com/a/g1V9t4fNN6",
+      "2026-09-14",
+      undefined,
+      {
+        name: "Freo X Ultra·X Plus·Z Ultra·Freo Pro 사이드 브러시",
+        kind: "genuine",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 Narwal Freo X Ultra·X Plus·Z Ultra·Freo Pro용 사이드 브러시로 표기한 상품입니다. 사용하는 모델을 구매 전에 확인하세요.",
+        packageLabel: "사이드 브러시 2종 세트",
+      },
+    ),
   },
   {
     id: "narwal-freo-dust-bag",
@@ -111,7 +150,20 @@ export const narwalConsumableRecords: ConsumableRecord[] = [
         "2026-09-10",
       ),
     ],
-    affiliate: affiliate("나르왈 Freo Z10 Z Ultra 정품 먼지봉투 2개입", undefined, "2026-09-10"),
+    affiliate: affiliate(
+      "나르왈 Freo Z10 Z Ultra 정품 먼지봉투 2개입",
+      "https://link.coupang.com/a/haKVvc2Ztk",
+      "2026-09-19",
+      undefined,
+      {
+        name: "Freo Z Ultra·Z10·Flow 호환 먼지봉투",
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 Narwal Freo Z Ultra·Z10·Flow 호환 먼지봉투로 표기한 상품입니다. 적용 모델과 구성 수량을 구매 전에 확인하세요.",
+        packageLabel: "판매 페이지 옵션 확인",
+      },
+    ),
   },
   researchedPart({
     id: "narwal-freo-z10-side-brush",
@@ -125,8 +177,17 @@ export const narwalConsumableRecords: ConsumableRecord[] = [
     searchKeyword: "나르왈 Freo Z10 정품 자동 엉킴 방지 사이드 브러시",
     replacementInterval: "3개월마다 (제조사 권장, 마모 상태에 따라 달라짐)",
     regional: true,
-    verifiedAt: "2026-09-11",
-    purchaseUnavailable: true,
+    verifiedAt: "2026-09-13",
+    directUrl: "https://link.coupang.com/a/g0DePzFBV6",
+    affiliateProductOption: {
+      name: "Freo Z10·Z10 Ultra 사이드 브러시 2종 세트",
+      kind: "genuine",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 Narwal Freo Z10·Z10 Ultra용 사이드 브러시 세트로 표기한 상품입니다. 사용하는 모델의 브러시를 확인하세요.",
+      partNumber: "Freo Z10 계열",
+      packageLabel: "사이드 브러시 2종 세트",
+    },
   }),
   researchedPart({
     id: "narwal-freo-x-ultra-dust-bag",
@@ -139,8 +200,17 @@ export const narwalConsumableRecords: ConsumableRecord[] = [
     sourceType: "official-store",
     searchKeyword: "나르왈 Freo X Ultra 정품 먼지봉투 3개입",
     regional: true,
-    verifiedAt: "2026-09-11",
-    purchaseUnavailable: true,
+    verifiedAt: "2026-09-19",
+    directUrl: "https://link.coupang.com/a/haKUnwN9Lp",
+    affiliateProductOption: {
+      name: "Freo X Ultra·Pro·Z10 호환 먼지봉투 3개",
+      kind: "compatible",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 Narwal Freo X Ultra·Pro·Z10 적용을 표기한 타사 먼지봉투입니다. Freo X Ultra용 3개 구성을 선택했는지 구매 전에 확인하세요.",
+      partNumber: "Freo X Ultra 호환",
+      packageLabel: "먼지봉투 3개",
+    },
   }),
   ...(
     [
@@ -193,7 +263,7 @@ export const narwalConsumableRecords: ConsumableRecord[] = [
       searchKeyword: `${displayName} 정품`,
       replacementInterval,
       regional: true,
-      verifiedAt: "2026-09-11",
+      verifiedAt: "2026-09-19",
       secondarySources: [
         {
           title: "Narwal 공식 Flow Advanced Kit — 호환 모델과 구성 수량",
@@ -201,7 +271,19 @@ export const narwalConsumableRecords: ConsumableRecord[] = [
           sourceType: "official-store",
         },
       ],
-      purchaseUnavailable: true,
+      directUrl:
+        id === "narwal-flow-dust-bag"
+          ? "https://link.coupang.com/a/haCchXcp6y"
+          : "https://link.coupang.com/a/haCaIweZ2H",
+      affiliateProductOption: {
+        name: `Narwal Flow ${compatibleProductName} 호환 옵션`,
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 Narwal Flow용 메인 롤러·사이드 브러시·먼지봉투·필터·물걸레 옵션을 제공하는 호환상품입니다. 사용하는 부품 종류와 구성 수량을 구매 전에 확인하세요.",
+        packageLabel:
+          id === "narwal-flow-dust-bag" ? "먼지봉투 옵션 확인" : "선택 옵션의 구성 확인 필요",
+      },
     }),
   ),
 ];

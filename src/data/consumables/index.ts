@@ -44,6 +44,10 @@ const consumableOrder = [
   "coway-4d-pre-filter",
   "coway-4d-dimensional-filter",
   "coway-air-matching-filter",
+  "coway-ap2021-compatible-4d-filter",
+  "coway-ap2021-pet-air-matching-filter",
+  "coway-ap2021-compatible-4d-dimensional-filter",
+  "coway-ap2021-compatible-complete-filter-set",
   "winix-tower-prime-plus-all-in-one-filter",
   "cuckoo-acf-wmt10-filter",
   "cuckoo-acf-ahmt10-filter",
@@ -61,6 +65,7 @@ const consumableOrder = [
   "blueair-cp7i-pac-filter",
   "blueair-dustmagnet-5200-combofilter",
   "roborock-saros-qrevo-s8-dust-bag",
+  "roborock-s8-qrevo-curv-compatible-dust-bag",
   "dreame-x40-main-brush",
   "dreame-x40-side-brush",
   "dreame-x40-dust-bag",
@@ -208,6 +213,7 @@ const consumableOrder = [
   "eufy-c28-side-brush",
   "eufy-c28-main-brush",
   "eufy-c28-roller-mop",
+  "xiaomi-5-series-anti-tangle-main-brush",
   "xiaomi-5-series-anti-tangle-side-brush",
 ] as const;
 const recordsById = new Map(allRecords.map((record) => [record.id, record]));

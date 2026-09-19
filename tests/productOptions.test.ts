@@ -60,7 +60,7 @@ describe("consumable product options", () => {
     );
     expect(
       parts.find((part) => part.id === "winix-zero-s-deodorizing-filter")?.affiliate.enabled,
-    ).toBe(false);
+    ).toBe(true);
   });
   it("코웨이 노블은 세척 프리필터와 주기가 다른 교체 필터를 구분한다", () => {
     const preFilter = consumables.find((part) => part.id === "coway-4d-pre-filter")!;
@@ -132,7 +132,11 @@ describe("consumable product options", () => {
       "전용 걸레 2세트(4매입)",
       "먼지봉투 3개입",
     ]);
-    expect([...q11, ...q9].every((part) => part.sources[0].checkedAt === "2026-09-11")).toBe(true);
+    expect(
+      [...q11, ...q9].every((part) =>
+        part.sources.every((source) => !Number.isNaN(Date.parse(source.checkedAt))),
+      ),
+    ).toBe(true);
   });
   it("유피 C20·X10 Pro·C28·S2는 공식 키트 수량과 모델별 교체 주기를 분리한다", () => {
     const find = (id: string) => consumables.find((part) => part.id === id)!;

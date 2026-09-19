@@ -76,8 +76,17 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceType: "manufacturer",
     searchKeyword: "웰스 토네이도 정품 올케어 필터",
     replacementInterval: "12개월 (공식 관리 안내 기준, 사용 환경에 따라 달라짐)",
-    verifiedAt: "2026-09-11",
-    purchaseUnavailable: true,
+    verifiedAt: "2026-09-19",
+    directUrl: "https://link.coupang.com/a/haKTuu81Ho",
+    affiliateProductOption: {
+      name: "웰스 토네이도 AN730·AN734 올케어 필터",
+      kind: "genuine",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 교원 웰스 AN730·AN734용 정품 올케어 필터로 표기한 상품입니다. 판매자와 포장 표기를 구매 전에 확인하세요.",
+      partNumber: "AN730·AN734용",
+      packageLabel: "올케어 필터 1개",
+    },
   }),
   researchedPart({
     id: "wells-aq107-pre-filter",

@@ -24,7 +24,20 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
         "https://www.irobot.com/en_US/high-efficiency-filter%252c-3-pack-for-roomba-combo-j-series/4785883.html",
       ),
     ],
-    affiliate: affiliate("아이로봇 4785883 정품 필터"),
+    affiliate: affiliate(
+      "아이로봇 4785883 정품 필터",
+      "https://link.coupang.com/a/haBglpldKe",
+      "2026-09-19",
+      undefined,
+      {
+        name: "Roomba Combo j7·j9 호환 고효율 필터 옵션",
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 Roomba Combo j7·j9용 브러시·필터·물걸레·먼지봉투 옵션을 제공하는 호환상품입니다. 필터 옵션과 구성 수량을 구매 전에 확인하세요.",
+        packageLabel: "필터 옵션 선택",
+      },
+    ),
   },
   {
     id: "irobot-i-e-j-high-efficiency-filter",
@@ -43,7 +56,20 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
         "https://www.irobot.com/en_US/high-efficiency-filter%252c-3-pack-for-roomba-combo-and-roomba-i%252c-e%252c-and-j-series/4639161.html?cgid=us",
       ),
     ],
-    affiliate: affiliate("아이로봇 4639161 정품 필터"),
+    affiliate: affiliate(
+      "아이로봇 4639161 정품 필터",
+      "https://link.coupang.com/a/haBfpqKKFU",
+      "2026-09-19",
+      undefined,
+      {
+        name: "Roomba Combo i5·j5 호환 고효율 필터 옵션",
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 Roomba Combo i5·j5용 브러시·필터·걸레·먼지봉투 옵션을 제공하는 호환상품입니다. 필터 옵션과 구성 수량을 구매 전에 확인하세요.",
+        packageLabel: "필터 옵션 선택",
+      },
+    ),
   },
   {
     id: "irobot-105-filter",
@@ -62,7 +88,20 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
         "https://www.irobot.com/en_US/filter-3-pack/4837321.html",
       ),
     ],
-    affiliate: affiliate("아이로봇 4837321 정품 필터"),
+    affiliate: affiliate(
+      "아이로봇 4837321 정품 필터",
+      "https://www.coupang.com/vp/products/9351127266",
+      "2026-09-19",
+      undefined,
+      {
+        name: "Roomba 105 호환 브러시·필터·물걸레 옵션",
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 Roomba 105용 메인 브러시·사이드 브러시·필터·물걸레 옵션을 제공하는 호환상품입니다. 필터 옵션과 구성 수량을 구매 전에 확인하세요.",
+        packageLabel: "필터 옵션 선택",
+      },
+    ),
   },
   ...(
     [
@@ -109,7 +148,21 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
       sourceType: "official-store",
       searchKeyword: `${displayName} 정품`,
       regional: true,
-      verifiedAt: "2026-09-11",
+      verifiedAt: id === "irobot-205-filter" ? "2026-09-19" : "2026-09-11",
+      directUrl:
+        id === "irobot-205-filter" ? "https://www.coupang.com/vp/products/9213388552" : undefined,
+      restrictionNote: id === "irobot-205-filter" ? "쿠팡 파트너스 링크 생성 제한 상품" : undefined,
+      affiliateProductOption:
+        id === "irobot-205-filter"
+          ? {
+              name: "Roomba 205 DustCompactor 호환 필터 6개",
+              kind: "compatible",
+              verification: "seller-claimed",
+              description:
+                "판매 페이지가 Roomba 205 DustCompactor 호환 교체 필터 6개로 표기한 상품입니다. 파트너스 링크 생성이 제한되어 일반 상품 링크로 제공합니다.",
+              packageLabel: "필터 6개",
+            }
+          : undefined,
     }),
   ),
   researchedPart({
@@ -123,8 +176,17 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
     sourceUrl:
       "https://www.irobot.com/en_US/replacement-dirt-disposal-bags%252c-3-pack/4640235.html",
     searchKeyword: "iRobot 4640235 정품 먼지봉투",
+    directUrl: "https://link.coupang.com/a/haBglpldKe",
+    affiliateProductOption: {
+      name: "Roomba Combo j7·j9 호환 먼지봉투 옵션",
+      kind: "compatible",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 Roomba Combo j7·j9용 브러시·필터·물걸레·먼지봉투 옵션을 제공하는 호환상품입니다. 먼지봉투 옵션과 구성 수량을 구매 전에 확인하세요.",
+      packageLabel: "먼지봉투 옵션 선택",
+    },
     regional: true,
-    verifiedAt: "2026-09-11",
+    verifiedAt: "2026-09-19",
     secondarySources: [
       {
         title: "iRobot 공식 Combo 10 Max 시리즈 액세서리 호환표",
@@ -147,8 +209,17 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
     sourceUrl:
       "https://www.irobot.com/en_US/dual-multi-surface-rubber-brushes-for-roomba-combo-and-roomba-e%2C-i%2C-and-j-series-and-roomba-combo-10-max/4639309.html",
     searchKeyword: "iRobot 4639309 정품 듀얼 고무 브러시",
+    directUrl: "https://link.coupang.com/a/haBglpldKe",
+    affiliateProductOption: {
+      name: "Roomba Combo j7·j9 호환 메인 브러시 옵션",
+      kind: "compatible",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 Roomba Combo j7·j9용 메인 브러시 옵션을 제공하는 호환상품입니다. Combo 10 Max·i5 사용자는 판매자에게 적용 여부를 다시 확인하세요.",
+      packageLabel: "메인 브러시 옵션 선택",
+    },
     regional: true,
-    verifiedAt: "2026-09-11",
+    verifiedAt: "2026-09-19",
     secondarySources: [
       {
         title: "iRobot 공식 Combo 10 Max 시리즈 액세서리 호환표",
@@ -175,8 +246,17 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
     sourceUrl:
       "https://www.irobot.com/en_US/edge-sweeping-brush-3-pack-for-roomba-combo-and-roomba-i%2C-e-and-j-series-and-roomba-combo-10-max/4757625.html",
     searchKeyword: "iRobot 4757625 정품 엣지 브러시",
+    directUrl: "https://link.coupang.com/a/haBglpldKe",
+    affiliateProductOption: {
+      name: "Roomba Combo j7·j9 호환 사이드 브러시 옵션",
+      kind: "compatible",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 Roomba Combo j7·j9용 사이드 브러시 옵션을 제공하는 호환상품입니다. Combo 10 Max·i5 사용자는 판매자에게 적용 여부를 다시 확인하세요.",
+      packageLabel: "사이드 브러시 옵션 선택",
+    },
     regional: true,
-    verifiedAt: "2026-09-11",
+    verifiedAt: "2026-09-19",
     secondarySources: [
       {
         title: "iRobot 공식 Combo 10 Max 시리즈 액세서리 호환표",
@@ -203,8 +283,17 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
     sourceUrl:
       "https://www.irobot.com/en_US/roomba-combo-j-series-washable-cleaning-pad%252c-2-pack/4785885.html",
     searchKeyword: "iRobot Roomba Combo j9+ 정품 물걸레 패드",
+    directUrl: "https://link.coupang.com/a/haBglpldKe",
+    affiliateProductOption: {
+      name: "Roomba Combo j7·j9 호환 물걸레 옵션",
+      kind: "compatible",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 Roomba Combo j7·j9용 물걸레 옵션을 제공하는 호환상품입니다. 물걸레 옵션과 구성 수량을 구매 전에 확인하세요.",
+      packageLabel: "물걸레 옵션 선택",
+    },
     regional: true,
-    verifiedAt: "2026-09-11",
+    verifiedAt: "2026-09-19",
     secondarySources: [
       {
         title: "iRobot 공식 전체 액세서리 목록 — Combo j9+ 세척형 패드",
@@ -223,8 +312,17 @@ export const irobotConsumableRecords: ConsumableRecord[] = [
     sourceUrl:
       "https://www.irobot.com/en_US/us/robot-vacuum-plus-mop-accessories/roomba-combo-i5-series",
     searchKeyword: "iRobot Roomba Combo i5 정품 물걸레 키트",
+    directUrl: "https://link.coupang.com/a/haBfpqKKFU",
+    affiliateProductOption: {
+      name: "Roomba Combo i5·j5 호환 물걸레 옵션",
+      kind: "compatible",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 Roomba Combo i5·j5용 물걸레 옵션을 제공하는 호환상품입니다. 물걸레 옵션과 구성 수량을 구매 전에 확인하세요.",
+      packageLabel: "물걸레 옵션 선택",
+    },
     regional: true,
-    verifiedAt: "2026-09-11",
+    verifiedAt: "2026-09-19",
     secondarySources: [
       {
         title: "iRobot 공식 전체 액세서리 목록 — Combo i5 보충 키트",
