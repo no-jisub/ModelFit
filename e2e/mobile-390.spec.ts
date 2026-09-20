@@ -6,7 +6,10 @@ const responsiveRoutes = [
   { name: "홈", path: "/" },
   { name: "검색", path: "/find?q=ADQ30041405" },
   { name: "공기청정기 카테고리", path: "/category/air-purifier" },
-  { name: "모델 상세", path: "/model/lg/as355nsna" },
+  { name: "로봇청소기 카테고리", path: "/category/robot-vacuum" },
+  { name: "LG 모델 상세", path: "/model/lg/as355nsna" },
+  { name: "웰스 모델 상세", path: "/model/wells/al106" },
+  { name: "드리미 모델 상세", path: "/model/dreame/x40-ultra" },
   { name: "제휴 안내", path: "/affiliate-disclosure" },
 ];
 
