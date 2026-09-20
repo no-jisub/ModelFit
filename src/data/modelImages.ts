@@ -143,13 +143,13 @@ export const modelImages: Record<string, ModelImage> = {
     src: "/images/models/dyson-tp09.webp",
     alt: "다이슨 TP09 제품 본체",
     sourceUrl: "https://www.dyson.co.kr/dyson-purifier-cool-formaldehyde-white-gold",
-    checkedAt: "2026-09-11",
+    checkedAt: "2026-09-20",
   },
   "dyson-ph04": {
     src: "/images/models/dyson-ph04.webp",
     alt: "다이슨 PH04 제품 본체",
     sourceUrl: "https://www.dyson.co.kr/dyson-purifier-humidify-cool-formaldehyde-white-gold",
-    checkedAt: "2026-09-11",
+    checkedAt: "2026-09-20",
   },
   "xiaomi-5-pro": {
     src: "/images/models/xiaomi-5-pro.webp",
@@ -215,19 +215,19 @@ export const modelImages: Record<string, ModelImage> = {
     src: "/images/models/wells-al106.webp",
     alt: "교원 웰스 AL106 제품 본체",
     sourceUrl: "https://m.kyowonwells.com/Product/Detail?grpIdx=47&productIdx=49",
-    checkedAt: "2026-09-11",
+    checkedAt: "2026-09-20",
   },
   "wells-an730": {
     src: "/images/models/wells-an730.webp",
     alt: "교원 웰스 AN730 제품 본체",
     sourceUrl: "https://m.kyowonwells.com/Product/Detail?grpIdx=182&productIdx=373",
-    checkedAt: "2026-09-11",
+    checkedAt: "2026-09-20",
   },
   "wells-an734": {
     src: "/images/models/wells-an734.webp",
     alt: "교원 웰스 AN734 제품 본체",
     sourceUrl: "https://m.kyowonwells.com/Product/Detail?grpIdx=182&productIdx=373",
-    checkedAt: "2026-09-11",
+    checkedAt: "2026-09-20",
   },
   "wells-aq107": {
     src: "/images/models/wells-aq107.webp",
@@ -239,7 +239,7 @@ export const modelImages: Record<string, ModelImage> = {
     src: "/images/models/wells-am315.webp",
     alt: "교원 웰스 AM315 제품 본체",
     sourceUrl: "https://m.kyowonwells.com/Product/Detail?grpIdx=49&productIdx=54",
-    checkedAt: "2026-09-11",
+    checkedAt: "2026-09-20",
   },
   "blueair-cp7i": {
     src: "/images/models/blueair-cp7i.webp",
@@ -277,6 +277,12 @@ export const modelImages: Record<string, ModelImage> = {
     sourceUrl:
       "https://kr.roborock.com/products/%EB%A1%9C%EB%B3%B4%EB%9D%BD-saros-z70-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0",
     checkedAt: "2026-09-11",
+  },
+  "roborock-s10-maxv-ultra": {
+    src: "/images/models/roborock-s10-maxv-ultra.webp",
+    alt: "로보락 S10 MAXV ULTRA 제품 본체",
+    sourceUrl: "https://kr.roborock.com/pages/roborock-s10-maxv-ultra",
+    checkedAt: "2026-09-20",
   },
   "roborock-s8-maxv-ultra": {
     src: "/images/models/roborock-s8-maxv-ultra.webp",

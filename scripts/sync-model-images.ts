@@ -122,6 +122,8 @@ function extractMeta(html: string, pageUrl: string) {
 }
 
 const directImages: Record<string, string> = {
+  "roborock-s10-maxv-ultra":
+    "https://kr.roborock.com/cdn/shop/files/saros_20_sonic_White_ID.png?v=1769073475",
   "coway-ap-2219k":
     "https://img.danuri.io/catalog-image/868/298/010/ada7c912cfcc489fb3c8c8a5852e5b50.jpg",
   "coway-ap-1521b":
@@ -133,10 +135,14 @@ const directImages: Record<string, string> = {
   "dyson-hp09":
     "https://dyson-h.assetsadobe2.com/is/image/content/dam/dyson/leap-petite-global/products/ec/527e/variants/sco/HP09_WHSGLD_Primary_800x1200.png?fmt=png-alpha&scl=1",
   "dyson-tp09":
-    "https://dyson-h.assetsadobe2.com/is/image/content/dam/dyson/leap-petite-global/products/machine-first-testing/support/purifiers/tp09-support-banner.jpg?wid=1920",
+    "https://dyson-h.assetsadobe2.com/is/image/content/dam/dyson/leap-petite-global/markets/poland/product/ec/hero-locale/369876-01.png?fmt=png-alpha&scl=1",
   "dyson-ph04":
-    "https://dyson-h.assetsadobe2.com/is/image/content/dam/dyson/leap-petite-global/markets/korea/support/s-a/KR_Support_PH04.jpg?wid=1920",
+    "https://dyson-h.assetsadobe2.com/is/image/content/dam/dyson/leap-petite-global/markets/poland/product/ec/hero-locale/379491-01.png?fmt=png-alpha&scl=1",
   "skmagic-acl130z0skpn": "https://static.skmagic.com/image/goods/G000069281/G000069281_2.png",
+  "wells-al106": "https://www.kyowonwells.com/upload/product/202010/472179423.png",
+  "wells-an730": "https://www.kyowonwells.com/upload/product/202101/00218467608.png",
+  "wells-an734": "https://www.kyowonwells.com/upload/product/202101/00218467608.png",
+  "wells-am315": "https://www.kyowonwells.com/upload/product/202010/993350495.png",
   "wells-aq107": "https://www.kyowonwells.com/upload/product/202301/00789954532.png",
   "blueair-5240i": "https://cdn.shopify.com/s/files/1/0881/6030/5438/files/1_20_1.png?v=1734554713",
   "blueair-5210i": "https://cdn.shopify.com/s/files/1/0881/6030/5438/files/1_20_1.png?v=1734554713",
@@ -172,8 +178,17 @@ const directImages: Record<string, string> = {
     "https://kr.object.ncloudstorage.com/w2r-commerce-winix/product/202603/260311100459969-b292e5e1641142c0b7219a98549ee48b.png",
 };
 
-const excludedImageIds = new Set(["roborock-s10-maxv-ultra"]);
-const trimImageIds = new Set(["dreame-l10s-pro-ultra-heat"]);
+const excludedImageIds = new Set<string>();
+const trimImageIds = new Set([
+  "dreame-l10s-pro-ultra-heat",
+  "dyson-tp09",
+  "dyson-ph04",
+  "wells-al106",
+  "wells-an730",
+  "wells-an734",
+  "wells-am315",
+  "roborock-s10-maxv-ultra",
+]);
 
 const outputDir = path.resolve("public/images/models");
 await mkdir(outputDir, { recursive: true });
@@ -225,7 +240,12 @@ for (const model of models) {
     const input = Buffer.from(await imageResponse.arrayBuffer());
     const destination = path.join(outputDir, `${model.id}.webp`);
     const image = sharp(input).rotate();
-    if (trimImageIds.has(model.id)) image.trim({ background: "#ffffff", threshold: 10 });
+    if (trimImageIds.has(model.id)) {
+      image.flatten({ background: { r: 248, g: 250, b: 252 } }).trim({
+        background: { r: 248, g: 250, b: 252 },
+        threshold: 12,
+      });
+    }
     await image
       .resize(720, 720, {
         fit: "contain",

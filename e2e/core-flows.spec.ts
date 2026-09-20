@@ -332,3 +332,29 @@ test("로그인하지 않은 방문자에게 관리자 제보 목록을 노출�
   ).toBeVisible();
   await expect(page.locator(".admin-reports-table, .admin-report-card")).toHaveCount(0);
 });
+
+test("모델 카드는 동일한 비율에서 제품 전체 이미지를 표시한다", async ({ page }) => {
+  await page.goto("/category/air-purifier");
+
+  const images = page.locator(".model-card-image img");
+  expect(await images.count()).toBeGreaterThan(0);
+  const presentations = await images.evaluateAll((items) =>
+    items.map((item) => {
+      const image = item as HTMLImageElement;
+      const frame = image.closest(".model-card-image")!.getBoundingClientRect();
+      return {
+        declaredWidth: image.getAttribute("width"),
+        declaredHeight: image.getAttribute("height"),
+        objectFit: window.getComputedStyle(image).objectFit,
+        frameRatio: frame.width / frame.height,
+      };
+    }),
+  );
+
+  for (const presentation of presentations) {
+    expect(presentation.declaredWidth).toBe("720");
+    expect(presentation.declaredHeight).toBe("720");
+    expect(presentation.objectFit).toBe("contain");
+    expect(presentation.frameRatio).toBeCloseTo(4 / 3, 1);
+  }
+});
