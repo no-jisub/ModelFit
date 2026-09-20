@@ -1,5 +1,5 @@
 import {
-  unavailableAffiliate,
+  affiliate,
   domesticWarning,
   researchedPart,
   source,
@@ -23,7 +23,21 @@ export const skmagicConsumableRecords: ConsumableRecord[] = [
         "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000062559",
       ),
     ],
-    affiliate: unavailableAffiliate("SK매직 ACL15C1ASKWH 정품 올인원 케어필터"),
+    affiliate: affiliate(
+      "SK매직 ACL15C1ASKWH 정품 올인원 케어필터",
+      "https://link.coupang.com/a/haYF92FJyC",
+      "2026-09-20",
+      undefined,
+      {
+        name: "SK매직 ACL-15C1A 올인원플러스 프레임·콤비 세트",
+        kind: "genuine",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 ACL-15C1A 전용 올인원플러스 프레임·콤비 세트로 표기한 상품입니다. 사용하는 모델과 필터 품번을 구매 전에 확인하세요.",
+        partNumber: "FLTA15C2ATWH",
+        packageLabel: "프레임·콤비 필터 세트",
+      },
+    ),
   },
   researchedPart({
     id: "skmagic-acl131-filter",
@@ -102,7 +116,17 @@ export const skmagicConsumableRecords: ConsumableRecord[] = [
       sourceUrl: "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000056901",
       searchKeyword: `SK매직 ACL130Z ${name} FLTACL130PWH 세트`,
       replacementInterval: "12개월 (사용 환경과 오염 상태에 따라 달라질 수 있음)",
-      verifiedAt: "2026-09-11",
+      verifiedAt: "2026-09-20",
+      directUrl: "https://link.coupang.com/a/haZvrm6Uc8",
+      affiliateProductOption: {
+        name: "SK매직 ACL-130P 정품 필터 세트",
+        kind: "genuine",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 ACL-130P용 정품 필터 세트로 표기한 상품입니다. ACL130Z 적용 여부와 구성품을 구매 전에 확인하세요.",
+        partNumber: "FLTACL130PWH",
+        packageLabel: "탈취필터·집진필터 세트",
+      },
       secondarySources: [
         {
           title: "SK매직 공식 상세 안내 — 분리된 탈취·집진 필터 각 1개 및 권장 교체 주기",
@@ -110,7 +134,6 @@ export const skmagicConsumableRecords: ConsumableRecord[] = [
           sourceType: "manufacturer",
         },
       ],
-      purchaseUnavailable: true,
     }),
     purchaseWarning: `${domesticWarning} 탈취필터와 집진필터는 각각 교체하는 별도 부품입니다. FLTACL130PWH는 두 필터가 포함된 세트 상품번호이며, 세트 한 개로 두 소모품을 함께 교체할 수 있습니다.`,
   })),

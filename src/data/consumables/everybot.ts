@@ -227,7 +227,17 @@ export const everybotConsumableRecords: ConsumableRecord[] = [
     sourceUrl:
       "https://everybotmall.com/product/%EC%97%90%EB%B8%8C%EB%A6%AC%EB%B4%87-%EB%AC%BC%EA%B1%B8%EB%A0%88-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0-%EB%B6%84%EC%84%AC%EC%82%AC%EA%B1%B8%EB%A0%883%EC%9E%A5/209/",
     searchKeyword: "에브리봇 쓰리스핀 EVO 분섬사 걸레 3장 정품",
-    verifiedAt: "2026-09-11",
+    directUrl: "https://www.coupang.com/vp/products/9510107826",
+    restrictionNote: "쿠팡 파트너스 링크 생성 제한 상품",
+    affiliateProductOption: {
+      name: "에브리봇 정품 분섬사·극세사 걸레 6장 세트",
+      kind: "genuine",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 에브리봇 엣지·쓰리스핀·RS500·RS700 호환 정품 걸레 세트로 표기한 상품입니다. 쓰리스핀용 구성과 재질을 구매 전에 확인하세요.",
+      packageLabel: "분섬사 3장·극세사 3장",
+    },
+    verifiedAt: "2026-09-19",
   }),
   researchedPart({
     id: "everybot-three-spin-disposable-sheet",
@@ -239,6 +249,15 @@ export const everybotConsumableRecords: ConsumableRecord[] = [
     sourceUrl:
       "https://everybotmall.com/product/%EC%97%90%EB%B8%8C%EB%A6%AC%EB%B4%87-%EB%AC%BC%EA%B1%B8%EB%A0%88-%EB%A1%9C%EB%B4%87%EC%B2%AD%EC%86%8C%EA%B8%B0-%EC%9D%BC%ED%9A%8C%EC%9A%A9-%EC%B2%AD%EC%86%8C%ED%8F%AC30%EB%A7%A4/93/",
     searchKeyword: "에브리봇 쓰리스핀 EVO 일회용 청소포 30매 정품",
-    verifiedAt: "2026-09-11",
+    directUrl: "https://link.coupang.com/a/haU8r31oLQ",
+    affiliateProductOption: {
+      name: "에브리봇 쓰리스핀 일회용 물걸레 청소포",
+      kind: "genuine",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 에브리봇 쓰리스핀 계열용 일회용 물걸레 청소포로 표기한 상품입니다. 적용 모델과 구성 수량을 구매 전에 확인하세요.",
+      packageLabel: "일회용 청소포 30매",
+    },
+    verifiedAt: "2026-09-19",
   }),
 ];

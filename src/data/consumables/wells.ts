@@ -11,8 +11,17 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceType: "manufacturer",
     searchKeyword: "웰스 AL106 정품 생활맞춤형 필터",
     replacementInterval: "3개월 (공식 관리 안내 기준, 사용 환경에 따라 달라짐)",
-    verifiedAt: "2026-09-11",
-    purchaseUnavailable: true,
+    verifiedAt: "2026-09-20",
+    directUrl: "https://link.coupang.com/a/haZJ60OiXc",
+    affiliateProductOption: {
+      name: "교원웰스 AL106·AQ107 계열 국내산 호환 필터",
+      kind: "compatible",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 AL106AWA·AN106·AP107·AQ107 적용을 표기한 국내산 호환 필터입니다. 생활맞춤형 필터에 대응하는 옵션인지 구매 전에 확인하세요.",
+      partNumber: "AL106·AQ107 계열 호환",
+      packageLabel: "판매 페이지 옵션 확인 필요",
+    },
   }),
   researchedPart({
     id: "wells-al106-deodorizing-filter",
@@ -24,8 +33,17 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceType: "manufacturer",
     searchKeyword: "웰스 AL106 정품 탈취필터",
     replacementInterval: "12개월 (공식 관리 안내 기준, 사용 환경에 따라 달라짐)",
-    verifiedAt: "2026-09-11",
-    purchaseUnavailable: true,
+    verifiedAt: "2026-09-20",
+    directUrl: "https://link.coupang.com/a/haZRj0mHoy",
+    affiliateProductOption: {
+      name: "교원웰스 AL106FWA H13 국내산 호환 필터",
+      kind: "compatible",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 AL106FWA용 H13 국내산 호환 필터로 표기한 상품입니다. 탈취필터가 포함된 구성인지 구매 전에 확인하세요.",
+      partNumber: "AL106FWA 호환",
+      packageLabel: "프리미엄형 H13 필터",
+    },
   }),
   researchedPart({
     id: "wells-al106-hepa-filter",
@@ -76,16 +94,16 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceType: "manufacturer",
     searchKeyword: "웰스 토네이도 정품 올케어 필터",
     replacementInterval: "12개월 (공식 관리 안내 기준, 사용 환경에 따라 달라짐)",
-    verifiedAt: "2026-09-19",
-    directUrl: "https://link.coupang.com/a/haKTuu81Ho",
+    verifiedAt: "2026-09-20",
+    directUrl: "https://link.coupang.com/a/hciaa2ezMO",
     affiliateProductOption: {
-      name: "웰스 토네이도 AN730·AN734 올케어 필터",
+      name: "웰스 토네이도 AN730·AN734 정품 올케어 필터 2개",
       kind: "genuine",
       verification: "seller-claimed",
       description:
-        "판매 페이지가 교원 웰스 AN730·AN734용 정품 올케어 필터로 표기한 상품입니다. 판매자와 포장 표기를 구매 전에 확인하세요.",
+        "판매 페이지가 교원 웰스 AN730·AN734용 정품 올케어 필터 2개 구성으로 표기한 상품입니다. 판매자와 포장 수량을 구매 전에 확인하세요.",
       partNumber: "AN730·AN734용",
-      packageLabel: "올케어 필터 1개",
+      packageLabel: "올케어 필터 2개",
     },
   }),
   researchedPart({
@@ -112,8 +130,17 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceType: "manufacturer",
     searchKeyword: "웰스 AQ107 정품 생활맞춤형 필터",
     replacementInterval: "3개월 (공식 관리 안내 기준, 사용 환경에 따라 달라짐)",
-    verifiedAt: "2026-09-11",
-    purchaseUnavailable: true,
+    verifiedAt: "2026-09-20",
+    directUrl: "https://link.coupang.com/a/haZJ60OiXc",
+    affiliateProductOption: {
+      name: "교원웰스 AQ107 국내산 호환 필터 세트",
+      kind: "compatible",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 AQ107 적용을 표기한 국내산 호환 필터입니다. 생활맞춤형 필터가 포함된 옵션인지 구매 전에 확인하세요.",
+      partNumber: "AQ107 호환",
+      packageLabel: "HEPA·탈취·미디엄 필터 옵션",
+    },
   }),
   researchedPart({
     id: "wells-aq107-deodorizing-filter",
@@ -124,8 +151,17 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://www.kyowonwells.com/Product/Detail?grpIdx=1394&productIdx=926",
     sourceType: "manufacturer",
     searchKeyword: "웰스 AQ107 정품 탈취필터",
-    verifiedAt: "2026-09-11",
-    purchaseUnavailable: true,
+    verifiedAt: "2026-09-20",
+    directUrl: "https://link.coupang.com/a/haZJ60OiXc",
+    affiliateProductOption: {
+      name: "교원웰스 AQ107 국내산 호환 탈취필터 세트",
+      kind: "compatible",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 AQ107 적용을 표기한 국내산 호환 필터입니다. 탈취필터가 포함된 옵션인지 구매 전에 확인하세요.",
+      partNumber: "AQ107 호환",
+      packageLabel: "HEPA·탈취·미디엄 필터 옵션",
+    },
   }),
   researchedPart({
     id: "wells-aq107-hepa-filter",
@@ -136,8 +172,17 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://www.kyowonwells.com/Product/Detail?grpIdx=1394&productIdx=926",
     sourceType: "manufacturer",
     searchKeyword: "웰스 AQ107 정품 클리어 HEPA 필터",
-    verifiedAt: "2026-09-11",
-    purchaseUnavailable: true,
+    verifiedAt: "2026-09-20",
+    directUrl: "https://link.coupang.com/a/haZJ60OiXc",
+    affiliateProductOption: {
+      name: "교원웰스 AQ107 국내산 호환 HEPA 필터 세트",
+      kind: "compatible",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 AQ107 적용을 표기한 국내산 호환 필터입니다. 클리어 HEPA 필터에 대응하는 옵션인지 구매 전에 확인하세요.",
+      partNumber: "AQ107 호환",
+      packageLabel: "HEPA·탈취·미디엄 필터 옵션",
+    },
   }),
   researchedPart({
     id: "wells-am315-combi-filter",
@@ -149,6 +194,16 @@ export const wellsConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://m.kyowonwells.com/Product/Detail?grpIdx=49&productIdx=54",
     sourceType: "manufacturer",
     searchKeyword: "웰스 AM315 정품 콤비 필터",
-    purchaseUnavailable: true,
+    verifiedAt: "2026-09-20",
+    directUrl: "https://link.coupang.com/a/hchuDCO6Sq",
+    affiliateProductOption: {
+      name: "교원웰스 제트블루 AM315·AL315 정품 필터",
+      kind: "genuine",
+      verification: "seller-claimed",
+      description:
+        "판매 페이지가 교원웰스 제트블루 AM315·AL315용 정품 필터로 표기한 상품입니다. AM315용 HEPA·탈취 콤비 필터 구성인지 구매 전에 확인하세요.",
+      partNumber: "AM315·AL315용",
+      packageLabel: "판매 페이지 구성 확인 필요",
+    },
   }),
 ];

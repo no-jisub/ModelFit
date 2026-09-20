@@ -30,7 +30,21 @@ export const narwalConsumableRecords: ConsumableRecord[] = [
         "2026-09-10",
       ),
     ],
-    affiliate: affiliate("나르왈 Freo 정품 물걸레 패드", undefined, "2026-09-10"),
+    affiliate: affiliate(
+      "나르왈 Freo 정품 물걸레 패드",
+      "https://link.coupang.com/a/haVdVVPFJc",
+      "2026-09-19",
+      undefined,
+      {
+        name: "나르왈 Freo X Plus 정품 물걸레",
+        kind: "genuine",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 Narwal Freo X Plus 전용 정품 물걸레로 표기한 상품입니다. 다른 Freo 모델은 호환 여부를 구매 전에 확인하세요.",
+        partNumber: "Freo X Plus 전용",
+        packageLabel: "물걸레 2개",
+      },
+    ),
   },
   {
     id: "narwal-freo-zero-tangle-roller",

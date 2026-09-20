@@ -41,17 +41,42 @@ export const dreameConsumableRecords: ConsumableRecord[] = [
     ],
     affiliate: affiliate(
       `${displayName} 정품`,
-      "https://link.coupang.com/a/g0DkSxFdC0",
-      "2026-09-13",
+      id === "dreame-x40-main-brush"
+        ? "https://link.coupang.com/a/hciQr6zTiK"
+        : id === "dreame-x40-side-brush"
+          ? "https://link.coupang.com/a/hciQ65CZIi"
+          : id === "dreame-x40-dust-bag"
+            ? "https://link.coupang.com/a/hcigM0CwRE"
+            : id === "dreame-x40-dust-box-filter"
+              ? "https://link.coupang.com/a/hciSyrJ7eK"
+              : "https://link.coupang.com/a/hciUlZWiHs",
+      "2026-09-20",
       undefined,
       {
         name: `${displayName.replace("Dreame ", "")} 호환상품`,
         kind: "compatible",
         verification: "seller-claimed",
         description:
-          "판매 페이지가 Dreame X40 Ultra 적용을 표기한 5종 옵션형 호환상품입니다. 현재 소모품 종류와 구성 수량을 확인하세요.",
+          id === "dreame-x40-main-brush"
+            ? "판매 페이지가 Dreame X40 Pro Ultra용 메인 브러시로 표기한 호환상품입니다. X40 Ultra 적용 모델과 구성 수량을 확인하세요."
+            : id === "dreame-x40-side-brush"
+              ? "판매 페이지가 Dreame X40·X40 Pro Ultra용 사이드 브러시로 표기한 호환상품입니다. 구성 수량을 확인하세요."
+              : id === "dreame-x40-dust-bag"
+                ? "판매 페이지가 Dreame X40 Ultra용 활성탄 먼지봉투로 표기한 호환상품입니다. 구성 수량을 구매 전에 확인하세요."
+                : id === "dreame-x40-dust-box-filter"
+                  ? "판매 페이지가 Dreame X40 Ultra Pro용 HEPA 필터 옵션을 제공하는 호환상품입니다. 먼지통 필터 옵션과 구성 수량을 확인하세요."
+                  : "판매 페이지가 Dreame X40 Pro·X40 Ultra용 물걸레 옵션을 제공하는 호환상품입니다. 물걸레 옵션과 구성 수량을 확인하세요.",
         partNumber: "X40 Ultra 호환",
-        packageLabel: "선택 옵션의 구성 확인 필요",
+        packageLabel:
+          id === "dreame-x40-main-brush"
+            ? "메인 브러시 옵션"
+            : id === "dreame-x40-side-brush"
+              ? "사이드 브러시 옵션"
+              : id === "dreame-x40-dust-bag"
+                ? "활성탄 먼지봉투"
+                : id === "dreame-x40-dust-box-filter"
+                  ? "HEPA 필터 옵션"
+                  : "물걸레 옵션",
       },
     ),
   })),
@@ -134,8 +159,32 @@ export const dreameConsumableRecords: ConsumableRecord[] = [
       sourceUrl: "https://kr.dreametech.com/products?category=15",
       sourceType: "manufacturer",
       searchKeyword: `${displayName} 정품`,
-      verifiedAt: "2026-09-11",
-      purchaseUnavailable: true,
+      verifiedAt: id === "dreame-x40s-dust-bag" ? "2026-09-20" : "2026-09-11",
+      directUrl:
+        id === "dreame-x40s-dust-bag" ? "https://link.coupang.com/a/hcigM0CwRE" : undefined,
+      affiliateProductOption:
+        id === "dreame-x40s-dust-bag"
+          ? {
+              name: "드리미 X40 Ultra 활성탄 먼지봉투 호환상품",
+              kind: "compatible",
+              verification: "seller-claimed",
+              description:
+                "판매 페이지는 X40 Ultra용 활성탄 먼지봉투로 표기합니다. 동일 규격 3.2L 먼지봉투가 X40s Pro Ultra에도 적용된다는 별도 호환 자료를 함께 확인했습니다.",
+              partNumber: "Dreame Ultra 3.2L 호환",
+              packageLabel: "판매 페이지에서 수량 확인",
+            }
+          : undefined,
+      secondarySources:
+        id === "dreame-x40s-dust-bag"
+          ? [
+              {
+                title: "Dreame Ultra 3.2L 먼지봉투 호환표 — X40 Ultra·X40s Pro Ultra",
+                url: "https://www.provysavace.cz/m-25829-dreame-x40-pro-ultra-sacky-pro-roboticky-vysavac-dreame-x50-ultra-l40-ultra-5-ks-x19426",
+                sourceType: "seller",
+              },
+            ]
+          : [],
+      purchaseUnavailable: id !== "dreame-x40s-dust-bag",
     }),
   ),
   ...(

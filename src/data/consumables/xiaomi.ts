@@ -25,7 +25,21 @@ export const xiaomiConsumableRecords: ConsumableRecord[] = [
         "manufacturer",
       ),
     ],
-    affiliate: affiliate("샤오미 로봇청소기 5 Pro 정품 물걸레 패드"),
+    affiliate: affiliate(
+      "샤오미 로봇청소기 5 Pro 정품 물걸레 패드",
+      "https://www.coupang.com/vp/products/9439825782",
+      "2026-09-19",
+      "쿠팡 파트너스 링크 생성 제한 상품",
+      {
+        name: "Xiaomi 5 Pro 호환 소모품 옵션",
+        kind: "compatible",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 Xiaomi 5 Pro용 브러시·필터·천·먼지봉투 옵션을 제공하는 타사 상품입니다. 물걸레 패드 옵션과 적용 모델을 구매 전에 확인하세요.",
+        partNumber: "Xiaomi 5 Pro 호환",
+        packageLabel: "물걸레 패드 옵션 선택",
+      },
+    ),
   },
   ...(
     [
@@ -146,7 +160,13 @@ export const xiaomiConsumableRecords: ConsumableRecord[] = [
             ? "https://link.coupang.com/a/g0Dpim0YOO"
             : id === "xiaomi-x20-plus-mop-pad"
               ? "https://link.coupang.com/a/g1XrugC8v6"
-              : undefined,
+              : id === "xiaomi-x20-plus-dust-bag"
+                ? "https://link.coupang.com/a/haWcJtAKTk"
+                : id === "xiaomi-x20-plus-filter"
+                  ? "https://www.coupang.com/vp/products/8551010794"
+                  : undefined,
+      restrictionNote:
+        id === "xiaomi-x20-plus-filter" ? "쿠팡 파트너스 링크 생성 제한 상품" : undefined,
       affiliateProductOption:
         id === "xiaomi-x20-plus-main-brush"
           ? {

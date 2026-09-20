@@ -1,6 +1,5 @@
 import {
   affiliate,
-  unavailableAffiliate,
   domesticWarning,
   researchedPart,
   source,
@@ -27,7 +26,21 @@ export const blueairConsumableRecords: ConsumableRecord[] = [
         "2026-09-10",
       ),
     ],
-    affiliate: unavailableAffiliate("블루에어 CP7i 정품 PAC 필터"),
+    affiliate: affiliate(
+      "블루에어 CP7i 정품 PAC 필터",
+      "https://link.coupang.com/a/haZAtxko56",
+      "2026-09-20",
+      undefined,
+      {
+        name: "Blueair Classic Pro CP7i 정품 필터",
+        kind: "genuine",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 Classic Pro CP7i 정품 필터로 표기한 상품입니다. CP7i는 필터 2개를 함께 장착하므로 판매 구성 수량을 구매 전에 확인하세요.",
+        partNumber: "CP7i용",
+        packageLabel: "판매 페이지 구성 확인 필요",
+      },
+    ),
   },
   {
     id: "blueair-dustmagnet-5200-combofilter",
@@ -77,8 +90,17 @@ export const blueairConsumableRecords: ConsumableRecord[] = [
       searchKeyword: "블루에어 CP9i 정품 메인 필터 3개",
       replacementInterval: "최대 1년 (오염 수준과 기기·앱 교체 알림 기준)",
       regional: true,
-      verifiedAt: "2026-09-11",
-      purchaseUnavailable: true,
+      verifiedAt: "2026-09-20",
+      directUrl: "https://link.coupang.com/a/haZGIcwpLE",
+      affiliateProductOption: {
+        name: "Blueair Classic Pro CP9i 정품 필터",
+        kind: "genuine",
+        verification: "seller-claimed",
+        description:
+          "판매 페이지가 Classic Pro CP9i 정품 필터로 표기한 상품입니다. CP9i는 필터 3개를 함께 장착하므로 판매 구성 수량을 구매 전에 확인하세요.",
+        partNumber: "CP9i용",
+        packageLabel: "판매 페이지 구성 확인 필요",
+      },
     }),
     purchaseWarning: `${domesticWarning} CP9i 본체 한 대에는 메인 필터 3개를 함께 장착합니다. 공식 개별 판매 페이지가 확인되지 않았으므로 CP7i용 2개입 필터를 CP9i 호환품으로 간주하지 마세요.`,
   },

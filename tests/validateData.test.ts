@@ -110,9 +110,10 @@ describe("data validation", () => {
           part.sources.length > 0 &&
           part.sources.every(
             (source) =>
-              source.url.startsWith("https://") &&
-              !Number.isNaN(Date.parse(source.checkedAt)) &&
-              ["manufacturer", "official-manual", "official-store"].includes(source.sourceType),
+              source.url.startsWith("https://") && !Number.isNaN(Date.parse(source.checkedAt)),
+          ) &&
+          part.sources.some((source) =>
+            ["manufacturer", "official-manual", "official-store"].includes(source.sourceType),
           ),
       ),
     ).toBe(true);

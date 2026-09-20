@@ -124,7 +124,7 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://www.coway.com/core/product/fmanual/download/116",
     sourceType: "official-manual",
     searchKeyword: "코웨이 AP-2021A 4D 항균 호환 필터",
-    directUrl: "https://link.coupang.com/a/g1XjggQL3l",
+    directUrl: "https://link.coupang.com/a/haWeso2OwC",
     verifiedAt: "2026-09-14",
     affiliateProductOption: {
       name: "AP-2021A 4D 항균 호환 필터",
@@ -190,7 +190,7 @@ export const cowayConsumableRecords: ConsumableRecord[] = [
     sourceUrl: "https://www.coway.com/core/product/fmanual/download/116",
     sourceType: "official-manual",
     searchKeyword: "코웨이 AP-2021A 프리 집진 탈취 호환 필터 세트",
-    directUrl: "https://link.coupang.com/a/g1XnNMzpEi",
+    directUrl: "https://link.coupang.com/a/haWfjzH7bU",
     verifiedAt: "2026-09-14",
     affiliateProductOption: {
       name: "AP-2021A 프리·집진·탈취 호환 세트",

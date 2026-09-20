@@ -42,7 +42,11 @@ describe("consumable product options", () => {
         .filter((part) => part.type !== "custom-filter")
         .every((part) => part.replacementInterval?.startsWith("12개월")),
     ).toBe(true);
-    expect(parts.every((part) => !part.genuinePartNumber && !part.affiliate.enabled)).toBe(true);
+    expect(parts.every((part) => !part.genuinePartNumber)).toBe(true);
+    expect(parts.filter((part) => part.affiliate.enabled)).toHaveLength(2);
+    expect(parts.find((part) => part.id === "wells-al106-hepa-filter")?.affiliate.enabled).toBe(
+      false,
+    );
   });
   it("제로 S는 교체 필터 두 종류를 별도 부품번호와 공식 구매 근거로 제공한다", () => {
     const model = models.find((item) => item.id === "winix-azse430-jwk")!;
