@@ -5,10 +5,12 @@
 ## 사용 순서
 
 1. `data/import/models.csv`에 모델을 입력합니다.
-2. 먼저 `npm run check:models-csv`로 오류를 확인합니다.
-3. 오류가 없으면 `npm run import:models`로 사이트 데이터를 생성합니다.
-4. 이미지와 소모품 연결 안내를 확인하고 해당 데이터를 추가합니다.
-5. `npm run check`로 전체 검사 후 커밋합니다.
+2. 관계형 CSV에 이미지, 소모품, 출처와 구매 링크를 입력합니다.
+3. `npm run catalog:update`를 실행합니다.
+4. 출력되는 이미지·소모품 연결 안내와 검사 오류를 확인합니다.
+5. 필요하면 수정 후 같은 명령을 다시 실행합니다.
+
+`catalog:update`는 CSV 검사, 사이트 데이터 생성, SQL 시드 생성, 최종 일치 검사와 비공개 데이터 백업을 한 번에 처리합니다.
 
 `status`가 `draft`인 행은 검증하지만 사이트에는 추가하지 않습니다. 공식 출처 확인이 끝난 행만 `published`로 변경합니다.
 
@@ -28,7 +30,7 @@
 | `verifiedAt`       | 게시 시 | 확인 날짜 `YYYY-MM-DD`                                                         |
 | `releaseDate`      | 아니요  | 출시일 `YYYY-MM-DD`                                                            |
 | `releaseSourceUrl` | 아니요  | 출시일을 확인한 `https` 주소                                                   |
-| `aliases`          | 아니요  | 추가 검색어를 `                                                                | `로 구분 |
+| `aliases`          | 아니요  | 추가 검색어를 세로줄(`\|`)로 구분                                              |
 
 예시:
 

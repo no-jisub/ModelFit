@@ -4,12 +4,14 @@ import { brands } from "../src/data/brands";
 import { categories } from "../src/data/categories";
 import { consumables } from "../src/data/consumables";
 import { modelImages } from "../src/data/modelImages";
-import { models } from "../src/data/models";
+import { parseModelCsv, validateModelCsv } from "../src/utils/catalogCsv";
+import { toModelId } from "../src/utils/modelSlug";
 
 type Row = Record<string, string>;
 
 const inputDirectory = path.resolve("data/catalog");
 const errors: string[] = [];
+const sourceOnly = process.argv.includes("--source-only");
 
 const parseRows = (input: string): string[][] => {
   const rows: string[][] = [];
@@ -95,6 +97,58 @@ const requireHttps = (file: string, rows: Row[], field: string) => {
   }
 };
 
+const requireFields = (file: string, rows: Row[], fields: string[]) => {
+  for (const [index, row] of rows.entries()) {
+    for (const field of fields) {
+      if (!row[field]?.trim()) errors.push(`${file} ${index + 2}행: ${field} 값이 필요합니다.`);
+    }
+  }
+};
+
+const requireAllowedValues = (
+  file: string,
+  rows: Row[],
+  field: string,
+  allowed: readonly string[],
+) => {
+  for (const [index, row] of rows.entries()) {
+    if (row[field] && !allowed.includes(row[field])) {
+      errors.push(`${file} ${index + 2}행: ${field} 값이 올바르지 않습니다: ${row[field]}`);
+    }
+  }
+};
+
+const requireBoolean = (file: string, rows: Row[], fields: string[]) => {
+  for (const field of fields) requireAllowedValues(file, rows, field, ["true", "false"]);
+};
+
+const requireNonNegativeInteger = (file: string, rows: Row[], field: string) => {
+  for (const [index, row] of rows.entries()) {
+    if (!/^\d+$/.test(row[field] ?? "")) {
+      errors.push(`${file} ${index + 2}행: ${field}는 0 이상의 정수여야 합니다.`);
+    }
+  }
+};
+
+const requireIsoDate = (file: string, rows: Row[], field: string, allowEmpty = false) => {
+  for (const [index, row] of rows.entries()) {
+    const value = row[field];
+    if (!value && allowEmpty) continue;
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value ?? "");
+    const date = match
+      ? new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])))
+      : undefined;
+    if (
+      !match ||
+      !date ||
+      date.getUTCFullYear() !== Number(match[1]) ||
+      date.getUTCMonth() !== Number(match[2]) - 1 ||
+      date.getUTCDate() !== Number(match[3])
+    ) {
+      errors.push(`${file} ${index + 2}행: ${field}는 YYYY-MM-DD 형식이어야 합니다.`);
+    }
+  }
+};
 const categoriesCsv = await readCsv("categories.csv", [
   "id",
   "slug",
@@ -197,6 +251,117 @@ const imagesCsv = await readCsv("images.csv", [
   "isPrimary",
 ]);
 
+requireFields("categories.csv", categoriesCsv, ["id", "slug", "label", "sortOrder", "isActive"]);
+requireFields("brands.csv", brandsCsv, [
+  "id",
+  "slug",
+  "name",
+  "supportedCategories",
+  "sortOrder",
+  "isActive",
+]);
+requireFields("consumables.csv", consumablesCsv, [
+  "id",
+  "slug",
+  "type",
+  "displayName",
+  "partNumberStatus",
+  "verificationStatus",
+  "sortOrder",
+]);
+requireFields("model-consumables.csv", modelConsumablesCsv, [
+  "modelId",
+  "consumableId",
+  "verificationStatus",
+  "verifiedAt",
+]);
+requireFields("sources.csv", sourcesCsv, [
+  "id",
+  "title",
+  "url",
+  "sourceType",
+  "checkedAt",
+  "isActive",
+]);
+requireFields("entity-sources.csv", entitySourcesCsv, [
+  "entityType",
+  "entityId",
+  "sourceId",
+  "purpose",
+]);
+requireFields("product-options.csv", productOptionsCsv, [
+  "id",
+  "consumableId",
+  "name",
+  "kind",
+  "verification",
+  "sortOrder",
+  "isActive",
+]);
+requireFields("purchase-links.csv", purchaseLinksCsv, [
+  "id",
+  "consumableId",
+  "label",
+  "url",
+  "channel",
+  "linkType",
+  "isAffiliate",
+  "checkedAt",
+  "isActive",
+]);
+requireFields("images.csv", imagesCsv, [
+  "id",
+  "modelId",
+  "src",
+  "alt",
+  "sourceUrl",
+  "checkedAt",
+  "sortOrder",
+  "isPrimary",
+]);
+requireBoolean("categories.csv", categoriesCsv, ["isActive"]);
+requireBoolean("brands.csv", brandsCsv, ["isActive"]);
+requireBoolean("consumables.csv", consumablesCsv, ["affiliateIsAffiliate", "affiliateEnabled"]);
+requireBoolean("sources.csv", sourcesCsv, ["isActive"]);
+requireBoolean("product-options.csv", productOptionsCsv, ["isActive"]);
+requireBoolean("purchase-links.csv", purchaseLinksCsv, ["isAffiliate", "isActive"]);
+requireBoolean("images.csv", imagesCsv, ["isPrimary"]);
+for (const [file, rows] of [
+  ["categories.csv", categoriesCsv],
+  ["brands.csv", brandsCsv],
+  ["consumables.csv", consumablesCsv],
+  ["product-options.csv", productOptionsCsv],
+  ["images.csv", imagesCsv],
+] as const) {
+  requireNonNegativeInteger(file, rows, "sortOrder");
+}
+requireIsoDate("model-consumables.csv", modelConsumablesCsv, "verifiedAt");
+requireIsoDate("sources.csv", sourcesCsv, "checkedAt");
+requireIsoDate("purchase-links.csv", purchaseLinksCsv, "checkedAt");
+requireIsoDate("images.csv", imagesCsv, "checkedAt");
+requireIsoDate("consumables.csv", consumablesCsv, "affiliateLinkCheckedAt", true);
+requireAllowedValues("sources.csv", sourcesCsv, "sourceType", [
+  "manufacturer",
+  "official-manual",
+  "official-store",
+  "seller",
+  "other",
+]);
+requireAllowedValues("entity-sources.csv", entitySourcesCsv, "entityType", [
+  "model",
+  "consumable",
+  "product-option",
+]);
+requireAllowedValues("product-options.csv", productOptionsCsv, "kind", ["genuine", "compatible"]);
+requireAllowedValues("purchase-links.csv", purchaseLinksCsv, "channel", [
+  "coupang",
+  "official",
+  "other",
+]);
+requireAllowedValues("purchase-links.csv", purchaseLinksCsv, "linkType", [
+  "direct-product",
+  "official-reference",
+]);
 const categoryIds = unique("categories.csv", categoriesCsv, (row) => row.id);
 unique("categories.csv", categoriesCsv, (row) => `slug:${row.slug}`);
 const brandIds = unique("brands.csv", brandsCsv, (row) => row.id);
@@ -214,7 +379,22 @@ unique(
   (row) => `${row.entityType}|${row.entityId}|${row.sourceId}`,
 );
 
-const modelIds = new Set(models.map((model) => model.id));
+const modelRecords = parseModelCsv(await readFile(path.resolve("data/import/models.csv"), "utf8"));
+const modelValidation = validateModelCsv(modelRecords, {
+  categoryIds,
+  brandCategories: new Map(
+    brandsCsv.map((brand) => [
+      brand.id,
+      new Set(brand.supportedCategories.split("|").filter(Boolean)),
+    ]),
+  ),
+  existingModelIds: new Set(),
+  existingModelCodes: new Set(),
+});
+for (const error of modelValidation.errors) errors.push(`models.csv ${error}`);
+const modelIds = new Set(
+  modelValidation.entries.map((entry) => toModelId(entry.brandId, entry.modelCode)),
+);
 for (const [index, brand] of brandsCsv.entries()) {
   for (const categoryId of brand.supportedCategories.split("|").filter(Boolean)) {
     if (!categoryIds.has(categoryId))
@@ -248,43 +428,45 @@ for (const [index, relation] of entitySourcesCsv.entries()) {
     errors.push(`entity-sources.csv ${index + 2}행: entityId 참조 없음.`);
 }
 
-const expectedCounts = new Map<string, [number, number]>([
-  ["카테고리", [categoriesCsv.length, categories.length]],
-  ["브랜드", [brandsCsv.length, brands.length]],
-  ["소모품", [consumablesCsv.length, consumables.length]],
-  [
-    "호환 관계",
+if (!sourceOnly) {
+  const expectedCounts = new Map<string, [number, number]>([
+    ["카테고리", [categoriesCsv.length, categories.length]],
+    ["브랜드", [brandsCsv.length, brands.length]],
+    ["소모품", [consumablesCsv.length, consumables.length]],
     [
-      modelConsumablesCsv.length,
-      consumables.reduce((sum, part) => sum + part.compatibleModelIds.length, 0),
+      "호환 관계",
+      [
+        modelConsumablesCsv.length,
+        consumables.reduce((sum, part) => sum + part.compatibleModelIds.length, 0),
+      ],
     ],
-  ],
-  [
-    "제품 옵션",
     [
-      productOptionsCsv.length,
-      consumables.reduce((sum, part) => sum + part.productOptions.length, 0),
+      "제품 옵션",
+      [
+        productOptionsCsv.length,
+        consumables.reduce((sum, part) => sum + part.productOptions.length, 0),
+      ],
     ],
-  ],
-  [
-    "구매 링크",
     [
-      purchaseLinksCsv.length,
-      new Set(
-        consumables.flatMap((part) => [
-          ...part.purchaseLinks.map(({ id }) => id),
-          ...part.productOptions.flatMap((option) => option.purchaseLinks.map(({ id }) => id)),
-        ]),
-      ).size,
+      "구매 링크",
+      [
+        purchaseLinksCsv.length,
+        new Set(
+          consumables.flatMap((part) => [
+            ...part.purchaseLinks.map(({ id }) => id),
+            ...part.productOptions.flatMap((option) => option.purchaseLinks.map(({ id }) => id)),
+          ]),
+        ).size,
+      ],
     ],
-  ],
-  ["이미지", [imagesCsv.length, Object.keys(modelImages).length]],
-]);
-for (const [label, [actual, expected]] of expectedCounts) {
-  if (actual !== expected) errors.push(`${label} 행 수 불일치: CSV ${actual}, 기존 ${expected}`);
-}
-if (categoryIds.size !== categories.length || brandIds.size !== brands.length) {
-  errors.push("카테고리 또는 브랜드 ID 개수가 기존 데이터와 다릅니다.");
+    ["이미지", [imagesCsv.length, Object.keys(modelImages).length]],
+  ]);
+  for (const [label, [actual, expected]] of expectedCounts) {
+    if (actual !== expected) errors.push(`${label} 행 수 불일치: CSV ${actual}, 기존 ${expected}`);
+  }
+  if (categoryIds.size !== categories.length || brandIds.size !== brands.length) {
+    errors.push("카테고리 또는 브랜드 ID 개수가 기존 데이터와 다릅니다.");
+  }
 }
 
 if (errors.length) {
@@ -294,5 +476,5 @@ if (errors.length) {
 }
 
 console.log(
-  `관계형 CSV 검사 통과: 카테고리 ${categoriesCsv.length}, 브랜드 ${brandsCsv.length}, 모델 ${models.length}, 소모품 ${consumablesCsv.length}, 호환 관계 ${modelConsumablesCsv.length}, 출처 ${sourcesCsv.length}, 제품 옵션 ${productOptionsCsv.length}, 구매 링크 ${purchaseLinksCsv.length}, 이미지 ${imagesCsv.length}`,
+  `관계형 CSV 검사 통과: 카테고리 ${categoriesCsv.length}, 브랜드 ${brandsCsv.length}, 모델 ${modelIds.size}, 소모품 ${consumablesCsv.length}, 호환 관계 ${modelConsumablesCsv.length}, 출처 ${sourcesCsv.length}, 제품 옵션 ${productOptionsCsv.length}, 구매 링크 ${purchaseLinksCsv.length}, 이미지 ${imagesCsv.length}`,
 );

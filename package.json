@@ -34,7 +34,9 @@
     "catalog:import": "tsx scripts/import-relational-csv.ts && npm run import:models",
     "data:backup": "tsx scripts/private-data-backup.ts backup",
     "data:backup:verify": "tsx scripts/private-data-backup.ts verify --from latest",
-    "data:restore": "tsx scripts/private-data-backup.ts restore"
+    "data:restore": "tsx scripts/private-data-backup.ts restore",
+    "catalog:source-check": "tsx scripts/check-relational-csv.ts --source-only",
+    "catalog:update": "npm run catalog:source-check && npm run catalog:import && npm run database:seed && npm run validate:data && npm run check:models-csv && npm run catalog:check && npm run data:backup"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.2",
