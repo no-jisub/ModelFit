@@ -25,3 +25,6 @@ dataconnect/seed_data.gql
 src/data/consumables/*.ts
 !src/data/consumables/index.ts
 !src/data/consumables/shared.ts
+
+# Local-only private data snapshots
+private-backups/

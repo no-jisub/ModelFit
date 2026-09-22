@@ -31,7 +31,10 @@
     "check": "npm run format && npm run lint && npm run check:env && npm run validate:data && npm run check:models-csv && npm run catalog:check && npm run database:check && npm run test && npm run test:rules && npm run build",
     "catalog:export": "tsx scripts/export-relational-csv.ts",
     "catalog:check": "tsx scripts/check-relational-csv.ts && tsx scripts/import-relational-csv.ts --check",
-    "catalog:import": "tsx scripts/import-relational-csv.ts && npm run import:models"
+    "catalog:import": "tsx scripts/import-relational-csv.ts && npm run import:models",
+    "data:backup": "tsx scripts/private-data-backup.ts backup",
+    "data:backup:verify": "tsx scripts/private-data-backup.ts verify --from latest",
+    "data:restore": "tsx scripts/private-data-backup.ts restore"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.2",
