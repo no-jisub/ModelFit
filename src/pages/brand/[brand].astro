@@ -17,11 +17,14 @@ const { brand } = Astro.props;
 const brandModels = models.filter((model) => model.brandId === brand.id);
 const brandModelGroups = groupModelsByName(brandModels);
 const officialModels = brandModels.filter((model) => !model.isDemo);
+const supportedCategoryNames = brand.supportedCategories
+  .map((category) => categoryLabels[category])
+  .join(" · ");
 ---
 
 <BaseLayout
   title={`${brand.name} 호환 소모품 모델 찾기`}
-  description={`${brand.name} ${brand.nameEn ?? ""} 공기청정기와 로봇청소기 모델별 소모품 정보를 찾아보세요.`}
+  description={`${brand.name} ${brand.nameEn ?? ""} ${supportedCategoryNames} 모델별 소모품 정보를 찾아보세요.`}
   canonicalPath={`/brand/${brand.slug}`}
 >
   <section class="page-hero">
@@ -29,9 +32,7 @@ const officialModels = brandModels.filter((model) => !model.isDemo);
       <Breadcrumbs items={[{ label: "브랜드", href: "/#brands" }, { label: brand.name }]} />
       <h1>{brand.name} <span class="model-code">{brand.nameEn}</span></h1>
       <p class="page-meta-inline">
-        {brand.supportedCategories.map((category) => categoryLabels[category]).join(" · ")} · {
-          officialModels.length
-        }개 모델
+        {supportedCategoryNames} · {officialModels.length}개 모델
       </p>
     </div>
   </section>

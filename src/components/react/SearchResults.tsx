@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { brands } from "@/data/brands";
+import { categories, categoryById, isApplianceCategory } from "@/data/categories";
 import { consumables } from "@/data/consumables";
 import { models } from "@/data/models";
 import type { ApplianceCategory, ApplianceModel } from "@/types";
@@ -55,7 +56,7 @@ function ModelResultCard({
     <article className={`model-card card ${selected ? "is-selected" : ""}`}>
       <div className="model-card-top">
         <span className="category-chip">
-          {model.category === "air-purifier" ? "▤" : "◉"} {categoryLabels[model.category]}
+          {categoryById[model.category].symbol} {categoryLabels[model.category]}
         </span>
         {association && <span className="official-chip">소모품으로 찾은 모델</span>}
       </div>
@@ -221,9 +222,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
     const nextBrandId = params.get("brand");
 
     setQuery(params.get("q") ?? "");
-    setCategory(
-      nextCategory === "air-purifier" || nextCategory === "robot-vacuum" ? nextCategory : "all",
-    );
+    setCategory(isApplianceCategory(nextCategory) ? nextCategory : "all");
     setBrandId(nextBrandId && brands.some(({ id }) => id === nextBrandId) ? nextBrandId : "all");
     const nextTab = params.get("type");
     setTabPreference(nextTab === "models" || nextTab === "parts" ? nextTab : null);
@@ -261,7 +260,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
   };
 
   return (
-    <div className="search-page-app">
+    <div className="search-page-app" data-ready={urlStateReady ? "true" : "false"}>
       <SearchBox initialQuery={query} compact />
       <div className="filter-bar" aria-label="검색 결과 필터">
         <label>
@@ -274,8 +273,11 @@ export default function SearchResults({ initialQuery = "" }: Props) {
             }}
           >
             <option value="all">전체 카테고리</option>
-            <option value="air-purifier">공기청정기</option>
-            <option value="robot-vacuum">로봇청소기</option>
+            {categories.map((item) => (
+              <option value={item.id} key={item.id}>
+                {item.label}
+              </option>
+            ))}
           </select>
         </label>
         <label>

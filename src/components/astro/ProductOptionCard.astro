@@ -37,6 +37,9 @@ const hasDirectProduct = option.purchaseLinks.some((link) => link.linkType === "
         <span class="product-verification-badge">
           {verificationLabel}
         </span>
+        <span class:list={["product-link-badge", hasDirectProduct ? "is-available" : "is-pending"]}>
+          {hasDirectProduct ? "구매 링크 있음" : "구매 링크 준비 중"}
+        </span>
       </div>
       <h5 id={headingId}>{option.name}</h5>
     </div>

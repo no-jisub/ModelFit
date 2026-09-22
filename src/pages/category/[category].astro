@@ -4,38 +4,30 @@ import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import ModelCard from "@/components/astro/ModelCard.astro";
 import ModelGroupCard from "@/components/astro/ModelGroupCard.astro";
 import { brands } from "@/data/brands";
+import { categories, getCategoryConfig, type CategoryId } from "@/data/categories";
 import { guides } from "@/data/guides";
 import { models } from "@/data/models";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import type { ApplianceCategory } from "@/types";
-import { categoryLabels } from "@/utils/labels";
 import { groupModelsByName } from "@/utils/modelGroups";
 
 export function getStaticPaths() {
-  return (["air-purifier", "robot-vacuum"] satisfies ApplianceCategory[]).map((category) => ({
-    params: { category },
-  }));
+  return categories.map(({ id }) => ({ params: { category: id } }));
 }
 
-const category = Astro.params.category as ApplianceCategory;
-const label = categoryLabels[category];
+const category = Astro.params.category as CategoryId;
+const categoryConfig = getCategoryConfig(category);
+const { label, partTypes } = categoryConfig;
 const categoryModels = models.filter((model) => model.category === category);
 const categoryModelGroups = groupModelsByName(categoryModels);
 const categoryBrands = brands.filter((brand) => brand.supportedCategories.includes(category));
 const relatedGuides = guides.filter(
-  (guide) =>
-    guide.category === (category === "air-purifier" ? "공기청정기" : "로봇청소기") ||
-    guide.category === "기초",
+  (guide) => guide.category === category || guide.category === "basics",
 );
-const partTypes =
-  category === "air-purifier"
-    ? (["hepa-filter", "deodorizing-filter", "pre-filter", "all-in-one-filter"] as const)
-    : (["dust-bin-filter", "dust-bag", "main-brush", "side-brush", "mop-pad"] as const);
 ---
 
 <BaseLayout
   title={`${label} 호환 소모품 모델 목록`}
-  description={`${label} 모델별 호환 소모품 정보를 찾고 필터, 브러시, 먼지봉투 등의 검증 상태를 확인하세요.`}
+  description={categoryConfig.metaDescription}
   canonicalPath={`/category/${category}`}
 >
   <section class="page-hero category-page-hero">
@@ -43,6 +35,7 @@ const partTypes =
       <Breadcrumbs items={[{ label }]} />
 
       <h1>{label} 소모품 찾기</h1>
+      <p>{categoryConfig.description}</p>
       <p class="page-meta-inline">
         {categoryModels.filter((model) => !model.isDemo).length}개 모델 · {categoryBrands.length}개
         브랜드 · {partTypes.length}개 소모품 유형
@@ -67,7 +60,7 @@ const partTypes =
             <span>모델번호</span>
             <input
               type="search"
-              placeholder="모델번호 검색"
+              placeholder={`${label} 모델번호 검색`}
               autocomplete="off"
               data-model-filter-query
             />

@@ -1,5 +1,6 @@
 ---
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
+import { categories } from "@/data/categories";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
@@ -21,9 +22,9 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
         같은 제품군 안에서도 모델 코드에 따라 필터 크기와 브러시 결합 방식이 다릅니다. 모델핏은 구매
         전에 확인해야 할 정보를 모델 코드 중심으로 모읍니다.
       </p><h2>무엇을 제공하나요?</h2><ul>
-        <li>공기청정기와 로봇청소기 모델 검색</li><li>호환 소모품 유형과 부품번호 구조</li><li>
-          검증 상태와 공식 출처
-        </li><li>공식 출처와 구매 전 주의사항</li>
+        <li>{categories.map(({ label }) => label).join(" · ")} 모델 검색</li><li>
+          호환 소모품 유형과 부품번호 구조
+        </li><li>검증 상태와 공식 출처</li><li>공식 출처와 구매 전 주의사항</li>
       </ul><h2>현재 단계</h2><p>
         모델 정보는 제조사 공식 자료에서 확인한 항목만 공개합니다. 실제 소모품 호환성 데이터는 공식
         근거를 확인한 뒤 별도로 등록합니다.

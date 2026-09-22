@@ -2,6 +2,7 @@
 import type { ApplianceModel } from "@/types";
 import { categoryLabels } from "@/utils/labels";
 import { getModelDisplayName } from "@/utils/modelDisplayName";
+import CategoryIcon from "./CategoryIcon.astro";
 
 const { models } = Astro.props as { models: ApplianceModel[] };
 const representative = models[0];
@@ -20,7 +21,7 @@ const detailPath = `/model/${representative.brandId}/${representative.slug}#comp
 >
   <div class="model-card-top">
     <span class="category-chip">
-      <span aria-hidden="true">{representative.category === "air-purifier" ? "▤" : "◉"}</span>
+      <CategoryIcon category={representative.category} />
       {categoryLabels[representative.category]}
     </span>
   </div>

@@ -1,0 +1,153 @@
+query ListCategories @auth(level: PUBLIC, insecureReason: "Public product catalog") {
+  categories(where: { isActive: { eq: true } }, orderBy: [{ sortOrder: ASC }, { label: ASC }]) {
+    id
+    slug
+    label
+    description
+    modelNumberGuide
+  }
+}
+
+query ListBrands @auth(level: PUBLIC, insecureReason: "Public product catalog") {
+  brands(where: { isActive: { eq: true } }, orderBy: [{ sortOrder: ASC }, { name: ASC }]) {
+    id
+    slug
+    name
+    nameEn
+    officialDomains
+    categories: categories_via_BrandCategory {
+      id
+      slug
+      label
+    }
+  }
+}
+
+query GetModelBySlug($slug: String!)
+@auth(level: PUBLIC, insecureReason: "Public product catalog") {
+  model(first: { where: { slug: { eq: $slug }, status: { eq: PUBLISHED } } }) {
+    id
+    slug
+    modelName
+    modelCode
+    series
+    shortDescription
+    verificationStatus
+    verifiedAt
+    releaseYear
+    releaseMonth
+    releaseDay
+    releaseSourceUrl
+    category {
+      id
+      slug
+      label
+    }
+    brand {
+      id
+      slug
+      name
+      nameEn
+    }
+    aliases: modelAliases_on_model {
+      alias
+    }
+    images: modelImages_on_model(orderBy: [{ sortOrder: ASC }]) {
+      id
+      url
+      alt
+      sourceUrl
+      isPrimary
+    }
+    consumables: consumables_via_ModelConsumable {
+      id
+      slug
+      type
+      displayName
+      genuinePartNumber
+      partNumberStatus
+      replacementInterval
+      verificationStatus
+    }
+  }
+}
+
+query ListModelsByCategory($categoryId: String!, $limit: Int = 50, $offset: Int = 0)
+@auth(level: PUBLIC, insecureReason: "Public product catalog") {
+  models(
+    where: { categoryId: { eq: $categoryId }, status: { eq: PUBLISHED } }
+    orderBy: [{ brandId: ASC }, { modelName: ASC }]
+    limit: $limit
+    offset: $offset
+  ) {
+    id
+    slug
+    modelName
+    modelCode
+    series
+    releaseYear
+    releaseMonth
+    releaseDay
+    brand {
+      id
+      slug
+      name
+      nameEn
+    }
+    images: modelImages_on_model(where: { isPrimary: { eq: true } }, limit: 1) {
+      url
+      alt
+    }
+  }
+}
+
+query ListModelsByBrand($brandId: String!, $limit: Int = 50, $offset: Int = 0)
+@auth(level: PUBLIC, insecureReason: "Public product catalog") {
+  models(
+    where: { brandId: { eq: $brandId }, status: { eq: PUBLISHED } }
+    orderBy: [{ modelName: ASC }]
+    limit: $limit
+    offset: $offset
+  ) {
+    id
+    slug
+    modelName
+    modelCode
+    series
+    releaseYear
+    releaseMonth
+    releaseDay
+    category {
+      id
+      slug
+      label
+    }
+    images: modelImages_on_model(where: { isPrimary: { eq: true } }, limit: 1) {
+      url
+      alt
+    }
+  }
+}
+
+query SearchModels($query: String!, $limit: Int = 20)
+@auth(level: PUBLIC, insecureReason: "Public product catalog search") {
+  models_search(query: $query, limit: $limit) {
+    id
+    slug
+    modelName
+    modelCode
+    series
+    status
+    category {
+      id
+      slug
+      label
+    }
+    brand {
+      id
+      slug
+      name
+      nameEn
+    }
+  }
+}

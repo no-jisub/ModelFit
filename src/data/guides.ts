@@ -5,7 +5,7 @@ export const guides: Guide[] = [
     slug: "find-model-number",
     title: "가전제품 모델명 찾는 방법",
     summary: "제품 라벨과 앱에서 정확한 모델 코드를 찾는 순서를 안내합니다.",
-    category: "기초",
+    category: "basics",
     steps: [
       {
         title: "제품 전원을 끄세요",
@@ -34,7 +34,7 @@ export const guides: Guide[] = [
     slug: "genuine-vs-compatible",
     title: "정품과 호환 소모품 비교",
     summary: "표기, 가격, 판매자 고지를 비교해 구매 판단에 필요한 기준을 정리합니다.",
-    category: "기초",
+    category: "basics",
     steps: [
       {
         title: "부품번호 확인",
@@ -56,7 +56,7 @@ export const guides: Guide[] = [
     slug: "air-purifier-filter-guide",
     title: "공기청정기 필터 선택 가이드",
     summary: "집진, HEPA, 탈취, 프리필터의 차이와 확인 순서를 소개합니다.",
-    category: "공기청정기",
+    category: "air-purifier",
     steps: [
       { title: "필터 구조 확인", description: "일체형인지 분리형인지 먼저 확인합니다." },
       {
@@ -75,7 +75,7 @@ export const guides: Guide[] = [
     slug: "robot-vacuum-consumables",
     title: "로봇청소기 소모품 체크리스트",
     summary: "필터, 브러시, 먼지봉투, 물걸레 패드의 호환성을 확인합니다.",
-    category: "로봇청소기",
+    category: "robot-vacuum",
     steps: [
       {
         title: "본체와 스테이션 구분",
@@ -97,7 +97,7 @@ export const guides: Guide[] = [
     slug: "replacement-cycle",
     title: "소모품 교체주기 판단법",
     summary: "고정된 기간보다 사용 환경과 제품 상태를 함께 보는 방법을 안내합니다.",
-    category: "관리",
+    category: "maintenance",
     steps: [
       { title: "앱 알림 확인", description: "제조사 앱이 제공하는 잔여 수명 정보를 참고합니다." },
       { title: "외관 확인", description: "변색, 냄새, 손상, 흡입력 저하를 확인합니다." },

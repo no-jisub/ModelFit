@@ -1,4 +1,6 @@
-export type ApplianceCategory = "air-purifier" | "robot-vacuum";
+import type { CategoryId } from "@/data/categories";
+
+export type ApplianceCategory = CategoryId;
 
 export type VerificationStatus = "official" | "seller-confirmed" | "user-reported" | "unverified";
 
@@ -99,6 +101,21 @@ export interface ModelImage {
   checkedAt: string;
 }
 
+export interface ImportedCatalogEntry {
+  brandId: string;
+  category: ApplianceCategory;
+  modelName: string;
+  modelCode: string;
+  series?: string;
+  sourceUrl: string;
+  sourceTitle: string;
+  sourceType: SourceReference["sourceType"];
+  verifiedAt: string;
+  releaseDate?: string;
+  releaseSourceUrl?: string;
+  aliases?: string[];
+}
+
 export interface ApplianceModel {
   id: string;
   slug: string;
@@ -135,7 +152,7 @@ export interface Guide {
   slug: string;
   title: string;
   summary: string;
-  category: "기초" | "공기청정기" | "로봇청소기" | "관리";
+  category: "basics" | "maintenance" | ApplianceCategory;
   steps: { title: string; description: string }[];
   checklist: string[];
   cautions: string[];

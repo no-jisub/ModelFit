@@ -1,3 +1,4 @@
+import { categories } from "../data/categories";
 import type {
   ApplianceCategory,
   ConsumableType,
@@ -5,9 +6,14 @@ import type {
   VerificationStatus,
 } from "@/types";
 
-export const categoryLabels: Record<ApplianceCategory, string> = {
-  "air-purifier": "공기청정기",
-  "robot-vacuum": "로봇청소기",
+export const categoryLabels = Object.fromEntries(
+  categories.map(({ id, label }) => [id, label]),
+) as Record<ApplianceCategory, string>;
+
+export const guideCategoryLabels: Record<"basics" | "maintenance" | ApplianceCategory, string> = {
+  basics: "기초",
+  maintenance: "관리",
+  ...categoryLabels,
 };
 
 export const statusLabels: Record<VerificationStatus, string> = {

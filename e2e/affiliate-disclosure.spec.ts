@@ -39,6 +39,7 @@ test("구매 링크가 없는 품목과 확인된 품목을 구분한다", async
   });
   await expect(unavailablePart.locator('a[data-purchase-channel="coupang"]')).toHaveCount(0);
   await expect(unavailablePart.getByText("외부 판매 상품 링크는 준비 중입니다.")).toBeVisible();
+  await expect(unavailablePart.getByText("구매 링크 준비 중", { exact: true })).toBeVisible();
 
   await page.goto("/model/wells/al106");
   await expect(page.locator('a[data-purchase-channel="coupang"]')).toHaveCount(2);

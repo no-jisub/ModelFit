@@ -44,6 +44,7 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
   const [indexState, setIndexState] = useState<"idle" | "loading" | "ready" | "error">("idle");
   const wrapperRef = useRef<HTMLDivElement>(null);
   const requestVersion = useRef(0);
+  const showPanel = open && Boolean(query.trim());
   const suggestions = useMemo(
     () => (autocompleteIndex ? searchAutocomplete(autocompleteIndex, query) : []),
     [autocompleteIndex, query],
@@ -115,6 +116,7 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
       setActiveIndex((index) => Math.max(index - 1, 0));
     } else if (event.key === "Escape") {
       setOpen(false);
+      setActiveIndex(-1);
     } else if (event.key === "Enter" && activeIndex >= 0) {
       event.preventDefault();
       selectSuggestion(activeIndex);
@@ -151,9 +153,11 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
           autoComplete="off"
           role="combobox"
           aria-autocomplete="list"
-          aria-expanded={open}
-          aria-controls={listId}
-          aria-activedescendant={activeIndex >= 0 ? `${listId}-${activeIndex}` : undefined}
+          aria-expanded={showPanel}
+          aria-controls={showPanel ? listId : undefined}
+          aria-activedescendant={
+            showPanel && activeIndex >= 0 ? `${listId}-${activeIndex}` : undefined
+          }
           onChange={(event) => {
             setQuery(event.target.value);
             setOpen(true);
@@ -170,7 +174,7 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
           소모품 찾기
         </button>
       </form>
-      {open && query.trim() && (
+      {showPanel && (
         <div className="autocomplete-panel" id={listId} role="listbox" aria-label="모델 검색 제안">
           {indexState === "loading" || indexState === "idle" ? (
             <div className="autocomplete-empty">

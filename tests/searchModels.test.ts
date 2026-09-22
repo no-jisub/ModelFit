@@ -20,6 +20,14 @@ describe("searchModels", () => {
     );
   });
 
+  it.each([
+    ["엘지 AS355NSNA", "lg-as355nsna"],
+    ["교원 웰스 AL106", "wells-al106"],
+    ["아이 로봇 COMBO J9+", "irobot-combo-j9-plus"],
+  ])("띄어쓴 브랜드 별칭과 모델번호 %s를 함께 검색한다", (query, expectedId) => {
+    expect(searchModels(models, query)[0]?.model.id).toBe(expectedId);
+  });
+
   it("완전 일치를 부분 일치보다 우선한다", () => {
     const results = searchModels(models, "S8 MAXV ULTRA");
     expect(results[0]?.model.id).toBe("roborock-s8-maxv-ultra");

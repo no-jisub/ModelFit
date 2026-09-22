@@ -231,6 +231,36 @@ test("모델 상세에서 같은 제품군의 모델번호를 변경한다", asy
   await expect(page.locator("#compatible-parts")).toBeVisible();
 });
 
+test("모델 상세 상단에서 정확한 모델번호와 검증 정보를 확인한다", async ({ page }) => {
+  await page.goto("/model/lg/as355nsna");
+
+  const summary = page.getByRole("region", { name: "모델 확인 요약" });
+  await expect(summary.getByText("확인된 모델번호")).toBeVisible();
+  await expect(summary.getByText("AS355NSNA", { exact: true })).toBeVisible();
+  await expect(summary.getByTitle("공식 모델 확인 상태")).toContainText("공식 모델 확인");
+  await expect(summary.getByText("모델 정보 확인일")).toBeVisible();
+  await expect(summary.locator("time")).toHaveAttribute("datetime", /^\d{4}-\d{2}-\d{2}$/);
+  await expect(summary.getByText("연결된 소모품")).toBeVisible();
+});
+
+test("모델 상세에서 소모품 현황과 바로가기를 제공한다", async ({ page }) => {
+  await page.goto("/model/lg/as355nsna");
+
+  const section = page.locator("#compatible-parts");
+  const status = section.getByLabel("소모품 등록 현황");
+  await expect(status).toContainText("공식 호환 확인 2종");
+  await expect(status).toContainText("구매 링크 제공 2종");
+
+  const navigation = section.getByRole("navigation", { name: "소모품 바로가기" });
+  await expect(navigation.getByRole("link")).toHaveCount(2);
+  await expect(navigation.getByRole("link").first()).toHaveAttribute(
+    "href",
+    "#lg-puricare-m-filter",
+  );
+  await expect(page.locator("#lg-puricare-m-filter")).toBeVisible();
+  await expect(page.getByText("구매 링크 있음", { exact: true }).first()).toBeVisible();
+});
+
 test("소모품 카드는 상품 확인과 제조사 호환 근거 행동만 제공한다", async ({ page }) => {
   await page.goto("/model/lg/as355nsna");
 

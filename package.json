@@ -18,10 +18,20 @@
     "test:performance": "playwright test e2e/performance.spec.ts --project=desktop-chromium",
     "check:env": "tsx scripts/check-env.ts",
     "validate:data": "tsx scripts/validate-data.ts",
+    "check:models-csv": "tsx scripts/import-models-csv.ts --check",
+    "import:models": "tsx scripts/import-models-csv.ts",
+    "database:seed": "tsx scripts/generate-dataconnect-seed.ts",
+    "database:check": "npm run database:seed && prettier --check \"dataconnect/**/*.{gql,yaml}\" && tsx scripts/check-dataconnect.ts",
+    "database:compile": "npx -y firebase-tools@15.28.1 dataconnect:compile",
+    "database:sdk": "npx -y firebase-tools@15.28.1 dataconnect:sdk:generate",
+    "database:emulator": "npx -y firebase-tools@15.28.1 emulators:start --only dataconnect",
     "audit:sources": "tsx scripts/audit-sources.ts",
     "audit:freshness": "tsx scripts/audit-freshness.ts",
     "sync:model-images": "tsx scripts/sync-model-images.ts",
-    "check": "npm run format && npm run lint && npm run check:env && npm run validate:data && npm run test && npm run test:rules && npm run build"
+    "check": "npm run format && npm run lint && npm run check:env && npm run validate:data && npm run check:models-csv && npm run catalog:check && npm run database:check && npm run test && npm run test:rules && npm run build",
+    "catalog:export": "tsx scripts/export-relational-csv.ts",
+    "catalog:check": "tsx scripts/check-relational-csv.ts && tsx scripts/import-relational-csv.ts --check",
+    "catalog:import": "tsx scripts/import-relational-csv.ts && npm run import:models"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.2",

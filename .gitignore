@@ -13,3 +13,15 @@ test-results/
 .agents/
 skills-lock.json
 outputs/
+
+# Private product catalog source and generated data
+data/catalog/*.csv
+data/import/*.csv
+src/data/importedCatalogModels.ts
+src/data/importedRelationalCatalog.ts
+dataconnect/seed_data.gql
+
+# Legacy catalog records (keep runtime helpers tracked)
+src/data/consumables/*.ts
+!src/data/consumables/index.ts
+!src/data/consumables/shared.ts

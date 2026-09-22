@@ -14,7 +14,10 @@
     "ui": {
       "enabled": false
     },
-    "singleProjectMode": true
+    "singleProjectMode": true,
+    "dataconnect": {
+      "port": 9399
+    }
   },
   "hosting": {
     "public": "dist",
@@ -70,5 +73,8 @@
         ]
       }
     ]
+  },
+  "dataconnect": {
+    "source": "dataconnect"
   }
 }

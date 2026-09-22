@@ -1,0 +1,12 @@
+specVersion: "v1"
+serviceId: "modelfit-catalog"
+location: "asia-northeast3"
+schema:
+  source: "./schema"
+  datasource:
+    postgresql:
+      database: "modelfit_catalog"
+      cloudSql:
+        instanceId: "modelfit-catalog"
+        schemaValidation: "COMPATIBLE"
+connectorDirs: ["./catalog"]

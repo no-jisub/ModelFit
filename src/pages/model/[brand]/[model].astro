@@ -2,11 +2,12 @@
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import ConsumableCard from "@/components/astro/ConsumableCard.astro";
 import SourceList from "@/components/astro/SourceList.astro";
+import VerificationBadge from "@/components/astro/VerificationBadge.astro";
 
 import { consumables } from "@/data/consumables";
 import { models } from "@/data/models";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { categoryLabels } from "@/utils/labels";
+import { categoryLabels, partTypeLabels } from "@/utils/labels";
 import { getModelFullName } from "@/utils/modelDisplayName";
 import { groupModelsByName } from "@/utils/modelGroups";
 
@@ -25,6 +26,14 @@ const parts = model.consumableIds
   .map((id: string) => consumables.find((part) => part.id === id))
   .filter((part) => part !== undefined);
 const purchaseWarnings = [...new Set(parts.map((part) => part.purchaseWarning).filter(Boolean))];
+const officiallyVerifiedPartCount = parts.filter(
+  (part) => part.verificationStatus === "official",
+).length;
+const purchaseReadyPartCount = parts.filter((part) =>
+  part.productOptions.some((option) =>
+    option.purchaseLinks.some((link) => link.linkType === "direct-product"),
+  ),
+).length;
 const categoryLabel = categoryLabels[model.category];
 const fullModelName = getModelFullName(model);
 const title = `${fullModelName} 호환 소모품 찾기`;
@@ -124,6 +133,25 @@ const breadcrumbJsonLd = {
           )
         }
       </div>
+      <section class="model-verification-summary" aria-label="모델 확인 요약">
+        <div class="model-verification-fact is-code">
+          <span>확인된 모델번호</span>
+          <strong>{model.modelCode}</strong>
+        </div>
+        <div class="model-verification-fact">
+          <span>모델 검증</span>
+          <VerificationBadge status={model.verificationStatus} context="model" />
+        </div>
+        <div class="model-verification-fact">
+          <span>모델 정보 확인일</span>
+          <strong><time datetime={model.lastVerifiedAt}>{model.lastVerifiedAt}</time></strong>
+        </div>
+        <div class="model-verification-fact">
+          <span>연결된 소모품</span>
+          <strong>{parts.length}종</strong>
+        </div>
+      </section>
+
       {
         model.isDemo && (
           <div class="alert-box" role="alert">
@@ -139,11 +167,38 @@ const breadcrumbJsonLd = {
 
   <div class="container model-content">
     <section class="detail-section compatible-parts-section" id="compatible-parts">
-      <div class="section-header">
+      <div class="section-header compatible-parts-header">
         <div>
           <h2>교체 소모품 {parts.length}종</h2>
+          <p class="section-description">
+            제품 라벨의 모델번호가 <strong>{model.modelCode}</strong>와 정확히 같은지 확인한 뒤
+            소모품을 선택하세요.
+          </p>
         </div>
+        {
+          parts.length > 0 && (
+            <div class="compatible-parts-status" aria-label="소모품 등록 현황">
+              <span>공식 호환 확인 {officiallyVerifiedPartCount}종</span>
+              <span>구매 링크 제공 {purchaseReadyPartCount}종</span>
+            </div>
+          )
+        }
       </div>
+      {
+        parts.length > 1 && (
+          <nav class="consumable-jump-links" aria-label="소모품 바로가기">
+            {parts.map((part, index) => (
+              <a href={`#${part.id}`} aria-label={`${part.displayName}으로 이동`}>
+                <span class="consumable-jump-number">{index + 1}</span>
+                <span>
+                  <strong>{partTypeLabels[part.type]}</strong>
+                  <small>{part.displayName}</small>
+                </span>
+              </a>
+            ))}
+          </nav>
+        )
+      }
       <div class="consumable-list">
         {
           parts.length > 0 ? (

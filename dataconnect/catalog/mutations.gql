@@ -1,0 +1,94 @@
+mutation UpsertCategory(
+  $id: String!
+  $slug: String!
+  $label: String!
+  $description: String
+  $modelNumberGuide: String
+  $sortOrder: Int!
+) @auth(expr: "auth.token.admin == true") {
+  category_upsert(
+    data: {
+      id: $id
+      slug: $slug
+      label: $label
+      description: $description
+      modelNumberGuide: $modelNumberGuide
+      sortOrder: $sortOrder
+      isActive: true
+      updatedAt_expr: "request.time"
+    }
+  )
+}
+
+mutation UpsertBrand(
+  $id: String!
+  $slug: String!
+  $name: String!
+  $nameEn: String
+  $officialDomains: [String!]!
+  $sortOrder: Int!
+) @auth(expr: "auth.token.admin == true") {
+  brand_upsert(
+    data: {
+      id: $id
+      slug: $slug
+      name: $name
+      nameEn: $nameEn
+      officialDomains: $officialDomains
+      sortOrder: $sortOrder
+      isActive: true
+      updatedAt_expr: "request.time"
+    }
+  )
+}
+
+mutation UpsertModel(
+  $id: String!
+  $slug: String!
+  $categoryId: String!
+  $brandId: String!
+  $modelName: String!
+  $modelCode: String!
+  $modelCodeNormalized: String!
+  $series: String
+  $shortDescription: String
+  $status: PublishStatus!
+  $verificationStatus: VerificationStatus!
+  $sourceUrl: String
+  $sourceTitle: String
+  $sourceType: SourceType
+  $verifiedAt: Date
+  $releaseYear: Int
+  $releaseMonth: Int
+  $releaseDay: Int
+  $releaseSourceUrl: String
+) @auth(expr: "auth.token.admin == true") {
+  model_upsert(
+    data: {
+      id: $id
+      slug: $slug
+      category: { id: $categoryId }
+      brand: { id: $brandId }
+      modelName: $modelName
+      modelCode: $modelCode
+      modelCodeNormalized: $modelCodeNormalized
+      series: $series
+      shortDescription: $shortDescription
+      status: $status
+      verificationStatus: $verificationStatus
+      sourceUrl: $sourceUrl
+      sourceTitle: $sourceTitle
+      sourceType: $sourceType
+      verifiedAt: $verifiedAt
+      releaseYear: $releaseYear
+      releaseMonth: $releaseMonth
+      releaseDay: $releaseDay
+      releaseSourceUrl: $releaseSourceUrl
+      updatedAt_expr: "request.time"
+    }
+  )
+}
+
+mutation ArchiveModel($id: String!) @auth(expr: "auth.token.admin == true") {
+  model_update(id: $id, data: { status: ARCHIVED, updatedAt_expr: "request.time" })
+}

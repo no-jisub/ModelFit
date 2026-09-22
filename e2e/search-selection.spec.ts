@@ -48,3 +48,27 @@ test("로봇청소기 카테고리에서 브랜드와 모델번호를 좁혀 상
   await expect(page).toHaveURL(/\/model\/dreame\/x40-ultra#compatible-parts$/);
   await expect(page.locator("#compatible-parts")).toBeVisible();
 });
+test("빈 검색창은 자동완성 목록이 없을 때 닫힌 상태를 유지한다", async ({ page }) => {
+  await page.goto("/", { waitUntil: "networkidle" });
+
+  const header = page.locator("header");
+  const input = header.getByRole("combobox", { name: "모델번호·부품번호 검색" });
+  await input.focus();
+
+  await expect(input).toHaveAttribute("aria-expanded", "false");
+  await expect(input).not.toHaveAttribute("aria-controls", /.+/);
+  await expect(header.getByRole("listbox", { name: "모델 검색 제안" })).toHaveCount(0);
+});
+
+test("한글 브랜드 별칭과 모델번호 조합으로 자동완성한다", async ({ page }) => {
+  await page.goto("/", { waitUntil: "networkidle" });
+
+  const header = page.locator("header");
+  const input = header.getByRole("combobox", { name: "모델번호·부품번호 검색" });
+  await input.fill("엘지 AS355NSNA");
+
+  const option = header.getByRole("option").first();
+  await expect(option).toContainText("AS355NSNA");
+  await option.click();
+  await expect(page).toHaveURL(/\/model\/lg\/as355nsna#compatible-parts$/);
+});
