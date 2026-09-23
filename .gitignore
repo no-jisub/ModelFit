@@ -28,3 +28,8 @@ src/data/consumables/*.ts
 
 # Local-only private data snapshots
 private-backups/
+
+# Firebase SQL Connect generated compiler files and local logs
+dataconnect/.dataconnect/
+dataconnect-debug.log
+pglite-debug.log

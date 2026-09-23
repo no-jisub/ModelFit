@@ -36,11 +36,15 @@
     "data:backup:verify": "tsx scripts/private-data-backup.ts verify --from latest",
     "data:restore": "tsx scripts/private-data-backup.ts restore",
     "catalog:source-check": "tsx scripts/check-relational-csv.ts --source-only",
-    "catalog:update": "npm run catalog:source-check && npm run catalog:import && npm run database:seed && npm run validate:data && npm run check:models-csv && npm run catalog:check && npm run data:backup"
+    "catalog:update": "npm run catalog:source-check && npm run catalog:import && npm run database:seed && npm run validate:data && npm run check:models-csv && npm run catalog:check && npm run data:backup",
+    "database:import": "npm run catalog:source-check && npm run database:check && tsx scripts/execute-dataconnect-seed.ts",
+    "database:smoke": "tsx scripts/check-dataconnect-emulator.ts",
+    "database:local:test": "npx -y firebase-tools@15.28.1 emulators:exec --only dataconnect --project demo-modelfit-sql \"npm run database:import && npm run database:smoke\""
   },
   "dependencies": {
     "@astrojs/react": "^6.0.2",
     "@astrojs/sitemap": "^3.7.3",
+    "@modelfit/dataconnect": "file:src/lib/dataconnect-generated",
     "astro": "^7.2.0",
     "firebase": "^12.3.0",
     "react": "^19.1.1",

@@ -54,7 +54,10 @@ type Category @table(key: "id") {
   id: String! @col(dataType: "varchar(80)")
   slug: String! @unique @col(dataType: "varchar(80)")
   label: String! @col(dataType: "varchar(120)")
+  selectorImage: String
   description: String
+  metaDescription: String
+  partTypes: [String!]
   modelNumberGuide: String
   sortOrder: Int! @default(value: 0)
   isActive: Boolean! @default(value: true)
@@ -123,10 +126,21 @@ type Consumable @table(key: "id") @index(fields: ["type", "status", "displayName
   genuinePartNumber: String @searchable @col(dataType: "varchar(160)")
   partNumberStatus: PartNumberStatus! @default(value: RESEARCHING)
   compatibleProductName: String
+  searchKeywords: [String!]
   replacementInterval: String @col(dataType: "varchar(120)")
   purchaseWarning: String
   status: PublishStatus! @default(value: DRAFT)
   verificationStatus: VerificationStatus! @default(value: UNVERIFIED)
+  affiliateSearchKeyword: String
+  affiliateDirectUrl: String
+  affiliateIsAffiliate: Boolean! @default(value: false)
+  affiliateRestrictionNote: String
+  affiliateEnabled: Boolean! @default(value: false)
+  affiliateStatus: String @col(dataType: "varchar(80)")
+  affiliatePriceStatus: String @col(dataType: "varchar(80)")
+  affiliateStockStatus: String @col(dataType: "varchar(80)")
+  affiliateLinkCheckedAt: Date
+  sortOrder: Int! @default(value: 0)
   createdAt: Timestamp! @default(expr: "request.time")
   updatedAt: Timestamp! @default(expr: "request.time")
 }
@@ -142,7 +156,7 @@ type ModelConsumable @table(key: ["model", "consumable"]) {
 type Source @table(key: "id") {
   id: String! @col(dataType: "varchar(180)")
   title: String! @col(dataType: "varchar(300)")
-  url: String! @unique
+  url: String!
   sourceType: SourceType!
   checkedAt: Date!
   isActive: Boolean! @default(value: true)
@@ -157,6 +171,12 @@ type ModelSource @table(key: ["model", "source"]) {
 
 type ConsumableSource @table(key: ["consumable", "source"]) {
   consumable: Consumable!
+  source: Source!
+  purpose: String @col(dataType: "varchar(80)")
+}
+
+type ProductOptionSource @table(key: ["productOption", "source"]) {
+  productOption: ProductOption!
   source: Source!
   purpose: String @col(dataType: "varchar(80)")
 }
@@ -183,6 +203,7 @@ type ProductOption @table(key: "id") @index(fields: ["consumableId", "kind"]) {
   description: String!
   partNumber: String @col(dataType: "varchar(160)")
   packageLabel: String @col(dataType: "varchar(160)")
+  sortOrder: Int! @default(value: 0)
   isActive: Boolean! @default(value: true)
 }
 
