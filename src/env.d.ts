@@ -12,6 +12,8 @@ interface ImportMetaEnv {
   readonly PUBLIC_FIREBASE_APP_ID?: string;
   readonly PUBLIC_FIREBASE_MESSAGING_SENDER_ID?: string;
   readonly PUBLIC_FIREBASE_APP_CHECK_SITE_KEY?: string;
+  readonly PUBLIC_CATALOG_DATA_SOURCE?: "csv" | "sql-connect";
+  readonly PUBLIC_DATA_CONNECT_EMULATOR_HOST?: string;
 }
 
 interface ImportMeta {
