@@ -1,6 +1,5 @@
 mutation UpsertCategory(
   $id: String!
-  $slug: String!
   $label: String!
   $description: String
   $modelNumberGuide: String
@@ -9,7 +8,6 @@ mutation UpsertCategory(
   category_upsert(
     data: {
       id: $id
-      slug: $slug
       label: $label
       description: $description
       modelNumberGuide: $modelNumberGuide
@@ -25,7 +23,6 @@ mutation UpsertBrand(
   $slug: String!
   $name: String!
   $nameEn: String
-  $officialDomains: [String!]!
   $sortOrder: Int!
 ) @auth(expr: "auth.token.admin == true") {
   brand_upsert(
@@ -34,7 +31,6 @@ mutation UpsertBrand(
       slug: $slug
       name: $name
       nameEn: $nameEn
-      officialDomains: $officialDomains
       sortOrder: $sortOrder
       isActive: true
       updatedAt_expr: "request.time"
@@ -51,17 +47,12 @@ mutation UpsertModel(
   $modelCode: String!
   $modelCodeNormalized: String!
   $series: String
-  $shortDescription: String
   $status: PublishStatus!
   $verificationStatus: VerificationStatus!
-  $sourceUrl: String
-  $sourceTitle: String
-  $sourceType: SourceType
-  $verifiedAt: Date
   $releaseYear: Int
   $releaseMonth: Int
   $releaseDay: Int
-  $releaseSourceUrl: String
+  $verifiedAt: Date!
 ) @auth(expr: "auth.token.admin == true") {
   model_upsert(
     data: {
@@ -73,17 +64,12 @@ mutation UpsertModel(
       modelCode: $modelCode
       modelCodeNormalized: $modelCodeNormalized
       series: $series
-      shortDescription: $shortDescription
       status: $status
       verificationStatus: $verificationStatus
-      sourceUrl: $sourceUrl
-      sourceTitle: $sourceTitle
-      sourceType: $sourceType
-      verifiedAt: $verifiedAt
       releaseYear: $releaseYear
       releaseMonth: $releaseMonth
       releaseDay: $releaseDay
-      releaseSourceUrl: $releaseSourceUrl
+      verifiedAt: $verifiedAt
       updatedAt_expr: "request.time"
     }
   )

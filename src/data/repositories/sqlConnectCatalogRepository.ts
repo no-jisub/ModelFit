@@ -82,7 +82,6 @@ export const sqlConnectCatalogRepository: CatalogRepository = {
     const result = await listCategories(client());
     return result.data.categories.map((category) => ({
       id: category.id,
-      slug: category.slug,
       label: category.label,
       description: category.description ?? null,
       modelNumberGuide: category.modelNumberGuide ?? null,

@@ -11,7 +11,6 @@ function page<T>(rows: T[], options: CatalogListOptions = {}): T[] {
 
 const categoryRows = categories.map((category) => ({
   id: category.id,
-  slug: category.id,
   label: category.label,
   description: category.description,
   modelNumberGuide: category.modelNumberGuide,
@@ -33,7 +32,7 @@ const modelRows = models.map((model) => ({
   categoryId: model.category,
   brandId: model.brandId,
   releaseDate: model.releaseDate ?? null,
-  status: model.isDemo ? "draft" : "published",
+  status: model.status,
 }));
 
 export const staticCatalogRepository: CatalogRepository = {

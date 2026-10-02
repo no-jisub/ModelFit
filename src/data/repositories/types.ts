@@ -2,7 +2,6 @@ export type CatalogDataSource = "csv" | "sql-connect";
 
 export interface CatalogCategoryRecord {
   id: string;
-  slug: string;
   label: string;
   description?: string | null;
   modelNumberGuide?: string | null;

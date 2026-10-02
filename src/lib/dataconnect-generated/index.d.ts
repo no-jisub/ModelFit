@@ -74,16 +74,13 @@ export interface GetModelBySlugData {
     modelName: string;
     modelCode: string;
     series?: string | null;
-    shortDescription?: string | null;
     verificationStatus: VerificationStatus;
-    verifiedAt?: DateString | null;
     releaseYear?: number | null;
     releaseMonth?: number | null;
     releaseDay?: number | null;
     releaseSourceUrl?: string | null;
     category: {
       id: string;
-      slug: string;
       label: string;
     } & Category_Key;
     brand: {
@@ -128,7 +125,6 @@ export interface ListBrandsData {
     officialDomains?: string[] | null;
     categories: ({
       id: string;
-      slug: string;
       label: string;
     } & Category_Key)[];
   } & Brand_Key)[];
@@ -137,7 +133,6 @@ export interface ListBrandsData {
 export interface ListCategoriesData {
   categories: ({
     id: string;
-    slug: string;
     label: string;
     description?: string | null;
     modelNumberGuide?: string | null;
@@ -156,7 +151,6 @@ export interface ListModelsByBrandData {
     releaseDay?: number | null;
     category: {
       id: string;
-      slug: string;
       label: string;
     } & Category_Key;
     images: ({
@@ -255,7 +249,6 @@ export interface SearchModelsData {
     status: PublishStatus;
     category: {
       id: string;
-      slug: string;
       label: string;
     } & Category_Key;
     brand: {
@@ -296,7 +289,6 @@ export interface UpsertCategoryData {
 
 export interface UpsertCategoryVariables {
   id: string;
-  slug: string;
   label: string;
   description?: string | null;
   modelNumberGuide?: string | null;
@@ -316,13 +308,8 @@ export interface UpsertModelVariables {
   modelCode: string;
   modelCodeNormalized: string;
   series?: string | null;
-  shortDescription?: string | null;
   status: PublishStatus;
   verificationStatus: VerificationStatus;
-  sourceUrl?: string | null;
-  sourceTitle?: string | null;
-  sourceType?: SourceType | null;
-  verifiedAt?: DateString | null;
   releaseYear?: number | null;
   releaseMonth?: number | null;
   releaseDay?: number | null;
@@ -448,4 +435,3 @@ export const searchModelsRef: SearchModelsRef;
 
 export function searchModels(vars: SearchModelsVariables, options?: ExecuteQueryOptions): QueryPromise<SearchModelsData, SearchModelsVariables>;
 export function searchModels(dc: DataConnect, vars: SearchModelsVariables, options?: ExecuteQueryOptions): QueryPromise<SearchModelsData, SearchModelsVariables>;
-

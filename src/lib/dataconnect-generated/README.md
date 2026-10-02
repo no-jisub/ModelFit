@@ -104,7 +104,6 @@ The `data` property is an object of type `ListCategoriesData`, which is defined 
 export interface ListCategoriesData {
   categories: ({
     id: string;
-    slug: string;
     label: string;
     description?: string | null;
     modelNumberGuide?: string | null;
@@ -207,7 +206,6 @@ export interface ListBrandsData {
     officialDomains?: string[] | null;
     categories: ({
       id: string;
-      slug: string;
       label: string;
     } & Category_Key)[];
   } & Brand_Key)[];
@@ -313,16 +311,13 @@ export interface GetModelBySlugData {
     modelName: string;
     modelCode: string;
     series?: string | null;
-    shortDescription?: string | null;
     verificationStatus: VerificationStatus;
-    verifiedAt?: DateString | null;
     releaseYear?: number | null;
     releaseMonth?: number | null;
     releaseDay?: number | null;
     releaseSourceUrl?: string | null;
     category: {
       id: string;
-      slug: string;
       label: string;
     } & Category_Key;
     brand: {
@@ -607,7 +602,6 @@ export interface ListModelsByBrandData {
     releaseDay?: number | null;
     category: {
       id: string;
-      slug: string;
       label: string;
     } & Category_Key;
     images: ({
@@ -737,7 +731,6 @@ export interface SearchModelsData {
     status: PublishStatus;
     category: {
       id: string;
-      slug: string;
       label: string;
     } & Category_Key;
     brand: {
@@ -864,7 +857,6 @@ The `UpsertCategory` mutation requires an argument of type `UpsertCategoryVariab
 ```typescript
 export interface UpsertCategoryVariables {
   id: string;
-  slug: string;
   label: string;
   description?: string | null;
   modelNumberGuide?: string | null;
@@ -889,7 +881,6 @@ import { connectorConfig, upsertCategory, UpsertCategoryVariables } from '@model
 // The `UpsertCategory` mutation requires an argument of type `UpsertCategoryVariables`:
 const upsertCategoryVars: UpsertCategoryVariables = {
   id: ..., 
-  slug: ..., 
   label: ..., 
   description: ..., // optional
   modelNumberGuide: ..., // optional
@@ -900,7 +891,7 @@ const upsertCategoryVars: UpsertCategoryVariables = {
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await upsertCategory(upsertCategoryVars);
 // Variables can be defined inline as well.
-const { data } = await upsertCategory({ id: ..., slug: ..., label: ..., description: ..., modelNumberGuide: ..., sortOrder: ..., });
+const { data } = await upsertCategory({ id: ..., label: ..., description: ..., modelNumberGuide: ..., sortOrder: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -924,7 +915,6 @@ import { connectorConfig, upsertCategoryRef, UpsertCategoryVariables } from '@mo
 // The `UpsertCategory` mutation requires an argument of type `UpsertCategoryVariables`:
 const upsertCategoryVars: UpsertCategoryVariables = {
   id: ..., 
-  slug: ..., 
   label: ..., 
   description: ..., // optional
   modelNumberGuide: ..., // optional
@@ -934,7 +924,7 @@ const upsertCategoryVars: UpsertCategoryVariables = {
 // Call the `upsertCategoryRef()` function to get a reference to the mutation.
 const ref = upsertCategoryRef(upsertCategoryVars);
 // Variables can be defined inline as well.
-const ref = upsertCategoryRef({ id: ..., slug: ..., label: ..., description: ..., modelNumberGuide: ..., sortOrder: ..., });
+const ref = upsertCategoryRef({ id: ..., label: ..., description: ..., modelNumberGuide: ..., sortOrder: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1119,13 +1109,8 @@ export interface UpsertModelVariables {
   modelCode: string;
   modelCodeNormalized: string;
   series?: string | null;
-  shortDescription?: string | null;
   status: PublishStatus;
   verificationStatus: VerificationStatus;
-  sourceUrl?: string | null;
-  sourceTitle?: string | null;
-  sourceType?: SourceType | null;
-  verifiedAt?: DateString | null;
   releaseYear?: number | null;
   releaseMonth?: number | null;
   releaseDay?: number | null;
@@ -1157,13 +1142,8 @@ const upsertModelVars: UpsertModelVariables = {
   modelCode: ..., 
   modelCodeNormalized: ..., 
   series: ..., // optional
-  shortDescription: ..., // optional
   status: ..., 
   verificationStatus: ..., 
-  sourceUrl: ..., // optional
-  sourceTitle: ..., // optional
-  sourceType: ..., // optional
-  verifiedAt: ..., // optional
   releaseYear: ..., // optional
   releaseMonth: ..., // optional
   releaseDay: ..., // optional
@@ -1174,7 +1154,7 @@ const upsertModelVars: UpsertModelVariables = {
 // You can use the `await` keyword to wait for the promise to resolve.
 const { data } = await upsertModel(upsertModelVars);
 // Variables can be defined inline as well.
-const { data } = await upsertModel({ id: ..., slug: ..., categoryId: ..., brandId: ..., modelName: ..., modelCode: ..., modelCodeNormalized: ..., series: ..., shortDescription: ..., status: ..., verificationStatus: ..., sourceUrl: ..., sourceTitle: ..., sourceType: ..., verifiedAt: ..., releaseYear: ..., releaseMonth: ..., releaseDay: ..., releaseSourceUrl: ..., });
+const { data } = await upsertModel({ id: ..., slug: ..., categoryId: ..., brandId: ..., modelName: ..., modelCode: ..., modelCodeNormalized: ..., series: ..., status: ..., verificationStatus: ..., releaseYear: ..., releaseMonth: ..., releaseDay: ..., releaseSourceUrl: ..., });
 
 // You can also pass in a `DataConnect` instance to the action shortcut function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1205,13 +1185,8 @@ const upsertModelVars: UpsertModelVariables = {
   modelCode: ..., 
   modelCodeNormalized: ..., 
   series: ..., // optional
-  shortDescription: ..., // optional
   status: ..., 
   verificationStatus: ..., 
-  sourceUrl: ..., // optional
-  sourceTitle: ..., // optional
-  sourceType: ..., // optional
-  verifiedAt: ..., // optional
   releaseYear: ..., // optional
   releaseMonth: ..., // optional
   releaseDay: ..., // optional
@@ -1221,7 +1196,7 @@ const upsertModelVars: UpsertModelVariables = {
 // Call the `upsertModelRef()` function to get a reference to the mutation.
 const ref = upsertModelRef(upsertModelVars);
 // Variables can be defined inline as well.
-const ref = upsertModelRef({ id: ..., slug: ..., categoryId: ..., brandId: ..., modelName: ..., modelCode: ..., modelCodeNormalized: ..., series: ..., shortDescription: ..., status: ..., verificationStatus: ..., sourceUrl: ..., sourceTitle: ..., sourceType: ..., verifiedAt: ..., releaseYear: ..., releaseMonth: ..., releaseDay: ..., releaseSourceUrl: ..., });
+const ref = upsertModelRef({ id: ..., slug: ..., categoryId: ..., brandId: ..., modelName: ..., modelCode: ..., modelCodeNormalized: ..., series: ..., status: ..., verificationStatus: ..., releaseYear: ..., releaseMonth: ..., releaseDay: ..., releaseSourceUrl: ..., });
 
 // You can also pass in a `DataConnect` instance to the `MutationRef` function.
 const dataConnect = getDataConnect(connectorConfig);
@@ -1348,4 +1323,3 @@ executeMutation(ref).then((response) => {
   console.log(data.model_update);
 });
 ```
-

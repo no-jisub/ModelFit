@@ -32,12 +32,6 @@ enum PurchaseChannel {
   OTHER
 }
 
-enum PurchaseLinkType {
-  OFFICIAL_REFERENCE
-  DIRECT_PRODUCT
-  SEARCH_RESULTS
-}
-
 enum ProductOptionKind {
   GENUINE
   COMPATIBLE
@@ -52,12 +46,9 @@ enum ProductOptionVerification {
 
 type Category @table(key: "id") {
   id: String! @col(dataType: "varchar(80)")
-  slug: String! @unique @col(dataType: "varchar(80)")
   label: String! @col(dataType: "varchar(120)")
   selectorImage: String
   description: String
-  metaDescription: String
-  partTypes: [String!]
   modelNumberGuide: String
   sortOrder: Int! @default(value: 0)
   isActive: Boolean! @default(value: true)
@@ -70,7 +61,6 @@ type Brand @table(key: "id") {
   slug: String! @unique @col(dataType: "varchar(80)")
   name: String! @col(dataType: "varchar(120)")
   nameEn: String @col(dataType: "varchar(120)")
-  officialDomains: [String!]
   sortOrder: Int! @default(value: 0)
   isActive: Boolean! @default(value: true)
   createdAt: Timestamp! @default(expr: "request.time")
@@ -85,10 +75,11 @@ type BrandCategory @table(key: ["brand", "category"]) {
 type Model
   @table(key: "id")
   @unique(fields: ["brandId", "modelCodeNormalized"])
+  @unique(fields: ["brandId", "slug"])
   @index(fields: ["categoryId", "status", "modelName"])
   @index(fields: ["brandId", "status", "modelName"]) {
   id: String! @col(dataType: "varchar(180)")
-  slug: String! @unique @col(dataType: "varchar(180)")
+  slug: String! @col(dataType: "varchar(180)")
   category: Category! @ref(fields: "categoryId", references: "id")
   categoryId: String! @col(dataType: "varchar(80)")
   brand: Brand! @ref(fields: "brandId", references: "id")
@@ -97,17 +88,12 @@ type Model
   modelCode: String! @searchable @col(dataType: "varchar(160)")
   modelCodeNormalized: String! @col(dataType: "varchar(160)")
   series: String @searchable @col(dataType: "varchar(180)")
-  shortDescription: String
   status: PublishStatus! @default(value: DRAFT)
   verificationStatus: VerificationStatus! @default(value: UNVERIFIED)
-  sourceUrl: String
-  sourceTitle: String
-  sourceType: SourceType
-  verifiedAt: Date
   releaseYear: Int
   releaseMonth: Int
   releaseDay: Int
-  releaseSourceUrl: String
+  verifiedAt: Date!
   createdAt: Timestamp! @default(expr: "request.time")
   updatedAt: Timestamp! @default(expr: "request.time")
 }
@@ -125,32 +111,28 @@ type Consumable @table(key: "id") @index(fields: ["type", "status", "displayName
   displayName: String! @searchable @col(dataType: "varchar(240)")
   genuinePartNumber: String @searchable @col(dataType: "varchar(160)")
   partNumberStatus: PartNumberStatus! @default(value: RESEARCHING)
-  compatibleProductName: String
   searchKeywords: [String!]
-  replacementInterval: String @col(dataType: "varchar(120)")
+  maintenanceMode: String
+  maintenanceDetail: String
   purchaseWarning: String
   status: PublishStatus! @default(value: DRAFT)
   verificationStatus: VerificationStatus! @default(value: UNVERIFIED)
-  affiliateSearchKeyword: String
-  affiliateDirectUrl: String
-  affiliateIsAffiliate: Boolean! @default(value: false)
-  affiliateRestrictionNote: String
-  affiliateEnabled: Boolean! @default(value: false)
-  affiliateStatus: String @col(dataType: "varchar(80)")
-  affiliatePriceStatus: String @col(dataType: "varchar(80)")
-  affiliateStockStatus: String @col(dataType: "varchar(80)")
-  affiliateLinkCheckedAt: Date
   sortOrder: Int! @default(value: 0)
   createdAt: Timestamp! @default(expr: "request.time")
   updatedAt: Timestamp! @default(expr: "request.time")
 }
 
-type ModelConsumable @table(key: ["model", "consumable"]) {
+type ModelConsumable @table(key: "id") @unique(fields: ["modelId", "consumableId"]) {
+  id: String!
+  evidenceScope: String!
+  itemCode: String
+  requiredQuantity: String
+  salesPackage: String
+  composition: String
   model: Model!
   consumable: Consumable!
   verificationStatus: VerificationStatus! @default(value: UNVERIFIED)
   verifiedAt: Date
-  note: String
 }
 
 type Source @table(key: "id") {
@@ -164,21 +146,19 @@ type Source @table(key: "id") {
 }
 
 type ModelSource @table(key: ["model", "source"]) {
+  purpose: String!
   model: Model!
   source: Source!
-  purpose: String @col(dataType: "varchar(80)")
 }
 
 type ConsumableSource @table(key: ["consumable", "source"]) {
   consumable: Consumable!
   source: Source!
-  purpose: String @col(dataType: "varchar(80)")
 }
 
 type ProductOptionSource @table(key: ["productOption", "source"]) {
   productOption: ProductOption!
   source: Source!
-  purpose: String @col(dataType: "varchar(80)")
 }
 
 type ModelImage @table(key: "id") @index(fields: ["modelId", "sortOrder"]) {
@@ -201,25 +181,45 @@ type ProductOption @table(key: "id") @index(fields: ["consumableId", "kind"]) {
   kind: ProductOptionKind!
   verification: ProductOptionVerification!
   description: String!
-  partNumber: String @col(dataType: "varchar(160)")
+  itemCode: String @col(dataType: "varchar(160)")
   packageLabel: String @col(dataType: "varchar(160)")
   sortOrder: Int! @default(value: 0)
   isActive: Boolean! @default(value: true)
 }
 
-type PurchaseLink @table(key: "id") @index(fields: ["consumableId", "isActive"]) {
+type PurchaseLink @table(key: "id") @index(fields: ["productOptionId", "isActive"]) {
   id: String! @col(dataType: "varchar(180)")
-  consumable: Consumable! @ref(fields: "consumableId", references: "id")
-  consumableId: String! @col(dataType: "varchar(180)")
-  productOption: ProductOption @ref(fields: "productOptionId", references: "id")
-  productOptionId: String @col(dataType: "varchar(180)")
+  productOption: ProductOption! @ref(fields: "productOptionId", references: "id")
+  productOptionId: String! @col(dataType: "varchar(180)")
   label: String! @col(dataType: "varchar(200)")
   url: String!
   channel: PurchaseChannel!
-  linkType: PurchaseLinkType!
   isAffiliate: Boolean! @default(value: false)
   checkedAt: Date!
   isActive: Boolean! @default(value: true)
   createdAt: Timestamp! @default(expr: "request.time")
   updatedAt: Timestamp! @default(expr: "request.time")
+}
+
+type BrandDomain @table(key: ["brand", "domain"]) {
+  brand: Brand!
+  domain: String!
+}
+type CompatibilitySource @table(key: ["compatibility", "source"]) {
+  compatibility: ModelConsumable!
+  source: Source!
+}
+type OptionModelLabel @table(key: ["productOption", "model"]) {
+  productOption: ProductOption!
+  model: Model!
+  label: String!
+}
+type GuidanceLink @table(key: "id") {
+  id: String!
+  productOption: ProductOption!
+  label: String!
+  url: String!
+  channel: PurchaseChannel!
+  checkedAt: Date!
+  isActive: Boolean! @default(value: true)
 }

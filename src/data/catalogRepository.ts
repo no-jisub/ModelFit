@@ -27,5 +27,3 @@ export async function createCatalogRepository(
 
   return staticCatalogRepository;
 }
-
-export const catalogRepository = staticCatalogRepository;

@@ -1,7 +1,6 @@
 query ListCategories @auth(level: PUBLIC, insecureReason: "Public product catalog") {
   categories(where: { isActive: { eq: true } }, orderBy: [{ sortOrder: ASC }, { label: ASC }]) {
     id
-    slug
     label
     description
     modelNumberGuide
@@ -14,10 +13,11 @@ query ListBrands @auth(level: PUBLIC, insecureReason: "Public product catalog") 
     slug
     name
     nameEn
-    officialDomains
+    domains: brandDomains_on_brand {
+      domain
+    }
     categories: categories_via_BrandCategory {
       id
-      slug
       label
     }
   }
@@ -31,16 +31,22 @@ query GetModelBySlug($slug: String!)
     modelName
     modelCode
     series
-    shortDescription
     verificationStatus
-    verifiedAt
     releaseYear
     releaseMonth
     releaseDay
-    releaseSourceUrl
+    sources: modelSources_on_model {
+      purpose
+      source {
+        id
+        title
+        url
+        sourceType
+        checkedAt
+      }
+    }
     category {
       id
-      slug
       label
     }
     brand {
@@ -59,15 +65,63 @@ query GetModelBySlug($slug: String!)
       sourceUrl
       isPrimary
     }
-    consumables: consumables_via_ModelConsumable {
+    compatibilities: modelConsumables_on_model {
       id
-      slug
-      type
-      displayName
-      genuinePartNumber
-      partNumberStatus
-      replacementInterval
       verificationStatus
+      verifiedAt
+      evidenceScope
+      itemCode
+      requiredQuantity
+      salesPackage
+      composition
+      sources: compatibilitySources_on_compatibility {
+        source {
+          id
+          title
+          url
+          sourceType
+          checkedAt
+        }
+      }
+      consumable {
+        id
+        slug
+        type
+        displayName
+        genuinePartNumber
+        partNumberStatus
+        maintenanceMode
+        maintenanceDetail
+        productOptions: productOptions_on_consumable(where: { isActive: { eq: true } }) {
+          id
+          name
+          kind
+          verification
+          itemCode
+          packageLabel
+          labels: optionModelLabels_on_productOption {
+            model {
+              id
+            }
+            label
+          }
+          purchaseLinks: purchaseLinks_on_productOption(where: { isActive: { eq: true } }) {
+            id
+            label
+            url
+            channel
+            isAffiliate
+            checkedAt
+          }
+          guidanceLinks: guidanceLinks_on_productOption(where: { isActive: { eq: true } }) {
+            id
+            label
+            url
+            channel
+            checkedAt
+          }
+        }
+      }
     }
   }
 }
@@ -88,6 +142,10 @@ query ListModelsByCategory($categoryId: String!, $limit: Int = 50, $offset: Int 
     releaseYear
     releaseMonth
     releaseDay
+    category {
+      id
+      label
+    }
     brand {
       id
       slug
@@ -117,9 +175,14 @@ query ListModelsByBrand($brandId: String!, $limit: Int = 50, $offset: Int = 0)
     releaseYear
     releaseMonth
     releaseDay
-    category {
+    brand {
       id
       slug
+      name
+      nameEn
+    }
+    category {
+      id
       label
     }
     images: modelImages_on_model(where: { isPrimary: { eq: true } }, limit: 1) {
@@ -131,7 +194,7 @@ query ListModelsByBrand($brandId: String!, $limit: Int = 50, $offset: Int = 0)
 
 query SearchModels($query: String!, $limit: Int = 20)
 @auth(level: PUBLIC, insecureReason: "Public product catalog search") {
-  models_search(query: $query, limit: $limit) {
+  models_search(query: $query, limit: $limit, where: { status: { eq: PUBLISHED } }) {
     id
     slug
     modelName
@@ -140,7 +203,6 @@ query SearchModels($query: String!, $limit: Int = 20)
     status
     category {
       id
-      slug
       label
     }
     brand {
