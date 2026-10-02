@@ -4,11 +4,11 @@
 
 ## 구조
 
-- `Category`, `Brand`, `BrandCategory`: 카테고리와 브랜드의 다대다 관계
+- `Category`, `Brand`, `BrandCategory`, `BrandDomain`: 카테고리와 브랜드의 다대다 관계
 - `Model`, `ModelAlias`, `ModelImage`: 제품 모델, 검색 별칭, 이미지
 - `Consumable`, `ModelConsumable`: 소모품과 모델의 다대다 호환 관계
-- `Source`, `ModelSource`, `ConsumableSource`: 정보 출처와 검증 근거
-- `ProductOption`, `ProductOptionSource`, `PurchaseLink`: 정품·호환 옵션, 검증 출처와 구매 링크
+- `Source`, `ModelSource`, `ConsumableSource`, `CompatibilitySource`: 정보 출처와 검증 근거
+- `ProductOption`, `ProductOptionSource`, `PurchaseLink`, `GuidanceLink`, `OptionModelLabel`: 정품·호환 옵션, 검증 출처와 구매 링크
 
 제품 모델번호는 브랜드 안에서 중복될 수 없고, 공개 조회는 `PUBLISHED` 데이터만 반환합니다. 쓰기 작업은 Firebase Authentication의 `admin: true` 사용자 지정 클레임이 있는 관리자만 사용할 수 있습니다.
 
@@ -21,7 +21,7 @@ npm run database:check
 npm run database:local:test
 ```
 
-`database:check`는 비공개 CSV 전체에서 로컬 전용 `dataconnect/seed_data.gql`을 생성하고, 14개 테이블·권한·관계·원본 ID 포함 여부를 검사합니다.
+`database:check`는 비공개 CSV 전체에서 로컬 전용 `dataconnect/seed_data.gql`을 생성하고, 18개 테이블·권한·관계·원본 ID 포함 여부를 검사합니다.
 
 `database:local:test`는 별도의 데모 프로젝트로 SQL Connect와 PostgreSQL 에뮬레이터를 시작한 뒤 CSV 전체를 멱등 업서트하고, 생성된 웹 SDK로 카테고리·브랜드·모델 수를 다시 조회합니다. 실제 Firebase 프로젝트나 Cloud SQL에는 쓰지 않습니다.
 
@@ -46,4 +46,4 @@ PUBLIC_DATA_CONNECT_EMULATOR_HOST=
 4. `npm run database:compile`로 공식 컴파일을 통과시킵니다.
 5. 생성될 Cloud SQL 인스턴스와 마이그레이션 차이를 검토한 후 배포합니다.
 
-현재 실제 프로젝트 컴파일은 SQL Connect API, Application Default Credentials, 조회 권한이 준비되지 않아 HTTP 403으로 차단됩니다. 로컬 에뮬레이터 검증에는 영향이 없으며, 클라우드 자원이나 비용은 생성하지 않았습니다.
+2026-10-02 v2 전환 후 Windows 애플리케이션 제어 정책이 SQL Connect 실행 파일을 차단했습니다. SQL 정적 검사는 통과했지만 공식 컴파일·SDK 재생성·에뮬레이터 검증은 미완료입니다. 생성 SDK는 구버전이므로 SQL 원본 활성화 전에 공식 검증과 재생성을 통과해야 합니다. [정규화 기록](CATALOG_NORMALIZATION.md)을 참고하세요.

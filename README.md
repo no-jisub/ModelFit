@@ -1,8 +1,8 @@
 # 모델핏(ModelFit)
 
 가전 모델번호로 교체 소모품의 공식 호환 근거와 구매 링크를 찾는 정적 웹서비스입니다.
-현재 공개 카탈로그는 **16개 브랜드, 80개 모델, 166개 소모품**입니다.
-사진 추가와 사이트 전체의 동적 전환은 현재 작업 범위에 포함하지 않습니다.
+현재 공개 카탈로그는 **16개 브랜드, 80개 모델, 177개 소모품**입니다.
+모델 80개의 대표 이미지를 로컬 WebP로 제공하며, 카탈로그는 기본적으로 정적 페이지로 빌드합니다.
 
 ## 실행
 
@@ -19,16 +19,16 @@ Firebase Hosting으로 배포하며, 오류 제보는 별도 Firestore 데이터
 
 ## 데이터 구조
 
-| 파일                             | 역할                                    |
-| -------------------------------- | --------------------------------------- |
-| `src/data/brands.ts`             | 브랜드와 공식 출처 허용 도메인          |
-| `src/data/catalogModels.ts`      | 모델 원본과 화면용 모델 생성            |
-| `src/data/compatibilityMap.ts`   | 모델 ID별 소모품 ID 연결                |
-| `src/data/models.ts`             | 모델 목록 진입점                        |
-| `src/data/consumables/*.ts`      | 브랜드별 소모품 원본                    |
-| `src/data/consumables/shared.ts` | 출처·구매 링크 상태·공통 생성 함수      |
-| `src/data/consumables/index.ts`  | 소모품 정렬과 구매 선택지 생성          |
-| `src/utils/validateData.ts`      | 출처·ID·양방향 호환 연결·구매 링크 검증 |
+| 파일                                  | 역할                                       |
+| ------------------------------------- | ------------------------------------------ |
+| `src/data/brands.ts`                  | 브랜드와 공식 출처 허용 도메인             |
+| `src/data/catalogModels.ts`           | 모델 원본과 화면용 모델 생성               |
+| `src/data/compatibilityMap.ts`        | 모델 ID별 소모품 ID 연결                   |
+| `src/data/models.ts`                  | 모델 목록 진입점                           |
+| `src/data/consumables/*.ts`           | 브랜드별 소모품 원본                       |
+| `src/data/importedCatalogMetadata.ts` | CSV에서 생성한 경량 브랜드·카테고리 데이터 |
+| `src/data/consumables/index.ts`       | 소모품 정렬과 구매 선택지 생성             |
+| `src/utils/validateData.ts`           | 출처·ID·양방향 호환 연결·구매 링크 검증    |
 
 ## 모델·소모품 추가
 
@@ -47,7 +47,7 @@ Firebase Hosting으로 배포하며, 오류 제보는 별도 Firestore 데이터
 
 - 쿠팡 검색 결과 URL은 카탈로그에 등록하지 않습니다.
 - 직접 상품 URL이 없으면 `unavailable` 상태로 공식 근거만 제공합니다.
-- 현재 등록된 쿠팡 상품 링크는 9개이며, 그중 파트너스 링크는 4개입니다.
+- 구매 링크는 관계형 카탈로그에 저장한 직접 상품 URL만 사용합니다.
 - 공식 호환 근거와 외부 판매 상품의 진품·구성 확인은 별개입니다.
 - 접근 차단 응답은 품절·링크 오류·상품 검증 완료를 뜻하지 않습니다. 판매 페이지는 사람이 재확인해야 합니다.
 - 모든 쿠팡 상품 링크 아래에는 아래 문구를 유지합니다.
@@ -55,7 +55,6 @@ Firebase Hosting으로 배포하며, 오류 제보는 별도 Firestore 데이터
 > 이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
 
 제휴 링크는 `nofollow sponsored noopener noreferrer`와 새 창 열기를 적용합니다.
-`PUBLIC_COUPANG_BASE_URL`은 이전 검색 링크 기능용 설정이며 현재 카탈로그에서는 사용하지 않습니다.
 
 ## 환경변수와 제보
 
@@ -103,6 +102,9 @@ npm run test:e2e
 ```
 
 ## 배포
+
+CI는 비공개 카탈로그 CSV를 GitHub Actions Secrets에서 복원한 뒤 생성 데이터를 만듭니다.
+최초 설정과 데이터 갱신은 [CI 카탈로그 공급](docs/CI_CATALOG.md)을 참고하세요.
 
 `main` push 시 `.github/workflows/deploy.yml`이 전체 검사, 취약점 검사와 브라우저 검사를 모두 통과한
 빌드만 Firebase Hosting으로 배포합니다. 브라우저 검사는 빌드 결과를 재사용합니다.

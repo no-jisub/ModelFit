@@ -34,3 +34,7 @@ npm run data:restore -- --from latest --force
 복구 전에 백업 무결성을 확인하며, `--force`가 없으면 기존 로컬 데이터를 덮어쓰지 않습니다. 특정 백업은 `latest` 대신 백업 폴더 이름을 지정합니다.
 
 백업 폴더도 같은 컴퓨터에만 있으면 디스크 고장에 대비할 수 없습니다. `private-backups/`를 암호화된 외장 저장장치나 비공개 클라우드 저장소에 별도로 복사해야 합니다.
+
+## CI 공급
+
+카탈로그 원본의 CI 공급에는 [CI_CATALOG.md](CI_CATALOG.md)의 압축 패키지와 Repository Secrets를 사용합니다. 패키지는 outputs에만 저장하며 Git에 추가하지 않습니다. 새 경량 생성 파일 src/data/importedCatalogMetadata.ts도 Git 제외와 백업 대상입니다.

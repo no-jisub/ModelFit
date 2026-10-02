@@ -15,7 +15,7 @@ GitHub Repository variables에는 `.env.example`의 공개 웹 설정을 등록�
 
 `PUBLIC_` 값은 브라우저에 공개된다. 서비스 계정 JSON은 Repository secret
 `FIREBASE_SERVICE_ACCOUNT_MODELFIT_KR`에만 보관하며 저장소·공개 변수에 넣지 않는다.
-현재 쿠팡 카탈로그는 직접 상품 링크만 사용하고 `PUBLIC_COUPANG_BASE_URL`은 사용하지 않는다.
+쿠팡 구매 링크는 카탈로그에 저장한 검증된 직접 상품 URL만 사용한다.
 
 ## 배포 전
 
