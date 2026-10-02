@@ -25,6 +25,8 @@ const typeDescriptions = {
 } as const;
 const configuration = getPartConfiguration(part, modelId);
 const compatibility = part.compatibilities.find((relation) => relation.modelId === modelId);
+const compatibilityConfirmed =
+  compatibility?.verificationStatus === "official" && compatibility.evidenceScope === "scoped";
 const compatibilityStatus = compatibility?.verificationStatus ?? "unverified";
 const maintenance = getMaintenancePresentation(part);
 const compatibilityNotes = {
@@ -148,6 +150,7 @@ const evidenceCount = evidenceSources.length;
         part.productOptions.length > 0 ? (
           part.productOptions.map((option) => (
             <ProductOptionCard
+              compatibilityConfirmed={compatibilityConfirmed}
               option={option}
               modelId={modelId}
               partId={part.id}

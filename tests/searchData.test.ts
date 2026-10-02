@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { models } from "../src/data/models";
 import { consumables } from "../src/data/consumables";
-import { createSearchCatalogData } from "../src/utils/searchData";
+import { createSearchCatalogData, hasOfficialCompatibility } from "../src/utils/searchData";
 import { searchCatalog } from "../src/utils/searchCatalog";
 describe("search page payload", () => {
   it("omits sources and purchase data while preserving model and part search results", () => {
@@ -24,4 +24,20 @@ describe("search page payload", () => {
       );
     }
   });
+});
+
+it("does not label inherited or unverified relations as officially compatible", () => {
+  const part = structuredClone(consumables[0]);
+  const relation = part.compatibilities[0];
+  relation.verificationStatus = "official";
+  relation.evidenceScope = "legacy-unscoped";
+  let compact = createSearchCatalogData([], [part]).consumables[0];
+  expect(hasOfficialCompatibility(compact, relation.modelId)).toBe(false);
+  relation.evidenceScope = "scoped";
+  compact = createSearchCatalogData([], [part]).consumables[0];
+  expect(hasOfficialCompatibility(compact, relation.modelId)).toBe(true);
+  expect(hasOfficialCompatibility(compact, "unknown-model")).toBe(false);
+  relation.verificationStatus = "unverified";
+  compact = createSearchCatalogData([], [part]).consumables[0];
+  expect(hasOfficialCompatibility(compact, relation.modelId)).toBe(false);
 });

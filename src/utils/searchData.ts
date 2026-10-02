@@ -27,6 +27,10 @@ export type SearchConsumable = Pick<
   | "searchKeywords"
 > & {
   productOptions: { name: string; packageLabel?: string }[];
+  compatibilities?: Pick<
+    ConsumableCompatibility["compatibilities"][number],
+    "modelId" | "verificationStatus" | "evidenceScope"
+  >[];
 };
 export interface SearchCatalogData {
   models: SearchModel[];
@@ -77,6 +81,7 @@ export function createSearchCatalogData(
         compatibleModelIds,
         searchKeywords,
         productOptions,
+        compatibilities,
       }) => ({
         id,
         displayName,
@@ -85,10 +90,26 @@ export function createSearchCatalogData(
         partNumberStatus,
         compatibleModelIds,
         searchKeywords,
+        compatibilities: compatibilities.map(({ modelId, verificationStatus, evidenceScope }) => ({
+          modelId,
+          verificationStatus,
+          evidenceScope,
+        })),
         productOptions: productOptions
           .slice(0, 1)
           .map(({ name, packageLabel }) => ({ name, packageLabel })),
       }),
     ),
   };
+}
+
+export function hasOfficialCompatibility(part: SearchConsumable, modelId: string): boolean {
+  return (
+    part.compatibilities?.some(
+      (r) =>
+        r.modelId === modelId &&
+        r.verificationStatus === "official" &&
+        r.evidenceScope === "scoped",
+    ) ?? false
+  );
 }

@@ -94,7 +94,7 @@ test("카테고리에서 브랜드와 모델번호를 바로 필터링한다", a
   await filter.getByRole("searchbox", { name: "모델번호" }).fill("없는모델번호");
   await expect(page.locator("[data-filter-empty]")).toBeVisible();
 });
-test("검색에서 소모품의 공식 호환 모델을 펼쳐 모델 상세로 이동한다", async ({ page }) => {
+test("검색에서 소모품의 연결 모델과 개별 호환 상태를 확인한다", async ({ page }) => {
   await page.goto("/", { waitUntil: "networkidle" });
   const header = page.locator("header");
   await header.getByRole("combobox", { name: "모델번호·부품번호 검색" }).fill("ADQ30041405");
@@ -109,7 +109,7 @@ test("검색에서 소모품의 공식 호환 모델을 펼쳐 모델 상세로 
   const partCard = page.locator(".search-part-card").filter({
     hasText: "LG 퓨리탈취청정 M 필터",
   });
-  const compatibleModels = partCard.getByText(/공식 호환 모델 2개 보기/);
+  const compatibleModels = partCard.getByText(/연결 모델 2개 보기/);
   await compatibleModels.click();
   await partCard.getByRole("link", { name: "LG AS355NSNA" }).click();
 
@@ -426,4 +426,22 @@ test("모델 카드는 동일한 비율에서 제품 전체 이미지를 표시�
     expect(presentation.objectFit).toBe("contain");
     expect(presentation.frameRatio).toBeCloseTo(4 / 3, 1);
   }
+});
+
+test("미확인 관계는 검색과 상품 카드에서 공식 호환으로 표시하지 않는다", async ({ page }) => {
+  await page.goto("/find?q=DustMagnet&type=parts", { waitUntil: "networkidle" });
+  const result = page
+    .locator(".search-part-card")
+    .filter({ hasText: "Blueair DustMagnet 5200 시리즈 ComboFilter" });
+  await result.getByText("연결 모델 2개 보기").click();
+  await expect(result.getByText("호환 확인 필요", { exact: false })).toHaveCount(2);
+  await expect(result.getByText("공식 호환 확인", { exact: false })).toHaveCount(0);
+  await result.getByRole("link", { name: /5210i/ }).click();
+  const part = page.locator("#blueair-dustmagnet-5200-combofilter");
+  await expect(part.getByTitle("미검증 상태")).toBeVisible();
+  await expect(part.getByTitle("공식 호환 확인 상태")).toHaveCount(0);
+  await expect(part.locator(".product-verification-badge").first()).toContainText(
+    "모델 호환 확인 필요",
+  );
+  await expect(part.getByRole("link", { name: /공식 호환 근거/ })).toHaveCount(0);
 });

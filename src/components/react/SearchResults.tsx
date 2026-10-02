@@ -3,6 +3,7 @@ import { brands } from "@/data/brands";
 import { categories, isApplianceCategory } from "@/data/categories";
 import type { ApplianceCategory } from "@/types";
 import type { SearchModel, SearchConsumable, SearchCatalogData } from "@/utils/searchData";
+import { hasOfficialCompatibility } from "@/utils/searchData";
 import { analytics } from "@/utils/analytics";
 import {
   categoryLabels,
@@ -105,11 +106,11 @@ function ModelResultCard({
         <section
           className="model-inline-consumables"
           id={panelId}
-          aria-label={`${model.brandName} ${model.modelCode} 공식 호환 소모품`}
+          aria-label={`${model.brandName} ${model.modelCode} 모델별 소모품`}
         >
           <div className="model-inline-heading">
             <div>
-              <span className="eyebrow">공식 호환 소모품</span>
+              <span className="eyebrow">모델별 소모품</span>
               <strong>{modelParts.length}개가 연결되어 있습니다</strong>
             </div>
           </div>
@@ -125,6 +126,10 @@ function ModelResultCard({
                     <strong>{part.displayName}</strong>
                     <small>
                       {partTypeLabels[part.type]} · {part.genuinePartNumber ?? "부품번호 정보 없음"}
+                      {" · "}
+                      {hasOfficialCompatibility(part, model.id)
+                        ? "공식 호환 확인"
+                        : "호환 확인 필요"}
                     </small>
                   </span>
                   <span aria-hidden="true">→</span>
@@ -132,7 +137,7 @@ function ModelResultCard({
               ))}
             </div>
           ) : (
-            <p className="empty-inline">현재 연결된 공식 소모품을 조사 중입니다.</p>
+            <p className="empty-inline">현재 연결된 소모품을 조사 중입니다.</p>
           )}
         </section>
       )}
@@ -168,12 +173,16 @@ function PartResultCard({
         {partNumberStatusLabels[getPartNumberStatus(part.genuinePartNumber, part.partNumberStatus)]}
       </span>
       <details className="compatible-model-links">
-        <summary>공식 호환 모델 {compatibleModels.length}개 보기</summary>
+        <summary>연결 모델 {compatibleModels.length}개 보기</summary>
         {compatibleModels.length > 0 ? (
           <div>
             {compatibleModels.map((model) => (
               <a href={`/model/${model.brandId}/${model.slug}#compatible-parts`} key={model.id}>
                 {model.brandName} {model.modelCode}
+                <small>
+                  {" "}
+                  · {hasOfficialCompatibility(part, model.id) ? "공식 호환 확인" : "호환 확인 필요"}
+                </small>
               </a>
             ))}
           </div>

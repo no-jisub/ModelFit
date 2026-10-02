@@ -4,12 +4,14 @@ import AffiliateDisclosure from "./AffiliateDisclosure.astro";
 
 const {
   option,
+  compatibilityConfirmed = false,
   modelId,
   partId,
   fallbackPartNumber,
   showPackageLabel = true,
 } = Astro.props as {
   option: ConsumableProductOption;
+  compatibilityConfirmed?: boolean;
   modelId: string;
   partId: string;
   fallbackPartNumber?: string;
@@ -22,12 +24,17 @@ const verificationLabels = {
   "verified-compatible": "호환 근거 확인",
   unverified: "미검증",
 } as const;
-const verificationLabel =
+const productVerificationLabel =
   option.verification === "seller-claimed"
     ? option.kind === "genuine"
       ? "판매자 정품 표기"
       : "판매자 호환 표기"
     : verificationLabels[option.verification];
+const verificationLabel =
+  !compatibilityConfirmed &&
+  ["official-genuine", "verified-compatible"].includes(option.verification)
+    ? "상품 자료 확인 · 모델 호환 확인 필요"
+    : productVerificationLabel;
 const packageLabel = option.modelLabels[modelId] ?? option.packageLabel;
 const purchaseLinks = option.purchaseLinks;
 const guidanceLinks = option.guidanceLinks;
@@ -118,7 +125,10 @@ const searchablePartNumber = option.itemCode ?? fallbackPartNumber;
             data-part-id={partId}
             data-link-status={link.linkType}
           >
-            {link.label} <span aria-hidden="true">↗</span>
+            {!compatibilityConfirmed && link.label.includes("공식 호환")
+              ? "제조사 참고 자료"
+              : link.label}{" "}
+            <span aria-hidden="true">↗</span>
           </a>
         ))}
       </div>
