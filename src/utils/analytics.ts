@@ -54,13 +54,24 @@ export function bindAnalyticsInteractions(): () => void {
     if (!anchor) return;
 
     const partId = anchor.dataset.partId ?? "";
-    const affiliateKind = anchor.dataset.affiliateKind;
+    const productKind = anchor.dataset.productKind;
+    const purchaseChannel = anchor.dataset.purchaseChannel;
     const sourceType = anchor.dataset.sourceType;
     const reportChannel = anchor.dataset.reportChannel;
     const url = new URL(anchor.href, window.location.origin);
 
-    if (affiliateKind === "genuine" || affiliateKind === "compatible") {
-      analytics.trackAffiliateClick(affiliateKind, partId, anchor.dataset.linkStatus ?? "unknown");
+    if (
+      purchaseChannel &&
+      (productKind === "genuine" || productKind === "compatible") &&
+      anchor.dataset.linkStatus === "direct-product"
+    ) {
+      analytics.trackPurchaseClick(
+        purchaseChannel,
+        productKind,
+        partId,
+        "direct-product",
+        anchor.dataset.productOptionId ?? "",
+      );
       return;
     }
 
@@ -131,6 +142,21 @@ export const analytics = {
       source_type: sourceType,
       part_id: partId || "not-set",
       destination,
+    });
+  },
+  trackPurchaseClick(
+    channel: string,
+    kind: "genuine" | "compatible",
+    partId: string,
+    linkStatus: string,
+    optionId: string,
+  ) {
+    sendAnalyticsEvent("purchase_link_click", {
+      channel,
+      product_kind: kind,
+      part_id: partId,
+      link_status: linkStatus,
+      product_option_id: optionId,
     });
   },
   trackAffiliateClick(kind: "genuine" | "compatible", partId: string, linkStatus: string) {
