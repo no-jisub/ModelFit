@@ -37,3 +37,6 @@ pglite-debug.log
 
 # Local WebAssembly compiler cache
 .tmp-wasi/
+
+# Private compatibility decision history
+data/catalog/compatibility-review.json

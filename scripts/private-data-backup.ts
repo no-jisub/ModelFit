@@ -19,6 +19,7 @@ const backupRoot = path.resolve(
   process.env.MODELFIT_PRIVATE_BACKUP_DIR ?? path.join(root, "private-backups"),
 );
 const fixedPrivateFiles = [
+  "data/catalog/compatibility-review.json",
   "src/data/importedCatalogModels.ts",
   "src/data/importedRelationalCatalog.ts",
   "src/data/importedCatalogMetadata.ts",

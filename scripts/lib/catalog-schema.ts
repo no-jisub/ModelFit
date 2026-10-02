@@ -180,6 +180,34 @@ export function validateRawCatalog(raw: RawCatalog): string[] {
         !raw["compatibility-sources.csv"].some((r) => r.compatibilityId === row.id)
       )
         errors.push(label + ": scoped evidence missing");
+      if (
+        file === "model-consumables.csv" &&
+        row.evidenceScope === "scoped" &&
+        row.verificationStatus === "official"
+      ) {
+        const model = raw["models.csv"].find((m) => m.id === row.modelId);
+        const domains = raw["brand-domains.csv"]
+          .filter((d) => d.brandId === model?.brandId)
+          .map((d) => d.domain);
+        const linked = raw["compatibility-sources.csv"].filter((j) => j.compatibilityId === row.id);
+        for (const join of linked) {
+          const source = raw["sources.csv"].find((s) => s.id === join.sourceId);
+          let officialHost = false;
+          try {
+            const host = new URL(source?.url ?? "").hostname;
+            officialHost = domains.some((d) => host === d || host.endsWith("." + d));
+          } catch {
+            /* Invalid source URL is reported by the source validator. */
+          }
+          if (
+            !source ||
+            source.isActive !== "true" ||
+            !["manufacturer", "official-manual", "official-store"].includes(source.sourceType) ||
+            !officialHost
+          )
+            errors.push(label + ": official compatibility requires active manufacturer evidence");
+        }
+      }
       if (file === "option-model-labels.csv") {
         const option = raw["product-options.csv"].find((o) => o.id === row.productOptionId);
         if (

@@ -43,7 +43,9 @@
     "catalog:ci:pack": "tsx scripts/catalog-ci.ts pack",
     "catalog:ci:restore": "tsx scripts/catalog-ci.ts restore",
     "catalog:migrate:v2": "tsx scripts/migrate-catalog-v2.ts",
-    "catalog:migration:check": "tsx scripts/check-catalog-migration.ts"
+    "catalog:migration:check": "tsx scripts/check-catalog-migration.ts",
+    "catalog:compatibility:review": "tsx scripts/review-compatibility.ts",
+    "catalog:compatibility:check": "tsx scripts/check-compatibility-review.ts"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.2",
