@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { brands } from "@/data/brands";
-import { categories, categoryById, isApplianceCategory } from "@/data/categories";
-import { consumables } from "@/data/consumables";
-import { models } from "@/data/models";
-import type { ApplianceCategory, ApplianceModel } from "@/types";
+import { categories, isApplianceCategory } from "@/data/categories";
+import type { ApplianceCategory } from "@/types";
+import type { SearchModel, SearchConsumable, SearchCatalogData } from "@/utils/searchData";
 import { analytics } from "@/utils/analytics";
 import {
   categoryLabels,
@@ -21,6 +20,7 @@ import {
 import SearchBox from "./SearchBox";
 
 interface Props {
+  catalog: SearchCatalogData;
   initialQuery?: string;
 }
 
@@ -37,12 +37,14 @@ const matchReasonLabels: Record<ConsumableMatchReason, string> = {
 };
 
 function ModelResultCard({
+  consumables,
   model,
   selected,
   onSelect,
   association,
 }: {
-  model: ApplianceModel;
+  consumables: SearchConsumable[];
+  model: SearchModel;
   selected: boolean;
   onSelect: () => void;
   association?: CompatibleModelMatch;
@@ -55,9 +57,7 @@ function ModelResultCard({
   return (
     <article className={`model-card card ${selected ? "is-selected" : ""}`}>
       <div className="model-card-top">
-        <span className="category-chip">
-          {categoryById[model.category].symbol} {categoryLabels[model.category]}
-        </span>
+        <span className="category-chip">{categoryLabels[model.category]}</span>
         {association && <span className="official-chip">소모품으로 찾은 모델</span>}
       </div>
       {model.image && (
@@ -141,10 +141,12 @@ function ModelResultCard({
 }
 
 function PartResultCard({
+  models,
   part,
   reason,
 }: {
-  part: (typeof consumables)[number];
+  models: SearchModel[];
+  part: SearchConsumable;
   reason: ConsumableMatchReason;
 }) {
   const compatibleModels = part.compatibleModelIds
@@ -183,7 +185,10 @@ function PartResultCard({
   );
 }
 
-export default function SearchResults({ initialQuery = "" }: Props) {
+export default function SearchResults({
+  initialQuery = "",
+  catalog: { models, consumables },
+}: Props) {
   const [query, setQuery] = useState(initialQuery);
   const [category, setCategory] = useState<ApplianceCategory | "all">("all");
   const [brandId, setBrandId] = useState("all");
@@ -198,7 +203,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
         brandId,
         consumableLimit: 30,
       }),
-    [query, category, brandId],
+    [models, consumables, query, category, brandId],
   );
   const totalResults =
     results.models.length + results.consumables.length + results.compatibleModels.length;
@@ -345,6 +350,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
                   <div className="model-grid">
                     {visibleModelMatches.map(({ model }) => (
                       <ModelResultCard
+                        consumables={consumables}
                         model={model}
                         selected={selectedModelId === model.id}
                         onSelect={() => selectModel(model.id)}
@@ -374,6 +380,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
                   <div className="model-grid">
                     {results.compatibleModels.map((association) => (
                       <ModelResultCard
+                        consumables={consumables}
                         model={association.model}
                         association={association}
                         selected={selectedModelId === association.model.id}
@@ -409,6 +416,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
                     <div className="model-grid">
                       {modelMatches.related.map(({ model }) => (
                         <ModelResultCard
+                          consumables={consumables}
                           model={model}
                           selected={selectedModelId === model.id}
                           onSelect={() => selectModel(model.id)}
@@ -434,7 +442,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
                   </div>
                   <div className="search-part-grid">
                     {consumableMatches.primary.map(({ part, reason }) => (
-                      <PartResultCard part={part} reason={reason} key={part.id} />
+                      <PartResultCard models={models} part={part} reason={reason} key={part.id} />
                     ))}
                   </div>
                 </section>
@@ -461,7 +469,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
                   <div className="related-result-groups">
                     <div className="search-part-grid">
                       {consumableMatches.related.map(({ part, reason }) => (
-                        <PartResultCard part={part} reason={reason} key={part.id} />
+                        <PartResultCard models={models} part={part} reason={reason} key={part.id} />
                       ))}
                     </div>
                   </div>

@@ -1,4 +1,5 @@
-import type { ApplianceCategory, ApplianceModel, ConsumableCompatibility } from "@/types";
+import type { ApplianceCategory } from "@/types";
+import type { SearchModel, SearchConsumable } from "./searchData";
 import { partTypeLabels } from "./labels";
 import { normalizeSearch } from "./normalizeSearch";
 import { type RankedModel, searchModels } from "./searchModels";
@@ -7,14 +8,14 @@ export type ConsumableMatchReason =
   "part-number" | "product-name" | "display-name" | "keyword" | "type";
 
 export interface RankedConsumable {
-  part: ConsumableCompatibility;
+  part: SearchConsumable;
   score: number;
   reason: ConsumableMatchReason;
 }
 
 export interface CompatibleModelMatch {
-  model: ApplianceModel;
-  matchedParts: ConsumableCompatibility[];
+  model: SearchModel;
+  matchedParts: SearchConsumable[];
   score: number;
 }
 
@@ -42,10 +43,14 @@ export function splitStrongMatches<T extends { score: number }>(items: T[]) {
   };
 }
 
-function getConsumableValues(part: ConsumableCompatibility) {
+function getConsumableValues(part: SearchConsumable) {
   return {
     partNumber: normalizeSearch(part.genuinePartNumber ?? ""),
-    productName: normalizeSearch(part.compatibleProductName ?? ""),
+    productName: normalizeSearch(
+      [part.productOptions[0]?.name, part.productOptions[0]?.packageLabel]
+        .filter(Boolean)
+        .join(" "),
+    ),
     displayName: normalizeSearch(part.displayName),
     keywords: part.searchKeywords.map(normalizeSearch),
     type: normalizeSearch(partTypeLabels[part.type]),
@@ -53,7 +58,7 @@ function getConsumableValues(part: ConsumableCompatibility) {
 }
 
 function scoreConsumable(
-  part: ConsumableCompatibility,
+  part: SearchConsumable,
   query: string,
 ): Pick<RankedConsumable, "score" | "reason"> {
   const q = normalizeSearch(query);
@@ -98,8 +103,8 @@ function scoreConsumable(
 }
 
 export function searchConsumables(
-  allConsumables: ConsumableCompatibility[],
-  allModels: ApplianceModel[],
+  allConsumables: SearchConsumable[],
+  allModels: SearchModel[],
   query: string,
   options: Pick<CatalogSearchOptions, "category" | "brandId" | "consumableLimit"> = {},
 ): RankedConsumable[] {
@@ -125,8 +130,8 @@ export function searchConsumables(
 }
 
 export function searchCatalog(
-  allModels: ApplianceModel[],
-  allConsumables: ConsumableCompatibility[],
+  allModels: SearchModel[],
+  allConsumables: SearchConsumable[],
   query: string,
   options: CatalogSearchOptions = {},
 ): CatalogSearchResult {

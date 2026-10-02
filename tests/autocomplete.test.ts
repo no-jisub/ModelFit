@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { consumables } from "../src/data/consumables";
 import { models } from "../src/data/models";
-import { createAutocompleteIndex, searchAutocomplete } from "../src/utils/autocomplete";
+import { searchAutocomplete } from "../src/utils/autocomplete";
+import { createAutocompleteIndex } from "../src/utils/autocompleteIndex";
 import { searchCatalog } from "../src/utils/searchCatalog";
 
 const index = createAutocompleteIndex(models, consumables);

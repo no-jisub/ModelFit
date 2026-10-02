@@ -4,7 +4,9 @@ function escapeRegExp(value: string) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-export function getModelDisplayName(model: ApplianceModel) {
+export function getModelDisplayName(
+  model: Pick<ApplianceModel, "brandName" | "brandNameEn" | "modelName">,
+) {
   const brandAliases = [model.brandName, model.brandNameEn ?? "", ...model.brandName.split(/\s+/)]
     .map((value) => value.trim())
     .filter((value) => value.length >= 2)
@@ -22,6 +24,8 @@ export function getModelDisplayName(model: ApplianceModel) {
   return displayName || model.modelName;
 }
 
-export function getModelFullName(model: ApplianceModel) {
+export function getModelFullName(
+  model: Pick<ApplianceModel, "brandName" | "brandNameEn" | "modelName">,
+) {
   return `${model.brandName} ${getModelDisplayName(model)}`.trim();
 }

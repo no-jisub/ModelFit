@@ -36,3 +36,22 @@ for (const budget of budgets) {
     expect(metrics.domNodes).toBeLessThanOrEqual(1_200);
   });
 }
+
+test("검색 UI JavaScript에 전체 카탈로그가 포함되지 않는다", async ({ page }) => {
+  let scriptBytes = 0;
+  const responses: Promise<void>[] = [];
+  page.on("response", (response) => {
+    if (new URL(response.url()).pathname.startsWith("/_astro/") && response.url().endsWith(".js")) {
+      responses.push(
+        response.body().then((body) => {
+          scriptBytes += body.byteLength;
+        }),
+      );
+    }
+  });
+  await page.goto("/find?q=AS355NSNA", { waitUntil: "networkidle" });
+  await Promise.all(responses);
+  // Includes the React DOM runtime (~184 KB), shared code and both search components.
+  expect(scriptBytes).toBeLessThan(250_000);
+  await expect(page.locator(".search-page-app")).toHaveAttribute("data-ready", "true");
+});
