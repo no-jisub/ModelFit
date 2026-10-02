@@ -95,3 +95,7 @@ Firestore 규칙을 변경했다면 Java 21 환경에서 Emulator 허용·거부
 ## 2026-10-02 정규화
 
 원본은 v2 CSV 18개입니다. 모델 80개, 부품 177개, 호환 231개, 옵션 316개와 링크 326개의 ID·URL을 보존했습니다. 구매 149개와 안내 177개 링크를 분리했습니다. [계약과 검토 목록](CATALOG_NORMALIZATION.md)을 참고하세요. Windows 실행 정책으로 SQL 공식 컴파일·SDK 재생성·에뮬레이터 검증은 대기 중입니다. CI Secret 등록은 CSV 보완 후 진행합니다.
+
+## 2026-10-02 호환 근거 검토
+
+구매 링크 192개 관계와 공유 부품 88개 관계를 우선하여 전체 231개 관계를 분류했습니다. 공식 적용 범위를 확인한 99개는 scoped, 132개는 미확인입니다. compatibility-sources.csv에는 109개 관계별 출처 연결이 있습니다. 검색과 상품 카드도 관계 상태에 맞게 표시합니다. [검토 절차](COMPATIBILITY_REVIEW.md)를 참고하세요. 비공개 검토 기록 data/catalog/compatibility-review.json은 백업에 포함하며 Git과 CI Secret에는 포함하지 않습니다. 운영 CI에는 판정이 반영된 18개 CSV만 공급합니다.
