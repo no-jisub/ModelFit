@@ -1,8 +1,0 @@
----
-import { categoryById } from "@/data/categories";
-import type { ApplianceCategory } from "@/types";
-
-const { category } = Astro.props as { category: ApplianceCategory };
----
-
-<span aria-hidden="true">{categoryById[category].symbol}</span>

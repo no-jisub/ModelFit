@@ -1,1 +1,1 @@
-export { relationalBrands as brands } from "./importedRelationalCatalog";
+export { relationalBrands as brands } from "./importedCatalogMetadata";

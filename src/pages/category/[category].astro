@@ -5,6 +5,7 @@ import ModelCard from "@/components/astro/ModelCard.astro";
 import ModelGroupCard from "@/components/astro/ModelGroupCard.astro";
 import { brands } from "@/data/brands";
 import { categories, getCategoryConfig, type CategoryId } from "@/data/categories";
+import { consumables } from "@/data/consumables";
 import { guides } from "@/data/guides";
 import { models } from "@/data/models";
 import BaseLayout from "@/layouts/BaseLayout.astro";
@@ -16,8 +17,12 @@ export function getStaticPaths() {
 
 const category = Astro.params.category as CategoryId;
 const categoryConfig = getCategoryConfig(category);
-const { label, partTypes } = categoryConfig;
+const { label } = categoryConfig;
 const categoryModels = models.filter((model) => model.category === category);
+const categoryConsumableIds = new Set(categoryModels.flatMap((model) => model.consumableIds));
+const categoryPartTypeCount = new Set(
+  consumables.filter((part) => categoryConsumableIds.has(part.id)).map((part) => part.type),
+).size;
 const categoryModelGroups = groupModelsByName(categoryModels);
 const categoryBrands = brands.filter((brand) => brand.supportedCategories.includes(category));
 const relatedGuides = guides.filter(
@@ -27,7 +32,7 @@ const relatedGuides = guides.filter(
 
 <BaseLayout
   title={`${label} 호환 소모품 모델 목록`}
-  description={categoryConfig.metaDescription}
+  description={categoryConfig.description}
   canonicalPath={`/category/${category}`}
 >
   <section class="page-hero category-page-hero">
@@ -37,8 +42,9 @@ const relatedGuides = guides.filter(
       <h1>{label} 소모품 찾기</h1>
       <p>{categoryConfig.description}</p>
       <p class="page-meta-inline">
-        {categoryModels.filter((model) => !model.isDemo).length}개 모델 · {categoryBrands.length}개
-        브랜드 · {partTypes.length}개 소모품 유형
+        {categoryModels.filter((model) => !(model.status !== "published")).length}개 모델 · {
+          categoryBrands.length
+        }개 브랜드 · {categoryPartTypeCount}개 소모품 유형
       </p>
     </div>
   </section>

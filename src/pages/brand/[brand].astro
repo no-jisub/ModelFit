@@ -16,7 +16,7 @@ export function getStaticPaths() {
 const { brand } = Astro.props;
 const brandModels = models.filter((model) => model.brandId === brand.id);
 const brandModelGroups = groupModelsByName(brandModels);
-const officialModels = brandModels.filter((model) => !model.isDemo);
+const officialModels = brandModels.filter((model) => !(model.status !== "published"));
 const supportedCategoryNames = brand.supportedCategories
   .map((category) => categoryLabels[category])
   .join(" · ");

@@ -20,30 +20,11 @@ export type ConsumableType =
   | "mop-pad";
 
 export interface SourceReference {
+  id: string;
   title: string;
   url: string;
   sourceType: "manufacturer" | "official-manual" | "official-store" | "seller" | "other";
   checkedAt: string;
-}
-
-export interface AffiliateLinkData {
-  searchKeyword: string;
-  directUrl?: string;
-  isAffiliate: boolean;
-  restrictionNote?: string;
-  productOption?: {
-    name: string;
-    kind: ProductOptionKind;
-    verification: Exclude<ProductOptionVerification, "official-genuine">;
-    description: string;
-    partNumber?: string;
-    packageLabel?: string;
-  };
-  enabled: boolean;
-  status: "direct-product" | "search-results" | "unavailable";
-  priceStatus: "manual-check-required" | "recently-checked";
-  stockStatus: "manual-check-required" | "in-stock" | "out-of-stock";
-  linkCheckedAt: string;
 }
 
 export type PurchaseChannel = "official" | "coupang" | "other";
@@ -53,7 +34,7 @@ export interface PurchaseLinkData {
   label: string;
   url: string;
   channel: PurchaseChannel;
-  linkType: "official-reference" | "direct-product" | "search-results";
+  linkType: "direct-product";
   isAffiliate: boolean;
   checkedAt: string;
 }
@@ -69,10 +50,12 @@ export interface ConsumableProductOption {
   kind: ProductOptionKind;
   verification: ProductOptionVerification;
   description: string;
-  partNumber?: string;
+  itemCode?: string;
+  modelLabels: Record<string, string>;
   packageLabel?: string;
   sources: SourceReference[];
   purchaseLinks: PurchaseLinkData[];
+  guidanceLinks: GuidanceLinkData[];
 }
 
 export interface ConsumableCompatibility {
@@ -80,17 +63,16 @@ export interface ConsumableCompatibility {
   slug: string;
   type: ConsumableType;
   displayName: string;
+  image?: ModelImage;
   genuinePartNumber?: string;
   partNumberStatus: PartNumberStatus;
-  compatibleProductName?: string;
   compatibleModelIds: string[];
   searchKeywords: string[];
-  replacementInterval?: string;
+  maintenance?: MaintenancePresentation;
+  compatibilities: ModelConsumable[];
   purchaseWarning?: string;
   verificationStatus: VerificationStatus;
   sources: SourceReference[];
-  affiliate: AffiliateLinkData;
-  purchaseLinks: PurchaseLinkData[];
   productOptions: ConsumableProductOption[];
 }
 
@@ -99,21 +81,6 @@ export interface ModelImage {
   alt: string;
   sourceUrl: string;
   checkedAt: string;
-}
-
-export interface ImportedCatalogEntry {
-  brandId: string;
-  category: ApplianceCategory;
-  modelName: string;
-  modelCode: string;
-  series?: string;
-  sourceUrl: string;
-  sourceTitle: string;
-  sourceType: SourceReference["sourceType"];
-  verifiedAt: string;
-  releaseDate?: string;
-  releaseSourceUrl?: string;
-  aliases?: string[];
 }
 
 export interface ApplianceModel {
@@ -127,16 +94,13 @@ export interface ApplianceModel {
   modelCode: string;
   aliases: string[];
   series?: string;
-  shortDescription: string;
   image?: ModelImage;
-  consumableNote?: string;
-  modelNumberLocation?: string;
   releaseDate?: string;
   consumableIds: string[];
   sources: SourceReference[];
   lastVerifiedAt: string;
   verificationStatus: VerificationStatus;
-  isDemo: boolean;
+  status: "draft" | "review" | "published" | "archived";
 }
 
 export interface Brand {
@@ -156,4 +120,33 @@ export interface Guide {
   steps: { title: string; description: string }[];
   checklist: string[];
   cautions: string[];
+}
+
+export interface GuidanceLinkData {
+  id: string;
+  label: string;
+  url: string;
+  channel: PurchaseChannel;
+  checkedAt: string;
+  linkType: "official-reference";
+}
+export interface PartConfigurationPresentation {
+  itemCode?: string;
+  requiredQuantity?: string;
+  salesPackage?: string;
+  composition?: string;
+}
+export interface MaintenancePresentation {
+  mode: "정기 교체" | "세척 후 재사용" | "상태에 따라 교체" | "정기 관리";
+  detail: string;
+}
+export interface ModelConsumable {
+  id: string;
+  modelId: string;
+  consumableId: string;
+  verificationStatus: VerificationStatus;
+  verifiedAt: string;
+  evidenceScope: "legacy-unscoped" | "scoped";
+  sources: SourceReference[];
+  configuration?: PartConfigurationPresentation;
 }

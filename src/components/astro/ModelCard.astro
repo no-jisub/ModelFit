@@ -2,7 +2,6 @@
 import type { ApplianceModel } from "@/types";
 import { categoryLabels } from "@/utils/labels";
 import { getModelDisplayName } from "@/utils/modelDisplayName";
-import CategoryIcon from "./CategoryIcon.astro";
 
 const { model } = Astro.props as { model: ApplianceModel };
 const displayName = getModelDisplayName(model);
@@ -12,10 +11,9 @@ const detailPath = `/model/${model.brandId}/${model.slug}#compatible-parts`;
 <a class="model-card card" href={detailPath} aria-label={`${displayName} 모델 상세 보기`}>
   <div class="model-card-top">
     <span class="category-chip">
-      <CategoryIcon category={model.category} />
       {categoryLabels[model.category]}
     </span>
-    {model.isDemo && <span class="demo-chip">데모 데이터</span>}
+    {model.status !== "published" && <span class="demo-chip">데모 데이터</span>}
   </div>
   {
     model.image && (

@@ -139,7 +139,7 @@ test("헤더 검색 인덱스는 첫 상호작용 전에는 내려받지 않는�
 });
 
 test("검색 결과 화면에서도 헤더 검색으로 다시 검색한다", async ({ page }) => {
-  await page.goto("/find?q=필터");
+  await page.goto("/find?q=필터", { waitUntil: "networkidle" });
 
   const header = page.locator("header");
   const searchInput = header.getByRole("combobox", { name: "모델번호·부품번호 검색" });
@@ -179,11 +179,13 @@ test("통합검색 결과를 모델과 소모품 탭으로 전환한다", async 
 });
 
 test("검색 첫 화면은 모델을 나눠 표시하고 더 보기로 확장한다", async ({ page }) => {
-  await page.goto("/find");
+  await page.goto("/find", { waitUntil: "networkidle" });
 
   const cards = page.getByRole("tabpanel", { name: "모델" }).locator(".model-card");
   await expect(cards).toHaveCount(12);
-  await page.getByRole("button", { name: "모델 더 보기" }).click();
+  const moreButton = page.getByRole("button", { name: "모델 더 보기" });
+  await expect(moreButton).toBeEnabled();
+  await moreButton.click();
   await expect(cards).toHaveCount(24);
 });
 test("모델 카드 전체를 클릭해 상세 페이지로 이동한다", async ({ page }) => {
@@ -234,45 +236,67 @@ test("모델 상세에서 같은 제품군의 모델번호를 변경한다", asy
 test("모델 상세 상단에서 정확한 모델번호와 검증 정보를 확인한다", async ({ page }) => {
   await page.goto("/model/lg/as355nsna");
 
-  const summary = page.getByRole("region", { name: "모델 확인 요약" });
-  await expect(summary.getByText("확인된 모델번호")).toBeVisible();
-  await expect(summary.getByText("AS355NSNA", { exact: true })).toBeVisible();
-  await expect(summary.getByTitle("공식 모델 확인 상태")).toContainText("공식 모델 확인");
-  await expect(summary.getByText("모델 정보 확인일")).toBeVisible();
-  await expect(summary.locator("time")).toHaveAttribute("datetime", /^\d{4}-\d{2}-\d{2}$/);
-  await expect(summary.getByText("연결된 소모품")).toBeVisible();
+  const identity = page.locator(".model-identity");
+  await expect(identity.getByText("정확한 모델번호")).toBeVisible();
+  await expect(identity.locator(".model-detail-current-code")).toHaveText("AS355NSNA");
+  await expect(identity.getByTitle("공식 모델 확인 상태")).toContainText("공식 모델 확인");
+  await expect(identity.getByText(/모델 정보 확인:/)).toBeVisible();
+  await expect(identity.locator("time")).toHaveAttribute("datetime", /^\d{4}-\d{2}-\d{2}$/);
+  await expect(identity.getByRole("link", { name: "모델번호 확인 방법" })).toBeVisible();
+  await expect(page.locator(".model-verification-summary")).toHaveCount(0);
 });
 
-test("모델 상세에서 소모품 현황과 바로가기를 제공한다", async ({ page }) => {
+test("부품이 적은 모델은 중복 바로가기 없이 공통 제목과 개수를 한 번만 제공한다", async ({
+  page,
+}) => {
   await page.goto("/model/lg/as355nsna");
 
   const section = page.locator("#compatible-parts");
-  const status = section.getByLabel("소모품 등록 현황");
-  await expect(status).toContainText("공식 호환 확인 2종");
-  await expect(status).toContainText("구매 링크 제공 2종");
-
-  const navigation = section.getByRole("navigation", { name: "소모품 바로가기" });
-  await expect(navigation.getByRole("link")).toHaveCount(2);
-  await expect(navigation.getByRole("link").first()).toHaveAttribute(
-    "href",
-    "#lg-puricare-m-filter",
+  await expect(section.getByRole("heading", { name: "호환 소모품·부품" })).toBeVisible();
+  await expect(section.getByText("2개 확인", { exact: true })).toHaveCount(1);
+  await expect(section.getByRole("navigation", { name: "소모품 바로가기" })).toHaveCount(0);
+  const firstPart = page.locator("#lg-puricare-m-filter");
+  await expect(firstPart).toBeVisible();
+  await expect(firstPart.getByRole("heading", { name: "구매처와 교체·관리 안내" })).toBeVisible();
+  await expect(firstPart.getByText("구매 링크 있음", { exact: true })).toHaveCount(0);
+  await expect(firstPart.getByText(/번 소모품|구매 선택지|소개할 상품|추가 조사 중/)).toHaveCount(
+    0,
   );
-  await expect(page.locator("#lg-puricare-m-filter")).toBeVisible();
-  await expect(page.getByText("구매 링크 있음", { exact: true }).first()).toBeVisible();
 });
 
-test("소모품 카드는 상품 확인과 제조사 호환 근거 행동만 제공한다", async ({ page }) => {
+test("현재 모델에 필요한 상품 구성만 표시한다", async ({ page }) => {
+  await page.goto("/model/lg/as205ngja");
+
+  const filter = page.locator("#lg-puricare-g-filter");
+  await expect(filter.getByText("제품 1대 필요 수량", { exact: true })).toBeVisible();
+  await expect(filter.getByText("1개 필요", { exact: true })).toBeVisible();
+  await expect(filter.getByText("PFSACC01", { exact: true })).toBeVisible();
+  await expect(filter.getByText(/AS355NSAH는 2개/)).toHaveCount(0);
+  await expect(filter.getByText(/1-1|1-2|1-3/)).toHaveCount(0);
+});
+
+test("소모품 카드는 호환 상태·복사·관리·구매·근거를 분리해 제공한다", async ({ page, context }) => {
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await page.goto("/model/lg/as355nsna");
 
   const card = page.locator(".consumable-group").first();
+  await expect(card.getByText("AS355NSNA 호환 상태")).toBeVisible();
+  await expect(card.getByTitle("공식 호환 확인 상태")).toBeVisible();
+  const copyButton = card.getByRole("button", { name: /부품번호 복사/ });
+  await expect(copyButton).toBeVisible();
+  await copyButton.click();
+  await expect(copyButton).toContainText("복사됨");
+  await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toBe("ADQ30041405");
+  await expect(card.getByText("관리 방식", { exact: true })).toBeVisible();
+  await expect(card.getByText("정기 교체", { exact: true })).toBeVisible();
   const coupangLink = card.getByRole("link", { name: /쿠팡 상품 확인/ });
   await expect(coupangLink).toHaveCount(1);
   await expect(coupangLink).toHaveAttribute("rel", /sponsored/);
   await expect(card.getByRole("link", { name: /공식 호환 근거/ })).toHaveCount(1);
-  await expect(card.locator("details.purchase-warning-inline")).toHaveCount(0);
-  const purchaseWarning = page.locator("details.purchase-warning-page");
-  await expect(purchaseWarning).toHaveCount(1);
-  await expect(purchaseWarning.getByText("구매 전 확인", { exact: true })).toBeVisible();
+  await expect(card.locator("details.part-care-warning")).toHaveCount(1);
+  await expect(card.getByText("관리 및 구매 전 주의사항", { exact: true })).toBeVisible();
+  await expect(card.locator("details.part-evidence")).toHaveCount(1);
+  await expect(card.getByText("확인 근거와 날짜", { exact: true })).toBeVisible();
   await expect(card.getByText("교체주기 참고")).toHaveCount(0);
   await expect(card.getByText("부품번호 상태")).toHaveCount(0);
   await expect(card.getByText("검증 상태")).toHaveCount(0);
@@ -282,7 +306,7 @@ test("소모품 카드는 상품 확인과 제조사 호환 근거 행동만 제
   await expect(card.locator(".affiliate-disclosure")).toContainText(
     "이 포스팅은 쿠팡 파트너스 활동의 일환으로",
   );
-  await expect(card.getByText(/링크 확인 \d{4}-\d{2}-\d{2}/)).toHaveCount(0);
+  await expect(card.getByText(/구매 링크 확인: \d{4}-\d{2}-\d{2}/)).toBeVisible();
   const affiliateDisclosureLineCount = await card
     .locator(".affiliate-disclosure")
     .evaluate((element) => {
@@ -294,6 +318,21 @@ test("소모품 카드는 상품 확인과 제조사 호환 근거 행동만 제
   expect(affiliateDisclosureLineCount).toBeLessThanOrEqual(2);
   await expect(card.getByRole("link", { name: /구매처 확인하기/ })).toHaveCount(0);
   await expect(card.getByRole("link", { name: /호환품 검색/ })).toHaveCount(0);
+});
+
+test("다수 부품 모델은 바로가기를 제공하고 구매처 누락은 텍스트로 안내한다", async ({ page }) => {
+  await page.goto("/model/coway/ap-2021a");
+  const section = page.locator("#compatible-parts");
+  await expect(section.getByRole("navigation", { name: "소모품 바로가기" })).toBeVisible();
+  await expect(
+    section.getByRole("navigation", { name: "소모품 바로가기" }).getByRole("link"),
+  ).toHaveCount(7);
+
+  await page.goto("/model/coway/ap-1521b");
+  const noPurchaseCard = page.locator("#coway-4d-pre-filter");
+  await expect(noPurchaseCard.getByText("확인된 구매처가 없습니다.")).toBeVisible();
+  await expect(noPurchaseCard.getByText("공식 자료에 번호 미표기")).toBeVisible();
+  await expect(noPurchaseCard.getByText("세척 후 재사용", { exact: true })).toBeVisible();
 });
 
 test("모델 확인 자료는 면책 안내 바로 위에 간결하게 제공한다", async ({ page }) => {

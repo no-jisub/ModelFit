@@ -1,4 +1,4 @@
-import { relationalCategories } from "./importedRelationalCatalog";
+import { relationalCategories } from "./importedCatalogMetadata";
 
 export const categories = relationalCategories;
 

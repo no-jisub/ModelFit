@@ -36,12 +36,14 @@ describe("data validation", () => {
   });
 
   it("활성화된 구매 링크는 HTTPS 쿠팡 주소만 사용한다", () => {
-    const linkedParts = consumables.filter((part) => part.affiliate.enabled);
+    const links = consumables
+      .flatMap((part) => part.productOptions.flatMap((option) => option.purchaseLinks))
+      .filter((link) => link.channel === "coupang");
 
-    expect(linkedParts.length).toBeGreaterThan(0);
+    expect(links.length).toBeGreaterThan(0);
     expect(
-      linkedParts.every((part) => {
-        const url = new URL(part.affiliate.directUrl ?? "");
+      links.every((link) => {
+        const url = new URL(link.url);
         return url.protocol === "https:" && url.hostname.endsWith("coupang.com");
       }),
     ).toBe(true);
@@ -49,37 +51,34 @@ describe("data validation", () => {
 
   it("쿠팡 링크 상태가 URL 유형과 일치한다", () => {
     expect(
-      consumables.every((part) => {
-        const url = part.affiliate.directUrl ?? "";
-
-        if (part.affiliate.status === "direct-product") {
-          return url.includes("/vp/products/") || url.startsWith("https://link.coupang.com/a/");
-        }
-        if (part.affiliate.status === "search-results") return url.includes("/np/search");
-        return !part.affiliate.enabled;
-      }),
+      consumables
+        .flatMap((part) => part.productOptions.flatMap((option) => option.purchaseLinks))
+        .filter((link) => link.channel === "coupang")
+        .every(
+          (link) =>
+            link.linkType === "direct-product" &&
+            (link.url.includes("/vp/products/") ||
+              link.url.startsWith("https://link.coupang.com/a/")),
+        ),
     ).toBe(true);
   });
 
   it("제휴 링크는 쿠팡 파트너스 단축 URL로만 표시한다", () => {
-    const affiliateParts = consumables.filter((part) => part.affiliate.isAffiliate);
+    const affiliateLinks = consumables
+      .flatMap((part) => part.productOptions.flatMap((option) => option.purchaseLinks))
+      .filter((link) => link.isAffiliate);
 
-    expect(affiliateParts.length).toBeGreaterThan(0);
-    expect(
-      affiliateParts.every((part) =>
-        part.affiliate.directUrl?.startsWith("https://link.coupang.com/a/"),
-      ),
-    ).toBe(true);
+    expect(affiliateLinks.length).toBeGreaterThan(0);
+    expect(affiliateLinks.every((link) => link.url.startsWith("https://link.coupang.com/a/"))).toBe(
+      true,
+    );
   });
 
-  it("모든 구매 링크는 가격·재고 수동 확인 상태와 확인일을 제공한다", () => {
+  it("모든 구매 링크는 확인일을 제공한다", () => {
     expect(
-      consumables.every(
-        (part) =>
-          part.affiliate.priceStatus === "manual-check-required" &&
-          part.affiliate.stockStatus === "manual-check-required" &&
-          !Number.isNaN(Date.parse(part.affiliate.linkCheckedAt)),
-      ),
+      consumables
+        .flatMap((part) => part.productOptions.flatMap((option) => option.purchaseLinks))
+        .every((link) => !Number.isNaN(Date.parse(link.checkedAt))),
     ).toBe(true);
   });
 

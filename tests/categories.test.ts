@@ -5,7 +5,6 @@ import { brands } from "../src/data/brands";
 import { categories, categoryById, categoryIds, isApplianceCategory } from "../src/data/categories";
 import { guides } from "../src/data/guides";
 import { models } from "../src/data/models";
-import { partTypeLabels } from "../src/utils/labels";
 
 describe("category config", () => {
   it("카테고리 식별자와 화면 설정을 한 곳에서 완전하게 제공한다", async () => {
@@ -16,14 +15,7 @@ describe("category config", () => {
         expect(categoryById[category.id]).toBe(category);
         expect(category.label.trim()).not.toBe("");
         expect(category.description.trim()).not.toBe("");
-        expect(category.metaDescription.trim()).not.toBe("");
         expect(category.modelNumberGuide.trim()).not.toBe("");
-        expect(category.partTypes.length).toBeGreaterThan(0);
-
-        for (const partType of category.partTypes) {
-          expect(partTypeLabels[partType]).toBeTruthy();
-        }
-
         await access(path.resolve("public", category.selectorImage.slice(1)));
       }),
     );

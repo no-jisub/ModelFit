@@ -2,13 +2,19 @@
 import type { ConsumableProductOption } from "@/types";
 import AffiliateDisclosure from "./AffiliateDisclosure.astro";
 
-const { option, partNumber, productNumber, partId } = Astro.props as {
+const {
+  option,
+  modelId,
+  partId,
+  fallbackPartNumber,
+  showPackageLabel = true,
+} = Astro.props as {
   option: ConsumableProductOption;
-  partNumber: number;
-  productNumber: number;
+  modelId: string;
   partId: string;
+  fallbackPartNumber?: string;
+  showPackageLabel?: boolean;
 };
-const optionNumber = String(partNumber) + "-" + String(productNumber);
 const headingId = option.id + "-heading";
 const kindLabel = option.kind === "genuine" ? "정품" : "호환상품";
 const verificationLabels = {
@@ -22,7 +28,10 @@ const verificationLabel =
       ? "판매자 정품 표기"
       : "판매자 호환 표기"
     : verificationLabels[option.verification];
-const hasDirectProduct = option.purchaseLinks.some((link) => link.linkType === "direct-product");
+const packageLabel = option.modelLabels[modelId] ?? option.packageLabel;
+const purchaseLinks = option.purchaseLinks;
+const guidanceLinks = option.guidanceLinks;
+const searchablePartNumber = option.itemCode ?? fallbackPartNumber;
 ---
 
 <article
@@ -30,37 +39,30 @@ const hasDirectProduct = option.purchaseLinks.some((link) => link.linkType === "
   aria-labelledby={headingId}
 >
   <div class="product-option-heading">
-    <span class="product-option-number">{optionNumber}</span>
     <div>
       <div class="product-option-badges">
         <span class:list={["product-kind-badge", "is-" + option.kind]}>{kindLabel}</span>
-        <span class="product-verification-badge">
-          {verificationLabel}
-        </span>
-        <span class:list={["product-link-badge", hasDirectProduct ? "is-available" : "is-pending"]}>
-          {hasDirectProduct ? "구매 링크 있음" : "구매 링크 준비 중"}
-        </span>
+        <span class="product-verification-badge">{verificationLabel}</span>
       </div>
       <h5 id={headingId}>{option.name}</h5>
+      <p>{option.description}</p>
     </div>
   </div>
 
-  <p class="product-option-description">{option.description}</p>
-
-  <dl class="product-option-details">
-    <div>
-      <dt>부품번호</dt>
-      <dd>{option.partNumber ?? "공식 자료에 번호 미표기"}</dd>
-    </div>
-    <div>
-      <dt>구성</dt>
-      <dd>{option.packageLabel ?? "판매 페이지에서 구성 수량 확인"}</dd>
-    </div>
-  </dl>
+  {
+    showPackageLabel && packageLabel && (
+      <dl class="product-option-details">
+        <div>
+          <dt>판매 상품 표기</dt>
+          <dd>{packageLabel}</dd>
+        </div>
+      </dl>
+    )
+  }
 
   <div class="product-option-links">
     {
-      option.purchaseLinks.map((link) => (
+      purchaseLinks.map((link) => (
         <Fragment>
           <a
             class:list={[
@@ -77,25 +79,49 @@ const hasDirectProduct = option.purchaseLinks.some((link) => link.linkType === "
             }
             target="_blank"
             data-product-option-id={option.id}
+            data-product-kind={option.kind}
             data-purchase-channel={link.channel}
             data-part-id={partId}
             data-link-status={link.linkType}
           >
             {link.label} <span aria-hidden="true">↗</span>
           </a>
+          <small>구매 링크 확인: {link.checkedAt}</small>
           {link.channel === "coupang" && (
             <AffiliateDisclosure hasAffiliateLinks={link.isAffiliate} />
           )}
         </Fragment>
       ))
     }
+    {
+      purchaseLinks.length === 0 && (
+        <p class="purchase-unavailable">
+          <strong>확인된 구매처가 없습니다.</strong>
+          {searchablePartNumber
+            ? ` 부품번호 ${searchablePartNumber}로 제조사나 판매처에 문의하세요.`
+            : " 제조사 안내에서 부품명과 적용 모델을 다시 확인하세요."}
+        </p>
+      )
+    }
   </div>
-
   {
-    !hasDirectProduct && (
-      <p class="product-option-link-note">
-        외부 판매 상품 링크는 준비 중입니다. 위의 공식 사이트에서 소모품 정보를 확인하세요.
-      </p>
+    guidanceLinks.length > 0 && (
+      <div class="product-guidance-links">
+        {guidanceLinks.map((link) => (
+          <a
+            href={link.url}
+            rel="noopener noreferrer"
+            target="_blank"
+            data-product-option-id={option.id}
+            data-product-kind={option.kind}
+            data-purchase-channel={link.channel}
+            data-part-id={partId}
+            data-link-status={link.linkType}
+          >
+            {link.label} <span aria-hidden="true">↗</span>
+          </a>
+        ))}
+      </div>
     )
   }
 </article>
