@@ -21,6 +21,7 @@ const backupRoot = path.resolve(
 const fixedPrivateFiles = [
   "src/data/importedCatalogModels.ts",
   "src/data/importedRelationalCatalog.ts",
+  "src/data/importedCatalogMetadata.ts",
   "dataconnect/seed_data.gql",
 ];
 

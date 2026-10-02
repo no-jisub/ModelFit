@@ -7,7 +7,6 @@ type LinkKind =
   | "product-option-source"
   | "purchase-link"
   | "product-option-purchase-link"
-  | "affiliate-direct"
   | "external-asset";
 
 interface LinkItem {
@@ -72,27 +71,13 @@ const linkItems: LinkItem[] = [
         kind: "product-option-source" as const,
       })),
     ),
-    ...part.purchaseLinks.map((link) => ({
-      url: link.url,
-      itemId: `${part.id}/${link.id}`,
-      kind: "purchase-link" as const,
-    })),
     ...part.productOptions.flatMap((option) =>
-      option.purchaseLinks.map((link) => ({
+      [...option.purchaseLinks, ...option.guidanceLinks].map((link) => ({
         url: link.url,
         itemId: `${part.id}/${option.id}/${link.id}`,
         kind: "product-option-purchase-link" as const,
       })),
     ),
-    ...(part.affiliate.directUrl
-      ? [
-          {
-            url: part.affiliate.directUrl,
-            itemId: part.id,
-            kind: "affiliate-direct" as const,
-          },
-        ]
-      : []),
   ]),
   ...staticExternalAssets,
 ];

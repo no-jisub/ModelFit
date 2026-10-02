@@ -7,12 +7,12 @@ on:
 
 jobs:
   check:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     env:
       PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL || 'https://modelfit-kr.web.app' }}
       PUBLIC_REPORT_EMAIL: ${{ vars.PUBLIC_REPORT_EMAIL }}
       PUBLIC_SITE_NAME: ${{ vars.PUBLIC_SITE_NAME || '모델핏' }}
-      PUBLIC_COUPANG_BASE_URL: ${{ vars.PUBLIC_COUPANG_BASE_URL }}
       PUBLIC_AFFILIATE_DISCLOSURE_TEXT: ${{ vars.PUBLIC_AFFILIATE_DISCLOSURE_TEXT }}
       PUBLIC_GA_MEASUREMENT_ID: ${{ vars.PUBLIC_GA_MEASUREMENT_ID }}
       PUBLIC_FIREBASE_API_KEY: ${{ vars.PUBLIC_FIREBASE_API_KEY }}
@@ -32,6 +32,13 @@ jobs:
           distribution: temurin
           java-version: 21
       - run: npm ci
+      - name: Restore private catalog sources
+        run: npm run catalog:ci:restore
+        env:
+          MODELFIT_CATALOG_GZIP_1: ${{ secrets.MODELFIT_CATALOG_GZIP_1 }}
+          MODELFIT_CATALOG_GZIP_2: ${{ secrets.MODELFIT_CATALOG_GZIP_2 }}
+      - name: Generate catalog data
+        run: npm run catalog:import
       - run: npm run check
       - run: npm audit --audit-level=high
       - run: npx playwright install --with-deps chromium
