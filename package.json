@@ -73,5 +73,8 @@
     "typescript": "^5.9.2",
     "vite": "^8.2.2",
     "vitest": "^4.1.11"
+  },
+  "overrides": {
+    "@grpc/grpc-js": "1.13.6"
   }
 }
