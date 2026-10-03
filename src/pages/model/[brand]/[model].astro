@@ -1,5 +1,6 @@
 ---
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
+import MobilePartsJump from "@/components/astro/MobilePartsJump.astro";
 import ConsumableCard from "@/components/astro/ConsumableCard.astro";
 import SourceList from "@/components/astro/SourceList.astro";
 import VerificationBadge from "@/components/astro/VerificationBadge.astro";
@@ -250,7 +251,7 @@ const breadcrumbJsonLd = {
     </section>
   </div>
 
-  <a class="mobile-compatible-parts-cta" href="#compatible-parts"> 호환 소모품·부품 보기 </a>
+  <MobilePartsJump />
 </BaseLayout>
 
 <script>

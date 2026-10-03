@@ -16,6 +16,7 @@ for (const channel of ["coupang", "official"]) {
             '"]',
         )
         .first();
+      if (!direct) await page.locator(".part-details > summary").first().click();
       await expect(link).toBeVisible();
       const partId = await link.getAttribute("data-part-id");
       const productKind = await link.getAttribute("data-product-kind");

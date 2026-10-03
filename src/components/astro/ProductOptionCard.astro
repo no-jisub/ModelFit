@@ -6,16 +6,20 @@ const {
   option,
   compatibilityConfirmed = false,
   modelId,
+  partName,
   partId,
   fallbackPartNumber,
   showPackageLabel = true,
+  packageLabel: presentedPackageLabel,
 } = Astro.props as {
   option: ConsumableProductOption;
   compatibilityConfirmed?: boolean;
   modelId: string;
+  partName: string;
   partId: string;
   fallbackPartNumber?: string;
   showPackageLabel?: boolean;
+  packageLabel?: string;
 };
 const headingId = option.id + "-heading";
 const kindLabel = option.kind === "genuine" ? "정품" : "호환상품";
@@ -35,7 +39,7 @@ const verificationLabel =
   ["official-genuine", "verified-compatible"].includes(option.verification)
     ? "상품 자료 확인 · 모델 호환 확인 필요"
     : productVerificationLabel;
-const packageLabel = option.modelLabels[modelId] ?? option.packageLabel;
+const packageLabel = presentedPackageLabel ?? option.modelLabels[modelId] ?? option.packageLabel;
 const purchaseLinks = option.purchaseLinks;
 const guidanceLinks = option.guidanceLinks;
 const searchablePartNumber = option.itemCode ?? fallbackPartNumber;
@@ -51,17 +55,16 @@ const searchablePartNumber = option.itemCode ?? fallbackPartNumber;
         <span class:list={["product-kind-badge", "is-" + option.kind]}>{kindLabel}</span>
         <span class="product-verification-badge">{verificationLabel}</span>
       </div>
-      <h5 id={headingId}>{option.name}</h5>
-      <p>{option.description}</p>
+      <h5 id={headingId} class:list={[option.name === partName && "sr-only"]}>{option.name}</h5>
     </div>
   </div>
 
   {
-    showPackageLabel && packageLabel && (
+    showPackageLabel && (
       <dl class="product-option-details">
         <div>
-          <dt>판매 상품 표기</dt>
-          <dd>{packageLabel}</dd>
+          <dt>판매 구성</dt>
+          <dd>{packageLabel ?? "판매 구성 확인 필요"}</dd>
         </div>
       </dl>
     )
@@ -69,13 +72,14 @@ const searchablePartNumber = option.itemCode ?? fallbackPartNumber;
 
   <div class="product-option-links">
     {
-      purchaseLinks.map((link) => (
+      purchaseLinks.map((link, index) => (
         <Fragment>
           <a
             class:list={[
               "button",
               link.channel === "official" ? "button-secondary" : "button-primary",
             ]}
+            id={`${partId}--${option.id}--purchase-${index}`}
             href={link.url}
             rel={
               link.isAffiliate
@@ -91,9 +95,13 @@ const searchablePartNumber = option.itemCode ?? fallbackPartNumber;
             data-part-id={partId}
             data-link-status={link.linkType}
           >
-            {link.label} <span aria-hidden="true">↗</span>
+            {link.channel === "coupang"
+              ? "쿠팡에서 구매하기"
+              : link.channel === "official"
+                ? "공식몰에서 구매하기"
+                : link.label}{" "}
+            <span aria-hidden="true">↗</span>
           </a>
-          <small>구매 링크 확인: {link.checkedAt}</small>
           {link.channel === "coupang" && (
             <AffiliateDisclosure hasAffiliateLinks={link.isAffiliate} />
           )}
@@ -112,26 +120,31 @@ const searchablePartNumber = option.itemCode ?? fallbackPartNumber;
     }
   </div>
   {
-    guidanceLinks.length > 0 && (
-      <div class="product-guidance-links">
-        {guidanceLinks.map((link) => (
-          <a
-            href={link.url}
-            rel="noopener noreferrer"
-            target="_blank"
-            data-product-option-id={option.id}
-            data-product-kind={option.kind}
-            data-purchase-channel={link.channel}
-            data-part-id={partId}
-            data-link-status={link.linkType}
-          >
-            {!compatibilityConfirmed && link.label.includes("공식 호환")
-              ? "제조사 참고 자료"
-              : link.label}{" "}
-            <span aria-hidden="true">↗</span>
-          </a>
-        ))}
-      </div>
+    purchaseLinks.length === 0 && (
+      <>
+        <>
+          <p>{option.description}</p>
+          <div class="product-guidance-links">
+            {guidanceLinks.map((link) => (
+              <a
+                href={link.url}
+                rel="noopener noreferrer"
+                target="_blank"
+                data-product-option-id={option.id}
+                data-product-kind={option.kind}
+                data-purchase-channel={link.channel}
+                data-part-id={partId}
+                data-link-status={link.linkType}
+              >
+                {!compatibilityConfirmed && link.label.includes("공식 호환")
+                  ? "제조사 참고 자료"
+                  : link.label}{" "}
+                <span aria-hidden="true">↗</span>
+              </a>
+            ))}
+          </div>
+        </>
+      </>
     )
   }
 </article>

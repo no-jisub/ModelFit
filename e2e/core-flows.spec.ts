@@ -257,7 +257,7 @@ test("부품이 적은 모델은 중복 바로가기 없이 공통 제목과 개
   await expect(section.getByRole("navigation", { name: "소모품 바로가기" })).toHaveCount(0);
   const firstPart = page.locator("#lg-puricare-m-filter");
   await expect(firstPart).toBeVisible();
-  await expect(firstPart.getByRole("heading", { name: "구매처와 교체·관리 안내" })).toBeVisible();
+  await expect(firstPart.getByRole("heading", { name: "구매 가능한 상품" })).toBeVisible();
   await expect(firstPart.getByText("구매 링크 있음", { exact: true })).toHaveCount(0);
   await expect(firstPart.getByText(/번 소모품|구매 선택지|소개할 상품|추가 조사 중/)).toHaveCount(
     0,
@@ -269,7 +269,10 @@ test("현재 모델에 필요한 상품 구성만 표시한다", async ({ page }
 
   const filter = page.locator("#lg-puricare-g-filter");
   await expect(filter.getByText("제품 1대 필요 수량", { exact: true })).toBeVisible();
-  await expect(filter.getByText("1개 필요", { exact: true })).toBeVisible();
+  await expect(
+    filter.locator(".purchase-quantity-summary").getByText("1개 필요", { exact: true }),
+  ).toBeVisible();
+  await filter.locator(".part-details > summary").click();
   await expect(filter.getByText("PFSACC01", { exact: true })).toBeVisible();
   await expect(filter.getByText(/AS355NSAH는 2개/)).toHaveCount(0);
   await expect(filter.getByText(/1-1|1-2|1-3/)).toHaveCount(0);
@@ -280,22 +283,24 @@ test("소모품 카드는 호환 상태·복사·관리·구매·근거를 분�
   await page.goto("/model/lg/as355nsna");
 
   const card = page.locator(".consumable-group").first();
-  await expect(card.getByText("AS355NSNA 호환 상태")).toBeVisible();
+  await expect(card.locator('[aria-label="AS355NSNA 호환 상태"]')).toBeVisible();
   await expect(card.getByTitle("공식 호환 확인 상태")).toBeVisible();
   const copyButton = card.getByRole("button", { name: /부품번호 복사/ });
   await expect(copyButton).toBeVisible();
   await copyButton.click();
   await expect(copyButton).toContainText("복사됨");
   await expect.poll(() => page.evaluate(() => navigator.clipboard.readText())).toBe("ADQ30041405");
+  await expect(card.getByText("관리 방식", { exact: true })).not.toBeVisible();
+  await card.locator(".part-details > summary").click();
   await expect(card.getByText("관리 방식", { exact: true })).toBeVisible();
   await expect(card.getByText("정기 교체", { exact: true })).toBeVisible();
-  const coupangLink = card.getByRole("link", { name: /쿠팡 상품 확인/ });
+  const coupangLink = card.getByRole("link", { name: /쿠팡에서 구매하기/ });
   await expect(coupangLink).toHaveCount(1);
   await expect(coupangLink).toHaveAttribute("rel", /sponsored/);
   await expect(card.getByRole("link", { name: /공식 호환 근거/ })).toHaveCount(1);
-  await expect(card.locator("details.part-care-warning")).toHaveCount(1);
-  await expect(card.getByText("관리 및 구매 전 주의사항", { exact: true })).toBeVisible();
-  await expect(card.locator("details.part-evidence")).toHaveCount(1);
+  await expect(card.locator(".part-purchase-warning")).toHaveCount(0);
+  await expect(card.getByText(/쿠팡 상품명만으로/)).toHaveCount(0);
+  await expect(card.locator("details")).toHaveCount(1);
   await expect(card.getByText("확인 근거와 날짜", { exact: true })).toBeVisible();
   await expect(card.getByText("교체주기 참고")).toHaveCount(0);
   await expect(card.getByText("부품번호 상태")).toHaveCount(0);
@@ -330,8 +335,13 @@ test("다수 부품 모델은 바로가기를 제공하고 구매처 누락은 �
 
   await page.goto("/model/coway/ap-1521b");
   const noPurchaseCard = page.locator("#coway-4d-pre-filter");
-  await expect(noPurchaseCard.getByText("확인된 구매처가 없습니다.")).toBeVisible();
+  await expect(
+    noPurchaseCard
+      .locator(".product-options-section > .product-option-list")
+      .getByText("확인된 구매처가 없습니다."),
+  ).toBeVisible();
   await expect(noPurchaseCard.getByText("공식 자료에 번호 미표기")).toBeVisible();
+  await noPurchaseCard.locator(".part-details > summary").click();
   await expect(noPurchaseCard.getByText("세척 후 재사용", { exact: true })).toBeVisible();
 });
 
@@ -441,7 +451,7 @@ test("미확인 관계는 검색과 상품 카드에서 공식 호환으로 표�
   await expect(part.getByTitle("미검증 상태")).toBeVisible();
   await expect(part.getByTitle("공식 호환 확인 상태")).toHaveCount(0);
   await expect(part.locator(".product-verification-badge").first()).toContainText(
-    "모델 호환 확인 필요",
+    "판매자 호환 표기",
   );
   await expect(part.getByRole("link", { name: /공식 호환 근거/ })).toHaveCount(0);
 });

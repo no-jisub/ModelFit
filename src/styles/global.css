@@ -4709,3 +4709,206 @@ html {
     padding-inline: 20px;
   }
 }
+
+/* A single part card with plain purchase rows and one reference disclosure. */
+.consumable-group-heading {
+  padding: 20px 24px 10px;
+}
+.part-title-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+.part-title-line h3 {
+  margin: 0;
+  font-size: 19px;
+}
+.part-title-line .status-badge {
+  font-size: 11px;
+}
+.part-number-inline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+  color: var(--color-neutral-600);
+  font-size: 12px;
+}
+.part-number-inline code {
+  font: inherit;
+  color: var(--color-neutral-800);
+  font-weight: 650;
+}
+.purchase-quantity-summary {
+  margin: 0;
+  padding: 0 24px 12px;
+}
+.purchase-quantity-summary > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  font-size: 13px;
+}
+.purchase-quantity-summary dt {
+  color: var(--color-neutral-600);
+}
+.purchase-quantity-summary dd {
+  margin: 0;
+  font-weight: 700;
+}
+.part-purchase-warning {
+  margin: 0;
+  padding: 0 24px 12px;
+  color: var(--color-neutral-700);
+  font-size: 12px;
+  line-height: 1.6;
+}
+.product-options-section {
+  border: 0;
+  background: white;
+  padding: 0 24px 18px;
+}
+.product-option-list {
+  gap: 0;
+}
+.product-option-card,
+.product-option-card.is-compatible {
+  border: 0;
+  border-top: 1px solid var(--color-neutral-200);
+  border-radius: 0;
+  padding: 14px 0;
+  background: transparent;
+}
+.product-option-card:last-child {
+  padding-bottom: 0;
+}
+.product-option-badges {
+  gap: 8px;
+  margin-bottom: 4px;
+  align-items: center;
+}
+.product-verification-badge {
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  font-size: 11px;
+  font-weight: 500;
+}
+.product-option-heading h5 {
+  font-size: 14px;
+  font-weight: 650;
+}
+.product-option-details {
+  margin: 8px 0 12px;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
+}
+.product-option-details > div {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.product-option-details dt {
+  flex: none;
+  margin: 0;
+  font-size: 12px;
+}
+.product-option-details dd {
+  font-size: 12px;
+  font-weight: 500;
+}
+.product-option-links {
+  align-items: flex-start;
+}
+.product-option-links .button {
+  min-height: 44px;
+}
+.product-option-links .affiliate-disclosure {
+  width: 100%;
+  margin: 0;
+}
+.part-details {
+  border-top: 1px solid var(--color-neutral-200);
+}
+.part-details > summary {
+  cursor: pointer;
+  padding: 14px 24px;
+  color: var(--color-neutral-700);
+  font-size: 13px;
+  font-weight: 650;
+}
+.part-details-content {
+  padding: 0 24px 20px;
+}
+.part-details-content section + section {
+  margin-top: 18px;
+}
+.part-details-content h4 {
+  margin: 0 0 8px;
+  font-size: 13px;
+}
+.part-details-content p {
+  margin: 6px 0;
+  font-size: 12px;
+  color: var(--color-neutral-600);
+}
+.part-details-content .part-use-details {
+  border: 0;
+  background: transparent;
+  gap: 12px;
+}
+.part-details-content .part-use-details > div {
+  padding: 0;
+  background: transparent;
+}
+.part-details-content .part-evidence {
+  border: 0;
+  background: transparent;
+}
+.part-details-content .part-evidence-content {
+  padding: 0;
+  border: 0;
+}
+.part-details-content .product-guidance-links:empty {
+  display: none;
+}
+.part-details-content .purchase-unavailable {
+  padding: 0;
+  background: transparent;
+}
+[hidden] {
+  display: none !important;
+}
+@media (max-width: 700px) {
+  .consumable-group-heading {
+    padding: 18px 18px 10px;
+  }
+  .part-title-line h3 {
+    font-size: 18px;
+  }
+  .purchase-quantity-summary {
+    padding: 0 18px 12px;
+  }
+  .part-purchase-warning {
+    padding: 0 18px 12px;
+  }
+  .product-options-section {
+    padding: 0 18px 16px;
+  }
+  .product-option-card,
+  .product-option-card.is-compatible {
+    padding: 12px 0;
+  }
+  .product-option-links {
+    align-items: stretch;
+  }
+  .part-details > summary {
+    padding: 14px 18px;
+  }
+  .part-details-content {
+    padding: 0 18px 18px;
+  }
+}
