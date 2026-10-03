@@ -40,6 +40,27 @@ const evidenceSources =
   compatibility?.evidenceScope === "scoped" ? compatibility.sources : part.sources;
 const evidenceCount = evidenceSources.length;
 const purchaseOptions = groupPurchaseOptions(part.productOptions);
+const officialStoreGuidance = part.productOptions
+  .flatMap((option) =>
+    option.guidanceLinks
+      .filter((link) =>
+        option.sources.some(
+          (source) => source.sourceType === "official-store" && source.url === link.url,
+        ),
+      )
+      .map((link) => ({ link, option })),
+  )
+  .filter(
+    ({ link }, index, links) => links.findIndex((entry) => entry.link.url === link.url) === index,
+  );
+function isOverseasStore(url: string) {
+  const destination = new URL(url);
+  return (
+    destination.hostname === "us.roborock.com" ||
+    destination.hostname === "www.eufy.com" ||
+    /\/(us|en_US)\//.test(destination.pathname)
+  );
+}
 ---
 
 <article class="consumable-group card" id={part.id}>
@@ -124,6 +145,30 @@ const purchaseOptions = groupPurchaseOptions(part.productOptions);
               fallbackPartNumber={part.genuinePartNumber}
             />
           ))
+        ) : officialStoreGuidance.length > 0 ? (
+          <div class="official-store-guidance">
+            {officialStoreGuidance.map(({ link, option }) => (
+              <div>
+                <a
+                  class="button button-secondary"
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-product-option-id={option.id}
+                  data-product-kind={option.kind}
+                  data-purchase-channel="official"
+                  data-part-id={part.id}
+                  data-link-status="official-reference"
+                >
+                  {isOverseasStore(link.url) ? "해외 공식몰에서 부품 확인" : "공식몰에서 부품 확인"}{" "}
+                  <span aria-hidden="true">↗</span>
+                </a>
+                {isOverseasStore(link.url) && (
+                  <p class="purchase-unavailable">국내 배송 여부를 공식몰에서 확인하세요.</p>
+                )}
+              </div>
+            ))}
+          </div>
         ) : (
           <p class="purchase-unavailable">
             <strong>확인된 구매처가 없습니다.</strong> 제조사 안내에서 적용 모델과 구매처를
