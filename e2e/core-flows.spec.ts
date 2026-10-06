@@ -113,7 +113,7 @@ test("검색에서 소모품의 연결 모델과 개별 호환 상태를 확인�
   await compatibleModels.click();
   await partCard.getByRole("link", { name: "LG AS355NSNA" }).click();
 
-  await expect(page).toHaveURL(/\/model\/lg\/as355nsna#compatible-parts$/);
+  await expect(page).toHaveURL(/\/model\/lg\/as355nsna#lg-puricare-m-filter$/);
   await expect(page.locator("#compatible-parts")).toBeVisible();
 });
 
@@ -253,7 +253,7 @@ test("부품이 적은 모델은 중복 바로가기 없이 공통 제목과 개
 
   const section = page.locator("#compatible-parts");
   await expect(section.getByRole("heading", { name: "호환 소모품·부품" })).toBeVisible();
-  await expect(section.getByText("2개 확인", { exact: true })).toHaveCount(1);
+  await expect(section.getByText("등록 2개", { exact: true })).toHaveCount(1);
   await expect(section.getByRole("navigation", { name: "소모품 바로가기" })).toHaveCount(0);
   const firstPart = page.locator("#lg-puricare-m-filter");
   await expect(firstPart).toBeVisible();
@@ -270,7 +270,9 @@ test("현재 모델에 필요한 상품 구성만 표시한다", async ({ page }
   const filter = page.locator("#lg-puricare-g-filter");
   await expect(filter.getByText("제품 1대 필요 수량", { exact: true })).toBeVisible();
   await expect(
-    filter.locator(".purchase-quantity-summary").getByText("1개 필요", { exact: true }),
+    filter
+      .locator(".product-options-section .product-option-details")
+      .getByText("1개 필요", { exact: true }),
   ).toBeVisible();
   await filter.locator(".part-details > summary").click();
   await expect(filter.getByText("PFSACC01", { exact: true })).toBeVisible();
@@ -297,7 +299,9 @@ test("소모품 카드는 호환 상태·복사·관리·구매·근거를 분�
   const coupangLink = card.getByRole("link", { name: /쿠팡에서 구매하기/ });
   await expect(coupangLink).toHaveCount(1);
   await expect(coupangLink).toHaveAttribute("rel", /sponsored/);
-  await expect(card.getByRole("link", { name: /공식 호환 근거/ })).toHaveCount(1);
+  await expect(
+    card.locator(".part-evidence-summary").getByRole("link", { name: /공식 호환 근거/ }),
+  ).toHaveCount(1);
   await expect(card.locator(".part-purchase-warning")).toHaveCount(0);
   await expect(card.getByText(/쿠팡 상품명만으로/)).toHaveCount(0);
   await expect(card.locator("details")).toHaveCount(1);

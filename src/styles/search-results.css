@@ -1,0 +1,75 @@
+.compatibility-summary {
+  display: grid;
+  gap: 4px;
+}
+.compatibility-summary small,
+.result-page-count {
+  color: var(--color-neutral-600);
+  font-size: 14px;
+}
+.result-page-count {
+  margin-top: 16px;
+}
+.filter-reset {
+  min-height: 44px;
+  margin-bottom: 12px;
+}
+.search-tabs button span {
+  margin-left: 6px;
+  font-size: 13px;
+}
+.search-page-app .model-grid {
+  grid-template-columns: 1fr;
+}
+.search-page-app .model-card {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  column-gap: 20px;
+  align-content: start;
+}
+.search-page-app .model-card-image {
+  grid-column: 1;
+  grid-row: 1 / span 5;
+  width: 96px;
+  height: 112px;
+  margin: 0;
+}
+.search-page-app .model-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.search-page-app .model-card > :not(.model-card-image) {
+  grid-column: 2;
+}
+.search-page-app .model-card h3 {
+  margin: 4px 0;
+  font-size: 20px;
+}
+.search-page-app .model-card .model-series {
+  margin-bottom: 12px;
+  overflow-wrap: anywhere;
+}
+.search-page-app .model-card .model-inline-consumables {
+  grid-column: 1 / -1;
+}
+.search-page-app .model-card-footer {
+  flex-wrap: wrap;
+  gap: 12px;
+}
+@media (max-width: 700px) {
+  .search-page-app .model-card {
+    grid-template-columns: 64px minmax(0, 1fr);
+    column-gap: 12px;
+  }
+  .search-page-app .model-card-image {
+    width: 64px;
+    height: 88px;
+  }
+  .search-page-app .model-card h3 {
+    font-size: 18px;
+  }
+  .search-page-app .model-card .model-card-footer {
+    grid-column: 1 / -1;
+  }
+}

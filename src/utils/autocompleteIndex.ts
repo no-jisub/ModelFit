@@ -53,6 +53,11 @@ export function createAutocompleteIndex(
           .join(" "),
       ),
       displayName: normalizeSearch(part.displayName),
+      productNames: part.productOptions
+        .map((option) =>
+          normalizeSearch([option.name, option.packageLabel].filter(Boolean).join(" ")),
+        )
+        .filter(Boolean),
       keywords: part.searchKeywords.map(normalizeSearch),
       typeName: normalizeSearch(partTypeLabels[part.type]),
     })),

@@ -25,6 +25,7 @@ export function sendAnalyticsEvent(name: string, params: AnalyticsParams = {}): 
   const event = { name, params, createdAt: new Date().toISOString() };
   window.modelfitAnalyticsQueue ??= [];
   window.modelfitAnalyticsQueue.push(event);
+  if (window.modelfitAnalyticsQueue.length > 200) window.modelfitAnalyticsQueue.shift();
   window.dispatchEvent(new CustomEvent("modelfit:analytics", { detail: event }));
 
   if (typeof window.gtag === "function") {
@@ -71,18 +72,28 @@ export function bindAnalyticsInteractions(): () => void {
         partId,
         "direct-product",
         anchor.dataset.productOptionId ?? "",
+        entityType === "model" ? (entityId ?? "") : "",
       );
       return;
     }
 
     if (sourceType) {
-      analytics.trackSourceClick(sourceType, partId, destinationHost(anchor));
+      analytics.trackSourceClick(
+        sourceType,
+        partId,
+        destinationHost(anchor),
+        entityType === "model" ? (entityId ?? "") : "",
+      );
       return;
     }
 
     if (reportChannel) {
       analytics.trackReportSubmit(reportChannel);
       return;
+    }
+
+    if (anchor.dataset.searchModelId) {
+      sendAnalyticsEvent("search_model_selected", { model_id: anchor.dataset.searchModelId });
     }
 
     if (url.origin === window.location.origin && url.pathname.startsWith("/part/")) {
@@ -99,10 +110,11 @@ export function bindAnalyticsInteractions(): () => void {
 }
 
 export const analytics = {
-  trackSearch(query: string, resultCount: number) {
+  trackSearch(query: string, resultCount: number, filters: AnalyticsParams = {}) {
     sendAnalyticsEvent("search_results_viewed", {
       search_term: query,
       result_count: resultCount,
+      ...filters,
     });
   },
   trackSearchSubmit(query: string, placement: "header" | "page" | "popular") {
@@ -137,11 +149,12 @@ export const analytics = {
   trackPartClick(partId: string) {
     sendAnalyticsEvent("consumable_click", { part_id: partId });
   },
-  trackSourceClick(sourceType: string, partId: string, destination: string) {
+  trackSourceClick(sourceType: string, partId: string, destination: string, modelId = "") {
     sendAnalyticsEvent("official_source_click", {
       source_type: sourceType,
       part_id: partId || "not-set",
       destination,
+      model_id: modelId || "not-set",
     });
   },
   trackPurchaseClick(
@@ -150,6 +163,7 @@ export const analytics = {
     partId: string,
     linkStatus: string,
     optionId: string,
+    modelId = "",
   ) {
     sendAnalyticsEvent("purchase_link_click", {
       channel,
@@ -157,6 +171,7 @@ export const analytics = {
       part_id: partId,
       link_status: linkStatus,
       product_option_id: optionId,
+      model_id: modelId || "not-set",
     });
   },
   trackAffiliateClick(kind: "genuine" | "compatible", partId: string, linkStatus: string) {

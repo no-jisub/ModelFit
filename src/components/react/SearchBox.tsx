@@ -74,8 +74,12 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
   }, []);
 
   useEffect(() => {
-    setQuery(initialQuery);
-  }, [initialQuery]);
+    setQuery(
+      header
+        ? (new URLSearchParams(window.location.search).get("q") ?? initialQuery)
+        : initialQuery,
+    );
+  }, [initialQuery, header]);
 
   useEffect(
     () => () => {
@@ -215,8 +219,8 @@ export default function SearchBox({ initialQuery = "", compact = false, header =
         </div>
       )}
       {!compact && !header && (
-        <div className="popular-keywords" aria-label="인기 검색어">
-          <span>인기 검색</span>
+        <div className="popular-keywords" aria-label="검색 예시">
+          <span>검색 예시</span>
           {["로보락 S8", "ADQ30041405", "먼지봉투"].map((item) => (
             <button type="button" key={item} onClick={() => goToSearch(item)}>
               {item}

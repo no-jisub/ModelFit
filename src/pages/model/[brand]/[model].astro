@@ -1,4 +1,5 @@
 ---
+import "@/styles/model-detail.css";
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import MobilePartsJump from "@/components/astro/MobilePartsJump.astro";
 import ConsumableCard from "@/components/astro/ConsumableCard.astro";
@@ -11,6 +12,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import { categoryLabels, partTypeLabels } from "@/utils/labels";
 import { getModelFullName } from "@/utils/modelDisplayName";
 import { groupModelsByName } from "@/utils/modelGroups";
+import { summarizeCompatibility } from "@/utils/compatibility";
 
 export function getStaticPaths() {
   return models.map((model) => ({
@@ -27,6 +29,7 @@ const parts = model.consumableIds
   .map((id: string) => consumables.find((part) => part.id === id))
   .filter((part) => part !== undefined);
 const categoryLabel = categoryLabels[model.category];
+const compatibilitySummary = summarizeCompatibility(parts, model.id);
 const fullModelName = getModelFullName(model);
 const title = `${fullModelName} 호환 소모품 찾기`;
 const description =
@@ -66,7 +69,7 @@ const breadcrumbJsonLd = {
   canonicalPath={`/model/${model.brandId}/${model.slug}`}
   jsonLd={breadcrumbJsonLd}
   analyticsEntityType="model"
-  analyticsEntityId={model.modelCode}
+  analyticsEntityId={model.id}
 >
   <section class="model-detail-hero">
     <div class="container model-content">
@@ -156,8 +159,19 @@ const breadcrumbJsonLd = {
         <div>
           <div class="section-title-row">
             <h2>호환 소모품·부품</h2>
-            {parts.length > 0 && <span class="section-count">{parts.length}개 확인</span>}
+            {parts.length > 0 && <span class="section-count">등록 {parts.length}개</span>}
           </div>
+          <p class="model-compatibility-summary">
+            공식 호환 확인 <strong>{compatibilitySummary.confirmed}개</strong>
+            {
+              compatibilitySummary.needsReview > 0 && (
+                <span>
+                  {" "}
+                  · 확인 필요 <strong>{compatibilitySummary.needsReview}개</strong>
+                </span>
+              )
+            }
+          </p>
           <p class="section-description">
             제품 라벨의 모델번호가 <strong>{model.modelCode}</strong>와 같은지 먼저 확인하세요.
             <a href="#model-number-guide"> 확인 위치 보기</a>
@@ -204,7 +218,7 @@ const breadcrumbJsonLd = {
 
     <section class="detail-section model-reference-section" aria-label="모델 확인 자료">
       <div class="model-reference-grid">
-        <details class="detail-disclosure" id="model-number-guide">
+        <details class="detail-disclosure">
           <summary>
             <strong>제조사 공식 출처</strong>
           </summary>
@@ -212,7 +226,7 @@ const breadcrumbJsonLd = {
             <SourceList sources={model.sources} />
           </div>
         </details>
-        <details class="detail-disclosure">
+        <details class="detail-disclosure" id="model-number-guide">
           <summary>
             <strong>모델번호 확인 위치</strong>
           </summary>
@@ -254,7 +268,31 @@ const breadcrumbJsonLd = {
   <MobilePartsJump />
 </BaseLayout>
 
+<style>
+  .model-compatibility-summary {
+    color: var(--color-neutral-700);
+    font-size: 14px;
+    margin: 10px 0;
+  }
+  #model-number-guide {
+    scroll-margin-top: 140px;
+  }
+</style>
+
 <script>
+  const revealModelGuide = () => {
+    if (window.location.hash !== "#model-number-guide") return;
+    const guide = document.querySelector<HTMLDetailsElement>("#model-number-guide");
+    if (guide) guide.open = true;
+  };
+  revealModelGuide();
+  window.addEventListener("hashchange", revealModelGuide);
+  document.querySelectorAll<HTMLAnchorElement>('a[href="#model-number-guide"]').forEach((link) => {
+    link.addEventListener("click", () => {
+      const guide = document.querySelector<HTMLDetailsElement>("#model-number-guide");
+      if (guide) guide.open = true;
+    });
+  });
   document
     .querySelectorAll<HTMLDetailsElement>("[data-model-detail-selector]")
     .forEach((details) => {

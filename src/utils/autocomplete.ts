@@ -21,6 +21,7 @@ export interface AutocompleteConsumableEntry extends AutocompleteBaseEntry {
   kind: "part";
   partNumber: string;
   productName: string;
+  productNames?: string[];
   displayName: string;
   keywords: string[];
   typeName: string;
@@ -72,15 +73,17 @@ function scoreModel(model: AutocompleteModelEntry, query: string) {
 
 function scoreConsumable(part: AutocompleteConsumableEntry, query: string) {
   const q = normalizeSearch(query);
+  const productNames = part.productNames ?? [part.productName];
   if (!q) return { score: 0, status: "소모품" };
   if (part.partNumber && part.partNumber === q) return { score: 120, status: "부품번호 일치" };
-  if (part.productName && part.productName === q) return { score: 110, status: "소모품" };
+  if (part.typeName === q) return { score: 115, status: "소모품 종류 일치" };
+  if (productNames.some((name) => name && name === q)) return { score: 110, status: "소모품" };
   if (part.displayName === q) return { score: 100, status: "소모품" };
   if (part.keywords.includes(q)) return { score: 95, status: "소모품" };
   if (part.partNumber && part.partNumber.includes(q)) {
     return { score: 90, status: "부품번호 일치" };
   }
-  if (part.productName && part.productName.includes(q)) return { score: 85, status: "소모품" };
+  if (productNames.some((name) => name && name.includes(q))) return { score: 85, status: "소모품" };
   if (part.displayName.includes(q) || q.includes(part.displayName)) {
     return { score: 80, status: "소모품" };
   }
@@ -98,7 +101,7 @@ function scoreConsumable(part: AutocompleteConsumableEntry, query: string) {
     .filter(Boolean);
   const haystack = [
     part.partNumber,
-    part.productName,
+    ...productNames,
     part.displayName,
     ...part.keywords,
     part.typeName,
@@ -146,7 +149,8 @@ export function searchAutocomplete(
       url: part.url,
       score,
     }));
-  const ranked = [...models, ...consumables].sort(
+  const modelIntent = (models[0]?.score ?? 0) >= 50;
+  const ranked = (modelIntent ? models : [...models, ...consumables]).sort(
     (a, b) =>
       b.score - a.score ||
       (a.kind === b.kind ? a.title.localeCompare(b.title, "ko") : a.kind === "model" ? -1 : 1),

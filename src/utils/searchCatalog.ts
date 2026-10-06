@@ -31,6 +31,24 @@ export interface CatalogSearchResult {
   models: RankedModel[];
   consumables: RankedConsumable[];
   compatibleModels: CompatibleModelMatch[];
+  totals: { models: number; consumables: number; compatibleModels: number };
+}
+
+export function preferredSearchTab(
+  query: string,
+  allModels: SearchModel[],
+  result: CatalogSearchResult,
+): "models" | "parts" {
+  const q = normalizeSearch(query);
+  if (!q) return "models";
+  const modelIntent = allModels.some((model) =>
+    [model.brandName, model.brandNameEn, model.modelCode, model.modelName, ...model.aliases]
+      .filter((value): value is string => Boolean(value))
+      .some((value) => normalizeSearch(value) === q),
+  );
+  // 50+ identifies a model code/name/alias or brand + model prefix (e.g. 로보락 S8).
+  if (modelIntent || (result.models[0]?.score ?? 0) >= 50) return "models";
+  return result.consumables.length > 0 ? "parts" : "models";
 }
 
 export function splitStrongMatches<T extends { score: number }>(items: T[]) {
@@ -46,11 +64,11 @@ export function splitStrongMatches<T extends { score: number }>(items: T[]) {
 function getConsumableValues(part: SearchConsumable) {
   return {
     partNumber: normalizeSearch(part.genuinePartNumber ?? ""),
-    productName: normalizeSearch(
-      [part.productOptions[0]?.name, part.productOptions[0]?.packageLabel]
-        .filter(Boolean)
-        .join(" "),
-    ),
+    productNames: part.productOptions
+      .map((option) =>
+        normalizeSearch([option.name, option.packageLabel].filter(Boolean).join(" ")),
+      )
+      .filter(Boolean),
     displayName: normalizeSearch(part.displayName),
     keywords: part.searchKeywords.map(normalizeSearch),
     type: normalizeSearch(partTypeLabels[part.type]),
@@ -66,13 +84,14 @@ function scoreConsumable(
 
   if (!q) return { score: 0, reason: "keyword" };
   if (values.partNumber && values.partNumber === q) return { score: 120, reason: "part-number" };
-  if (values.productName && values.productName === q) return { score: 110, reason: "product-name" };
+  if (values.type === q) return { score: 115, reason: "type" };
+  if (values.productNames.includes(q)) return { score: 110, reason: "product-name" };
   if (values.displayName === q) return { score: 100, reason: "display-name" };
   if (values.keywords.includes(q)) return { score: 95, reason: "keyword" };
   if (values.partNumber && values.partNumber.includes(q)) {
     return { score: 90, reason: "part-number" };
   }
-  if (values.productName && values.productName.includes(q)) {
+  if (values.productNames.some((value) => value.includes(q))) {
     return { score: 85, reason: "product-name" };
   }
   if (values.displayName.includes(q) || q.includes(values.displayName)) {
@@ -90,7 +109,7 @@ function scoreConsumable(
     .filter(Boolean);
   const haystack = [
     values.partNumber,
-    values.productName,
+    ...values.productNames,
     values.displayName,
     ...values.keywords,
     values.type,
@@ -140,13 +159,12 @@ export function searchCatalog(
     brandId = "all",
     modelLimit,
     consumableLimit,
-    compatibleModelLimit = 12,
+    compatibleModelLimit,
   } = options;
-  const models = searchModels(allModels, query, { category, brandId, limit: modelLimit });
+  const models = searchModels(allModels, query, { category, brandId });
   const consumables = searchConsumables(allConsumables, allModels, query, {
     category,
     brandId,
-    consumableLimit,
   });
   const directModelIds = new Set(models.map(({ model }) => model.id));
   const compatibleModels = allModels
@@ -166,8 +184,20 @@ export function searchCatalog(
       return { model, matchedParts, score };
     })
     .filter(({ matchedParts }) => matchedParts.length > 0)
-    .sort((a, b) => b.score - a.score || a.model.modelCode.localeCompare(b.model.modelCode))
-    .slice(0, compatibleModelLimit);
+    .sort((a, b) => b.score - a.score || a.model.modelCode.localeCompare(b.model.modelCode));
 
-  return { models, consumables, compatibleModels };
+  return {
+    models: typeof modelLimit === "number" ? models.slice(0, modelLimit) : models,
+    consumables:
+      typeof consumableLimit === "number" ? consumables.slice(0, consumableLimit) : consumables,
+    compatibleModels:
+      typeof compatibleModelLimit === "number"
+        ? compatibleModels.slice(0, compatibleModelLimit)
+        : compatibleModels,
+    totals: {
+      models: models.length,
+      consumables: consumables.length,
+      compatibleModels: compatibleModels.length,
+    },
+  };
 }

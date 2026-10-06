@@ -95,21 +95,10 @@ export function createSearchCatalogData(
           verificationStatus,
           evidenceScope,
         })),
-        productOptions: productOptions
-          .slice(0, 1)
-          .map(({ name, packageLabel }) => ({ name, packageLabel })),
+        productOptions: productOptions.map(({ name, packageLabel }) => ({ name, packageLabel })),
       }),
     ),
   };
 }
 
-export function hasOfficialCompatibility(part: SearchConsumable, modelId: string): boolean {
-  return (
-    part.compatibilities?.some(
-      (r) =>
-        r.modelId === modelId &&
-        r.verificationStatus === "official" &&
-        r.evidenceScope === "scoped",
-    ) ?? false
-  );
-}
+export { hasOfficialCompatibility } from "./compatibility";

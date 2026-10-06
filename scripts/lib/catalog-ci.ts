@@ -1,8 +1,27 @@
 import { gzipSync, gunzipSync } from "node:zlib";
+import { createHash } from "node:crypto";
 import { catalogSchema } from "./catalog-schema";
 
 export const catalogCiFiles = Object.keys(catalogSchema).map((file) => "data/catalog/" + file);
 const maxSecretBytes = 45_000;
+
+export function catalogFingerprint(files: Record<string, string>): string {
+  validateFiles(files);
+  return createHash("sha256")
+    .update(JSON.stringify(catalogCiFiles.toSorted().map((name) => [name, files[name]])))
+    .digest("hex");
+}
+
+export function verifyCatalogFingerprint(files: Record<string, string>, expected: unknown) {
+  if (typeof expected !== "string" || !/^[a-f0-9]{64}$/.test(expected))
+    throw new Error(
+      "유효한 data/catalog-version.json SHA-256이 필요합니다. catalog:ci:pack을 실행하세요.",
+    );
+  if (catalogFingerprint(files) !== expected)
+    throw new Error(
+      "카탈로그 버전 불일치: 현재 소스와 CI Secrets의 CSV 스냅샷이 다릅니다. 동일 패키지의 Secret 두 개를 함께 갱신하세요.",
+    );
+}
 
 export function packCatalogCi(files: Record<string, string>): [string, string] {
   validateFiles(files);

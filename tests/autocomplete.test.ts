@@ -3,7 +3,7 @@ import { consumables } from "../src/data/consumables";
 import { models } from "../src/data/models";
 import { searchAutocomplete } from "../src/utils/autocomplete";
 import { createAutocompleteIndex } from "../src/utils/autocompleteIndex";
-import { searchCatalog } from "../src/utils/searchCatalog";
+import { searchCatalog, preferredSearchTab } from "../src/utils/searchCatalog";
 
 const index = createAutocompleteIndex(models, consumables);
 
@@ -26,10 +26,14 @@ describe("autocomplete index", () => {
         consumableLimit: 4,
         compatibleModelLimit: 0,
       });
-      const expectedTop = [
+      const expectedCandidates = [
         ...expected.models.map(({ model, score }) => ({ id: model.id, score })),
         ...expected.consumables.map(({ part, score }) => ({ id: part.id, score })),
-      ].sort((a, b) => b.score - a.score)[0];
+      ];
+      const expectedTop =
+        preferredSearchTab(query, models, expected) === "models"
+          ? { id: expected.models[0]?.model.id, score: expected.models[0]?.score }
+          : expectedCandidates.sort((a, b) => b.score - a.score)[0];
       const actualTop = searchAutocomplete(index, query)[0];
 
       expect({ id: actualTop?.entityId, score: actualTop?.score }).toEqual(expectedTop);

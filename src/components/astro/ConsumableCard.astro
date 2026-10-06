@@ -5,6 +5,7 @@ import { getMaintenancePresentation, getPartConfiguration } from "@/utils/partPr
 import { groupPurchaseOptions, getSalesPackageLabel } from "@/utils/purchasePresentation";
 import ProductOptionCard from "./ProductOptionCard.astro";
 import VerificationBadge from "./VerificationBadge.astro";
+import { isOfficialCompatibility } from "@/utils/compatibility";
 
 const { part, modelCode, modelId } = Astro.props as {
   part: ConsumableCompatibility;
@@ -26,9 +27,11 @@ const typeDescriptions = {
 } as const;
 const configuration = getPartConfiguration(part, modelId);
 const compatibility = part.compatibilities.find((relation) => relation.modelId === modelId);
-const compatibilityConfirmed =
-  compatibility?.verificationStatus === "official" && compatibility.evidenceScope === "scoped";
-const compatibilityStatus = compatibility?.verificationStatus ?? "unverified";
+const compatibilityConfirmed = isOfficialCompatibility(compatibility);
+const compatibilityStatus =
+  compatibility?.verificationStatus === "official" && !compatibilityConfirmed
+    ? "unverified"
+    : (compatibility?.verificationStatus ?? "unverified");
 const maintenance = getMaintenancePresentation(part);
 const compatibilityNotes = {
   official: "제조사 자료에서 이 모델과의 호환 관계를 확인했습니다.",
@@ -64,65 +67,92 @@ function isOverseasStore(url: string) {
 ---
 
 <article class="consumable-group card" id={part.id}>
-  <header class:list={["consumable-group-heading", part.image && "has-part-image"]}>
+  <div class="part-overview">
+    <header class:list={["consumable-group-heading", part.image && "has-part-image"]}>
+      {
+        part.image && (
+          <figure class="part-image">
+            <img
+              src={part.image.src}
+              alt={part.image.alt}
+              width="240"
+              height="240"
+              loading="lazy"
+            />
+          </figure>
+        )
+      }
+      <div>
+        <div class="part-title-line">
+          <h3>{part.displayName}</h3><span aria-label={`${modelCode} 호환 상태`}
+            ><VerificationBadge status={compatibilityStatus} context="compatibility" /></span
+          >
+        </div>
+        <p class="part-purpose">{typeDescriptions[part.type]}</p>
+        <div class="part-number-inline" aria-label="부품번호">
+          <span>부품번호</span>
+          {
+            part.genuinePartNumber ? (
+              <>
+                <>
+                  <code>{part.genuinePartNumber}</code>
+                  <button
+                    type="button"
+                    class="copy-part-number"
+                    data-copy-value={part.genuinePartNumber}
+                    aria-label={`${part.genuinePartNumber} 부품번호 복사`}
+                  >
+                    <span data-copy-label>복사</span>
+                  </button>
+                </>
+              </>
+            ) : (
+              <span>{partNumberStatusLabels[part.partNumberStatus]}</span>
+            )
+          }
+        </div>
+      </div>
+    </header>
     {
-      part.image && (
-        <figure class="part-image">
-          <img src={part.image.src} alt={part.image.alt} width="240" height="240" loading="lazy" />
-        </figure>
+      compatibilityConfirmed && compatibility?.sources[0] && (
+        <p class="part-evidence-summary">
+          <a
+            href={compatibility.sources[0].url}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-source-type={compatibility.sources[0].sourceType}
+            data-part-id={part.id}
+          >
+            이 모델의 공식 호환 근거 <span aria-hidden="true">↗</span>
+          </a>
+          <span>
+            호환 확인 <time datetime={compatibility.verifiedAt}>{compatibility.verifiedAt}</time>
+          </span>
+        </p>
       )
     }
-    <div>
-      <div class="part-title-line">
-        <h3>{part.displayName}</h3><span aria-label={`${modelCode} 호환 상태`}
-          ><VerificationBadge status={compatibilityStatus} context="compatibility" /></span
-        >
-      </div>
-      <div class="part-number-inline" aria-label="부품번호">
-        <span>부품번호</span>
-        {
-          part.genuinePartNumber ? (
+    {
+      purchaseOptions.available.length === 0 && configuration?.requiredQuantity && (
+        <dl class="purchase-quantity-summary">
+          <div>
             <>
-              <>
-                <code>{part.genuinePartNumber}</code>
-                <button
-                  type="button"
-                  class="copy-part-number"
-                  data-copy-value={part.genuinePartNumber}
-                  aria-label={`${part.genuinePartNumber} 부품번호 복사`}
-                >
-                  <span data-copy-label>복사</span>
-                </button>
-              </>
+              <dt>제품 1대 필요 수량</dt>
+              <dd>{configuration.requiredQuantity}</dd>
             </>
-          ) : (
-            <span>{partNumberStatusLabels[part.partNumberStatus]}</span>
-          )
-        }
-      </div>
-    </div>
-  </header>
-  {
-    configuration?.requiredQuantity && (
-      <dl class="purchase-quantity-summary">
-        <div>
-          <>
-            <dt>제품 1대 필요 수량</dt>
-            <dd>{configuration.requiredQuantity}</dd>
-          </>
-        </div>
-      </dl>
-    )
-  }
-  {
-    !compatibilityConfirmed && (
-      <p class="part-purchase-warning">
-        {compatibility?.evidenceScope === "legacy-unscoped"
-          ? "이 모델의 호환 근거를 재확인하고 있습니다. 구매 전 제조사 안내를 확인하세요."
-          : compatibilityNotes[compatibilityStatus]}
-      </p>
-    )
-  }
+          </div>
+        </dl>
+      )
+    }
+    {
+      !compatibilityConfirmed && (
+        <p class="part-purchase-warning">
+          {compatibility?.evidenceScope === "legacy-unscoped"
+            ? "이 모델의 호환 근거를 재확인하고 있습니다. 구매 전 제조사 안내를 확인하세요."
+            : compatibilityNotes[compatibilityStatus]}
+        </p>
+      )
+    }
+  </div>
   <section class="product-options-section" aria-labelledby={part.id + "-products"}>
     <h4 class="sr-only" id={part.id + "-products"}>
       {purchaseOptions.available.length > 0 ? "구매 가능한 상품" : "구매처 확인 안내"}
@@ -137,6 +167,7 @@ function isOverseasStore(url: string) {
               modelId={modelId}
               partId={part.id}
               partName={part.displayName}
+              requiredQuantity={configuration?.requiredQuantity}
               packageLabel={getSalesPackageLabel(
                 option.modelLabels[modelId] ?? option.packageLabel,
                 configuration,
@@ -286,7 +317,13 @@ function isOverseasStore(url: string) {
               <ul>
                 {evidenceSources.map((source) => (
                   <li>
-                    <a href={source.url} target="_blank" rel="noopener noreferrer">
+                    <a
+                      href={source.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-source-type={source.sourceType}
+                      data-part-id={part.id}
+                    >
                       {source.title}
                     </a>
                     <span>
@@ -314,6 +351,33 @@ function isOverseasStore(url: string) {
     </div>
   </details>
 </article>
+
+<style>
+  .part-evidence-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    margin: 0;
+    padding: 0 24px 16px;
+    font-size: 14px;
+  }
+  .part-evidence-summary a {
+    color: var(--color-primary-700);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .part-evidence-summary span {
+    color: var(--color-neutral-600);
+  }
+  .part-purchase-warning {
+    font-size: 14px;
+  }
+  @media (max-width: 700px) {
+    .part-evidence-summary {
+      padding-inline: 18px;
+    }
+  }
+</style>
 
 <script>
   document.querySelectorAll<HTMLButtonElement>("[data-copy-value]").forEach((button) => {

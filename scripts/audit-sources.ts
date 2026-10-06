@@ -4,6 +4,7 @@ import { models } from "../src/data/models";
 type LinkKind =
   | "model-source"
   | "consumable-source"
+  | "compatibility-source"
   | "product-option-source"
   | "purchase-link"
   | "product-option-purchase-link"
@@ -59,6 +60,13 @@ const linkItems: LinkItem[] = [
     })),
   ),
   ...consumables.flatMap((part) => [
+    ...part.compatibilities.flatMap((relation) =>
+      relation.sources.map((source) => ({
+        url: source.url,
+        itemId: relation.id,
+        kind: "compatibility-source" as const,
+      })),
+    ),
     ...part.sources.map((source) => ({
       url: source.url,
       itemId: part.id,

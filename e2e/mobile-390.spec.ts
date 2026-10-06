@@ -27,8 +27,8 @@ for (const route of responsiveRoutes) {
   });
 }
 
-test("390px 헤더는 검색과 검증 기준 메뉴를 두 줄로 제공한다", async ({ page }) => {
-  await page.goto("/");
+test("390px 내부 페이지 헤더는 검색과 검증 기준 메뉴를 두 줄로 제공한다", async ({ page }) => {
+  await page.goto("/guide/find-model-number");
 
   const header = page.locator("header");
   const searchInput = header.getByRole("combobox", { name: "모델번호·부품번호 검색" });
@@ -96,5 +96,5 @@ test("390px 모델 상세에서 주요 행동을 먼저 제공한다", async ({ 
   await compatiblePartsCta.click();
   await expect(page).toHaveURL(/#compatible-parts$/);
   await expect(page.getByRole("heading", { name: "호환 소모품·부품" })).toBeVisible();
-  await expect(page.locator("#compatible-parts").getByText("2개 확인")).toBeVisible();
+  await expect(page.locator("#compatible-parts").getByText("등록 2개")).toBeVisible();
 });

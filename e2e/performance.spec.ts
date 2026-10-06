@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 
 const budgets = [
   { name: "홈", path: "/", maxResources: 30, maxTransferBytes: 750_000 },
+  { name: "검색", path: "/find?q=필터", maxResources: 35, maxTransferBytes: 900_000 },
   {
     name: "모델 상세",
     path: "/model/lg/as355nsna",
