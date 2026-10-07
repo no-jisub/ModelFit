@@ -37,22 +37,22 @@ describe("normalized option links", () => {
   });
   it("replaces mismatched Xiaomi destinations and adds domestic official stores", () => {
     const replacements = [
-      ["xiaomi-x10-plus-main-brush", "8518462768"],
-      ["xiaomi-x20-plus-main-brush", "8518462768"],
-      ["xiaomi-x10-plus-side-brush", "8305225725"],
-      ["xiaomi-x20-plus-side-brush", "8305225725"],
-      ["xiaomi-x10-plus-dust-bag", "8518458631"],
-    ];
-    for (const [id, productId] of replacements) {
+      ["xiaomi-x10-plus-main-brush", "https://link.coupang.com/a/hC9ARzuMp2", true],
+      ["xiaomi-x20-plus-main-brush", "https://link.coupang.com/a/hC9ARzuMp2", true],
+      ["xiaomi-x10-plus-side-brush", "https://www.coupang.com/vp/products/8305225725", false],
+      ["xiaomi-x20-plus-side-brush", "https://www.coupang.com/vp/products/8305225725", false],
+      ["xiaomi-x10-plus-dust-bag", "https://link.coupang.com/a/hC9BEDlMbY", true],
+    ] as const;
+    for (const [id, url, isAffiliate] of replacements) {
       const options = consumables.find((part) => part.id === id)!.productOptions;
       const available = options.filter((option) => option.purchaseLinks.length);
       expect(available).toHaveLength(1);
       expect(available[0].verification).toBe("seller-claimed");
       expect(available[0].purchaseLinks[0]).toMatchObject({
         channel: "coupang",
-        isAffiliate: false,
+        isAffiliate,
+        url,
       });
-      expect(new URL(available[0].purchaseLinks[0].url).pathname).toBe("/vp/products/" + productId);
     }
     for (const id of [
       "dyson-360-glass-hepa-carbon-filter",
@@ -69,7 +69,7 @@ describe("normalized option links", () => {
   });
   it("preserves non-affiliate product URLs and link check dates", () => {
     const links = consumables.flatMap((p) => p.productOptions.flatMap((o) => o.purchaseLinks));
-    expect(links.some((l) => !l.isAffiliate && l.url.includes("/vp/products/8941845170"))).toBe(
+    expect(links.some((l) => !l.isAffiliate && l.url.includes("/vp/products/8305225725"))).toBe(
       true,
     );
     expect(links.every((l) => !Number.isNaN(Date.parse(l.checkedAt)))).toBe(true);
@@ -78,5 +78,23 @@ describe("normalized option links", () => {
         .filter((l) => l.isAffiliate)
         .every((l) => l.url.startsWith("https://link.coupang.com/a/")),
     ).toBe(true);
+  });
+  it("uses reviewed affiliate replacements for the G filter and three-spin mop set", () => {
+    for (const [partId, url] of [
+      ["lg-puricare-g-filter", "https://link.coupang.com/a/hC9HkDvlro"],
+      ["everybot-three-spin-yarn-mop", "https://link.coupang.com/a/hC9HsbJcsK"],
+    ]) {
+      const links = consumables
+        .find((part) => part.id === partId)!
+        .productOptions.flatMap((option) => option.purchaseLinks);
+      expect(links).toContainEqual(
+        expect.objectContaining({
+          url,
+          channel: "coupang",
+          isAffiliate: true,
+          checkedAt: "2026-10-06",
+        }),
+      );
+    }
   });
 });
