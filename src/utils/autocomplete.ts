@@ -1,6 +1,3 @@
-import type { ApplianceModel, ConsumableCompatibility } from "@/types";
-import { categoryLabels, partTypeLabels } from "./labels";
-import { getModelFullName } from "./modelDisplayName";
 import { normalizeSearch } from "./normalizeSearch";
 
 interface AutocompleteBaseEntry {
@@ -24,6 +21,7 @@ export interface AutocompleteConsumableEntry extends AutocompleteBaseEntry {
   kind: "part";
   partNumber: string;
   productName: string;
+  productNames?: string[];
   displayName: string;
   keywords: string[];
   typeName: string;
@@ -44,57 +42,6 @@ export interface AutocompleteSuggestion {
   status: string;
   url: string;
   score: number;
-}
-
-function modelValues(model: ApplianceModel) {
-  return [
-    model.modelCode,
-    model.modelName,
-    ...model.aliases,
-    model.brandName,
-    model.brandNameEn ?? "",
-    model.series ?? "",
-    `${model.brandName}${model.modelCode}`,
-    `${model.brandNameEn ?? ""}${model.modelCode}`,
-  ]
-    .filter(Boolean)
-    .map(normalizeSearch);
-}
-
-export function createAutocompleteIndex(
-  models: ApplianceModel[],
-  consumables: ConsumableCompatibility[],
-): AutocompleteIndex {
-  return {
-    version: 1,
-    models: models.map((model) => ({
-      id: model.id,
-      kind: "model",
-      title: getModelFullName(model),
-      description: `${model.modelCode} · ${categoryLabels[model.category]}`,
-      url: `/model/${model.brandId}/${model.slug}#compatible-parts`,
-      code: normalizeSearch(model.modelCode),
-      name: normalizeSearch(model.modelName),
-      aliases: model.aliases.map(normalizeSearch),
-      brandKo: normalizeSearch(model.brandName),
-      brandEn: normalizeSearch(model.brandNameEn ?? ""),
-      values: modelValues(model),
-    })),
-    consumables: consumables.map((part) => ({
-      id: part.id,
-      kind: "part",
-      title: part.displayName,
-      description: `${partTypeLabels[part.type]} · ${part.genuinePartNumber ?? "부품번호 정보 없음"}`,
-      url: `/find?q=${encodeURIComponent(
-        part.genuinePartNumber ?? part.displayName,
-      )}&type=parts#part-${part.id}`,
-      partNumber: normalizeSearch(part.genuinePartNumber ?? ""),
-      productName: normalizeSearch(part.compatibleProductName ?? ""),
-      displayName: normalizeSearch(part.displayName),
-      keywords: part.searchKeywords.map(normalizeSearch),
-      typeName: normalizeSearch(partTypeLabels[part.type]),
-    })),
-  };
 }
 
 function scoreModel(model: AutocompleteModelEntry, query: string) {
@@ -126,15 +73,17 @@ function scoreModel(model: AutocompleteModelEntry, query: string) {
 
 function scoreConsumable(part: AutocompleteConsumableEntry, query: string) {
   const q = normalizeSearch(query);
+  const productNames = part.productNames ?? [part.productName];
   if (!q) return { score: 0, status: "소모품" };
   if (part.partNumber && part.partNumber === q) return { score: 120, status: "부품번호 일치" };
-  if (part.productName && part.productName === q) return { score: 110, status: "소모품" };
+  if (part.typeName === q) return { score: 115, status: "소모품 종류 일치" };
+  if (productNames.some((name) => name && name === q)) return { score: 110, status: "소모품" };
   if (part.displayName === q) return { score: 100, status: "소모품" };
   if (part.keywords.includes(q)) return { score: 95, status: "소모품" };
   if (part.partNumber && part.partNumber.includes(q)) {
     return { score: 90, status: "부품번호 일치" };
   }
-  if (part.productName && part.productName.includes(q)) return { score: 85, status: "소모품" };
+  if (productNames.some((name) => name && name.includes(q))) return { score: 85, status: "소모품" };
   if (part.displayName.includes(q) || q.includes(part.displayName)) {
     return { score: 80, status: "소모품" };
   }
@@ -152,7 +101,7 @@ function scoreConsumable(part: AutocompleteConsumableEntry, query: string) {
     .filter(Boolean);
   const haystack = [
     part.partNumber,
-    part.productName,
+    ...productNames,
     part.displayName,
     ...part.keywords,
     part.typeName,
@@ -200,7 +149,8 @@ export function searchAutocomplete(
       url: part.url,
       score,
     }));
-  const ranked = [...models, ...consumables].sort(
+  const modelIntent = (models[0]?.score ?? 0) >= 50;
+  const ranked = (modelIntent ? models : [...models, ...consumables]).sort(
     (a, b) =>
       b.score - a.score ||
       (a.kind === b.kind ? a.title.localeCompare(b.title, "ko") : a.kind === "model" ? -1 : 1),

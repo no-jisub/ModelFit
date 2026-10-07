@@ -12,8 +12,23 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap({
-      filter: (page) => !page.includes("/part/") && !page.endsWith("/search-index.json"),
+      filter: (page) => {
+        const pathname = new URL(page).pathname.replace(/\/$/, "") || "/";
+        return (
+          !["/find", "/report", "/admin", "/404", "/404.html", "/search-index.json"].includes(
+            pathname,
+          ) &&
+          !pathname.startsWith("/part/") &&
+          !pathname.startsWith("/admin/")
+        );
+      },
     }),
   ],
+  redirects: {
+    "/part/skmagic-acl130z-filter": "/model/skmagic/acl130z0skpn#compatible-parts",
+    "/part/wells-aq107-filter-set": "/model/wells/aq107#compatible-parts",
+    "/part/wells-al106-filter-set": "/model/wells/al106#compatible-parts",
+    "/part/winix-zero-s-replacement-filter": "/model/winix/azse430-jwk#compatible-parts",
+  },
   trailingSlash: "never",
 });

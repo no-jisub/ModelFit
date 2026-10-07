@@ -36,12 +36,14 @@ describe("data validation", () => {
   });
 
   it("활성화된 구매 링크는 HTTPS 쿠팡 주소만 사용한다", () => {
-    const linkedParts = consumables.filter((part) => part.affiliate.enabled);
+    const links = consumables
+      .flatMap((part) => part.productOptions.flatMap((option) => option.purchaseLinks))
+      .filter((link) => link.channel === "coupang");
 
-    expect(linkedParts.length).toBeGreaterThan(0);
+    expect(links.length).toBeGreaterThan(0);
     expect(
-      linkedParts.every((part) => {
-        const url = new URL(part.affiliate.directUrl ?? "");
+      links.every((link) => {
+        const url = new URL(link.url);
         return url.protocol === "https:" && url.hostname.endsWith("coupang.com");
       }),
     ).toBe(true);
@@ -49,60 +51,68 @@ describe("data validation", () => {
 
   it("쿠팡 링크 상태가 URL 유형과 일치한다", () => {
     expect(
-      consumables.every((part) => {
-        const url = part.affiliate.directUrl ?? "";
-
-        if (part.affiliate.status === "direct-product") {
-          return url.includes("/vp/products/") || url.startsWith("https://link.coupang.com/a/");
-        }
-        if (part.affiliate.status === "search-results") return url.includes("/np/search");
-        return !part.affiliate.enabled;
-      }),
+      consumables
+        .flatMap((part) => part.productOptions.flatMap((option) => option.purchaseLinks))
+        .filter((link) => link.channel === "coupang")
+        .every(
+          (link) =>
+            link.linkType === "direct-product" &&
+            (link.url.includes("/vp/products/") ||
+              link.url.startsWith("https://link.coupang.com/a/")),
+        ),
     ).toBe(true);
   });
 
   it("제휴 링크는 쿠팡 파트너스 단축 URL로만 표시한다", () => {
-    const affiliateParts = consumables.filter((part) => part.affiliate.isAffiliate);
+    const affiliateLinks = consumables
+      .flatMap((part) => part.productOptions.flatMap((option) => option.purchaseLinks))
+      .filter((link) => link.isAffiliate);
 
-    expect(affiliateParts).toHaveLength(4);
+    expect(affiliateLinks.length).toBeGreaterThan(0);
+    expect(affiliateLinks.every((link) => link.url.startsWith("https://link.coupang.com/a/"))).toBe(
+      true,
+    );
+  });
+
+  it("모든 구매 링크는 확인일을 제공한다", () => {
     expect(
-      affiliateParts.every((part) =>
-        part.affiliate.directUrl?.startsWith("https://link.coupang.com/a/"),
-      ),
+      consumables
+        .flatMap((part) => part.productOptions.flatMap((option) => option.purchaseLinks))
+        .every((link) => !Number.isNaN(Date.parse(link.checkedAt))),
     ).toBe(true);
   });
 
-  it("모든 구매 링크는 가격·재고 수동 확인 상태와 확인일을 제공한다", () => {
-    expect(
-      consumables.every(
-        (part) =>
-          part.affiliate.priceStatus === "manual-check-required" &&
-          part.affiliate.stockStatus === "manual-check-required" &&
-          !Number.isNaN(Date.parse(part.affiliate.linkCheckedAt)),
-      ),
-    ).toBe(true);
+  it("공개 카탈로그에는 교체 소모품이 연결된 모델만 등록한다", () => {
+    expect(models).toHaveLength(80);
+    expect(models.every((model) => model.consumableIds.length > 0)).toBe(true);
+    expect(models.filter((model) => model.category === "air-purifier")).toHaveLength(40);
+    expect(models.filter((model) => model.category === "robot-vacuum")).toHaveLength(40);
+    expect(brands.every((brand) => models.some((model) => model.brandId === brand.id))).toBe(true);
   });
 
-  it("모든 실제 모델은 공식 소모품 또는 비등록 사유를 제공한다", () => {
-    expect(
-      models.every(
-        (model) =>
-          model.isDemo || model.consumableIds.length > 0 || Boolean(model.consumableNote?.trim()),
-      ),
-    ).toBe(true);
+  it("정기 교체 필터가 없는 삼성 리유저블 모델은 제외한다", () => {
+    const excludedCodes = [
+      "AP90H10198EDD",
+      "AP90H10198UDD",
+      "AP90H03193EGD",
+      "AP90H03193UGD",
+      "AP90H10198MDD",
+    ];
+    expect(models.some((model) => excludedCodes.includes(model.modelCode))).toBe(false);
+    expect(brands.some((brand) => brand.id === "samsung")).toBe(false);
   });
 
-  it("157개 소모품 모두 제조사 공식 출처와 확인일을 제공한다", () => {
-    expect(consumables).toHaveLength(157);
+  it("모든 소모품이 제조사 공식 출처와 확인일을 제공한다", () => {
     expect(
       consumables.every(
         (part) =>
           part.sources.length > 0 &&
           part.sources.every(
             (source) =>
-              source.url.startsWith("https://") &&
-              !Number.isNaN(Date.parse(source.checkedAt)) &&
-              ["manufacturer", "official-manual", "official-store"].includes(source.sourceType),
+              source.url.startsWith("https://") && !Number.isNaN(Date.parse(source.checkedAt)),
+          ) &&
+          part.sources.some((source) =>
+            ["manufacturer", "official-manual", "official-store"].includes(source.sourceType),
           ),
       ),
     ).toBe(true);
@@ -138,7 +148,7 @@ describe("data validation", () => {
           part?.verificationStatus === "official" &&
           part.sources.length >= 2 &&
           part.sources.every(
-            (source) => source.url.startsWith("https://") && source.checkedAt === "2026-08-04",
+            (source) => source.url.startsWith("https://") && source.checkedAt >= "2026-08-04",
           ),
       ),
     ).toBe(true);

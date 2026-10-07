@@ -6,7 +6,10 @@ const responsiveRoutes = [
   { name: "홈", path: "/" },
   { name: "검색", path: "/find?q=ADQ30041405" },
   { name: "공기청정기 카테고리", path: "/category/air-purifier" },
-  { name: "모델 상세", path: "/model/lg/as355nsna" },
+  { name: "로봇청소기 카테고리", path: "/category/robot-vacuum" },
+  { name: "LG 모델 상세", path: "/model/lg/as355nsna" },
+  { name: "웰스 모델 상세", path: "/model/wells/al106" },
+  { name: "드리미 모델 상세", path: "/model/dreame/x40-ultra" },
   { name: "제휴 안내", path: "/affiliate-disclosure" },
 ];
 
@@ -24,8 +27,8 @@ for (const route of responsiveRoutes) {
   });
 }
 
-test("390px 헤더는 검색과 검증 기준 메뉴를 두 줄로 제공한다", async ({ page }) => {
-  await page.goto("/");
+test("390px 내부 페이지 헤더는 검색과 검증 기준 메뉴를 두 줄로 제공한다", async ({ page }) => {
+  await page.goto("/guide/find-model-number");
 
   const header = page.locator("header");
   const searchInput = header.getByRole("combobox", { name: "모델번호·부품번호 검색" });
@@ -59,16 +62,19 @@ test("390px 카테고리 필터는 버튼으로 펼쳐진다", async ({ page }) 
   await expect(filter.getByRole("searchbox", { name: "모델번호" })).toBeVisible();
   await expect(filter.getByRole("button", { name: "LG", exact: true })).toBeVisible();
 });
-test("390px 홈 카테고리 카드는 세로로 배치된다", async ({ page }) => {
+test("390px 홈에서 두 제품 카테고리와 전체보기를 한 줄로 제공한다", async ({ page }) => {
   await page.goto("/");
 
   const cards = page.locator(".home-category-section .category-card");
-  await expect(cards).toHaveCount(2);
+  await expect(cards).toHaveCount(3);
+  await expect(cards.nth(0)).toHaveAttribute("href", "/category/air-purifier");
+  await expect(cards.nth(1)).toHaveAttribute("href", "/category/robot-vacuum");
+  await expect(cards.nth(2)).toHaveAttribute("href", "/find");
   const firstCard = await cards.nth(0).boundingBox();
   const secondCard = await cards.nth(1).boundingBox();
 
-  expect(Math.abs((firstCard?.x ?? 0) - (secondCard?.x ?? 0))).toBeLessThanOrEqual(1);
-  expect(secondCard?.y).toBeGreaterThan((firstCard?.y ?? 0) + (firstCard?.height ?? 0));
+  expect(Math.abs((firstCard?.y ?? 0) - (secondCard?.y ?? 0))).toBeLessThanOrEqual(1);
+  expect(secondCard?.x).toBeGreaterThan((firstCard?.x ?? 0) + (firstCard?.width ?? 0));
 });
 
 test("390px 검색 화면에서 결과 탭의 우선순위가 분명하다", async ({ page }) => {
@@ -85,9 +91,10 @@ test("390px 모델 상세에서 주요 행동을 먼저 제공한다", async ({ 
   await page.goto("/model/lg/as355nsna");
 
   await expect(page.getByRole("link", { name: "정보 수정 제보" }).first()).toBeVisible();
-  const compatiblePartsCta = page.getByRole("link", { name: /호환 소모품 2개 보기/ });
+  const compatiblePartsCta = page.getByRole("link", { name: "호환 소모품·부품 보기" });
   await expect(compatiblePartsCta).toBeVisible();
   await compatiblePartsCta.click();
   await expect(page).toHaveURL(/#compatible-parts$/);
-  await expect(page.getByRole("heading", { name: /^호환 소모품 \d+개$/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "호환 소모품·부품" })).toBeVisible();
+  await expect(page.locator("#compatible-parts").getByText("등록 2개")).toBeVisible();
 });

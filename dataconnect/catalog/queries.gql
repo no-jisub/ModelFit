@@ -1,0 +1,216 @@
+query ListCategories @auth(level: PUBLIC, insecureReason: "Public product catalog") {
+  categories(where: { isActive: { eq: true } }, orderBy: [{ sortOrder: ASC }, { label: ASC }]) {
+    id
+    label
+    description
+    modelNumberGuide
+  }
+}
+
+query ListBrands @auth(level: PUBLIC, insecureReason: "Public product catalog") {
+  brands(where: { isActive: { eq: true } }, orderBy: [{ sortOrder: ASC }, { name: ASC }]) {
+    id
+    slug
+    name
+    nameEn
+    domains: brandDomains_on_brand {
+      domain
+    }
+    categories: categories_via_BrandCategory {
+      id
+      label
+    }
+  }
+}
+
+query GetModelBySlug($slug: String!)
+@auth(level: PUBLIC, insecureReason: "Public product catalog") {
+  model(first: { where: { slug: { eq: $slug }, status: { eq: PUBLISHED } } }) {
+    id
+    slug
+    modelName
+    modelCode
+    series
+    verificationStatus
+    releaseYear
+    releaseMonth
+    releaseDay
+    sources: modelSources_on_model {
+      purpose
+      source {
+        id
+        title
+        url
+        sourceType
+        checkedAt
+      }
+    }
+    category {
+      id
+      label
+    }
+    brand {
+      id
+      slug
+      name
+      nameEn
+    }
+    aliases: modelAliases_on_model {
+      alias
+    }
+    images: modelImages_on_model(orderBy: [{ sortOrder: ASC }]) {
+      id
+      url
+      alt
+      sourceUrl
+      isPrimary
+    }
+    compatibilities: modelConsumables_on_model {
+      id
+      verificationStatus
+      verifiedAt
+      evidenceScope
+      itemCode
+      requiredQuantity
+      salesPackage
+      composition
+      sources: compatibilitySources_on_compatibility {
+        source {
+          id
+          title
+          url
+          sourceType
+          checkedAt
+        }
+      }
+      consumable {
+        id
+        slug
+        type
+        displayName
+        genuinePartNumber
+        partNumberStatus
+        maintenanceMode
+        maintenanceDetail
+        productOptions: productOptions_on_consumable(where: { isActive: { eq: true } }) {
+          id
+          name
+          kind
+          verification
+          itemCode
+          packageLabel
+          labels: optionModelLabels_on_productOption {
+            model {
+              id
+            }
+            label
+          }
+          purchaseLinks: purchaseLinks_on_productOption(where: { isActive: { eq: true } }) {
+            id
+            label
+            url
+            channel
+            isAffiliate
+            purchaseScope
+            checkedAt
+          }
+          guidanceLinks: guidanceLinks_on_productOption(where: { isActive: { eq: true } }) {
+            id
+            label
+            url
+            channel
+            checkedAt
+          }
+        }
+      }
+    }
+  }
+}
+
+query ListModelsByCategory($categoryId: String!, $limit: Int = 50, $offset: Int = 0)
+@auth(level: PUBLIC, insecureReason: "Public product catalog") {
+  models(
+    where: { categoryId: { eq: $categoryId }, status: { eq: PUBLISHED } }
+    orderBy: [{ brandId: ASC }, { modelName: ASC }]
+    limit: $limit
+    offset: $offset
+  ) {
+    id
+    slug
+    modelName
+    modelCode
+    series
+    releaseYear
+    releaseMonth
+    releaseDay
+    category {
+      id
+      label
+    }
+    brand {
+      id
+      slug
+      name
+      nameEn
+    }
+    images: modelImages_on_model(where: { isPrimary: { eq: true } }, limit: 1) {
+      url
+      alt
+    }
+  }
+}
+
+query ListModelsByBrand($brandId: String!, $limit: Int = 50, $offset: Int = 0)
+@auth(level: PUBLIC, insecureReason: "Public product catalog") {
+  models(
+    where: { brandId: { eq: $brandId }, status: { eq: PUBLISHED } }
+    orderBy: [{ modelName: ASC }]
+    limit: $limit
+    offset: $offset
+  ) {
+    id
+    slug
+    modelName
+    modelCode
+    series
+    releaseYear
+    releaseMonth
+    releaseDay
+    brand {
+      id
+      slug
+      name
+      nameEn
+    }
+    category {
+      id
+      label
+    }
+    images: modelImages_on_model(where: { isPrimary: { eq: true } }, limit: 1) {
+      url
+      alt
+    }
+  }
+}
+
+query SearchModels($query: String!, $limit: Int = 20)
+@auth(level: PUBLIC, insecureReason: "Public product catalog search") {
+  models_search(query: $query, limit: $limit, where: { status: { eq: PUBLISHED } }) {
+    id
+    slug
+    modelName
+    modelCode
+    series
+    status
+    category {
+      id
+      label
+    }
+    brand {
+      id
+      slug
+      name
+      nameEn
+    }
+  }
+}

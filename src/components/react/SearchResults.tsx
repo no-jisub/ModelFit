@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { brands } from "@/data/brands";
-import { consumables } from "@/data/consumables";
-import { models } from "@/data/models";
-import type { ApplianceCategory, ApplianceModel } from "@/types";
+import { categories, isApplianceCategory } from "@/data/categories";
+import type { ApplianceCategory } from "@/types";
+import type { SearchModel, SearchConsumable, SearchCatalogData } from "@/utils/searchData";
+import { hasOfficialCompatibility } from "@/utils/searchData";
+import { summarizeCompatibility } from "@/utils/compatibility";
 import { analytics } from "@/utils/analytics";
 import {
   categoryLabels,
@@ -15,17 +17,21 @@ import {
   type CompatibleModelMatch,
   type ConsumableMatchReason,
   searchCatalog,
+  preferredSearchTab,
   splitStrongMatches,
 } from "@/utils/searchCatalog";
 import SearchBox from "./SearchBox";
+import "@/styles/search-results.css";
 
 interface Props {
+  catalog: SearchCatalogData;
   initialQuery?: string;
 }
 
 type SearchTab = "models" | "parts";
 
 const MODEL_PAGE_SIZE = 12;
+const PART_PAGE_SIZE = 12;
 
 const matchReasonLabels: Record<ConsumableMatchReason, string> = {
   "part-number": "부품번호 일치",
@@ -36,12 +42,14 @@ const matchReasonLabels: Record<ConsumableMatchReason, string> = {
 };
 
 function ModelResultCard({
+  consumables,
   model,
   selected,
   onSelect,
   association,
 }: {
-  model: ApplianceModel;
+  consumables: SearchConsumable[];
+  model: SearchModel;
   selected: boolean;
   onSelect: () => void;
   association?: CompatibleModelMatch;
@@ -50,15 +58,25 @@ function ModelResultCard({
     .map((id) => consumables.find((part) => part.id === id))
     .filter((part) => part !== undefined);
   const panelId = `model-parts-${model.id}`;
+  const summary = summarizeCompatibility(modelParts, model.id);
 
   return (
     <article className={`model-card card ${selected ? "is-selected" : ""}`}>
       <div className="model-card-top">
-        <span className="category-chip">
-          {model.category === "air-purifier" ? "▤" : "◉"} {categoryLabels[model.category]}
-        </span>
+        <span className="category-chip">{categoryLabels[model.category]}</span>
         {association && <span className="official-chip">소모품으로 찾은 모델</span>}
       </div>
+      {model.image && (
+        <div className="model-card-image">
+          <img
+            src={model.image.src}
+            alt={model.image.alt}
+            width={720}
+            height={720}
+            loading="lazy"
+          />
+        </div>
+      )}
       <p className="model-brand-label">{model.brandName}</p>
       <h3>{getModelDisplayName(model)}</h3>
       <p className="model-series">
@@ -78,7 +96,12 @@ function ModelResultCard({
       )}
 
       <div className="model-card-footer">
-        <strong>호환 소모품 {model.consumableIds.length}개</strong>
+        <div className="compatibility-summary">
+          <strong>등록 부품 {summary.registered}개</strong>
+          <small>
+            공식 호환 확인 {summary.confirmed}개 · 확인 필요 {summary.needsReview}개
+          </small>
+        </div>
         <button
           className="text-button"
           type="button"
@@ -93,11 +116,11 @@ function ModelResultCard({
         <section
           className="model-inline-consumables"
           id={panelId}
-          aria-label={`${model.brandName} ${model.modelCode} 공식 호환 소모품`}
+          aria-label={`${model.brandName} ${model.modelCode} 모델별 소모품`}
         >
           <div className="model-inline-heading">
             <div>
-              <span className="eyebrow">공식 호환 소모품</span>
+              <span className="eyebrow">모델별 소모품</span>
               <strong>{modelParts.length}개가 연결되어 있습니다</strong>
             </div>
           </div>
@@ -106,13 +129,18 @@ function ModelResultCard({
               {modelParts.map((part) => (
                 <a
                   className="model-inline-part"
-                  href={`/model/${model.brandId}/${model.slug}#compatible-parts`}
+                  href={`/model/${model.brandId}/${model.slug}#${part.id}`}
+                  data-search-model-id={model.id}
                   key={part.id}
                 >
                   <span>
                     <strong>{part.displayName}</strong>
                     <small>
                       {partTypeLabels[part.type]} · {part.genuinePartNumber ?? "부품번호 정보 없음"}
+                      {" · "}
+                      {hasOfficialCompatibility(part, model.id)
+                        ? "공식 호환 확인"
+                        : "호환 확인 필요"}
                     </small>
                   </span>
                   <span aria-hidden="true">→</span>
@@ -120,7 +148,7 @@ function ModelResultCard({
               ))}
             </div>
           ) : (
-            <p className="empty-inline">현재 연결된 공식 소모품을 조사 중입니다.</p>
+            <p className="empty-inline">현재 연결된 소모품을 조사 중입니다.</p>
           )}
         </section>
       )}
@@ -129,10 +157,12 @@ function ModelResultCard({
 }
 
 function PartResultCard({
+  models,
   part,
   reason,
 }: {
-  part: (typeof consumables)[number];
+  models: SearchModel[];
+  part: SearchConsumable;
   reason: ConsumableMatchReason;
 }) {
   const compatibleModels = part.compatibleModelIds
@@ -154,12 +184,20 @@ function PartResultCard({
         {partNumberStatusLabels[getPartNumberStatus(part.genuinePartNumber, part.partNumberStatus)]}
       </span>
       <details className="compatible-model-links">
-        <summary>공식 호환 모델 {compatibleModels.length}개 보기</summary>
+        <summary>연결 모델 {compatibleModels.length}개 보기</summary>
         {compatibleModels.length > 0 ? (
           <div>
             {compatibleModels.map((model) => (
-              <a href={`/model/${model.brandId}/${model.slug}#compatible-parts`} key={model.id}>
+              <a
+                href={`/model/${model.brandId}/${model.slug}#${part.id}`}
+                data-search-model-id={model.id}
+                key={model.id}
+              >
                 {model.brandName} {model.modelCode}
+                <small>
+                  {" "}
+                  · {hasOfficialCompatibility(part, model.id) ? "공식 호환 확인" : "호환 확인 필요"}
+                </small>
               </a>
             ))}
           </div>
@@ -171,7 +209,10 @@ function PartResultCard({
   );
 }
 
-export default function SearchResults({ initialQuery = "" }: Props) {
+export default function SearchResults({
+  initialQuery = "",
+  catalog: { models, consumables },
+}: Props) {
   const [query, setQuery] = useState(initialQuery);
   const [category, setCategory] = useState<ApplianceCategory | "all">("all");
   const [brandId, setBrandId] = useState("all");
@@ -179,29 +220,24 @@ export default function SearchResults({ initialQuery = "" }: Props) {
   const [urlStateReady, setUrlStateReady] = useState(false);
   const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
   const [visibleModelCount, setVisibleModelCount] = useState(MODEL_PAGE_SIZE);
+  const [visiblePartCount, setVisiblePartCount] = useState(PART_PAGE_SIZE);
+  const [visibleRelatedPartCount, setVisibleRelatedPartCount] = useState(PART_PAGE_SIZE);
   const results = useMemo(
     () =>
       searchCatalog(models, consumables, query, {
         category,
         brandId,
-        consumableLimit: 30,
       }),
-    [query, category, brandId],
+    [models, consumables, query, category, brandId],
   );
   const totalResults =
-    results.models.length + results.consumables.length + results.compatibleModels.length;
-  const modelResultCount = results.models.length + results.compatibleModels.length;
-  const partResultCount = results.consumables.length;
+    results.totals.models + results.totals.consumables + results.totals.compatibleModels;
+  const modelResultCount = results.totals.models + results.totals.compatibleModels;
+  const partResultCount = results.totals.consumables;
   const modelMatches = splitStrongMatches(results.models);
   const visibleModelMatches = modelMatches.primary.slice(0, visibleModelCount);
   const consumableMatches = splitStrongMatches(results.consumables);
-  const preferredTab: SearchTab =
-    query.trim() &&
-    partResultCount > 0 &&
-    (modelResultCount === 0 ||
-      (results.consumables[0]?.score ?? 0) > (results.models[0]?.score ?? 0))
-      ? "parts"
-      : "models";
+  const preferredTab = preferredSearchTab(query, models, results);
   const activeTab = tabPreference ?? preferredTab;
 
   useEffect(() => {
@@ -210,9 +246,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
     const nextBrandId = params.get("brand");
 
     setQuery(params.get("q") ?? "");
-    setCategory(
-      nextCategory === "air-purifier" || nextCategory === "robot-vacuum" ? nextCategory : "all",
-    );
+    setCategory(isApplianceCategory(nextCategory) ? nextCategory : "all");
     setBrandId(nextBrandId && brands.some(({ id }) => id === nextBrandId) ? nextBrandId : "all");
     const nextTab = params.get("type");
     setTabPreference(nextTab === "models" || nextTab === "parts" ? nextTab : null);
@@ -222,6 +256,8 @@ export default function SearchResults({ initialQuery = "" }: Props) {
   useEffect(() => {
     setSelectedModelId(null);
     setVisibleModelCount(MODEL_PAGE_SIZE);
+    setVisiblePartCount(PART_PAGE_SIZE);
+    setVisibleRelatedPartCount(PART_PAGE_SIZE);
   }, [query, category, brandId]);
 
   useEffect(() => {
@@ -239,23 +275,29 @@ export default function SearchResults({ initialQuery = "" }: Props) {
   useEffect(() => {
     if (!urlStateReady || !query.trim()) return;
     const timeoutId = window.setTimeout(() => {
-      analytics.trackSearch(query, totalResults);
+      analytics.trackSearch(query, totalResults, {
+        model_count: modelResultCount,
+        part_count: partResultCount,
+        category,
+        brand_id: brandId,
+      });
       if (totalResults === 0) analytics.trackNoResult(query);
     }, 500);
     return () => window.clearTimeout(timeoutId);
-  }, [query, totalResults, urlStateReady]);
+  }, [query, totalResults, urlStateReady, modelResultCount, partResultCount, category, brandId]);
 
   const selectModel = (modelId: string) => {
     setSelectedModelId((current) => (current === modelId ? null : modelId));
   };
 
   return (
-    <div className="search-page-app">
+    <div className="search-page-app" data-ready={urlStateReady ? "true" : "false"}>
       <SearchBox initialQuery={query} compact />
       <div className="filter-bar" aria-label="검색 결과 필터">
         <label>
           <span>카테고리</span>
           <select
+            aria-label="카테고리"
             value={category}
             onChange={(event) => {
               setCategory(event.target.value as ApplianceCategory | "all");
@@ -263,13 +305,17 @@ export default function SearchResults({ initialQuery = "" }: Props) {
             }}
           >
             <option value="all">전체 카테고리</option>
-            <option value="air-purifier">공기청정기</option>
-            <option value="robot-vacuum">로봇청소기</option>
+            {categories.map((item) => (
+              <option value={item.id} key={item.id}>
+                {item.label}
+              </option>
+            ))}
           </select>
         </label>
         <label>
           <span>브랜드</span>
           <select
+            aria-label="브랜드"
             value={brandId}
             onChange={(event) => {
               setBrandId(event.target.value);
@@ -286,6 +332,19 @@ export default function SearchResults({ initialQuery = "" }: Props) {
         </label>
       </div>
 
+      {(category !== "all" || brandId !== "all") && (
+        <button
+          className="text-button filter-reset"
+          type="button"
+          onClick={() => {
+            setCategory("all");
+            setBrandId("all");
+          }}
+        >
+          필터 전체 해제
+        </button>
+      )}
+
       <p className="results-summary" aria-live="polite">
         검색 결과 {activeTab === "models" ? modelResultCount : partResultCount}개
       </p>
@@ -301,7 +360,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
               id="model-results-tab"
               onClick={() => setTabPreference("models")}
             >
-              모델
+              모델 <span aria-hidden="true">{modelResultCount}개</span>
             </button>
             <button
               type="button"
@@ -311,7 +370,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
               id="part-results-tab"
               onClick={() => setTabPreference("parts")}
             >
-              소모품
+              소모품 <span aria-hidden="true">{partResultCount}개</span>
             </button>
           </div>
 
@@ -332,6 +391,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
                   <div className="model-grid">
                     {visibleModelMatches.map(({ model }) => (
                       <ModelResultCard
+                        consumables={consumables}
                         model={model}
                         selected={selectedModelId === model.id}
                         onSelect={() => selectModel(model.id)}
@@ -361,6 +421,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
                   <div className="model-grid">
                     {results.compatibleModels.map((association) => (
                       <ModelResultCard
+                        consumables={consumables}
                         model={association.model}
                         association={association}
                         selected={selectedModelId === association.model.id}
@@ -396,6 +457,7 @@ export default function SearchResults({ initialQuery = "" }: Props) {
                     <div className="model-grid">
                       {modelMatches.related.map(({ model }) => (
                         <ModelResultCard
+                          consumables={consumables}
                           model={model}
                           selected={selectedModelId === model.id}
                           onSelect={() => selectModel(model.id)}
@@ -420,10 +482,25 @@ export default function SearchResults({ initialQuery = "" }: Props) {
                     <h2 id="part-results-heading">일치하는 소모품</h2>
                   </div>
                   <div className="search-part-grid">
-                    {consumableMatches.primary.map(({ part, reason }) => (
-                      <PartResultCard part={part} reason={reason} key={part.id} />
-                    ))}
+                    {consumableMatches.primary
+                      .slice(0, visiblePartCount)
+                      .map(({ part, reason }) => (
+                        <PartResultCard models={models} part={part} reason={reason} key={part.id} />
+                      ))}
                   </div>
+                  <p className="result-page-count" aria-live="polite">
+                    일치 결과 {consumableMatches.primary.length}개 중{" "}
+                    {Math.min(visiblePartCount, consumableMatches.primary.length)}개 표시
+                  </p>
+                  {visiblePartCount < consumableMatches.primary.length && (
+                    <button
+                      className="button button-secondary"
+                      type="button"
+                      onClick={() => setVisiblePartCount((count) => count + PART_PAGE_SIZE)}
+                    >
+                      소모품 더 보기
+                    </button>
+                  )}
                 </section>
               ) : (
                 <p className="tab-empty-state">
@@ -447,10 +524,32 @@ export default function SearchResults({ initialQuery = "" }: Props) {
                   </summary>
                   <div className="related-result-groups">
                     <div className="search-part-grid">
-                      {consumableMatches.related.map(({ part, reason }) => (
-                        <PartResultCard part={part} reason={reason} key={part.id} />
-                      ))}
+                      {consumableMatches.related
+                        .slice(0, visibleRelatedPartCount)
+                        .map(({ part, reason }) => (
+                          <PartResultCard
+                            models={models}
+                            part={part}
+                            reason={reason}
+                            key={part.id}
+                          />
+                        ))}
                     </div>
+                    <p className="result-page-count" aria-live="polite">
+                      관련 결과 {consumableMatches.related.length}개 중{" "}
+                      {Math.min(visibleRelatedPartCount, consumableMatches.related.length)}개 표시
+                    </p>
+                    {visibleRelatedPartCount < consumableMatches.related.length && (
+                      <button
+                        className="button button-secondary"
+                        type="button"
+                        onClick={() =>
+                          setVisibleRelatedPartCount((count) => count + PART_PAGE_SIZE)
+                        }
+                      >
+                        관련 소모품 더 불러오기
+                      </button>
+                    )}
                   </div>
                 </details>
               )}
@@ -473,6 +572,12 @@ export default function SearchResults({ initialQuery = "" }: Props) {
             </a>
             <a className="button button-secondary" href="/find">
               검색 초기화
+            </a>
+            <a
+              className="button button-secondary"
+              href={`/report?${new URLSearchParams({ model: query, page: `/find?q=${encodeURIComponent(query)}` })}`}
+            >
+              모델 등록 요청
             </a>
           </div>
         </section>

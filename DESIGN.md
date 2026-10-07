@@ -911,16 +911,12 @@ Roborock · 로봇청소기
 
 ## 27. 이미지 정책
 
-제품 이미지가 공식적으로 제공되거나 사용 권한이 확인되지 않았다면 사용하지 않는다.
+제품 이미지는 제조사 공식 제품·지원 페이지 또는 사용 가능한 제조사 제공 자료에서 확보한다.
 
-대신 다음 요소를 사용한다.
-
-- 카테고리 아이콘
-- 브랜드 이니셜
-- 단순한 제품 유형 일러스트
-- CSS 기반 플레이스홀더
-
-외부 쇼핑몰의 상품 이미지를 직접 저장하거나 복사하지 않는다.
+- 모델별 이미지 출처와 확인일을 데이터에 기록한다.
+- 카드와 상세 화면에서 제품 전체가 보이도록 비율을 유지한다.
+- 공식 이미지를 확보하지 못하면 카테고리 아이콘이나 CSS 플레이스홀더를 사용한다.
+- 외부 쇼핑몰의 상품 이미지를 직접 저장하거나 복사하지 않는다.
 
 ---
 
@@ -933,9 +929,9 @@ Roborock · 로봇청소기
 3. VerificationBadge
 4. ModelCard
 5. ConsumableCard
-6. AffiliateButton
-7. SourceList
-8. EmptyState
+6. ProductOptionCard
+7. AffiliateDisclosure
+8. SourceList
 9. Breadcrumbs
 10. Header
 11. Footer

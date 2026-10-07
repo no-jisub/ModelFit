@@ -19,7 +19,13 @@ describe("getDataFreshness", () => {
 
   it("소모품은 공식 출처와 구매 링크 중 가장 오래된 확인일을 사용한다", () => {
     const part = consumables[0];
-    const expected = [...part.sources, ...part.purchaseLinks]
+    const expected = [
+      ...part.sources,
+      ...part.productOptions.flatMap((option) => [
+        ...option.purchaseLinks,
+        ...option.guidanceLinks,
+      ]),
+    ]
       .map((item) => item.checkedAt)
       .sort((left, right) => Date.parse(left) - Date.parse(right))[0];
 

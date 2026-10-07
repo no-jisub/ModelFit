@@ -1,0 +1,40 @@
+---
+import type { ConsumableCompatibility } from "@/types";
+import { getPurchaseBundles } from "@/utils/purchasePresentation";
+import ProductOptionCard from "./ProductOptionCard.astro";
+const { parts, modelId } = Astro.props as { parts: ConsumableCompatibility[]; modelId: string };
+const bundles = getPurchaseBundles(parts, modelId);
+---
+
+{
+  bundles.length > 0 && (
+    <section
+      class="detail-section purchase-bundles-section"
+      id="purchase-bundles"
+      aria-labelledby="purchase-bundles-heading"
+    >
+      <div class="section-header">
+        <div>
+          <h2 id="purchase-bundles-heading">세트 상품</h2>
+          <p>여러 종류의 부품을 함께 구매할 때 선택하세요.</p>
+        </div>
+      </div>
+      <div class="consumable-list">
+        {bundles.map(({ option, parts: includedParts }) => (
+          <div class="card purchase-bundle-card">
+            <h3>{option.name}</h3>
+            <p class="purchase-bundle-parts">
+              관련 부품: {includedParts.map((part) => part.displayName).join(" · ")}
+            </p>
+            <ProductOptionCard
+              option={option}
+              modelId={modelId}
+              partId={includedParts[0].id + "-bundle"}
+              partName={option.name}
+            />
+          </div>
+        ))}
+      </div>
+    </section>
+  )
+}

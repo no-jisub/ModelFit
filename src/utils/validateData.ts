@@ -44,10 +44,12 @@ export function validateData(
       errors.push(`${brand.id}: 중복 공식 출처 도메인 ${domain}`);
     }
   }
-  for (const slug of duplicates(models.map((model) => model.slug))) {
+  for (const slug of duplicates(models.map((model) => `${model.brandId}/${model.slug}`))) {
     errors.push(`중복 모델 slug: ${slug}`);
   }
-  for (const code of duplicates(models.map((model) => model.modelCode.toLowerCase()))) {
+  for (const code of duplicates(
+    models.map((model) => `${model.brandId}/${model.modelCode.toLowerCase()}`),
+  )) {
     errors.push(`중복 모델 코드: ${code}`);
   }
   for (const slug of duplicates(consumables.map((part) => part.slug))) {
@@ -89,15 +91,13 @@ export function validateData(
     if (model.verificationStatus === "official" && model.sources.length === 0) {
       errors.push(`${model.id}: 공식 확인 모델에 출처가 없습니다.`);
     }
-    if (!model.isDemo && model.sources.length === 0) {
+    if (model.status === "published" && model.sources.length === 0) {
       errors.push(`${model.id}: 실제 모델에 제조사 출처가 없습니다.`);
     }
-    if (!model.isDemo && model.consumableIds.length === 0 && !model.consumableNote?.trim()) {
+    if (model.status === "published" && model.consumableIds.length === 0) {
       errors.push(`${model.id}: 공식 소모품 또는 소모품 미등록 사유가 없습니다.`);
     }
-    if (model.isDemo && model.verificationStatus !== "unverified") {
-      errors.push(`${model.id}: 데모 모델은 미검증으로 표시해야 합니다.`);
-    }
+
     if (
       model.releaseDate &&
       !/^\d{4}-(0[1-9]|1[0-2])(?:-(0[1-9]|[12]\d|3[01]))?$/.test(model.releaseDate)
@@ -157,71 +157,13 @@ export function validateData(
     if (part.partNumberStatus === "not-listed" && part.sources.length === 0) {
       errors.push(`${part.id}: not-listed part number status requires a source.`);
     }
-    if (part.affiliate.enabled && !part.affiliate.directUrl) {
-      errors.push(`${part.id}: 활성화된 구매 링크 URL이 없습니다.`);
-    }
-    if (
-      part.affiliate.status === "direct-product" &&
-      !part.affiliate.directUrl?.includes("/vp/products/") &&
-      !part.affiliate.directUrl?.startsWith("https://link.coupang.com/a/")
-    ) {
-      errors.push(`${part.id}: 직접 상품 링크 상태이지만 쿠팡 상품 URL이 아닙니다.`);
-    }
-    if (
-      part.affiliate.status === "search-results" &&
-      !part.affiliate.directUrl?.includes("/np/search")
-    ) {
-      errors.push(`${part.id}: 검색 링크 상태이지만 쿠팡 검색 URL이 아닙니다.`);
-    }
-    if (Number.isNaN(Date.parse(part.affiliate.linkCheckedAt))) {
-      errors.push(`${part.id}: 구매 링크 확인일이 올바르지 않습니다.`);
-    }
-    if (part.affiliate.restrictionNote && part.affiliate.isAffiliate) {
-      errors.push(`${part.id}: 생성 제한 상품을 제휴 링크로 표시할 수 없습니다.`);
-    }
-    if (
-      part.affiliate.priceStatus === "manual-check-required" &&
-      part.affiliate.stockStatus !== "manual-check-required"
-    ) {
-      warnings.push(`${part.id}: 가격과 재고의 수동 확인 상태가 다릅니다.`);
-    }
-    if (part.affiliate.directUrl) {
-      try {
-        const url = new URL(part.affiliate.directUrl);
-        if (url.protocol !== "https:" || !url.hostname.endsWith("coupang.com")) {
-          errors.push(`${part.id}: 허용되지 않은 쿠팡 링크 ${part.affiliate.directUrl}`);
-        }
-        if (
-          part.affiliate.isAffiliate !==
-          (url.hostname === "link.coupang.com" && url.pathname.startsWith("/a/"))
-        ) {
-          errors.push(`${part.id}: 쿠팡 제휴 링크 여부와 URL이 일치하지 않습니다.`);
-        }
-      } catch {
-        errors.push(`${part.id}: 잘못된 구매 링크 ${part.affiliate.directUrl}`);
-      }
-    }
-    const coupangPurchaseLinks = part.purchaseLinks.filter((link) => link.channel === "coupang");
-    if (part.affiliate.status === "unavailable") {
-      if (part.affiliate.enabled || part.affiliate.directUrl || part.affiliate.isAffiliate) {
-        errors.push(`${part.id}: 미확인 구매 링크는 비활성·비제휴 상태여야 합니다.`);
-      }
-      if (coupangPurchaseLinks.length > 0) {
-        errors.push(`${part.id}: 미확인 상품에는 쿠팡 구매 경로를 노출할 수 없습니다.`);
-      }
-    } else {
-      if (part.purchaseLinks.length < 2) {
-        errors.push(`${part.id}: 공식·쿠팡 구매 경로가 모두 필요합니다.`);
-      }
-      if (part.purchaseLinks[1]?.channel !== "coupang") {
-        errors.push(`${part.id}: 두 번째 구매 경로는 쿠팡이어야 합니다.`);
-      }
-    }
-    if (part.purchaseLinks[0]?.channel !== "official") {
-      errors.push(`${part.id}: 첫 구매 경로는 공식 사이트여야 합니다.`);
+    const purchaseLinks = part.productOptions.flatMap((option) => option.purchaseLinks);
+    const coupangPurchaseLinks = purchaseLinks.filter((link) => link.channel === "coupang");
+    if (coupangPurchaseLinks.some((link) => link.linkType !== "direct-product")) {
+      errors.push(`${part.id}: 쿠팡 검색 결과 대신 확인된 상품 상세 링크만 등록하세요.`);
     }
     const purchaseLinkIds = new Set<string>();
-    for (const link of part.purchaseLinks) {
+    for (const link of purchaseLinks) {
       if (purchaseLinkIds.has(link.id)) {
         errors.push(`${part.id}: 중복 구매 링크 ID ${link.id}`);
       }
@@ -245,9 +187,6 @@ export function validateData(
         ) {
           errors.push(`${part.id}: 잘못 표시된 제휴 구매 링크 ${link.url}`);
         }
-        if (link.channel === "coupang" && link.isAffiliate !== part.affiliate.isAffiliate) {
-          errors.push(`${part.id}: 쿠팡 구매 링크의 제휴 상태가 원본 데이터와 다릅니다.`);
-        }
       } catch {
         errors.push(`${part.id}: 잘못된 다중 구매 링크 ${link.url}`);
       }
@@ -267,9 +206,7 @@ export function validateData(
       if (option.kind === "compatible" && option.verification === "official-genuine") {
         errors.push(`${part.id}: 호환상품을 제조사 정품으로 표시할 수 없습니다.`);
       }
-      if (option.purchaseLinks.some((link) => link.linkType === "search-results")) {
-        errors.push(`${part.id}: 검색 결과 링크를 특정 상품 후보로 소개할 수 없습니다.`);
-      }
+
       for (const link of option.purchaseLinks) {
         try {
           const url = new URL(link.url);

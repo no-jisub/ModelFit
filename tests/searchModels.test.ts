@@ -4,11 +4,11 @@ import { searchModels } from "../src/utils/searchModels";
 
 describe("searchModels", () => {
   it("모델 코드 완전 일치를 가장 먼저 반환한다", () => {
-    expect(searchModels(models, "AP90H10198EDD")[0]?.model.id).toBe("samsung-ap90h10198edd");
+    expect(searchModels(models, "AS355NSNA")[0]?.model.id).toBe("lg-as355nsna");
   });
 
   it("공백과 하이픈을 제거해 검색한다", () => {
-    expect(searchModels(models, "AP90 H10198-EDD")[0]?.model.id).toBe("samsung-ap90h10198edd");
+    expect(searchModels(models, "AS355 NS-NA")[0]?.model.id).toBe("lg-as355nsna");
   });
 
   it("한글·영문 브랜드 별칭 검색을 지원한다", () => {
@@ -18,6 +18,14 @@ describe("searchModels", () => {
     expect(searchModels(models, "Roborock S8 MAXV ULTRA")[0]?.model.id).toBe(
       "roborock-s8-maxv-ultra",
     );
+  });
+
+  it.each([
+    ["엘지 AS355NSNA", "lg-as355nsna"],
+    ["교원 웰스 AL106", "wells-al106"],
+    ["아이 로봇 COMBO J9+", "irobot-combo-j9-plus"],
+  ])("띄어쓴 브랜드 별칭과 모델번호 %s를 함께 검색한다", (query, expectedId) => {
+    expect(searchModels(models, query)[0]?.model.id).toBe(expectedId);
   });
 
   it("완전 일치를 부분 일치보다 우선한다", () => {
