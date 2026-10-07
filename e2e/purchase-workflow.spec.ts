@@ -66,14 +66,14 @@ test("상세 정보를 접어도 모델 호환 미확인과 판매자 상품 표
 test("검토한 대체 구매 링크와 묶음·선택 구성을 구분한다", async ({ page }) => {
   for (const model of ["x20-plus", "x10-plus"]) {
     await page.goto("/model/xiaomi/" + model + "#compatible-parts");
-    for (const [partType, productId] of [
-      ["main-brush", "8518462768"],
-      ["side-brush", "8305225725"],
+    for (const [partType, destination] of [
+      ["main-brush", "https://link.coupang.com/a/hC9ARzuMp2"],
+      ["side-brush", "https://www.coupang.com/vp/products/8305225725"],
     ]) {
       const part = page.locator("#xiaomi-" + model + "-" + partType);
       const link = part.locator('a[data-link-status="direct-product"]');
       await expect(link).toHaveCount(1);
-      await expect(link).toHaveAttribute("href", new RegExp("/vp/products/" + productId));
+      await expect(link).toHaveAttribute("href", destination);
       await expect(part.locator(".product-options-section .product-verification-badge")).toHaveText(
         "판매자 정품 표기",
       );
@@ -81,15 +81,17 @@ test("검토한 대체 구매 링크와 묶음·선택 구성을 구분한다", 
   }
   await expect(
     page.locator("#xiaomi-x10-plus-dust-bag a[data-link-status=direct-product]"),
-  ).toHaveAttribute("href", /8518458631/);
+  ).toHaveAttribute("href", "https://link.coupang.com/a/hC9BEDlMbY");
   await page.goto("/model/eufy/x10-pro-omni#compatible-parts");
   const mop = page.locator("#eufy-x10-pro-mop-cloth .product-options-section");
+  await expect(mop.locator('a[data-link-status="direct-product"]')).toHaveCount(1);
+  await expect(mop).not.toContainText("물걸레 패드 6개 + 먼지봉투 8개 묶음");
+  const bundles = page.locator("#purchase-bundles");
+  await expect(mop.locator(".product-option-details")).toContainText("물걸레 패드");
+  await expect(bundles).toContainText("물걸레 패드 6개 + 먼지봉투 8개 묶음");
   await expect(
-    mop.getByRole("heading", { name: "eufy X10 Pro Omni 호환 물걸레·먼지봉투 세트" }),
-  ).toBeVisible();
-  await expect(mop.locator(".product-option-details")).toContainText(
-    "물걸레 패드 6개 + 먼지봉투 8개 묶음",
-  );
+    bundles.locator('a[href="https://www.coupang.com/vp/products/9319311624"]'),
+  ).toHaveCount(1);
   await expect(mop.locator(".product-verification-badge")).toHaveText("판매자 호환 표기");
   await page.goto("/model/everybot/q9#compatible-parts");
   await expect(
