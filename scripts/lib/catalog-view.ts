@@ -103,6 +103,7 @@ export function buildCatalogView(raw: RawCatalog) {
       .map((j) => ({
         ...link(j),
         isAffiliate: j.isAffiliate === "true",
+        purchaseScope: j.purchaseScope,
         linkType: "direct-product",
       })),
     guidanceLinks: raw["guidance-links.csv"]

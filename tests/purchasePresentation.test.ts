@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 import { consumables } from "../src/data/consumables";
-import { groupPurchaseOptions, getSalesPackageLabel } from "../src/utils/purchasePresentation";
+import {
+  groupPurchaseOptions,
+  getSalesPackageLabel,
+  getPurchaseBundles,
+} from "../src/utils/purchasePresentation";
 import type { ConsumableProductOption } from "../src/types";
 
 function option(
@@ -55,6 +59,36 @@ describe("purchase option ordering", () => {
 });
 
 describe("sales package presentation", () => {
+  it("separates mixed bundles from individual parts and deduplicates a shared bundle", () => {
+    const parts = consumables.filter((part) => part.id.startsWith("eufy-s1-pro-"));
+    const before = structuredClone(parts);
+    const bundles = getPurchaseBundles(parts, parts[0].compatibleModelIds[0]);
+    expect(bundles).toHaveLength(1);
+    expect(bundles[0].parts).toHaveLength(5);
+    expect(bundles[0].option.purchaseLinks).toHaveLength(1);
+    for (const part of parts) {
+      const groups = groupPurchaseOptions(part.productOptions);
+      expect(groups.available.length).toBeGreaterThan(0);
+      expect(
+        groups.available
+          .flatMap((option) => option.purchaseLinks)
+          .every((link) => link.purchaseScope === "individual"),
+      ).toBe(true);
+      expect(groups.reference.every((option) => !option.purchaseLinks.length)).toBe(true);
+    }
+    expect(parts).toEqual(before);
+  });
+  it("keeps same-part multipacks and integrated filters in the individual list", () => {
+    for (const id of [
+      "narwal-freo-side-brush",
+      "blueair-3410-particle-carbon-filter",
+      "dyson-360-glass-hepa-carbon-filter",
+    ]) {
+      const part = consumables.find((part) => part.id === id)!;
+      expect(getPurchaseBundles([part], part.compatibleModelIds[0])).toHaveLength(0);
+      expect(groupPurchaseOptions(part.productOptions).available.length).toBeGreaterThan(0);
+    }
+  });
   it("does not present the number needed for replacement as a seller pack", () => {
     expect(
       getSalesPackageLabel(

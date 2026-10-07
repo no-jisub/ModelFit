@@ -36,6 +36,7 @@ export interface PurchaseLinkData {
   channel: PurchaseChannel;
   linkType: "direct-product";
   isAffiliate: boolean;
+  purchaseScope?: "individual" | "bundle";
   checkedAt: string;
 }
 

@@ -173,6 +173,10 @@ if (
 raw["purchase-links.csv"] = raw["purchase-links.csv"].filter(
   (r) => r.linkType === "direct-product",
 );
+raw["purchase-links.csv"] = raw["purchase-links.csv"].map((row) => ({
+  ...row,
+  purchaseScope: row.purchaseScope || "individual",
+}));
 for (const file of Object.keys(catalogSchema) as CatalogFile[])
   raw[file] = raw[file].map((r) => pick(r, catalogSchema[file]));
 const errors = validateRawCatalog(raw);

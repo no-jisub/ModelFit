@@ -15,7 +15,7 @@ describe("normalized option links", () => {
   });
   it("separates guidance from actual purchases and never generates search URLs", () => {
     const options = consumables.flatMap((p) => p.productOptions);
-    expect(options.flatMap((o) => o.purchaseLinks)).toHaveLength(153);
+    expect(options.flatMap((o) => o.purchaseLinks)).toHaveLength(161);
     expect(options.flatMap((o) => o.guidanceLinks)).toHaveLength(177);
     const activeLinkIds = options.flatMap((o) => o.purchaseLinks.map((link) => link.id));
     expect(activeLinkIds).not.toContain("xiaomi-x20-plus-main-brush-coupang");

@@ -43,6 +43,9 @@ const evidenceSources =
   compatibility?.evidenceScope === "scoped" ? compatibility.sources : part.sources;
 const evidenceCount = evidenceSources.length;
 const purchaseOptions = groupPurchaseOptions(part.productOptions);
+const hasBundle = part.productOptions.some((option) =>
+  option.purchaseLinks.some((link) => link.purchaseScope === "bundle"),
+);
 const officialStoreGuidance = part.productOptions
   .flatMap((option) =>
     option.guidanceLinks
@@ -158,6 +161,13 @@ function isOverseasStore(url: string) {
       {purchaseOptions.available.length > 0 ? "구매 가능한 상품" : "구매처 확인 안내"}
     </h4>
     <div class="product-option-list">
+      {
+        purchaseOptions.available.length === 0 && hasBundle && (
+          <p class="purchase-unavailable">
+            확인된 개별 상품이 없습니다. <a href="#purchase-bundles">세트 상품 보기</a>
+          </p>
+        )
+      }
       {
         purchaseOptions.available.length > 0 ? (
           purchaseOptions.available.map((option) => (

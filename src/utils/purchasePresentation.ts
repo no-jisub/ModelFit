@@ -1,4 +1,8 @@
-import type { ConsumableProductOption, PartConfigurationPresentation } from "@/types";
+import type {
+  ConsumableCompatibility,
+  ConsumableProductOption,
+  PartConfigurationPresentation,
+} from "@/types";
 
 const verificationOrder: Record<ConsumableProductOption["verification"], number> = {
   "official-genuine": 0,
@@ -9,6 +13,15 @@ const verificationOrder: Record<ConsumableProductOption["verification"], number>
 
 export function groupPurchaseOptions(options: ConsumableProductOption[]) {
   const ordered = options
+    .filter(
+      (option) =>
+        !option.purchaseLinks.length ||
+        option.purchaseLinks.some((link) => link.purchaseScope !== "bundle"),
+    )
+    .map((option) => ({
+      ...option,
+      purchaseLinks: option.purchaseLinks.filter((link) => link.purchaseScope !== "bundle"),
+    }))
     .map((option, index) => ({ option, index }))
     .sort(
       (a, b) =>
@@ -21,6 +34,34 @@ export function groupPurchaseOptions(options: ConsumableProductOption[]) {
     available: ordered.filter((option) => option.purchaseLinks.length > 0),
     reference: ordered.filter((option) => option.purchaseLinks.length === 0),
   };
+}
+
+export function getPurchaseBundles(parts: ConsumableCompatibility[], modelId: string) {
+  const bundles = new Map<
+    string,
+    { option: ConsumableProductOption; parts: ConsumableCompatibility[] }
+  >();
+  for (const part of parts) {
+    for (const option of part.productOptions) {
+      for (const link of option.purchaseLinks.filter((link) => link.purchaseScope === "bundle")) {
+        const bundle = bundles.get(link.url);
+        if (bundle) {
+          if (!bundle.parts.some((entry) => entry.id === part.id)) bundle.parts.push(part);
+        } else {
+          bundles.set(link.url, {
+            option: {
+              ...option,
+              id: option.id + "-bundle",
+              name: option.modelLabels[modelId] ?? option.packageLabel ?? option.name,
+              purchaseLinks: [link],
+            },
+            parts: [part],
+          });
+        }
+      }
+    }
+  }
+  return [...bundles.values()];
 }
 
 // A replacement requirement is not a seller's pack quantity.

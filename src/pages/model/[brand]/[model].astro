@@ -3,6 +3,7 @@ import "@/styles/model-detail.css";
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import MobilePartsJump from "@/components/astro/MobilePartsJump.astro";
 import ConsumableCard from "@/components/astro/ConsumableCard.astro";
+import PurchaseBundleList from "@/components/astro/PurchaseBundleList.astro";
 import SourceList from "@/components/astro/SourceList.astro";
 import VerificationBadge from "@/components/astro/VerificationBadge.astro";
 
@@ -218,6 +219,7 @@ const breadcrumbJsonLd = {
       </div>
     </section>
 
+    <PurchaseBundleList parts={parts} modelId={model.id} />
     <section class="detail-section model-reference-section" aria-label="모델 확인 자료">
       <div class="model-reference-grid">
         <details class="detail-disclosure">

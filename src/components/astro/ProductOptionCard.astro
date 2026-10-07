@@ -45,6 +45,7 @@ const packageLabel = presentedPackageLabel ?? option.modelLabels[modelId] ?? opt
 const purchaseLinks = option.purchaseLinks;
 const guidanceLinks = option.guidanceLinks;
 const searchablePartNumber = option.itemCode ?? fallbackPartNumber;
+const isOverseas = (url: string) => new URL(url).hostname === "www.eufy.com";
 ---
 
 <article
@@ -117,12 +118,19 @@ const searchablePartNumber = option.itemCode ?? fallbackPartNumber;
             {link.channel === "coupang"
               ? "쿠팡에서 구매하기"
               : link.channel === "official"
-                ? "공식몰에서 구매하기"
+                ? isOverseas(link.url)
+                  ? "해외 공식몰에서 구매하기"
+                  : "공식몰에서 구매하기"
                 : link.label}{" "}
             <span aria-hidden="true">↗</span>
           </a>
           {link.channel === "coupang" && (
             <AffiliateDisclosure hasAffiliateLinks={link.isAffiliate} />
+          )}
+          {link.channel === "official" && isOverseas(link.url) && (
+            <p class="purchase-unavailable">
+              해외 공식몰 상품입니다. 국내 배송 가능 여부를 확인하세요.
+            </p>
           )}
         </Fragment>
       ))

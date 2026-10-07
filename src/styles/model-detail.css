@@ -133,3 +133,16 @@
     font-size: 22px;
   }
 }
+.purchase-bundle-card {
+  padding: var(--space-6);
+}
+
+.purchase-bundle-card > h3 {
+  margin: 0 0 var(--space-2);
+}
+
+.purchase-bundle-parts {
+  color: var(--color-neutral-500);
+  margin-bottom: var(--space-4);
+  overflow-wrap: anywhere;
+}

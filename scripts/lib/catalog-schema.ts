@@ -22,7 +22,8 @@ export const catalogSchema = {
   "product-options.csv":
     "id,consumableId,name,kind,verification,description,itemCode,packageLabel,sortOrder,isActive",
   "option-model-labels.csv": "productOptionId,modelId,label",
-  "purchase-links.csv": "id,productOptionId,label,url,channel,isAffiliate,checkedAt,isActive",
+  "purchase-links.csv":
+    "id,productOptionId,label,url,channel,isAffiliate,checkedAt,isActive,purchaseScope",
   "guidance-links.csv": "id,productOptionId,label,url,channel,checkedAt,isActive",
   "images.csv": "id,modelId,src,alt,sourceUrl,checkedAt,sortOrder,isPrimary",
 } as const;
@@ -69,6 +70,7 @@ export function validateRawCatalog(raw: RawCatalog): string[] {
     kind: ["genuine", "compatible"],
     verification: ["official-genuine", "verified-compatible", "seller-claimed", "unverified"],
     channel: ["official", "coupang", "other"],
+    purchaseScope: ["individual", "bundle"],
     purpose: ["model-info", "release-date"],
     evidenceScope: ["legacy-unscoped", "scoped"],
     maintenanceMode: ["정기 교체", "세척 후 재사용", "상태에 따라 교체", "정기 관리"],

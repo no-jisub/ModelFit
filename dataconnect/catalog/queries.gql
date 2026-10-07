@@ -111,6 +111,7 @@ query GetModelBySlug($slug: String!)
             url
             channel
             isAffiliate
+            purchaseScope
             checkedAt
           }
           guidanceLinks: guidanceLinks_on_productOption(where: { isActive: { eq: true } }) {

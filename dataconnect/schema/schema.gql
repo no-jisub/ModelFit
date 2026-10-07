@@ -195,6 +195,7 @@ type PurchaseLink @table(key: "id") @index(fields: ["productOptionId", "isActive
   url: String!
   channel: PurchaseChannel!
   isAffiliate: Boolean! @default(value: false)
+  purchaseScope: String! @default(value: "individual")
   checkedAt: Date!
   isActive: Boolean! @default(value: true)
   createdAt: Timestamp! @default(expr: "request.time")
