@@ -87,6 +87,9 @@
     width: 80px;
     align-self: start;
   }
+  .model-content .model-detail-image .model-photo-surface {
+    border-radius: 10px;
+  }
   .model-content .model-detail-image img {
     padding: 6px;
     border-radius: 10px;

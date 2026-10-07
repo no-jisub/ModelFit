@@ -122,13 +122,15 @@ const breadcrumbJsonLd = {
         {
           model.image && (
             <figure class="model-detail-image">
-              <img
-                src={model.image.src}
-                alt={model.image.alt}
-                width="720"
-                height="720"
-                loading="eager"
-              />
+              <div class="model-photo-surface">
+                <img
+                  src={model.image.src}
+                  alt={model.image.alt}
+                  width="720"
+                  height="720"
+                  loading="eager"
+                />
+              </div>
               <figcaption>
                 <a href={model.image.sourceUrl} target="_blank" rel="noopener noreferrer">
                   제품 이미지 출처
