@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { randomBytes } from "node:crypto";
 import {
   catalogCiFiles,
   packCatalogCi,
@@ -10,6 +11,15 @@ const files = Object.fromEntries(
   catalogCiFiles.map((name) => [name, "\uFEFFid,name\r\n1,한글 CSV\r\n"]),
 );
 describe("CI catalog transfer", () => {
+  it("splits a larger catalog across three secrets and requires all three parts", () => {
+    const large = { ...files, [catalogCiFiles[0]]: randomBytes(80_000).toString("base64") };
+    const parts = packCatalogCi(large);
+    expect(parts).toHaveLength(3);
+    expect(parts.every((part) => Buffer.byteLength(part!) <= 45_000)).toBe(true);
+    expect(unpackCatalogCi(...parts)).toEqual(large);
+    expect(() => unpackCatalogCi(parts[0], parts[1])).toThrow();
+    expect(() => unpackCatalogCi(parts[0] + "a".repeat(45_000), parts[1], parts[2])).toThrow();
+  });
   it("rejects a stale or mixed snapshot before writing any CSV", () => {
     const expected = catalogFingerprint(files);
     expect(() => verifyCatalogFingerprint(files, expected)).not.toThrow();

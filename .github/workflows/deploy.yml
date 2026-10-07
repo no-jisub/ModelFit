@@ -41,6 +41,7 @@ jobs:
         env:
           MODELFIT_CATALOG_GZIP_1: ${{ secrets.MODELFIT_CATALOG_GZIP_1 }}
           MODELFIT_CATALOG_GZIP_2: ${{ secrets.MODELFIT_CATALOG_GZIP_2 }}
+          MODELFIT_CATALOG_GZIP_3: ${{ secrets.MODELFIT_CATALOG_GZIP_3 }}
       - name: Generate catalog data
         run: npm run catalog:import
       - run: npm run check

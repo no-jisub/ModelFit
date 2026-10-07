@@ -22,7 +22,7 @@ if (command === "pack") {
   verifyCatalogFingerprint(unpackCatalogCi(...parts), catalogFingerprint(files));
   await mkdir("outputs", { recursive: true });
   for (const [index, part] of parts.entries())
-    await writeFile("outputs/catalog-ci-" + (index + 1) + ".txt", part, { mode: 0o600 });
+    await writeFile("outputs/catalog-ci-" + (index + 1) + ".txt", part!, { mode: 0o600 });
   await mkdir("data", { recursive: true });
   await writeFile(
     "data/catalog-version.json",
@@ -33,14 +33,17 @@ if (command === "pack") {
     ) + "\n",
   );
   console.log(
-    "CI 카탈로그 패키지 생성 완료: outputs/catalog-ci-{1,2}.txt (Git 제외, 각 " +
-      parts.map((p) => Buffer.byteLength(p)).join(" / ") +
+    "CI 카탈로그 패키지 생성 완료: outputs/catalog-ci-{1.." +
+      parts.length +
+      "}.txt (Git 제외, 각 " +
+      parts.map((p) => Buffer.byteLength(p!)).join(" / ") +
       " bytes)",
   );
 } else if (command === "restore") {
   const files = unpackCatalogCi(
     process.env.MODELFIT_CATALOG_GZIP_1,
     process.env.MODELFIT_CATALOG_GZIP_2,
+    process.env.MODELFIT_CATALOG_GZIP_3,
   );
   verifyCatalogFingerprint(files, await expectedFingerprint());
   parseRawCatalogFiles(

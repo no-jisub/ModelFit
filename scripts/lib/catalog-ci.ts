@@ -19,21 +19,24 @@ export function verifyCatalogFingerprint(files: Record<string, string>, expected
     );
   if (catalogFingerprint(files) !== expected)
     throw new Error(
-      "카탈로그 버전 불일치: 현재 소스와 CI Secrets의 CSV 스냅샷이 다릅니다. 동일 패키지의 Secret 두 개를 함께 갱신하세요.",
+      "카탈로그 버전 불일치: 현재 소스와 CI Secrets의 CSV 스냅샷이 다릅니다. 동일 패키지의 Secrets를 함께 갱신하세요.",
     );
 }
 
-export function packCatalogCi(files: Record<string, string>): [string, string] {
+export function packCatalogCi(files: Record<string, string>): [string, string, string?] {
   validateFiles(files);
   const encoded = gzipSync(Buffer.from(JSON.stringify({ version: 2, files })), {
     level: 9,
   }).toString("base64");
-  if (encoded.length > maxSecretBytes * 2)
+  if (encoded.length > maxSecretBytes * 3)
     throw new Error(
-      "CI 카탈로그가 Secret 2개 용량을 초과합니다. 비공개 데이터 저장소로 전환하세요.",
+      "CI 카탈로그가 Secret 3개 용량을 초과합니다. 비공개 데이터 저장소로 전환하세요.",
     );
-  const midpoint = Math.ceil(encoded.length / 2);
-  return [encoded.slice(0, midpoint), encoded.slice(midpoint)];
+  const count = encoded.length > maxSecretBytes * 2 ? 3 : 2;
+  const size = Math.ceil(encoded.length / count);
+  return count === 2
+    ? [encoded.slice(0, size), encoded.slice(size)]
+    : [encoded.slice(0, size), encoded.slice(size, size * 2), encoded.slice(size * 2)];
 }
 
 function validateFiles(files: unknown): asserts files is Record<string, string> {
@@ -56,13 +59,15 @@ function validateFiles(files: unknown): asserts files is Record<string, string> 
 export function unpackCatalogCi(
   first: string | undefined,
   second: string | undefined,
+  third?: string,
 ): Record<string, string> {
   if (!first?.trim() || !second?.trim())
     throw new Error(
       "MODELFIT_CATALOG_GZIP_1 및 MODELFIT_CATALOG_GZIP_2 GitHub Secrets가 필요합니다.",
     );
-  const encoded = first.trim() + second.trim();
-  if (encoded.length > maxSecretBytes * 2 || !/^[A-Za-z0-9+/]+={0,2}$/.test(encoded))
+  const parts = [first.trim(), second.trim(), third?.trim() ?? ""];
+  const encoded = parts.join("");
+  if (parts.some((part) => part.length > maxSecretBytes) || !/^[A-Za-z0-9+/]+={0,2}$/.test(encoded))
     throw new Error("CI 카탈로그 인코딩이 올바르지 않습니다.");
   const archive = JSON.parse(
     gunzipSync(Buffer.from(encoded, "base64"), { maxOutputLength: 8 * 1024 * 1024 }).toString(
