@@ -3,7 +3,10 @@ import BrandCard from "@/components/astro/BrandCard.astro";
 import CategorySelector from "@/components/astro/CategorySelector.astro";
 import CoupangCategoryBanner from "@/components/astro/CoupangCategoryBanner.astro";
 import { brands } from "@/data/brands";
+import { categories } from "@/data/categories";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+
+const categoryNameList = categories.map(({ label }) => label).join("와 ");
 
 const featuredBrandIds = [
   "lg",
@@ -44,7 +47,7 @@ const websiteJsonLd = [
 
 <BaseLayout
   title="가전 모델명으로 호환 소모품 찾기"
-  description="공기청정기와 로봇청소기 모델명을 검색해 필터, 브러시, 먼지봉투 등 호환 소모품 정보를 확인하세요."
+  description={`${categoryNameList} 모델명을 검색해 호환 소모품 정보와 검증 상태를 확인하세요.`}
   canonicalPath="/"
   jsonLd={websiteJsonLd}
 >

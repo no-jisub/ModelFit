@@ -2,22 +2,50 @@
 import type { ConsumableProductOption } from "@/types";
 import AffiliateDisclosure from "./AffiliateDisclosure.astro";
 
-const { option, partNumber, productNumber, partId } = Astro.props as {
+const {
+  option,
+  compatibilityConfirmed = false,
+  modelId,
+  partName,
+  partId,
+  fallbackPartNumber,
+  showPackageLabel = true,
+  requiredQuantity,
+  packageLabel: presentedPackageLabel,
+} = Astro.props as {
   option: ConsumableProductOption;
-  partNumber: number;
-  productNumber: number;
+  compatibilityConfirmed?: boolean;
+  modelId: string;
+  partName: string;
   partId: string;
+  fallbackPartNumber?: string;
+  showPackageLabel?: boolean;
+  requiredQuantity?: string;
+  packageLabel?: string;
 };
-const optionNumber = String(partNumber) + "-" + String(productNumber);
 const headingId = option.id + "-heading";
 const kindLabel = option.kind === "genuine" ? "정품" : "호환상품";
 const verificationLabels = {
   "official-genuine": "공식 규격·호환 근거 확인",
   "verified-compatible": "호환 근거 확인",
-  "seller-claimed": "판매자 호환 표기",
   unverified: "미검증",
 } as const;
-const hasDirectProduct = option.purchaseLinks.some((link) => link.linkType === "direct-product");
+const productVerificationLabel =
+  option.verification === "seller-claimed"
+    ? option.kind === "genuine"
+      ? "판매자 정품 표기"
+      : "판매자 호환 표기"
+    : verificationLabels[option.verification];
+const verificationLabel =
+  !compatibilityConfirmed &&
+  ["official-genuine", "verified-compatible"].includes(option.verification)
+    ? "상품 자료 확인 · 모델 호환 확인 필요"
+    : productVerificationLabel;
+const packageLabel = presentedPackageLabel ?? option.modelLabels[modelId] ?? option.packageLabel;
+const purchaseLinks = option.purchaseLinks;
+const guidanceLinks = option.guidanceLinks;
+const searchablePartNumber = option.itemCode ?? fallbackPartNumber;
+const isOverseas = (url: string) => new URL(url).hostname === "www.eufy.com";
 ---
 
 <article
@@ -25,40 +53,53 @@ const hasDirectProduct = option.purchaseLinks.some((link) => link.linkType === "
   aria-labelledby={headingId}
 >
   <div class="product-option-heading">
-    <span class="product-option-number">{optionNumber}</span>
     <div>
       <div class="product-option-badges">
         <span class:list={["product-kind-badge", "is-" + option.kind]}>{kindLabel}</span>
-        <span class="product-verification-badge">
-          {verificationLabels[option.verification]}
-        </span>
+        <span
+          class:list={[
+            "product-verification-badge",
+            compatibilityConfirmed && option.verification === "official-genuine" && "sr-only",
+          ]}>{verificationLabel}</span
+        >
       </div>
-      <h5 id={headingId}>{option.name}</h5>
+      <h5 id={headingId} class:list={[option.name === partName && "sr-only"]}>{option.name}</h5>
     </div>
   </div>
 
-  <p class="product-option-description">{option.description}</p>
-
-  <dl class="product-option-details">
-    <div>
-      <dt>부품번호</dt>
-      <dd>{option.partNumber ?? "공식 자료에 번호 미표기"}</dd>
-    </div>
-    <div>
-      <dt>구성</dt>
-      <dd>{option.packageLabel ?? "판매 페이지에서 구성 수량 확인"}</dd>
-    </div>
-  </dl>
+  {
+    showPackageLabel && (
+      <dl class="product-option-details">
+        {requiredQuantity && (
+          <div>
+            <dt>제품 1대 필요 수량</dt>
+            <dd>{requiredQuantity}</dd>
+          </div>
+        )}
+        <div>
+          <dt>판매 구성</dt>
+          <dd
+            class:list={[
+              (!packageLabel || packageLabel.includes("확인 필요")) && "package-needs-review",
+            ]}
+          >
+            {packageLabel ?? "판매 구성 확인 필요"}
+          </dd>
+        </div>
+      </dl>
+    )
+  }
 
   <div class="product-option-links">
     {
-      option.purchaseLinks.map((link) => (
+      purchaseLinks.map((link, index) => (
         <Fragment>
           <a
             class:list={[
               "button",
               link.channel === "official" ? "button-secondary" : "button-primary",
             ]}
+            id={`${partId}--${option.id}--purchase-${index}`}
             href={link.url}
             rel={
               link.isAffiliate
@@ -69,23 +110,68 @@ const hasDirectProduct = option.purchaseLinks.some((link) => link.linkType === "
             }
             target="_blank"
             data-product-option-id={option.id}
+            data-product-kind={option.kind}
             data-purchase-channel={link.channel}
             data-part-id={partId}
             data-link-status={link.linkType}
           >
-            {link.label} <span aria-hidden="true">↗</span>
+            {link.channel === "coupang"
+              ? "쿠팡에서 구매하기"
+              : link.channel === "official"
+                ? isOverseas(link.url)
+                  ? "해외 공식몰에서 구매하기"
+                  : "공식몰에서 구매하기"
+                : link.label}{" "}
+            <span aria-hidden="true">↗</span>
           </a>
-          {link.channel === "coupang" && <AffiliateDisclosure hasAffiliateLinks={true} />}
+          {link.channel === "coupang" && (
+            <AffiliateDisclosure hasAffiliateLinks={link.isAffiliate} />
+          )}
+          {link.channel === "official" && isOverseas(link.url) && (
+            <p class="purchase-unavailable">
+              해외 공식몰 상품입니다. 국내 배송 가능 여부를 확인하세요.
+            </p>
+          )}
         </Fragment>
       ))
     }
+    {
+      purchaseLinks.length === 0 && (
+        <p class="purchase-unavailable">
+          <strong>확인된 구매처가 없습니다.</strong>
+          {searchablePartNumber
+            ? ` 부품번호 ${searchablePartNumber}로 제조사나 판매처에 문의하세요.`
+            : " 제조사 안내에서 부품명과 적용 모델을 다시 확인하세요."}
+        </p>
+      )
+    }
   </div>
-
   {
-    !hasDirectProduct && (
-      <p class="product-option-link-note">
-        외부 판매 상품 링크는 준비 중입니다. 위의 공식 사이트에서 소모품 정보를 확인하세요.
-      </p>
+    purchaseLinks.length === 0 && (
+      <>
+        <>
+          <p>{option.description}</p>
+          <div class="product-guidance-links">
+            {guidanceLinks.map((link) => (
+              <a
+                href={link.url}
+                rel="noopener noreferrer"
+                target="_blank"
+                data-product-option-id={option.id}
+                data-product-kind={option.kind}
+                data-purchase-channel={link.channel}
+                data-part-id={partId}
+                data-link-status={link.linkType}
+              >
+                {!compatibilityConfirmed && link.label.includes("공식 호환")
+                  ? "제조사 참고 자료"
+                  : link.label}{" "}
+                <span aria-hidden="true">↗</span>
+              </a>
+            ))}
+          </div>
+        </>
+      </>
     )
   }
 </article>

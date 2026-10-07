@@ -12,7 +12,16 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap({
-      filter: (page) => !page.includes("/part/") && !page.endsWith("/search-index.json"),
+      filter: (page) => {
+        const pathname = new URL(page).pathname.replace(/\/$/, "") || "/";
+        return (
+          !["/find", "/report", "/admin", "/404", "/404.html", "/search-index.json"].includes(
+            pathname,
+          ) &&
+          !pathname.startsWith("/part/") &&
+          !pathname.startsWith("/admin/")
+        );
+      },
     }),
   ],
   redirects: {

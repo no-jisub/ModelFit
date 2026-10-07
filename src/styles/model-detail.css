@@ -1,0 +1,148 @@
+/* Model identification and purchase decisions share a compact reading order. */
+.model-content .compatible-parts-section:target {
+  margin-inline: 0;
+  padding-inline: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.model-content .consumable-group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 0.8fr);
+}
+.part-overview {
+  padding-block: 4px 16px;
+  min-width: 0;
+}
+.model-content .consumable-group-heading {
+  padding: 20px 24px 12px;
+}
+.model-content .part-purpose {
+  margin: 8px 0;
+  font-size: 14px;
+  color: var(--color-neutral-600);
+}
+.model-content .product-options-section {
+  margin: 24px 0;
+  padding: 0 24px;
+  border-left: 1px solid var(--color-neutral-200);
+}
+.model-content .product-option-card:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.model-content .product-option-details {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 16px;
+}
+.model-content .product-option-details > div {
+  flex-wrap: wrap;
+  gap: 4px 12px;
+}
+.model-content .product-option-details dd {
+  font-size: 14px;
+  font-weight: 650;
+}
+.model-content .package-needs-review {
+  color: #92400e;
+  background: #fffbeb;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+.model-content .product-option-links .button {
+  width: 100%;
+  font-size: 14px;
+}
+.model-content .part-details {
+  grid-column: 1 / -1;
+}
+.model-content .part-evidence-summary {
+  font-size: 13px;
+}
+.model-content .compatible-parts-header {
+  margin-bottom: 24px;
+}
+@media (max-width: 700px) {
+  .model-content .model-title-line:has(.model-detail-image) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 80px;
+    gap: 16px;
+    align-items: start;
+  }
+  .model-content .model-title-line:has(.model-detail-image) .model-identity {
+    display: contents;
+  }
+  .model-content .model-brand-category {
+    grid-column: 1;
+    margin: 0;
+  }
+  .model-content .model-title-line h1 {
+    grid-column: 1;
+    margin: -10px 0 0;
+    font-size: 24px;
+  }
+  .model-content .model-detail-image {
+    grid-column: 2;
+    grid-row: 1 / 3;
+    width: 80px;
+    align-self: start;
+  }
+  .model-content .model-detail-image .model-photo-surface {
+    border-radius: 10px;
+  }
+  .model-content .model-detail-image img {
+    padding: 6px;
+    border-radius: 10px;
+  }
+  .model-content .model-detail-image figcaption {
+    font-size: 10px;
+  }
+  .model-content .model-detail-image figcaption span {
+    display: none;
+  }
+  .model-content .model-detail-selector,
+  .model-content .model-code-block {
+    grid-column: 1 / -1;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+  .model-content .model-identity-meta {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px 12px;
+    margin: 0;
+  }
+  .model-content .consumable-group {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .model-content .consumable-group-heading {
+    padding: 18px 18px 12px;
+  }
+  .part-overview {
+    padding-bottom: 0;
+  }
+  .model-content .product-options-section {
+    margin: 0 18px 18px;
+    padding: 16px 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--color-neutral-200);
+  }
+  .model-content .compatible-parts-header h2 {
+    font-size: 22px;
+  }
+}
+.purchase-bundle-card {
+  padding: var(--space-6);
+}
+
+.purchase-bundle-card > h3 {
+  margin: 0 0 var(--space-2);
+}
+
+.purchase-bundle-parts {
+  color: var(--color-neutral-500);
+  margin-bottom: var(--space-4);
+  overflow-wrap: anywhere;
+}

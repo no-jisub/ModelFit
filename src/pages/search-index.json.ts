@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { consumables } from "@/data/consumables";
 import { models } from "@/data/models";
-import { createAutocompleteIndex } from "@/utils/autocomplete";
+import { createAutocompleteIndex } from "@/utils/autocompleteIndex";
 
 export const prerender = true;
 

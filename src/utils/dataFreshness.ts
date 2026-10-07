@@ -31,7 +31,9 @@ export function getDataFreshness(checkedAt: string, now = new Date()): DataFresh
 export function getConsumableCheckedAt(part: ConsumableCompatibility) {
   const dates = [
     ...part.sources.map((source) => source.checkedAt),
-    ...part.purchaseLinks.map((link) => link.checkedAt),
+    ...part.productOptions
+      .flatMap((option) => [...option.purchaseLinks, ...option.guidanceLinks])
+      .map((link) => link.checkedAt),
   ]
     .filter((date) => !Number.isNaN(Date.parse(date)))
     .sort((left, right) => Date.parse(left) - Date.parse(right));

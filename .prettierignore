@@ -3,3 +3,7 @@ dist
 node_modules
 package-lock.json
 DESIGN.md
+
+dataconnect/.dataconnect
+private-backups
+src/lib/dataconnect-generated

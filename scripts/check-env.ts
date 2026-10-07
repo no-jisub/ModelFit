@@ -5,7 +5,6 @@ const env = { ...loadEnv("production", process.cwd(), ""), ...process.env };
 const publicEnv = {
   PUBLIC_SITE_URL: env.PUBLIC_SITE_URL?.trim(),
   PUBLIC_SITE_NAME: env.PUBLIC_SITE_NAME?.trim(),
-  PUBLIC_COUPANG_BASE_URL: env.PUBLIC_COUPANG_BASE_URL?.trim(),
   PUBLIC_AFFILIATE_DISCLOSURE_TEXT: env.PUBLIC_AFFILIATE_DISCLOSURE_TEXT?.trim(),
   PUBLIC_GA_MEASUREMENT_ID: env.PUBLIC_GA_MEASUREMENT_ID?.trim(),
   PUBLIC_FIREBASE_API_KEY: env.PUBLIC_FIREBASE_API_KEY?.trim(),
@@ -31,7 +30,6 @@ function checkHttpsUrl(name: keyof typeof publicEnv) {
 }
 
 checkHttpsUrl("PUBLIC_SITE_URL");
-checkHttpsUrl("PUBLIC_COUPANG_BASE_URL");
 
 if (
   publicEnv.PUBLIC_GA_MEASUREMENT_ID &&

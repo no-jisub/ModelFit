@@ -1,0 +1,27 @@
+<a class="mobile-compatible-parts-cta" href="#compatible-parts" data-mobile-parts-jump
+  >호환 소모품·부품 보기</a
+>
+<script>
+  const jump = document.querySelector<HTMLElement>("[data-mobile-parts-jump]");
+  const parts = document.getElementById("compatible-parts");
+  let scheduled = false;
+  function updateVisibility() {
+    if (!jump || !parts) return;
+    const headerHeight = document.querySelector("header")?.getBoundingClientRect().height ?? 0;
+    jump.hidden =
+      parts.getBoundingClientRect().top <= Math.max(headerHeight + 48, window.innerHeight / 2);
+  }
+  function scheduleUpdate() {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
+      updateVisibility();
+    });
+  }
+  window.addEventListener("scroll", scheduleUpdate, { passive: true });
+  window.addEventListener("resize", scheduleUpdate);
+  window.addEventListener("hashchange", scheduleUpdate);
+  window.addEventListener("pageshow", scheduleUpdate);
+  updateVisibility();
+</script>

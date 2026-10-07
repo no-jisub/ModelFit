@@ -1,96 +1,409 @@
 ---
 import type { ConsumableCompatibility } from "@/types";
-import { partTypeLabels } from "@/utils/labels";
+import { partNumberStatusLabels } from "@/utils/labels";
+import { getMaintenancePresentation, getPartConfiguration } from "@/utils/partPresentation";
+import { groupPurchaseOptions, getSalesPackageLabel } from "@/utils/purchasePresentation";
 import ProductOptionCard from "./ProductOptionCard.astro";
 import VerificationBadge from "./VerificationBadge.astro";
+import { isOfficialCompatibility } from "@/utils/compatibility";
 
-const { part, itemNumber } = Astro.props as {
+const { part, modelCode, modelId } = Astro.props as {
   part: ConsumableCompatibility;
-  itemNumber: number;
+  modelCode: string;
+  modelId: string;
 };
 const typeDescriptions = {
   "dust-filter": "공기 중 먼지를 포집하는 교체 필터입니다.",
   "hepa-filter": "공기 중 미세입자와 초미세먼지를 포집하는 필터입니다.",
   "deodorizing-filter": "생활 냄새와 가스 성분을 흡착하는 필터입니다.",
-  "custom-filter": "사용 환경에 맞춰 선택하는 교체 필터입니다. 종류와 적용 모델을 확인하세요.",
+  "custom-filter": "사용 환경에 맞춰 선택하는 필터입니다. 종류와 적용 모델을 확인하세요.",
   "pre-filter": "큰 먼지와 털을 먼저 걸러 주는 전처리 필터입니다.",
-  "all-in-one-filter": "여러 필터 기능을 하나의 교체 구성으로 합친 필터입니다.",
+  "all-in-one-filter": "여러 필터 기능을 하나의 구성으로 합친 필터입니다.",
   "dust-bin-filter": "먼지통으로 들어온 미세먼지가 다시 배출되지 않도록 걸러 줍니다.",
-  "dust-bag": "수거된 먼지를 보관하며 가득 차면 새 제품으로 교체합니다.",
+  "dust-bag": "수거된 먼지를 보관하는 먼지봉투입니다.",
   "main-brush": "바닥의 먼지와 이물질을 쓸어 흡입구로 보내는 메인 브러시입니다.",
   "side-brush": "벽면과 모서리의 먼지를 중앙 흡입구 쪽으로 모아 줍니다.",
-  "mop-pad": "바닥 물걸레 청소에 사용하는 교체형 또는 세척형 패드입니다.",
+  "mop-pad": "바닥 물걸레 청소에 사용하는 패드입니다.",
 } as const;
-const compatibleOptionCount = part.productOptions.filter(
-  (option) => option.kind === "compatible",
-).length;
+const configuration = getPartConfiguration(part, modelId);
+const compatibility = part.compatibilities.find((relation) => relation.modelId === modelId);
+const compatibilityConfirmed = isOfficialCompatibility(compatibility);
+const compatibilityStatus =
+  compatibility?.verificationStatus === "official" && !compatibilityConfirmed
+    ? "unverified"
+    : (compatibility?.verificationStatus ?? "unverified");
+const maintenance = getMaintenancePresentation(part);
+const compatibilityNotes = {
+  official: "제조사 자료에서 이 모델과의 호환 관계를 확인했습니다.",
+  "seller-confirmed": "판매자가 이 모델과 호환된다고 표시한 정보입니다.",
+  "user-reported": "사용자 제보로 확인된 정보이며 공식 자료 확인이 필요합니다.",
+  unverified: "구매 판단에 필요한 호환 근거가 아직 확인되지 않았습니다.",
+} as const;
+const evidenceSources =
+  compatibility?.evidenceScope === "scoped" ? compatibility.sources : part.sources;
+const evidenceCount = evidenceSources.length;
+const purchaseOptions = groupPurchaseOptions(part.productOptions);
+const hasBundle = part.productOptions.some((option) =>
+  option.purchaseLinks.some((link) => link.purchaseScope === "bundle"),
+);
+const officialStoreGuidance = part.productOptions
+  .flatMap((option) =>
+    option.guidanceLinks
+      .filter((link) =>
+        option.sources.some(
+          (source) => source.sourceType === "official-store" && source.url === link.url,
+        ),
+      )
+      .map((link) => ({ link, option })),
+  )
+  .filter(
+    ({ link }, index, links) => links.findIndex((entry) => entry.link.url === link.url) === index,
+  );
+function isOverseasStore(url: string) {
+  const destination = new URL(url);
+  return (
+    destination.hostname === "us.roborock.com" ||
+    destination.hostname === "www.eufy.com" ||
+    /\/(us|en_US)\//.test(destination.pathname)
+  );
+}
 ---
 
-<article class="consumable-group card">
-  <header class="consumable-group-heading">
-    <span class="consumable-group-number">{itemNumber}</span>
-    <div>
-      <div class="eyebrow">{itemNumber}번 소모품 · {partTypeLabels[part.type]}</div>
-      <h3>{part.displayName}</h3>
-      <p>{typeDescriptions[part.type]}</p>
-    </div>
-  </header>
-
-  <dl class="consumable-group-details">
-    <div>
-      <dt>정품 부품번호</dt>
-      <dd>{part.genuinePartNumber ?? "공식 자료에 번호 미표기"}</dd>
-    </div>
-    <div>
-      <dt>호환 검증</dt>
-      <dd><VerificationBadge status={part.verificationStatus} context="compatibility" /></dd>
-    </div>
-    {
-      part.replacementInterval && (
-        <div>
-          <dt>교체 주기</dt>
-          <dd>{part.replacementInterval}</dd>
+<article class="consumable-group card" id={part.id}>
+  <div class="part-overview">
+    <header class:list={["consumable-group-heading", part.image && "has-part-image"]}>
+      {
+        part.image && (
+          <figure class="part-image">
+            <img
+              src={part.image.src}
+              alt={part.image.alt}
+              width="240"
+              height="240"
+              loading="lazy"
+            />
+          </figure>
+        )
+      }
+      <div>
+        <div class="part-title-line">
+          <h3>{part.displayName}</h3><span aria-label={`${modelCode} 호환 상태`}
+            ><VerificationBadge status={compatibilityStatus} context="compatibility" /></span
+          >
         </div>
+        <p class="part-purpose">{typeDescriptions[part.type]}</p>
+        <div class="part-number-inline" aria-label="부품번호">
+          <span>부품번호</span>
+          {
+            part.genuinePartNumber ? (
+              <>
+                <>
+                  <code>{part.genuinePartNumber}</code>
+                  <button
+                    type="button"
+                    class="copy-part-number"
+                    data-copy-value={part.genuinePartNumber}
+                    aria-label={`${part.genuinePartNumber} 부품번호 복사`}
+                  >
+                    <span data-copy-label>복사</span>
+                  </button>
+                </>
+              </>
+            ) : (
+              <span>{partNumberStatusLabels[part.partNumberStatus]}</span>
+            )
+          }
+        </div>
+      </div>
+    </header>
+    {
+      compatibilityConfirmed && compatibility?.sources[0] && (
+        <p class="part-evidence-summary">
+          <a
+            href={compatibility.sources[0].url}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-source-type={compatibility.sources[0].sourceType}
+            data-part-id={part.id}
+          >
+            이 모델의 공식 호환 근거 <span aria-hidden="true">↗</span>
+          </a>
+          <span>
+            호환 확인 <time datetime={compatibility.verifiedAt}>{compatibility.verifiedAt}</time>
+          </span>
+        </p>
       )
     }
-  </dl>
-
+    {
+      purchaseOptions.available.length === 0 && configuration?.requiredQuantity && (
+        <dl class="purchase-quantity-summary">
+          <div>
+            <>
+              <dt>제품 1대 필요 수량</dt>
+              <dd>{configuration.requiredQuantity}</dd>
+            </>
+          </div>
+        </dl>
+      )
+    }
+    {
+      !compatibilityConfirmed && (
+        <p class="part-purchase-warning">
+          {compatibility?.evidenceScope === "legacy-unscoped"
+            ? "이 모델의 호환 근거를 재확인하고 있습니다. 구매 전 제조사 안내를 확인하세요."
+            : compatibilityNotes[compatibilityStatus]}
+        </p>
+      )
+    }
+  </div>
   <section class="product-options-section" aria-labelledby={part.id + "-products"}>
-    <div class="product-options-heading">
-      <div>
-        <span class="eyebrow">{itemNumber}번 소모품의 구매 선택지</span>
-        <h4 id={part.id + "-products"}>소개할 상품 {part.productOptions.length}개</h4>
-      </div>
-      <span class="product-options-count">
-        정품 {part.productOptions.filter((option) => option.kind === "genuine").length} · 호환상품 {
-          compatibleOptionCount
-        }
-      </span>
-    </div>
-
+    <h4 class="sr-only" id={part.id + "-products"}>
+      {purchaseOptions.available.length > 0 ? "구매 가능한 상품" : "구매처 확인 안내"}
+    </h4>
     <div class="product-option-list">
       {
-        part.productOptions.map((option, productIndex) => (
-          <ProductOptionCard
-            option={option}
-            partNumber={itemNumber}
-            productNumber={productIndex + 1}
-            partId={part.id}
-          />
-        ))
+        purchaseOptions.available.length === 0 && hasBundle && (
+          <p class="purchase-unavailable">
+            확인된 개별 상품이 없습니다. <a href="#purchase-bundles">세트 상품 보기</a>
+          </p>
+        )
+      }
+      {
+        purchaseOptions.available.length > 0 ? (
+          purchaseOptions.available.map((option) => (
+            <ProductOptionCard
+              compatibilityConfirmed={compatibilityConfirmed}
+              option={option}
+              modelId={modelId}
+              partId={part.id}
+              partName={part.displayName}
+              requiredQuantity={configuration?.requiredQuantity}
+              packageLabel={getSalesPackageLabel(
+                option.modelLabels[modelId] ?? option.packageLabel,
+                configuration,
+                modelCode,
+              )}
+              fallbackPartNumber={part.genuinePartNumber}
+            />
+          ))
+        ) : officialStoreGuidance.length > 0 ? (
+          <div class="official-store-guidance">
+            {officialStoreGuidance.map(({ link, option }) => (
+              <div>
+                <a
+                  class="button button-secondary"
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  data-product-option-id={option.id}
+                  data-product-kind={option.kind}
+                  data-purchase-channel="official"
+                  data-part-id={part.id}
+                  data-link-status="official-reference"
+                >
+                  {isOverseasStore(link.url) ? "해외 공식몰에서 부품 확인" : "공식몰에서 부품 확인"}{" "}
+                  <span aria-hidden="true">↗</span>
+                </a>
+                {isOverseasStore(link.url) && (
+                  <p class="purchase-unavailable">국내 배송 여부를 공식몰에서 확인하세요.</p>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p class="purchase-unavailable">
+            <strong>확인된 구매처가 없습니다.</strong> 제조사 안내에서 적용 모델과 구매처를
+            확인하세요.
+          </p>
+        )
       }
     </div>
-
-    {
-      compatibleOptionCount === 0 && (
-        <div class="compatible-products-pending">
-          <strong>검증된 호환상품 추가 조사 중</strong>
-          <p>
-            판매자가 호환된다고 적은 것만으로는 등록하지 않습니다. 적용 모델, 크기와 결합부, 구성품
-            근거가 확인된 상품부터 {itemNumber}-2, {itemNumber}-3 순서로 추가합니다.
-          </p>
-        </div>
-      )
-    }
   </section>
+  <details class="part-details">
+    <summary>상세 정보</summary>
+    <div class="part-details-content">
+      <section class="part-management">
+        <h4>부품·관리 안내</h4><p>{typeDescriptions[part.type]}</p>
+        <p>{compatibilityNotes[compatibilityStatus]}</p>
+        <dl class="part-use-details">
+          {
+            configuration?.itemCode && (
+              <div>
+                <>
+                  <dt>상품·구성 코드</dt>
+                  <dd>{configuration.itemCode}</dd>
+                </>
+              </div>
+            )
+          }
+          {
+            configuration?.salesPackage && (
+              <div>
+                <>
+                  <dt>판매 단위</dt>
+                  <dd>{configuration.salesPackage}</dd>
+                </>
+              </div>
+            )
+          }
+          {
+            configuration?.composition && (
+              <div>
+                <>
+                  <dt>확인된 구성 정보</dt>
+                  <dd>{configuration.composition}</dd>
+                </>
+              </div>
+            )
+          }
+          {
+            maintenance && (
+              <div class="part-maintenance-detail">
+                <>
+                  <dt>관리 방식</dt>
+                  <dd>
+                    <>
+                      <span>{maintenance.mode}</span>
+                      <span>{maintenance.detail}</span>
+                    </>
+                  </dd>
+                </>
+              </div>
+            )
+          }
+        </dl>
+      </section>
+      {
+        purchaseOptions.available.map((option) => (
+          <section class="product-option-description">
+            <p>{option.description}</p>
+            <p>상품 원문 표기: {option.modelLabels[modelId] ?? option.packageLabel}</p>
+            {option.purchaseLinks.map((link) => (
+              <p class="purchase-checked-at">구매 링크 확인: {link.checkedAt}</p>
+            ))}
+            <div class="product-guidance-links">
+              {option.guidanceLinks.map((link) => (
+                <a
+                  href={link.url}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  data-product-option-id={option.id}
+                  data-product-kind={option.kind}
+                  data-purchase-channel={link.channel}
+                  data-part-id={part.id}
+                  data-link-status={link.linkType}
+                >
+                  {!compatibilityConfirmed && link.label.includes("공식 호환")
+                    ? "제조사 참고 자료"
+                    : link.label}{" "}
+                  <span aria-hidden="true">↗</span>
+                </a>
+              ))}
+            </div>
+          </section>
+        ))
+      }
+      {
+        purchaseOptions.reference.length > 0 && (
+          <section class="purchase-reference-options">
+            <h4>구매처 없는 정품·상품 안내</h4>
+            {purchaseOptions.reference.map((option) => (
+              <ProductOptionCard
+                compatibilityConfirmed={compatibilityConfirmed}
+                option={option}
+                modelId={modelId}
+                partId={part.id}
+                partName={part.displayName}
+                fallbackPartNumber={part.genuinePartNumber}
+              />
+            ))}
+          </section>
+        )
+      }
+      <section class="part-evidence">
+        <h4>확인 근거와 날짜</h4><div class="part-evidence-content">
+          {
+            evidenceCount > 0 ? (
+              <ul>
+                {evidenceSources.map((source) => (
+                  <li>
+                    <a
+                      href={source.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-source-type={source.sourceType}
+                      data-part-id={part.id}
+                    >
+                      {source.title}
+                    </a>
+                    <span>
+                      자료 확인: <time datetime={source.checkedAt}>{source.checkedAt}</time>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>이 부품의 호환 근거가 아직 연결되지 않았습니다. 구매 전 제조사에 확인하세요.</p>
+            )
+          }
+        </div>
+      </section>
+      {
+        part.image && (
+          <p class="part-image-credit">
+            <a href={part.image.sourceUrl} target="_blank" rel="noopener noreferrer">
+              부품 이미지 출처
+            </a>{" "}
+            · 이미지 확인: {part.image.checkedAt}
+          </p>
+        )
+      }
+    </div>
+  </details>
 </article>
+
+<style>
+  .part-evidence-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    margin: 0;
+    padding: 0 24px 16px;
+    font-size: 14px;
+  }
+  .part-evidence-summary a {
+    color: var(--color-primary-700);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .part-evidence-summary span {
+    color: var(--color-neutral-600);
+  }
+  .part-purchase-warning {
+    font-size: 14px;
+  }
+  @media (max-width: 700px) {
+    .part-evidence-summary {
+      padding-inline: 18px;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>("[data-copy-value]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const value = button.dataset.copyValue;
+      const label = button.querySelector<HTMLElement>("[data-copy-label]");
+      if (!value || !label) return;
+
+      try {
+        await navigator.clipboard.writeText(value);
+        label.textContent = "복사됨";
+        window.setTimeout(() => (label.textContent = "복사"), 1600);
+      } catch {
+        label.textContent = "복사 실패";
+        window.setTimeout(() => (label.textContent = "복사"), 1600);
+      }
+    });
+  });
+</script>

@@ -1,4 +1,5 @@
-import type { ApplianceCategory, ApplianceModel } from "@/types";
+import type { ApplianceCategory } from "@/types";
+import type { SearchModel } from "./searchData";
 import { normalizeSearch } from "./normalizeSearch";
 
 export interface SearchOptions {
@@ -8,11 +9,11 @@ export interface SearchOptions {
 }
 
 export interface RankedModel {
-  model: ApplianceModel;
+  model: SearchModel;
   score: number;
 }
 
-function searchableValues(model: ApplianceModel): string[] {
+function searchableValues(model: SearchModel): string[] {
   return [
     model.modelCode,
     model.modelName,
@@ -27,7 +28,7 @@ function searchableValues(model: ApplianceModel): string[] {
     .map(normalizeSearch);
 }
 
-function scoreModel(model: ApplianceModel, query: string): number {
+function scoreModel(model: SearchModel, query: string): number {
   const q = normalizeSearch(query);
   if (!q) return 1;
 
@@ -60,7 +61,7 @@ function scoreModel(model: ApplianceModel, query: string): number {
 }
 
 export function searchModels(
-  allModels: ApplianceModel[],
+  allModels: SearchModel[],
   query: string,
   options: SearchOptions = {},
 ): RankedModel[] {

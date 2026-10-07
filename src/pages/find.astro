@@ -1,5 +1,8 @@
 ---
 import SearchResults from "@/components/react/SearchResults";
+import { models } from "@/data/models";
+import { consumables } from "@/data/consumables";
+import { createSearchCatalogData } from "@/utils/searchData";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
 const query = Astro.url.searchParams.get("q") ?? "";
@@ -17,6 +20,10 @@ const query = Astro.url.searchParams.get("q") ?? "";
     </div>
   </header>
   <div class="container search-page-shell">
-    <SearchResults initialQuery={query} client:load />
+    <SearchResults
+      catalog={createSearchCatalogData(models, consumables)}
+      initialQuery={query}
+      client:load
+    />
   </div>
 </BaseLayout>

@@ -1,4 +1,5 @@
 ---
+import { categories } from "@/data/categories";
 import Logo from "./Logo.astro";
 ---
 
@@ -13,8 +14,7 @@ import Logo from "./Logo.astro";
         <h2>탐색</h2>
         <a href="/find">소모품 찾기</a>
         <a href="/#brands">브랜드별 모델</a>
-        <a href="/category/air-purifier">공기청정기</a>
-        <a href="/category/robot-vacuum">로봇청소기</a>
+        {categories.map((category) => <a href={`/category/${category.id}`}>{category.label}</a>)}
       </div>
       <div>
         <h2>도움말</h2>

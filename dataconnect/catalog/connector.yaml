@@ -1,0 +1,6 @@
+connectorId: "catalog"
+generate:
+  javascriptSdk:
+    outputDir: "../../src/lib/dataconnect-generated"
+    package: "@modelfit/dataconnect"
+    packageJsonDir: "../.."

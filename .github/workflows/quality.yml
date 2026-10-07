@@ -7,14 +7,23 @@ on:
 
 jobs:
   browser-quality:
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version-file: .node-version
           cache: npm
       - run: npm ci
+      - name: Restore private catalog sources
+        run: npm run catalog:ci:restore
+        env:
+          MODELFIT_CATALOG_GZIP_1: ${{ secrets.MODELFIT_CATALOG_GZIP_1 }}
+          MODELFIT_CATALOG_GZIP_2: ${{ secrets.MODELFIT_CATALOG_GZIP_2 }}
+          MODELFIT_CATALOG_GZIP_3: ${{ secrets.MODELFIT_CATALOG_GZIP_3 }}
+      - name: Generate catalog data
+        run: npm run catalog:import
       - run: npm audit --audit-level=high
       - run: npx playwright install --with-deps chromium
       - run: npm run test:e2e

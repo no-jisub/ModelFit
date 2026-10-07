@@ -1,0 +1,226 @@
+enum PublishStatus {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+enum VerificationStatus {
+  OFFICIAL
+  SELLER_CONFIRMED
+  USER_REPORTED
+  UNVERIFIED
+}
+
+enum SourceType {
+  MANUFACTURER
+  OFFICIAL_MANUAL
+  OFFICIAL_STORE
+  SELLER
+  OTHER
+}
+
+enum PartNumberStatus {
+  CONFIRMED
+  NOT_LISTED
+  RESEARCHING
+}
+
+enum PurchaseChannel {
+  OFFICIAL
+  COUPANG
+  OTHER
+}
+
+enum ProductOptionKind {
+  GENUINE
+  COMPATIBLE
+}
+
+enum ProductOptionVerification {
+  OFFICIAL_GENUINE
+  VERIFIED_COMPATIBLE
+  SELLER_CLAIMED
+  UNVERIFIED
+}
+
+type Category @table(key: "id") {
+  id: String! @col(dataType: "varchar(80)")
+  label: String! @col(dataType: "varchar(120)")
+  selectorImage: String
+  description: String
+  modelNumberGuide: String
+  sortOrder: Int! @default(value: 0)
+  isActive: Boolean! @default(value: true)
+  createdAt: Timestamp! @default(expr: "request.time")
+  updatedAt: Timestamp! @default(expr: "request.time")
+}
+
+type Brand @table(key: "id") {
+  id: String! @col(dataType: "varchar(80)")
+  slug: String! @unique @col(dataType: "varchar(80)")
+  name: String! @col(dataType: "varchar(120)")
+  nameEn: String @col(dataType: "varchar(120)")
+  sortOrder: Int! @default(value: 0)
+  isActive: Boolean! @default(value: true)
+  createdAt: Timestamp! @default(expr: "request.time")
+  updatedAt: Timestamp! @default(expr: "request.time")
+}
+
+type BrandCategory @table(key: ["brand", "category"]) {
+  brand: Brand!
+  category: Category!
+}
+
+type Model
+  @table(key: "id")
+  @unique(fields: ["brandId", "modelCodeNormalized"])
+  @unique(fields: ["brandId", "slug"])
+  @index(fields: ["categoryId", "status", "modelName"])
+  @index(fields: ["brandId", "status", "modelName"]) {
+  id: String! @col(dataType: "varchar(180)")
+  slug: String! @col(dataType: "varchar(180)")
+  category: Category! @ref(fields: "categoryId", references: "id")
+  categoryId: String! @col(dataType: "varchar(80)")
+  brand: Brand! @ref(fields: "brandId", references: "id")
+  brandId: String! @col(dataType: "varchar(80)")
+  modelName: String! @searchable @col(dataType: "varchar(240)")
+  modelCode: String! @searchable @col(dataType: "varchar(160)")
+  modelCodeNormalized: String! @col(dataType: "varchar(160)")
+  series: String @searchable @col(dataType: "varchar(180)")
+  status: PublishStatus! @default(value: DRAFT)
+  verificationStatus: VerificationStatus! @default(value: UNVERIFIED)
+  releaseYear: Int
+  releaseMonth: Int
+  releaseDay: Int
+  verifiedAt: Date!
+  createdAt: Timestamp! @default(expr: "request.time")
+  updatedAt: Timestamp! @default(expr: "request.time")
+}
+
+type ModelAlias @table(key: ["model", "aliasNormalized"]) {
+  model: Model!
+  alias: String! @searchable @col(dataType: "varchar(180)")
+  aliasNormalized: String! @col(dataType: "varchar(180)")
+}
+
+type Consumable @table(key: "id") @index(fields: ["type", "status", "displayName"]) {
+  id: String! @col(dataType: "varchar(180)")
+  slug: String! @unique @col(dataType: "varchar(180)")
+  type: String! @col(dataType: "varchar(80)")
+  displayName: String! @searchable @col(dataType: "varchar(240)")
+  genuinePartNumber: String @searchable @col(dataType: "varchar(160)")
+  partNumberStatus: PartNumberStatus! @default(value: RESEARCHING)
+  searchKeywords: [String!]
+  maintenanceMode: String
+  maintenanceDetail: String
+  purchaseWarning: String
+  status: PublishStatus! @default(value: DRAFT)
+  verificationStatus: VerificationStatus! @default(value: UNVERIFIED)
+  sortOrder: Int! @default(value: 0)
+  createdAt: Timestamp! @default(expr: "request.time")
+  updatedAt: Timestamp! @default(expr: "request.time")
+}
+
+type ModelConsumable @table(key: "id") @unique(fields: ["modelId", "consumableId"]) {
+  id: String!
+  evidenceScope: String!
+  itemCode: String
+  requiredQuantity: String
+  salesPackage: String
+  composition: String
+  model: Model!
+  consumable: Consumable!
+  verificationStatus: VerificationStatus! @default(value: UNVERIFIED)
+  verifiedAt: Date
+}
+
+type Source @table(key: "id") {
+  id: String! @col(dataType: "varchar(180)")
+  title: String! @col(dataType: "varchar(300)")
+  url: String!
+  sourceType: SourceType!
+  checkedAt: Date!
+  isActive: Boolean! @default(value: true)
+  createdAt: Timestamp! @default(expr: "request.time")
+}
+
+type ModelSource @table(key: ["model", "source"]) {
+  purpose: String!
+  model: Model!
+  source: Source!
+}
+
+type ConsumableSource @table(key: ["consumable", "source"]) {
+  consumable: Consumable!
+  source: Source!
+}
+
+type ProductOptionSource @table(key: ["productOption", "source"]) {
+  productOption: ProductOption!
+  source: Source!
+}
+
+type ModelImage @table(key: "id") @index(fields: ["modelId", "sortOrder"]) {
+  id: String! @col(dataType: "varchar(180)")
+  model: Model! @ref(fields: "modelId", references: "id")
+  modelId: String! @col(dataType: "varchar(180)")
+  url: String!
+  alt: String! @col(dataType: "varchar(300)")
+  sourceUrl: String!
+  checkedAt: Date!
+  sortOrder: Int! @default(value: 0)
+  isPrimary: Boolean! @default(value: false)
+}
+
+type ProductOption @table(key: "id") @index(fields: ["consumableId", "kind"]) {
+  id: String! @col(dataType: "varchar(180)")
+  consumable: Consumable! @ref(fields: "consumableId", references: "id")
+  consumableId: String! @col(dataType: "varchar(180)")
+  name: String! @col(dataType: "varchar(300)")
+  kind: ProductOptionKind!
+  verification: ProductOptionVerification!
+  description: String!
+  itemCode: String @col(dataType: "varchar(160)")
+  packageLabel: String @col(dataType: "varchar(160)")
+  sortOrder: Int! @default(value: 0)
+  isActive: Boolean! @default(value: true)
+}
+
+type PurchaseLink @table(key: "id") @index(fields: ["productOptionId", "isActive"]) {
+  id: String! @col(dataType: "varchar(180)")
+  productOption: ProductOption! @ref(fields: "productOptionId", references: "id")
+  productOptionId: String! @col(dataType: "varchar(180)")
+  label: String! @col(dataType: "varchar(200)")
+  url: String!
+  channel: PurchaseChannel!
+  isAffiliate: Boolean! @default(value: false)
+  purchaseScope: String! @default(value: "individual")
+  checkedAt: Date!
+  isActive: Boolean! @default(value: true)
+  createdAt: Timestamp! @default(expr: "request.time")
+  updatedAt: Timestamp! @default(expr: "request.time")
+}
+
+type BrandDomain @table(key: ["brand", "domain"]) {
+  brand: Brand!
+  domain: String!
+}
+type CompatibilitySource @table(key: ["compatibility", "source"]) {
+  compatibility: ModelConsumable!
+  source: Source!
+}
+type OptionModelLabel @table(key: ["productOption", "model"]) {
+  productOption: ProductOption!
+  model: Model!
+  label: String!
+}
+type GuidanceLink @table(key: "id") {
+  id: String!
+  productOption: ProductOption!
+  label: String!
+  url: String!
+  channel: PurchaseChannel!
+  checkedAt: Date!
+  isActive: Boolean! @default(value: true)
+}

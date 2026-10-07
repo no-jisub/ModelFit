@@ -1,28 +1,17 @@
 ---
-const cards = [
-  {
-    slug: "air-purifier",
-    title: "공기청정기",
-    image: "/images/categories/air-purifier.webp",
-  },
-  {
-    slug: "robot-vacuum",
-    title: "로봇청소기",
-    image: "/images/categories/robot-vacuum.webp",
-  },
-];
+import { categories } from "@/data/categories";
 ---
 
 <div class="category-selector-shell">
   <p class="category-selector-title">찾고 싶은 제품을 선택해 보세요</p>
   <div class="category-grid">
     {
-      cards.map((card) => (
-        <a class="category-card" href={`/category/${card.slug}`}>
+      categories.map((category) => (
+        <a class="category-card" href={`/category/${category.id}`}>
           <span class="category-visual">
-            <img src={card.image} width="512" height="512" alt="" loading="eager" />
+            <img src={category.selectorImage} width="512" height="512" alt="" loading="eager" />
           </span>
-          <strong>{card.title}</strong>
+          <strong>{category.label}</strong>
         </a>
       ))
     }
