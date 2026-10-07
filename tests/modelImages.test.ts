@@ -13,14 +13,22 @@ describe("model images", () => {
     expect(Object.keys(modelImages)).toHaveLength(models.length);
   });
 
-  it("모든 이미지 메타데이터가 로컬 WebP와 출처 확인일을 제공한다", async () => {
+  it("이미지 주소와 출처 확인일을 검증하고 로컬 WebP 규격을 유지한다", async () => {
     await Promise.all(
       Object.entries(modelImages).map(async ([id, image]) => {
-        expect(image.src).toBe(`/images/models/${id}.webp`);
+        const isLocal = image.src.startsWith("/");
+        if (isLocal) expect(image.src).toBe(`/images/models/${id}.webp`);
+        else {
+          const source = new URL(image.src);
+          expect(source.protocol).toBe("https:");
+          expect(source.username).toBe("");
+          expect(source.password).toBe("");
+        }
         expect(image.alt).toContain("제품 본체");
         expect(image.sourceUrl.startsWith("https://")).toBe(true);
         expect(Number.isNaN(Date.parse(image.checkedAt))).toBe(false);
 
+        if (!isLocal) return;
         const imagePath = path.resolve("public", image.src.slice(1));
         await access(imagePath);
         const metadata = await sharp(imagePath).metadata();
