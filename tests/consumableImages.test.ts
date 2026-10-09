@@ -7,7 +7,7 @@ describe("consumable image evidence", () => {
   it("has one existing local asset and active official source for every illustrated part", async () => {
     const raw = await loadRawCatalog();
     const parts = buildCatalogView(raw).consumables.filter((part) => part.image);
-    expect(parts).toHaveLength(20);
+    expect(parts).toHaveLength(60);
     for (const part of parts) {
       expect((await stat("." + part.image!.src)).size).toBeGreaterThan(0);
       const row = raw["consumable-images.csv"].find((row) => row.consumableId === part.id)!;
