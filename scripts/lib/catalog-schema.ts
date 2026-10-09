@@ -26,6 +26,7 @@ export const catalogSchema = {
     "id,productOptionId,label,url,channel,isAffiliate,checkedAt,isActive,purchaseScope,priceKeyword,priceProductId,priceItemId,priceVendorItemId",
   "guidance-links.csv": "id,productOptionId,label,url,channel,checkedAt,isActive",
   "images.csv": "id,modelId,src,alt,sourceUrl,checkedAt,sortOrder,isPrimary",
+  "consumable-images.csv": "id,consumableId,src,alt,sourceId,isActive",
 } as const;
 export type CatalogFile = keyof typeof catalogSchema;
 export type RawCatalog = Record<CatalogFile, CsvRow[]>;
@@ -47,6 +48,7 @@ export function validateRawCatalog(raw: RawCatalog): string[] {
     "sources.csv": ["title"],
     "product-options.csv": ["name", "description"],
     "images.csv": ["src", "alt"],
+    "consumable-images.csv": ["src", "alt"],
     "purchase-links.csv": ["label"],
     "guidance-links.csv": ["label"],
     "option-model-labels.csv": ["label"],
@@ -92,6 +94,18 @@ export function validateRawCatalog(raw: RawCatalog): string[] {
     const seen = new Set<string>();
     for (const [index, row] of raw[file].entries()) {
       const label = file + " " + (index + 2);
+      if (file === "consumable-images.csv") {
+        if (!/^\/src\/assets\/consumables\/[a-z0-9-]+\.(?:jpg|png|webp)$/.test(row.src))
+          errors.push(label + ": invalid local consumable image");
+        const source = raw["sources.csv"].find((s) => s.id === row.sourceId);
+        if (
+          row.isActive === "true" &&
+          (!source ||
+            source.isActive !== "true" ||
+            !["official-store", "manufacturer"].includes(source.sourceType))
+        )
+          errors.push(label + ": missing active official image source");
+      }
       for (const field of required[file] ?? [])
         if (!row[field]?.trim()) errors.push(label + ": missing " + field);
       const fields = keys[file] ?? ["id"];
@@ -242,6 +256,7 @@ export function validateRawCatalog(raw: RawCatalog): string[] {
     ["model-consumables.csv", ["modelId", "consumableId"]],
     ["brands.csv", ["slug"]],
     ["consumables.csv", ["slug"]],
+    ["consumable-images.csv", ["consumableId"]],
   ] as [CatalogFile, string[]][]) {
     const seen = new Set<string>();
     for (const row of raw[file]) {

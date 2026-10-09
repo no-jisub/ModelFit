@@ -22,7 +22,7 @@ Get-Content -LiteralPath outputs/catalog-ci-3.txt -Raw | gh secret set MODELFIT_
 
 배포, 브라우저 품질 검사, 주간 링크 감사 워크플로는 npm ci 후 Secret 복원과 catalog:import를 실행합니다. 모델·소모품·이미지 데이터는 CSV에서 생성하고 SQL Connect 시드는 database:check에서 생성합니다.
 
-복원은 v2 원본 CSV 18개만 허용합니다. 경로 추가, 파일 누락, 손상, 버전 불일치는 실패 처리합니다. Secret은 복원 단계에만 전달하며 패키지 내용을 로그에 출력하지 않습니다. 한 Secret은 최대 45,000 ASCII bytes, 패키지는 최대 3개 조각으로 제한합니다. 총 135,000 bytes를 넘으면 별도 비공개 데이터 저장소로 전환해야 합니다.
+복원은 v2 원본 CSV 19개만 허용합니다. 경로 추가, 파일 누락, 손상, 버전 불일치는 실패 처리합니다. Secret은 복원 단계에만 전달하며 패키지 내용을 로그에 출력하지 않습니다. 한 Secret은 최대 45,000 ASCII bytes, 패키지는 최대 3개 조각으로 제한합니다. 총 135,000 bytes를 넘으면 별도 비공개 데이터 저장소로 전환해야 합니다.
 
 기존 두 조각 패키지도 계속 지원합니다. 세 조각 패키지는 세 파일을 모두 등록해야 합니다. 카탈로그 변경, Secret 갱신, `data/catalog-version.json` 갱신을 함께 처리하세요.
 

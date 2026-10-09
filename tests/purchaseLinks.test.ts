@@ -15,7 +15,7 @@ describe("normalized option links", () => {
   });
   it("separates guidance from actual purchases and never generates search URLs", () => {
     const options = consumables.flatMap((p) => p.productOptions);
-    expect(options.flatMap((o) => o.purchaseLinks)).toHaveLength(164);
+    expect(options.flatMap((o) => o.purchaseLinks)).toHaveLength(163);
     expect(options.flatMap((o) => o.guidanceLinks)).toHaveLength(177);
     const activeLinkIds = options.flatMap((o) => o.purchaseLinks.map((link) => link.id));
     expect(activeLinkIds).not.toContain("xiaomi-x20-plus-main-brush-coupang");
@@ -111,6 +111,29 @@ describe("normalized option links", () => {
     expect(
       options.some((option) => option.kind === "genuine" && option.purchaseLinks.length === 0),
     ).toBe(true);
+  });
+  it("removes an unconfirmed deodorizing candidate and selects the Z70 mop-only six-pack", () => {
+    const wells = consumables.find((part) => part.id === "wells-al106-deodorizing-filter")!;
+    expect(wells.productOptions.flatMap((option) => option.purchaseLinks)).toHaveLength(0);
+    const saros = consumables.find((part) => part.id === "roborock-saros-z70-mop-cloth")!;
+    const available = saros.productOptions.filter((option) => option.purchaseLinks.length);
+    expect(available).toHaveLength(1);
+    expect(available[0]).toMatchObject({
+      kind: "compatible",
+      verification: "seller-claimed",
+      packageLabel: "물걸레 패드 6개",
+    });
+    expect(available[0].purchaseLinks[0].purchaseScope).toBe("individual");
+    for (const id of ["xiaomi-x10-plus-mop-pad", "xiaomi-x20-plus-mop-pad"]) {
+      const option = consumables
+        .find((part) => part.id === id)!
+        .productOptions.find((option) => option.purchaseLinks.length)!;
+      expect(option).toMatchObject({
+        kind: "compatible",
+        verification: "seller-claimed",
+        packageLabel: "물걸레 패드 10개",
+      });
+    }
   });
   it("uses reviewed affiliate replacements for the G filter and three-spin mop set", () => {
     for (const [partId, url] of [

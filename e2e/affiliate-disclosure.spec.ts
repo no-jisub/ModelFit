@@ -51,7 +51,10 @@ test("구매 링크가 없는 품목과 확인된 품목을 구분한다", async
   ).toHaveCount(0);
 
   await page.goto("/model/wells/al106");
-  await expect(page.locator('a[data-purchase-channel="coupang"]')).toHaveCount(2);
+  await expect(page.locator('a[data-purchase-channel="coupang"]')).toHaveCount(1);
+  const deodorizingPart = page.locator("#wells-al106-deodorizing-filter");
+  await expect(deodorizingPart.locator('a[data-purchase-channel="coupang"]')).toHaveCount(0);
+  await expect(deodorizingPart.locator(".affiliate-disclosure")).toHaveCount(0);
   const hepaPart = page.locator(".consumable-group").filter({
     has: page.getByRole("heading", { name: "웰스 AL106 제로클리어 HEPA H14 필터" }),
   });

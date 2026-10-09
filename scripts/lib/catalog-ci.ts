@@ -52,7 +52,9 @@ function validateFiles(files: unknown): asserts files is Record<string, string> 
         !content.trim(),
     )
   ) {
-    throw new Error("CI 카탈로그는 지정된 v2 원본 CSV 18개만 포함해야 합니다.");
+    throw new Error(
+      `CI 카탈로그는 지정된 v2 원본 CSV ${catalogCiFiles.length}개만 포함해야 합니다.`,
+    );
   }
 }
 

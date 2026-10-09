@@ -122,6 +122,15 @@ type Consumable @table(key: "id") @index(fields: ["type", "status", "displayName
   updatedAt: Timestamp! @default(expr: "request.time")
 }
 
+type ConsumableImage @table(key: "id") @unique(fields: ["consumable"]) {
+  id: String!
+  consumable: Consumable!
+  src: String!
+  alt: String!
+  source: Source!
+  isActive: Boolean! @default(value: true)
+}
+
 type ModelConsumable @table(key: "id") @unique(fields: ["modelId", "consumableId"]) {
   id: String!
   evidenceScope: String!

@@ -4298,7 +4298,8 @@ html {
   height: auto;
   aspect-ratio: 1;
   border-radius: var(--radius-md);
-  background: var(--color-neutral-50);
+  background: transparent;
+  mix-blend-mode: multiply;
   object-fit: contain;
 }
 
@@ -4625,7 +4626,26 @@ html {
 
   .consumable-group-heading.has-part-image {
     grid-template-columns: 84px minmax(0, 1fr);
-    gap: 14px;
+    gap: 12px 14px;
+  }
+
+  .consumable-group-heading.has-part-image .part-heading-copy {
+    display: contents;
+  }
+
+  .consumable-group-heading.has-part-image .part-image {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .consumable-group-heading.has-part-image .part-title-line {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .consumable-group-heading.has-part-image :is(.part-purpose, .part-fit-note, .part-number-inline) {
+    grid-column: 1 / -1;
+    margin: 0;
   }
 
   .part-decision-grid,

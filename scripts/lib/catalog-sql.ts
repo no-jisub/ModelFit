@@ -15,6 +15,7 @@ export const sqlTables: [CatalogFile, string][] = [
   ["images.csv", "modelImage"],
   ["product-options.csv", "productOption"],
   ["product-option-sources.csv", "productOptionSource"],
+  ["consumable-images.csv", "consumableImage"],
   ["option-model-labels.csv", "optionModelLabel"],
   ["purchase-links.csv", "purchaseLink"],
   ["guidance-links.csv", "guidanceLink"],

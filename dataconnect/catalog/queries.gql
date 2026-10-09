@@ -93,6 +93,14 @@ query GetModelBySlug($slug: String!)
         partNumberStatus
         maintenanceMode
         maintenanceDetail
+        images: consumableImages_on_consumable(where: { isActive: { eq: true } }) {
+          src
+          alt
+          source {
+            url
+            checkedAt
+          }
+        }
         productOptions: productOptions_on_consumable(where: { isActive: { eq: true } }) {
           id
           name

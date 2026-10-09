@@ -61,5 +61,5 @@ if (command === "pack") {
     await Promise.all(catalogCiFiles.map(async (name) => [name, await readFile(name, "utf8")])),
   );
   verifyCatalogFingerprint(files, await expectedFingerprint());
-  console.log("카탈로그 버전 확인 완료: 원본 18개와 추적 SHA-256 일치");
+  console.log(`카탈로그 버전 확인 완료: 원본 ${catalogCiFiles.length}개와 추적 SHA-256 일치`);
 } else throw new Error("사용법: catalog-ci.ts pack | restore | check");

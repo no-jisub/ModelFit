@@ -85,6 +85,15 @@ export function buildCatalogView(raw: RawCatalog) {
     channel: r.channel,
     checkedAt: r.checkedAt,
   });
+  const consumableImages: Record<string, ModelImage> = Object.fromEntries(
+    raw["consumable-images.csv"].filter(active).map((r) => {
+      const source = sourcesById.get(r.sourceId)!;
+      return [
+        r.consumableId,
+        { src: r.src, alt: r.alt, sourceUrl: source.url, checkedAt: source.checkedAt },
+      ];
+    }),
+  );
   const options: ConsumableProductOption[] = sorted("product-options.csv").map((r) => ({
     id: r.id,
     name: r.name,
@@ -116,6 +125,7 @@ export function buildCatalogView(raw: RawCatalog) {
     slug: r.slug,
     type: r.type,
     displayName: r.displayName,
+    image: consumableImages[r.id],
     genuinePartNumber: optional(r.genuinePartNumber),
     partNumberStatus: r.partNumberStatus,
     compatibleModelIds: relations.filter((j) => j.consumableId === r.id).map((j) => j.modelId),

@@ -41,7 +41,7 @@ describe("consumable product options", () => {
         .every((part) => part.maintenance?.detail?.startsWith("12개월")),
     ).toBe(true);
     expect(parts.every((part) => !part.genuinePartNumber)).toBe(true);
-    expect(parts.filter(hasCoupangProduct)).toHaveLength(2);
+    expect(parts.filter(hasCoupangProduct)).toHaveLength(1);
     expect(hasCoupangProduct(parts.find((part) => part.id === "wells-al106-hepa-filter")!)).toBe(
       false,
     );
