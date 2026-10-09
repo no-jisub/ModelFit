@@ -1,6 +1,9 @@
 name: Build and deploy
 
 on:
+  workflow_dispatch:
+  schedule:
+    - cron: "23 */6 * * *"
   push:
     branches: [main]
   pull_request:
@@ -44,6 +47,12 @@ jobs:
           MODELFIT_CATALOG_GZIP_3: ${{ secrets.MODELFIT_CATALOG_GZIP_3 }}
       - name: Generate catalog data
         run: npm run catalog:import
+      - name: Refresh exact purchase option prices
+        if: github.event_name != 'pull_request'
+        run: npm run sync:purchase-prices
+        env:
+          COUPANG_ACCESS_KEY: ${{ secrets.COUPANG_ACCESS_KEY }}
+          COUPANG_SECRET_KEY: ${{ secrets.COUPANG_SECRET_KEY }}
       - run: npm run check
       - run: npm audit --audit-level=high
       - run: npx playwright install --with-deps chromium
@@ -55,7 +64,7 @@ jobs:
           path: outputs/release-manifest.json
           retention-days: 30
       - uses: FirebaseExtended/action-hosting-deploy@v0
-        if: github.event_name == 'push'
+        if: github.event_name != 'pull_request'
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_MODELFIT_KR }}
