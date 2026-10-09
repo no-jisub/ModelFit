@@ -15,6 +15,7 @@ const targets = raw["purchase-links.csv"].filter((r) => r.isActive === "true" &&
 const prices: PurchasePriceSnapshot[] = [];
 const outcomes: { linkId: string; status: string }[] = [];
 const cache = new Map<string, Record<string, unknown>[]>();
+let nextRequestAt = 0;
 for (const target of targets) {
   if (!access || !secret) {
     outcomes.push({ linkId: target.id, status: "missing-credentials" });
@@ -23,6 +24,9 @@ for (const target of targets) {
   try {
     let products = cache.get(target.priceKeyword);
     if (!products) {
+      await new Promise((resolve) => setTimeout(resolve, Math.max(0, nextRequestAt - Date.now())));
+      // Throttle failed requests too; an API error must not trigger a burst of retries.
+      nextRequestAt = Date.now() + 2000;
       const endpoint = "/v2/providers/affiliate_open_api/apis/openapi/products/search";
       const query = new URLSearchParams({ keyword: target.priceKeyword, limit: "10" }).toString();
       const date = new Date()
@@ -45,7 +49,6 @@ for (const target of targets) {
         throw new Error("api");
       products = data.data.productData;
       cache.set(target.priceKeyword, products!);
-      await new Promise((resolve) => setTimeout(resolve, 2000));
     }
     const product = products!.find(
       (p) =>

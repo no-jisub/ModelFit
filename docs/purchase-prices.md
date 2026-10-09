@@ -12,3 +12,5 @@
 - `COUPANG_ACCESS_KEY`, `COUPANG_SECRET_KEY`는 GitHub Secrets와 로컬 `.env`에만 보관한다. 생성 가격은 ignored `outputs/purchase-prices.json`에 기록하며 원본 API 응답·키를 배포하지 않는다.
 
 상품 URL을 변경하면 기존 가격은 URL 일치 검사로 숨겨진다. 새 상품의 세 ID를 검증한 뒤 CSV와 CI 카탈로그 Secrets를 함께 갱신한다.
+
+요청 실패 시에도 다음 요청 시작까지 최소 2초 간격을 유지한다. 같은 실행에서 성공한 검색 결과는 검색어별로 공유해 중복 호출을 줄인다. 여러 부품이 같은 판매 상품을 공유하더라도 각 구매 링크의 세 ID를 따로 대조한다.
