@@ -1,0 +1,749 @@
+---
+export function getStaticPaths() {
+  return import.meta.env.DEV ? [{ params: { design: "part-cards" } }] : [];
+}
+
+const designs = [
+  {
+    id: "a",
+    name: "간결한 카드형",
+    label: "추천",
+    description: "제품 이름 → 필요 수량 → 가격 → 구매. 자주 확인하는 정보만 남겼습니다.",
+  },
+  {
+    id: "b",
+    name: "구매 영역 분리형",
+    label: "가격 강조",
+    description:
+      "제품 정보와 구매 정보를 나눴습니다. 넓은 화면에서 가격과 버튼이 눈에 잘 들어옵니다.",
+  },
+  {
+    id: "c",
+    name: "이미지 중심 상품형",
+    label: "제품 구분",
+    description:
+      "필터 사진으로 제품을 구분하는 방식입니다. 실제 필터 사진을 확보하면 효과적입니다.",
+  },
+];
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>부품 카드 디자인 비교 · 모델핏</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <a href="/" class="brand"><span class="brand-mark">✓</span> 모델핏</a>
+      <a class="back" href="/model/lg/as205ngja#lg-puricare-g-filter">현재 카드 보기 ↗</a>
+    </header>
+    <main>
+      <div class="intro">
+        <span class="eyebrow">PART CARD DESIGN</span>
+        <h1>부품 카드, 더 편하게.</h1>
+        <p>같은 필터를 세 가지 디자인으로 비교해보세요.</p>
+        <p class="preview-note">
+          디자인 비교용 화면입니다. 가격은 10월 7일 23:06 API 확인 예시이며 자동 갱신되지 않습니다.
+        </p>
+      </div>
+      <div class="toolbar">
+        <nav aria-label="디자인 예시">
+          <a href="#a">A 간결형</a><a href="#b">B 분리형</a><a href="#c">C 이미지형</a>
+        </nav>
+        <div class="view-switch" role="group" aria-label="미리보기 너비">
+          <button type="button" data-view="wide" aria-pressed="true">넓게 보기</button>
+          <button type="button" data-view="mobile" aria-pressed="false">모바일 보기</button>
+        </div>
+      </div>
+      {
+        designs.map((design) => (
+          <section id={design.id} class="design-section" aria-labelledby={`title-${design.id}`}>
+            <div class="section-heading">
+              <span class="design-letter">{design.id.toUpperCase()}</span>
+              <div>
+                <h2 id={`title-${design.id}`}>
+                  {design.name}
+                  <span class:list={["design-label", design.id === "a" && "recommended"]}>
+                    {design.label}
+                  </span>
+                </h2>
+                <p>{design.description}</p>
+              </div>
+            </div>
+            <div class="preview-frame">
+              <article class:list={["part-card", `variant-${design.id}`]}>
+                {design.id === "c" && (
+                  <figure class="image-placeholder" aria-label="필터 사진을 넣을 자리: 예시 도형">
+                    <svg viewBox="0 0 160 180" fill="none" aria-hidden="true">
+                      <ellipse cx="80" cy="159" rx="46" ry="7" fill="#e0e7ef" />
+                      <path
+                        d="M42 45L116 36V143L42 151Z"
+                        fill="#fff"
+                        stroke="#94a3b8"
+                        stroke-width="3"
+                      />
+                      <path
+                        d="M42 45L32 39L107 30L116 36M32 39V145L42 151"
+                        fill="#edf2f7"
+                        stroke="#94a3b8"
+                        stroke-width="3"
+                        stroke-linejoin="round"
+                      />
+                      {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+                        <path
+                          d={`M${49 + n * 7} ${47 - n * 0.85}V${145 - n * 0.85}`}
+                          stroke="#cbd5e1"
+                          stroke-width="3"
+                        />
+                      ))}
+                      <path d="M45 53L112 45M45 137L112 129" stroke="#e2e8f0" stroke-width="2" />
+                    </svg>
+                    <figcaption>필터 이미지 자리 · 예시 도형</figcaption>
+                  </figure>
+                )}
+                <div class="part-info">
+                  <div class="badges">
+                    <>
+                      <span class="genuine">정품</span>
+                      <span class="verified">✓ 공식 호환 확인</span>
+                    </>
+                  </div>
+                  <h3>LG 퓨리탈취청정 G 필터</h3>
+                  {design.id === "b" && (
+                    <p class="purpose">먼지와 생활 냄새를 함께 걸러주는 필터</p>
+                  )}
+                  <div class="part-code">
+                    <>
+                      <span>부품번호</span>
+                      <code>ADQ30041403</code>
+                      <button type="button" class="copy" aria-label="부품번호 ADQ30041403 복사">
+                        복사
+                      </button>
+                    </>
+                  </div>
+                  <div class="quantity">
+                    <>
+                      <span>제품 1대 필요 수량</span>
+                      <strong>1개</strong>
+                    </>
+                  </div>
+                  {design.id === "b" && <p class="model-fit">AS205NGJA 적용 모델</p>}
+                </div>
+                <div class="purchase-panel">
+                  <div class="price-row">
+                    <>
+                      <strong class="price">
+                        158,400<span>원</span>
+                      </strong>
+                      <span class="store">쿠팡</span>
+                    </>
+                  </div>
+                  <p class="pack-note">판매 구성은 구매처에서 확인</p>
+                  <button class="buy" type="button">
+                    쿠팡에서 구매하기 <span aria-hidden="true">↗</span>
+                  </button>
+                  <p class="price-date">10. 7. 23:06 확인 · 결제 가격은 구매처에서 확인</p>
+                </div>
+                <div class="card-footer">
+                  <details>
+                    <summary>
+                      호환 근거 · 상세 정보 <span aria-hidden="true">⌄</span>
+                    </summary>
+                    <div class="detail-body">
+                      <>
+                        <p>
+                          <strong>적용 모델</strong> AS205NGJA
+                        </p>
+                        <p>
+                          <strong>부품번호</strong> ADQ30041403
+                        </p>
+                        <p>공식 호환 자료와 판매 구성은 현재 상세페이지에서 확인할 수 있습니다.</p>
+                        <a href="/model/lg/as205ngja#lg-puricare-g-filter">
+                          현재 상세페이지 보기 ↗
+                        </a>
+                      </>
+                    </div>
+                  </details>
+                  <p class="disclosure">쿠팡 파트너스 활동으로 일정액의 수수료를 제공받습니다.</p>
+                </div>
+              </article>
+            </div>
+          </section>
+        ))
+      }
+      <aside class="recommendation">
+        <strong>제 추천은 A안입니다.</strong><p>
+          먼저 A안으로 정보를 줄이고, 실제 필터 사진이 준비되면 C안의 이미지 영역을 더하는 방향이
+          좋겠습니다.
+        </p>
+      </aside>
+      <p id="status" role="status" aria-live="polite"></p>
+    </main>
+    <script>
+      const status = document.querySelector<HTMLElement>("#status");
+      document.querySelectorAll<HTMLButtonElement>("[data-view]").forEach((button) => {
+        button.addEventListener("click", () => {
+          document.body.classList.toggle("mobile-preview", button.dataset.view === "mobile");
+          document
+            .querySelectorAll<HTMLButtonElement>("[data-view]")
+            .forEach((other) => other.setAttribute("aria-pressed", String(other === button)));
+        });
+      });
+      document.querySelectorAll<HTMLButtonElement>(".copy").forEach((button) => {
+        button.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText("ADQ30041403");
+            if (status) status.textContent = "부품번호를 복사했습니다.";
+          } catch {
+            if (status) status.textContent = "부품번호: ADQ30041403";
+          }
+        });
+      });
+      document.querySelectorAll<HTMLButtonElement>(".buy").forEach((button) => {
+        button.addEventListener("click", () => {
+          if (status)
+            status.textContent =
+              "디자인 예시입니다. 구매 링크는 현재 상세페이지에서 이용할 수 있습니다.";
+        });
+      });
+    </script>
+  </body>
+</html>
+
+<style>
+  :global(*) {
+    box-sizing: border-box;
+  }
+  :global(html) {
+    scroll-behavior: smooth;
+    background: #f5f7fb;
+  }
+  :global(body) {
+    margin: 0;
+    color: #15243d;
+    font-family:
+      Pretendard,
+      -apple-system,
+      BlinkMacSystemFont,
+      "Segoe UI",
+      "Malgun Gothic",
+      sans-serif;
+    word-break: keep-all;
+  }
+  :global(button),
+  :global(a) {
+    -webkit-tap-highlight-color: transparent;
+  }
+  :global(button) {
+    font: inherit;
+    cursor: pointer;
+  }
+  :global(a) {
+    color: inherit;
+    text-decoration: none;
+  }
+  :global(button:focus-visible),
+  :global(a:focus-visible),
+  :global(summary:focus-visible) {
+    outline: 3px solid #93b4ff;
+    outline-offset: 4px;
+  }
+  .site-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px max(24px, calc((100vw - 1040px) / 2));
+    background: #fff;
+    border-bottom: 1px solid #e6ebf3;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 19px;
+    font-weight: 800;
+  }
+  .brand-mark {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: #214ce5;
+    color: #fff;
+  }
+  .back {
+    color: #607087;
+    font-size: 13px;
+  }
+  main {
+    max-width: 1040px;
+    margin: auto;
+    padding: 48px 24px 64px;
+  }
+  .eyebrow {
+    color: #3152b6;
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 2px;
+  }
+  h1 {
+    margin: 10px 0;
+    font-size: clamp(28px, 4vw, 40px);
+    letter-spacing: -1.5px;
+  }
+  .intro > p {
+    margin: 0;
+    color: #62718a;
+    font-size: 16px;
+    line-height: 1.7;
+  }
+  .intro > .preview-note {
+    margin-top: 12px;
+    font-size: 12px;
+    color: #718096;
+  }
+  .toolbar {
+    margin: 28px 0 36px;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+  nav {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  nav a {
+    padding: 10px 14px;
+    border: 1px solid #e0e6ef;
+    border-radius: 999px;
+    background: #fff;
+    font-size: 12px;
+    font-weight: 650;
+  }
+  .view-switch {
+    display: flex;
+    padding: 4px;
+    background: #e9edf4;
+    border-radius: 9px;
+  }
+  .view-switch button {
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #65738a;
+    font-size: 12px;
+  }
+  .view-switch button[aria-pressed="true"] {
+    background: #fff;
+    color: #1f46cb;
+    box-shadow: 0 1px 4px #1b294411;
+  }
+  .design-section {
+    margin-bottom: 40px;
+    scroll-margin-top: 20px;
+  }
+  .section-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .design-letter {
+    width: 32px;
+    height: 32px;
+    flex: none;
+    border: 1px solid #dce3ef;
+    border-radius: 9px;
+    display: grid;
+    place-items: center;
+    font-size: 13px;
+    font-weight: 750;
+    background: #fff;
+  }
+  h2 {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0;
+    font-size: 18px;
+  }
+  .design-label {
+    padding: 4px 7px;
+    border-radius: 5px;
+    background: #e9eef6;
+    color: #586982;
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .recommended {
+    color: #1d4bd6;
+    background: #e8eeff;
+  }
+  .section-heading p {
+    margin: 6px 0 0;
+    color: #697990;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+  .preview-frame {
+    container-type: inline-size;
+    container-name: preview;
+    width: 100%;
+    max-width: 100%;
+    margin: auto;
+    transition: width 160ms;
+  }
+  :global(.mobile-preview) .preview-frame {
+    width: 390px;
+  }
+  .part-card {
+    background: #fff;
+    border: 1px solid #e0e6ef;
+    border-radius: 20px;
+    box-shadow: 0 5px 18px #283c5b05;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 270px;
+  }
+  .part-info {
+    padding: 28px;
+  }
+  .badges {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .genuine {
+    font-size: 10px;
+    font-weight: 750;
+    color: #718097;
+  }
+  .verified {
+    color: #168365;
+    background: #eaf8f2;
+    padding: 5px 8px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 650;
+  }
+  h3 {
+    margin: 12px 0 16px;
+    font-size: 21px;
+    letter-spacing: -0.65px;
+    line-height: 1.4;
+  }
+  .part-code {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-size: 12px;
+  }
+  .part-code > span {
+    color: #8793a5;
+    font-size: 11px;
+  }
+  code {
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 650;
+  }
+  .copy {
+    min-height: 32px;
+    padding: 5px 9px;
+    border: 1px solid #e3e9f1;
+    border-radius: 6px;
+    background: #fff;
+    color: #65748b;
+    font-size: 10px;
+  }
+  .quantity {
+    display: flex;
+    gap: 12px;
+    align-items: baseline;
+    margin-top: 16px;
+    font-size: 12px;
+  }
+  .quantity > span {
+    color: #718097;
+  }
+  .quantity strong {
+    font-weight: 700;
+  }
+  .purchase-panel {
+    padding: 28px 28px 22px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .price-row {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+  .price {
+    font-size: 30px;
+    font-weight: 780;
+    letter-spacing: -1px;
+    font-variant-numeric: tabular-nums;
+  }
+  .price > span {
+    font-size: 18px;
+    margin-left: 2px;
+  }
+  .store {
+    font-size: 11px;
+    color: #7e8ca0;
+  }
+  .pack-note {
+    margin: 7px 0 16px;
+    font-size: 11px;
+    color: #7b899c;
+  }
+  .buy {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    min-height: 46px;
+    border: 0;
+    border-radius: 10px;
+    background: #214ce5;
+    color: #fff;
+    padding: 12px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    transition: background 150ms;
+  }
+  .buy:hover {
+    background: #183bbb;
+  }
+  .price-date {
+    margin: 9px 0 0;
+    color: #7c899a;
+    font-size: 10px;
+    line-height: 1.6;
+  }
+  .card-footer {
+    grid-column: 1 / -1;
+    border-top: 1px solid #edf0f5;
+    padding: 0 28px 16px;
+  }
+  details > summary {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    padding: 16px 0 8px;
+    cursor: pointer;
+    color: #576780;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  details[open] summary span {
+    transform: rotate(180deg);
+  }
+  .detail-body {
+    padding: 6px 0 12px;
+    color: #637389;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .detail-body p {
+    margin: 4px 0;
+  }
+  .detail-body strong {
+    color: #32445d;
+    margin-right: 8px;
+  }
+  .detail-body a {
+    color: #214ce5;
+    text-decoration: underline;
+  }
+  .disclosure {
+    margin: 4px 0 0;
+    color: #7c899a;
+    font-size: 10px;
+    line-height: 1.6;
+  }
+  .variant-b {
+    grid-template-columns: minmax(0, 1fr) 320px;
+  }
+  .variant-b .part-info {
+    padding: 32px;
+  }
+  .variant-b .purchase-panel {
+    margin: 16px;
+    padding: 24px;
+    border-radius: 14px;
+    background: #f0f5ff;
+  }
+  .variant-b .price {
+    font-size: 34px;
+  }
+  .variant-b .price-row {
+    justify-content: space-between;
+  }
+  .purpose {
+    margin: -6px 0 20px;
+    color: #708098;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  .model-fit {
+    margin: 16px 0 0;
+    font-size: 11px;
+    color: #42629c;
+  }
+  .variant-c {
+    grid-template-columns: 156px minmax(0, 1fr) 270px;
+  }
+  .variant-c .part-info {
+    padding-left: 12px;
+  }
+  .image-placeholder {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0 20px 20px;
+    border-radius: 12px;
+    background: #f6f8fb;
+  }
+  .image-placeholder svg {
+    width: 110px;
+    height: 126px;
+  }
+  figcaption {
+    padding: 0 4px 12px;
+    color: #8390a2;
+    font-size: 9px;
+    text-align: center;
+  }
+  .recommendation {
+    padding: 22px;
+    background: #eaf0ff;
+    border-radius: 14px;
+  }
+  .recommendation > strong {
+    font-size: 14px;
+    color: #274894;
+  }
+  .recommendation > p {
+    margin: 8px 0 0;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #5c719b;
+  }
+  #status:not(:empty) {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: calc(100vw - 32px);
+    padding: 14px 18px;
+    border-radius: 10px;
+    background: #15243d;
+    color: white;
+    font-size: 12px;
+    box-shadow: 0 6px 20px #15243d33;
+    line-height: 1.5;
+    z-index: 10;
+  }
+  @container preview (max-width: 620px) {
+    .part-card,
+    .variant-b {
+      grid-template-columns: minmax(0, 1fr);
+      border-radius: 16px;
+    }
+    .part-info,
+    .variant-b .part-info {
+      padding: 22px 22px 0;
+    }
+    h3 {
+      font-size: 20px;
+    }
+    .purchase-panel {
+      padding: 22px;
+    }
+    .variant-b .purchase-panel {
+      margin: 20px 16px 16px;
+      padding: 20px;
+    }
+    .card-footer {
+      padding: 0 22px 16px;
+    }
+    .variant-c {
+      grid-template-columns: 100px minmax(0, 1fr);
+    }
+    .variant-c .part-info {
+      padding: 22px 18px 0 12px;
+    }
+    .variant-c .image-placeholder {
+      margin: 22px 0 0 16px;
+      align-self: start;
+    }
+    .variant-c .image-placeholder svg {
+      width: 76px;
+      height: 106px;
+    }
+    .variant-c h3 {
+      font-size: 17px;
+    }
+    .variant-c .purchase-panel {
+      grid-column: 1 / -1;
+    }
+    .variant-c .quantity {
+      gap: 6px;
+      font-size: 11px;
+    }
+    .variant-c .part-code {
+      gap: 5px;
+    }
+    .variant-c .part-code > span {
+      display: none;
+    }
+    .buy {
+      min-height: 48px;
+    }
+  }
+  @media (max-width: 600px) {
+    .site-header {
+      padding: 16px 20px;
+    }
+    .back {
+      font-size: 11px;
+    }
+    main {
+      padding: 30px 16px 40px;
+    }
+    .toolbar {
+      margin: 22px 0 30px;
+    }
+    .view-switch {
+      width: 100%;
+    }
+    .view-switch button {
+      flex: 1;
+    }
+    .intro > p {
+      font-size: 14px;
+    }
+    .intro > .preview-note {
+      font-size: 11px;
+    }
+  }
+</style>

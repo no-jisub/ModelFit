@@ -1,0 +1,459 @@
+---
+const { variant, prefix } = Astro.props as {
+  variant: "rows" | "tiles" | "accordion";
+  prefix: string;
+};
+const groups = [
+  {
+    name: "집진·탈취 필터",
+    description: "미세먼지와 생활 냄새를 걸러주는 교체용 필터입니다.",
+    products: [
+      { name: "제조사 정품 필터", kind: "정품", pack: "1개입", price: 129000, store: "공식몰" },
+      { name: "호환 필터 기본형", kind: "호환", pack: "1개입", price: 32900, store: "쿠팡" },
+      { name: "호환 필터 2개입", kind: "호환", pack: "2개입", price: 54900, store: "쿠팡" },
+    ],
+  },
+  {
+    name: "프리필터",
+    description: "큰 먼지와 반려동물의 털을 먼저 걸러주는 필터입니다.",
+    products: [
+      { name: "제조사 정품 프리필터", kind: "정품", pack: "1개입", price: 12900, store: "공식몰" },
+      { name: "호환 프리필터 기본형", kind: "호환", pack: "1개입", price: 7900, store: "쿠팡" },
+      { name: "호환 프리필터 2개입", kind: "호환", pack: "2개입", price: 13900, store: "쿠팡" },
+    ],
+  },
+];
+---
+
+<div class:list={["model-example", variant]}>
+  <header class="model-header">
+    <div class="model-symbol" aria-hidden="true">M</div>
+    <div>
+      <span class="overline">모델 1 · 공기청정기</span><h3>내 공기청정기의 소모품</h3><p>
+        모델번호 MF-1000 · 가상 모델 예시
+      </p>
+    </div>
+    <span class="model-count">2개 유형 · 6개 상품</span>
+  </header>
+  <div class="groups">
+    {
+      groups.map((group, index) => {
+        const heading = (
+          <div class="group-heading">
+            <span class="group-number" aria-hidden="true">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <div class="group-description">
+              <>
+                <h4 id={`${prefix}-group-${index}`}>{group.name}</h4>
+                <p>{group.description}</p>
+              </>
+            </div>
+            <span class="group-count">상품 3개</span>
+          </div>
+        );
+        const products = (
+          <ul class="products" aria-label={`${group.name} 상품 예시`}>
+            {group.products.map((product, productIndex) => (
+              <li class="product">
+                <div class="product-info">
+                  <div class="product-meta">
+                    <span class:list={["kind", product.kind === "정품" && "genuine"]}>
+                      {product.kind}
+                    </span>
+                    <span class="pack">{product.pack}</span>
+                  </div>
+                  <h5>{product.name}</h5>
+                  {variant === "tiles" && (
+                    <p class="product-caption">
+                      상품 {productIndex + 1} · {product.store}
+                    </p>
+                  )}
+                </div>
+                <div class="price-block">
+                  <strong>
+                    {product.price.toLocaleString("ko-KR")}
+                    <span>원</span>
+                  </strong>
+                  <span class="store">{product.store}</span>
+                </div>
+                <button
+                  class="purchase"
+                  type="button"
+                  aria-label={`${group.name} ${product.name} 구매 예시`}
+                >
+                  구매하기 <span aria-hidden="true">↗</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        );
+        return variant === "accordion" ? (
+          <details class="group group-accordion" open={index === 0}>
+            <summary>
+              {heading}
+              <span class="chevron" aria-hidden="true">
+                ⌄
+              </span>
+            </summary>
+            {products}
+          </details>
+        ) : (
+          <section class="group" aria-labelledby={`${prefix}-group-${index}`}>
+            {heading}
+            {products}
+          </section>
+        );
+      })
+    }
+  </div>
+  <p class="example-footer">상품명·가격·판매 구성은 디자인 비교를 위한 가상 예시입니다.</p>
+</div>
+
+<style>
+  .model-example {
+    background: #fff;
+    border: 1px solid #dfe6f0;
+    border-radius: 20px;
+    overflow: hidden;
+    color: #15243d;
+  }
+  .model-header {
+    padding: 26px 28px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid #e9eef5;
+  }
+  .model-symbol {
+    flex: none;
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    background: #edf3ff;
+    border-radius: 14px;
+    color: #2554d4;
+    font-size: 23px;
+    font-weight: 800;
+  }
+  .overline {
+    font-size: 10px;
+    color: #687e9b;
+  }
+  h3 {
+    margin: 5px 0 0;
+    font-size: 21px;
+    letter-spacing: -0.6px;
+    line-height: 1.4;
+  }
+  .model-header p {
+    margin: 5px 0 0;
+    font-size: 11px;
+    color: #7c8ca0;
+  }
+  .model-count {
+    margin-left: auto;
+    color: #718098;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .groups {
+    display: grid;
+    gap: 24px;
+    padding: 28px;
+  }
+  .group {
+    border: 1px solid #e1e7f0;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .group-heading {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 20px;
+    background: #f7f9fc;
+  }
+  .group-number {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 30px;
+    height: 30px;
+    border: 1px solid #e0e7f2;
+    border-radius: 8px;
+    background: #fff;
+    color: #7b90b0;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .group-description {
+    min-width: 0;
+  }
+  h4 {
+    margin: 0;
+    font-size: 17px;
+    letter-spacing: -0.3px;
+  }
+  .group-heading p {
+    margin: 6px 0 0;
+    font-size: 12px;
+    line-height: 1.7;
+    color: #738298;
+  }
+  .group-count {
+    margin-left: auto;
+    color: #7e8ba0;
+    padding-top: 3px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .products {
+    list-style: none;
+    margin: 0;
+    padding: 0 20px;
+  }
+  .product {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 125px 108px;
+    gap: 20px;
+    align-items: center;
+    padding: 18px 0;
+  }
+  .product + .product {
+    border-top: 1px solid #edf0f5;
+  }
+  .product-info {
+    min-width: 0;
+  }
+  .product-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .kind {
+    font-size: 10px;
+    font-weight: 700;
+    color: #576b86;
+    background: #f0f3f7;
+    border-radius: 5px;
+    padding: 4px 6px;
+  }
+  .genuine {
+    color: #148364;
+    background: #e9f8f2;
+  }
+  .pack {
+    color: #8390a3;
+    font-size: 10px;
+  }
+  h5 {
+    margin: 7px 0 0;
+    font-size: 14px;
+    font-weight: 650;
+    line-height: 1.5;
+  }
+  .price-block {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-end;
+  }
+  .price-block strong {
+    font-size: 19px;
+    letter-spacing: -0.5px;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .price-block strong > span {
+    font-size: 12px;
+    margin-left: 2px;
+  }
+  .store {
+    font-size: 10px;
+    color: #8190a3;
+  }
+  .purchase {
+    min-height: 42px;
+    border: 0;
+    background: #2450df;
+    color: #fff;
+    border-radius: 8px;
+    padding: 10px 12px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 650;
+    cursor: pointer;
+  }
+  .purchase:hover {
+    background: #1c3fb5;
+  }
+  .example-footer {
+    margin: 0;
+    padding: 0 28px 20px;
+    color: #8391a6;
+    font-size: 10px;
+    line-height: 1.7;
+  }
+  .tiles .group {
+    border: 0;
+    overflow: visible;
+  }
+  .tiles .group-heading {
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .tiles .products {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    padding: 0;
+  }
+  .tiles .product {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    padding: 18px;
+    border: 1px solid #e1e7f0;
+    border-radius: 12px;
+  }
+  .product-caption {
+    margin: 8px 0 0;
+    font-size: 10px;
+    color: #7f8fa4;
+  }
+  .tiles .price-block {
+    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .tiles .price-block .store {
+    display: none;
+  }
+  .tiles .price-block strong {
+    font-size: 24px;
+  }
+  .group-accordion > summary {
+    display: flex;
+    align-items: center;
+    background: #f7f9fc;
+    list-style: none;
+    cursor: pointer;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary .group-heading {
+    flex: 1;
+    padding-right: 10px;
+  }
+  .chevron {
+    margin-right: 20px;
+    color: #6e83a1;
+    font-size: 17px;
+  }
+  details[open] .chevron {
+    transform: rotate(180deg);
+  }
+  .accordion .groups {
+    gap: 14px;
+  }
+  @container group-preview (max-width: 620px) {
+    .model-header {
+      padding: 22px 18px;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .model-symbol {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      font-size: 18px;
+    }
+    h3 {
+      font-size: 18px;
+    }
+    .model-count {
+      width: 100%;
+      margin-left: 50px;
+      font-size: 10px;
+    }
+    .groups {
+      padding: 18px 14px;
+      gap: 20px;
+    }
+    .group-heading {
+      padding: 18px 14px;
+      gap: 9px;
+    }
+    h4 {
+      font-size: 16px;
+    }
+    .group-heading p {
+      font-size: 11px;
+    }
+    .group-count {
+      font-size: 10px;
+    }
+    .group-number {
+      width: 24px;
+      height: 24px;
+      font-size: 10px;
+    }
+    .products {
+      padding: 0 14px;
+    }
+    .product {
+      grid-template-columns: minmax(0, 1fr) 95px;
+      gap: 12px;
+      padding: 16px 0;
+    }
+    h5 {
+      font-size: 13px;
+    }
+    .price-block strong {
+      font-size: 18px;
+    }
+    .purchase {
+      grid-column: 1 / -1;
+      min-height: 44px;
+      justify-content: center;
+    }
+    .tiles .products {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .tiles .product {
+      grid-template-columns: minmax(0, 1fr) 90px;
+      gap: 12px;
+      padding: 16px;
+    }
+    .tiles .price-block {
+      align-items: flex-end;
+    }
+    .tiles .price-block strong {
+      font-size: 19px;
+    }
+    .tiles .product-caption {
+      margin-top: 6px;
+    }
+    .example-footer {
+      padding: 0 18px 18px;
+    }
+    .group-accordion .group-count {
+      display: none;
+    }
+    summary .group-heading {
+      padding: 18px 14px;
+    }
+    .chevron {
+      margin-right: 14px;
+    }
+  }
+</style>
