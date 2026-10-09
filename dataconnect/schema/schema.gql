@@ -129,6 +129,7 @@ type ModelConsumable @table(key: "id") @unique(fields: ["modelId", "consumableId
   requiredQuantity: String
   salesPackage: String
   composition: String
+  fitNote: String
   model: Model!
   consumable: Consumable!
   verificationStatus: VerificationStatus! @default(value: UNVERIFIED)
@@ -196,6 +197,10 @@ type PurchaseLink @table(key: "id") @index(fields: ["productOptionId", "isActive
   channel: PurchaseChannel!
   isAffiliate: Boolean! @default(value: false)
   purchaseScope: String! @default(value: "individual")
+  priceKeyword: String
+  priceProductId: String
+  priceItemId: String
+  priceVendorItemId: String
   checkedAt: Date!
   isActive: Boolean! @default(value: true)
   createdAt: Timestamp! @default(expr: "request.time")

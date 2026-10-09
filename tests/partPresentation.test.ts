@@ -21,4 +21,14 @@ describe("structured part presentation", () => {
       getPartConfiguration({ ...part, compatibilities: [] }, part.compatibleModelIds[0]),
     ).toBeUndefined();
   });
+  it("distinguishes factory filters from approved replacements per model", () => {
+    const m5 = consumables.find((p) => p.id === "lg-360-m5-filter")!;
+    expect(getPartConfiguration(m5, "lg-as356nsma")?.fitNote).toBe(
+      "기본 M7 필터 대신 사용할 수 있는 M5 교체 필터입니다.",
+    );
+    expect(getPartConfiguration(m5, "lg-as336nslc")?.fitNote).toBe("기본 장착 필터: M5");
+    const v2 = consumables.find((p) => p.id === "lg-360-v2-filter")!;
+    expect(getPartConfiguration(v2, "lg-as305dwwa")?.fitNote).toContain("기본 V 필터 대신");
+    expect(getPartConfiguration(v2, "lg-as186hwwa")?.fitNote).toBe("기본 장착 필터: V2");
+  });
 });

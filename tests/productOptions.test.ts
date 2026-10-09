@@ -61,8 +61,12 @@ describe("consumable product options", () => {
       true,
     );
     expect(
-      hasCoupangProduct(parts.find((part) => part.id === "winix-zero-s-deodorizing-filter")!),
-    ).toBe(true);
+      parts
+        .find((part) => part.id === "winix-zero-s-deodorizing-filter")!
+        .productOptions.flatMap((option) => option.purchaseLinks),
+    ).toContainEqual(
+      expect.objectContaining({ channel: "official", url: "https://www.winix.com/product/2" }),
+    );
   });
   it("코웨이 노블은 세척 프리필터와 주기가 다른 교체 필터를 구분한다", () => {
     const preFilter = consumables.find((part) => part.id === "coway-4d-pre-filter")!;
@@ -355,7 +359,7 @@ describe("consumable product options", () => {
       verification: "seller-claimed",
     });
     expect(blueair.productOptions[1]?.purchaseLinks[0]?.url).toBe(
-      "https://link.coupang.com/a/g0AWwsZXVs",
+      "https://link.coupang.com/a/hHUEJuqeHs",
     );
   });
 

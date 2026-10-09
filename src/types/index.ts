@@ -136,6 +136,7 @@ export interface PartConfigurationPresentation {
   requiredQuantity?: string;
   salesPackage?: string;
   composition?: string;
+  fitNote?: string;
 }
 export interface MaintenancePresentation {
   mode: "정기 교체" | "세척 후 재사용" | "상태에 따라 교체" | "정기 관리";

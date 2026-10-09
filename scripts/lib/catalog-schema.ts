@@ -13,7 +13,7 @@ export const catalogSchema = {
   "consumables.csv":
     "id,slug,type,displayName,genuinePartNumber,partNumberStatus,searchKeywords,maintenanceMode,maintenanceDetail,purchaseWarning,verificationStatus,sortOrder",
   "model-consumables.csv":
-    "id,modelId,consumableId,verificationStatus,verifiedAt,evidenceScope,itemCode,requiredQuantity,salesPackage,composition",
+    "id,modelId,consumableId,verificationStatus,verifiedAt,evidenceScope,itemCode,requiredQuantity,salesPackage,composition,fitNote",
   "sources.csv": "id,title,url,sourceType,checkedAt,isActive",
   "model-sources.csv": "modelId,sourceId,purpose",
   "consumable-sources.csv": "consumableId,sourceId",

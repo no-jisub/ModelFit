@@ -60,12 +60,13 @@ export function buildCatalogView(raw: RawCatalog) {
     evidenceScope: r.evidenceScope as ModelConsumable["evidenceScope"],
     sources: sources("compatibility-sources.csv", "compatibilityId", r.id),
     configuration:
-      r.itemCode || r.requiredQuantity || r.salesPackage || r.composition
+      r.itemCode || r.requiredQuantity || r.salesPackage || r.composition || r.fitNote
         ? {
             itemCode: optional(r.itemCode),
             requiredQuantity: optional(r.requiredQuantity),
             salesPackage: optional(r.salesPackage),
             composition: optional(r.composition),
+            fitNote: optional(r.fitNote),
           }
         : undefined,
   }));

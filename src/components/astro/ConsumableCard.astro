@@ -96,6 +96,7 @@ function isOverseasStore(url: string) {
           >
         </div>
         <p class="part-purpose">{typeDescriptions[part.type]}</p>
+        {configuration?.fitNote && <p class="part-fit-note">{configuration.fitNote}</p>}
         <div class="part-number-inline" aria-label="부품번호">
           <span>부품번호</span>
           {
@@ -379,6 +380,16 @@ function isOverseasStore(url: string) {
 </article>
 
 <style>
+  .part-fit-note {
+    margin: 12px 0;
+    padding: 10px 12px;
+    border-left: 3px solid var(--color-primary-700);
+    border-radius: 4px;
+    background: var(--color-primary-50);
+    color: var(--color-neutral-700);
+    font-size: 14px;
+    line-height: 1.6;
+  }
   .part-evidence-summary {
     display: flex;
     flex-wrap: wrap;

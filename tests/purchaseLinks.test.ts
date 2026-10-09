@@ -79,6 +79,39 @@ describe("normalized option links", () => {
         .every((l) => l.url.startsWith("https://link.coupang.com/a/")),
     ).toBe(true);
   });
+  it("offers verified official products when the old individual Coupang item cannot be confirmed", () => {
+    for (const [partId, url] of [
+      ["cuckoo-acf-tmt20-filter", "https://www.cuckoo.co.kr/mall/productView?productNo=9038"],
+      ["winix-zero-s-deodorizing-filter", "https://www.winix.com/product/2"],
+    ]) {
+      const options = consumables.find((part) => part.id === partId)!.productOptions;
+      const available = options.filter((option) => option.purchaseLinks.length);
+      expect(available).toHaveLength(1);
+      expect(available[0].kind).toBe("genuine");
+      expect(available[0].purchaseLinks[0]).toMatchObject({
+        url,
+        channel: "official",
+        isAffiliate: false,
+        purchaseScope: "individual",
+        checkedAt: "2026-10-09",
+      });
+    }
+  });
+  it("labels the verified third-party Xiaomi dust bag as a compatible ten-pack", () => {
+    const options = consumables.find(
+      (part) => part.id === "xiaomi-x20-plus-dust-bag",
+    )!.productOptions;
+    const available = options.filter((option) => option.purchaseLinks.length);
+    expect(available).toHaveLength(1);
+    expect(available[0]).toMatchObject({
+      kind: "compatible",
+      verification: "seller-claimed",
+      packageLabel: "먼지봉투 10개",
+    });
+    expect(
+      options.some((option) => option.kind === "genuine" && option.purchaseLinks.length === 0),
+    ).toBe(true);
+  });
   it("uses reviewed affiliate replacements for the G filter and three-spin mop set", () => {
     for (const [partId, url] of [
       ["lg-puricare-g-filter", "https://link.coupang.com/a/hHPSANYFfU"],

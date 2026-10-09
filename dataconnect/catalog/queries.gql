@@ -74,6 +74,7 @@ query GetModelBySlug($slug: String!)
       requiredQuantity
       salesPackage
       composition
+      fitNote
       sources: compatibilitySources_on_compatibility {
         source {
           id
