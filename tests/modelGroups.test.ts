@@ -5,7 +5,9 @@ import { formatModelReleaseDate } from "../src/utils/modelReleaseDate";
 
 describe("모델 제품군", () => {
   it("브랜드와 모델명이 같은 모델번호를 하나로 묶는다", () => {
-    const lgModels = models.filter((model) => model.brandId === "lg");
+    const lgModels = models.filter(
+      (model) => model.brandId === "lg" && model.modelName === "LG 퓨리케어 360° 공기청정기",
+    );
     const groups = groupModelsByName(lgModels);
 
     expect(groups).toHaveLength(1);

@@ -10,9 +10,11 @@ for (const model of ["as355nsna", "as205ngja"]) {
     const links = page.locator('a[data-purchase-channel="coupang"]');
     expect(await links.count()).toBeGreaterThan(0);
     for (const link of await links.all()) {
-      const notice = link.locator(
-        "xpath=following-sibling::p[contains(concat(' ', normalize-space(@class), ' '), ' affiliate-disclosure ')][1]",
-      );
+      const notice = link
+        .locator(
+          "xpath=ancestor::article[contains(concat(' ', normalize-space(@class), ' '), ' consumable-group ')][1]",
+        )
+        .locator(".product-options-section > .affiliate-disclosure");
       const rel = (await link.getAttribute("rel")) ?? "";
       const isAffiliate = rel.split(/\s+/).includes("sponsored");
 

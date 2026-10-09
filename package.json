@@ -49,7 +49,8 @@
     "catalog:ci:check": "tsx scripts/catalog-ci.ts check",
     "catalog:review": "tsx scripts/catalog-review.ts",
     "analytics:report": "tsx scripts/analytics-report.ts",
-    "release:manifest": "tsx scripts/release-manifest.ts"
+    "release:manifest": "tsx scripts/release-manifest.ts",
+    "sync:purchase-prices": "tsx scripts/sync-purchase-prices.ts"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.2",

@@ -6,7 +6,7 @@ describe("normalized option links", () => {
     expect(part.productOptions.flatMap((o) => o.purchaseLinks)).toContainEqual(
       expect.objectContaining({
         channel: "coupang",
-        url: "https://link.coupang.com/a/gDwSqU3CAC",
+        url: "https://link.coupang.com/a/hHPSpGT79w",
         isAffiliate: true,
         linkType: "direct-product",
       }),
@@ -15,7 +15,7 @@ describe("normalized option links", () => {
   });
   it("separates guidance from actual purchases and never generates search URLs", () => {
     const options = consumables.flatMap((p) => p.productOptions);
-    expect(options.flatMap((o) => o.purchaseLinks)).toHaveLength(161);
+    expect(options.flatMap((o) => o.purchaseLinks)).toHaveLength(164);
     expect(options.flatMap((o) => o.guidanceLinks)).toHaveLength(177);
     const activeLinkIds = options.flatMap((o) => o.purchaseLinks.map((link) => link.id));
     expect(activeLinkIds).not.toContain("xiaomi-x20-plus-main-brush-coupang");
@@ -81,7 +81,7 @@ describe("normalized option links", () => {
   });
   it("uses reviewed affiliate replacements for the G filter and three-spin mop set", () => {
     for (const [partId, url] of [
-      ["lg-puricare-g-filter", "https://link.coupang.com/a/hC9HkDvlro"],
+      ["lg-puricare-g-filter", "https://link.coupang.com/a/hHPSANYFfU"],
       ["everybot-three-spin-yarn-mop", "https://link.coupang.com/a/hC9HsbJcsK"],
     ]) {
       const links = consumables
@@ -92,7 +92,7 @@ describe("normalized option links", () => {
           url,
           channel: "coupang",
           isAffiliate: true,
-          checkedAt: "2026-10-06",
+          checkedAt: partId === "lg-puricare-g-filter" ? "2026-10-09" : "2026-10-06",
         }),
       );
     }

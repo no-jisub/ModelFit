@@ -6,6 +6,7 @@ import { groupPurchaseOptions, getSalesPackageLabel } from "@/utils/purchasePres
 import ProductOptionCard from "./ProductOptionCard.astro";
 import VerificationBadge from "./VerificationBadge.astro";
 import { isOfficialCompatibility } from "@/utils/compatibility";
+import AffiliateDisclosure from "./AffiliateDisclosure.astro";
 
 const { part, modelCode, modelId } = Astro.props as {
   part: ConsumableCompatibility;
@@ -43,6 +44,9 @@ const evidenceSources =
   compatibility?.evidenceScope === "scoped" ? compatibility.sources : part.sources;
 const evidenceCount = evidenceSources.length;
 const purchaseOptions = groupPurchaseOptions(part.productOptions);
+const coupangLinks = purchaseOptions.available.flatMap((option) =>
+  option.purchaseLinks.filter((link) => link.channel === "coupang"),
+);
 const hasBundle = part.productOptions.some((option) =>
   option.purchaseLinks.some((link) => link.purchaseScope === "bundle"),
 );
@@ -135,14 +139,20 @@ function isOverseasStore(url: string) {
       )
     }
     {
-      purchaseOptions.available.length === 0 && configuration?.requiredQuantity && (
+      (configuration?.requiredQuantity || purchaseOptions.available.length > 0) && (
         <dl class="purchase-quantity-summary">
-          <div>
-            <>
+          {configuration?.requiredQuantity && (
+            <div>
               <dt>제품 1대 필요 수량</dt>
               <dd>{configuration.requiredQuantity}</dd>
-            </>
-          </div>
+            </div>
+          )}
+          {purchaseOptions.available.length > 0 && (
+            <div class="part-product-count">
+              <dt class="sr-only">구매 가능한 상품</dt>
+              <dd>상품 {purchaseOptions.available.length}개</dd>
+            </div>
+          )}
         </dl>
       )
     }
@@ -177,7 +187,8 @@ function isOverseasStore(url: string) {
               modelId={modelId}
               partId={part.id}
               partName={part.displayName}
-              requiredQuantity={configuration?.requiredQuantity}
+              layout="row"
+              showDisclosure={false}
               packageLabel={getSalesPackageLabel(
                 option.modelLabels[modelId] ?? option.packageLabel,
                 configuration,
@@ -218,6 +229,11 @@ function isOverseasStore(url: string) {
         )
       }
     </div>
+    {
+      coupangLinks.length > 0 && (
+        <AffiliateDisclosure hasAffiliateLinks={coupangLinks.some((link) => link.isAffiliate)} />
+      )
+    }
   </section>
   <details class="part-details">
     <summary>상세 정보</summary>

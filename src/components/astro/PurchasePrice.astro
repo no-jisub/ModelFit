@@ -1,0 +1,78 @@
+---
+import type { PurchaseLinkData } from "@/types";
+import { getPurchasePrice } from "../../data/purchase-prices";
+import { PRICE_MAX_AGE_MS } from "../../lib/purchase-price";
+const { link } = Astro.props as { link: PurchaseLinkData };
+const snapshot = getPurchasePrice(link);
+const checkedTime = new Intl.DateTimeFormat("ko-KR", {
+  timeZone: "Asia/Seoul",
+  month: "numeric",
+  day: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+}).format(new Date(snapshot?.checkedAt ?? 0));
+---
+
+{
+  snapshot && (
+    <div
+      class="purchase-price"
+      aria-label="쿠팡 조회 가격"
+      data-price-expires={Date.parse(snapshot.checkedAt) + PRICE_MAX_AGE_MS}
+    >
+      <p class="price-heading">
+        <strong>{snapshot.amount.toLocaleString("ko-KR")}원</strong>
+        <span>조회 가격</span>
+      </p>
+      <p class="price-note">
+        <time datetime={snapshot.checkedAt}>{checkedTime}</time> 확인 · 결제 가격은 구매처에서 확인
+      </p>
+    </div>
+  )
+}
+
+<style>
+  .purchase-price {
+    flex-basis: 100%;
+    min-width: 0;
+    margin-bottom: 4px;
+  }
+  .price-heading {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+  }
+  .price-heading strong {
+    color: var(--color-neutral-900);
+    font-size: 24px;
+    font-weight: 750;
+    line-height: 1.3;
+    font-variant-numeric: tabular-nums;
+  }
+  .price-heading span {
+    color: var(--color-neutral-500);
+    font-size: 11px;
+  }
+  .price-note {
+    margin: 4px 0 0;
+    color: var(--color-neutral-500);
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+</style>
+
+<script>
+  function expirePrices() {
+    document.querySelectorAll<HTMLElement>("[data-price-expires]").forEach((element) => {
+      if (Date.now() >= Number(element.dataset.priceExpires)) element.remove();
+    });
+  }
+  expirePrices();
+  document.addEventListener("astro:page-load", expirePrices);
+  document.addEventListener("visibilitychange", expirePrices);
+  window.setInterval(expirePrices, 60000);
+</script>

@@ -83,9 +83,9 @@ describe("data validation", () => {
   });
 
   it("공개 카탈로그에는 교체 소모품이 연결된 모델만 등록한다", () => {
-    expect(models).toHaveLength(80);
+    expect(models).toHaveLength(90);
     expect(models.every((model) => model.consumableIds.length > 0)).toBe(true);
-    expect(models.filter((model) => model.category === "air-purifier")).toHaveLength(40);
+    expect(models.filter((model) => model.category === "air-purifier")).toHaveLength(50);
     expect(models.filter((model) => model.category === "robot-vacuum")).toHaveLength(40);
     expect(brands.every((brand) => models.some((model) => model.brandId === brand.id))).toBe(true);
   });

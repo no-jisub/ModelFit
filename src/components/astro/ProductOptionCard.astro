@@ -1,6 +1,7 @@
 ---
 import type { ConsumableProductOption } from "@/types";
 import AffiliateDisclosure from "./AffiliateDisclosure.astro";
+import PurchasePrice from "./PurchasePrice.astro";
 
 const {
   option,
@@ -12,6 +13,8 @@ const {
   showPackageLabel = true,
   requiredQuantity,
   packageLabel: presentedPackageLabel,
+  layout = "card",
+  showDisclosure = true,
 } = Astro.props as {
   option: ConsumableProductOption;
   compatibilityConfirmed?: boolean;
@@ -22,6 +25,8 @@ const {
   showPackageLabel?: boolean;
   requiredQuantity?: string;
   packageLabel?: string;
+  layout?: "card" | "row";
+  showDisclosure?: boolean;
 };
 const headingId = option.id + "-heading";
 const kindLabel = option.kind === "genuine" ? "정품" : "호환상품";
@@ -49,7 +54,11 @@ const isOverseas = (url: string) => new URL(url).hostname === "www.eufy.com";
 ---
 
 <article
-  class:list={["product-option-card", option.kind === "genuine" ? "is-genuine" : "is-compatible"]}
+  class:list={[
+    "product-option-card",
+    option.kind === "genuine" ? "is-genuine" : "is-compatible",
+    layout === "row" && "product-option-row",
+  ]}
   aria-labelledby={headingId}
 >
   <div class="product-option-heading">
@@ -63,7 +72,9 @@ const isOverseas = (url: string) => new URL(url).hostname === "www.eufy.com";
           ]}>{verificationLabel}</span
         >
       </div>
-      <h5 id={headingId} class:list={[option.name === partName && "sr-only"]}>{option.name}</h5>
+      <h5 id={headingId} class:list={[layout !== "row" && option.name === partName && "sr-only"]}>
+        {option.name}
+      </h5>
     </div>
   </div>
 
@@ -94,6 +105,7 @@ const isOverseas = (url: string) => new URL(url).hostname === "www.eufy.com";
     {
       purchaseLinks.map((link, index) => (
         <Fragment>
+          <PurchasePrice link={link} />
           <a
             class:list={[
               "button",
@@ -124,7 +136,7 @@ const isOverseas = (url: string) => new URL(url).hostname === "www.eufy.com";
                 : link.label}{" "}
             <span aria-hidden="true">↗</span>
           </a>
-          {link.channel === "coupang" && (
+          {showDisclosure && link.channel === "coupang" && (
             <AffiliateDisclosure hasAffiliateLinks={link.isAffiliate} />
           )}
           {link.channel === "official" && isOverseas(link.url) && (

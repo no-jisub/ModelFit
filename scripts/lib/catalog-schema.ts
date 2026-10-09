@@ -23,7 +23,7 @@ export const catalogSchema = {
     "id,consumableId,name,kind,verification,description,itemCode,packageLabel,sortOrder,isActive",
   "option-model-labels.csv": "productOptionId,modelId,label",
   "purchase-links.csv":
-    "id,productOptionId,label,url,channel,isAffiliate,checkedAt,isActive,purchaseScope",
+    "id,productOptionId,label,url,channel,isAffiliate,checkedAt,isActive,purchaseScope,priceKeyword,priceProductId,priceItemId,priceVendorItemId",
   "guidance-links.csv": "id,productOptionId,label,url,channel,checkedAt,isActive",
   "images.csv": "id,modelId,src,alt,sourceUrl,checkedAt,sortOrder,isPrimary",
 } as const;
@@ -225,6 +225,15 @@ export function validateRawCatalog(raw: RawCatalog): string[] {
         (row.channel !== "coupang" || !/^https:\/\/link\.coupang\.com\/a\//.test(row.url))
       )
         errors.push(label + ": invalid affiliate URL");
+      if (file === "purchase-links.csv" && row.priceKeyword) {
+        if (
+          row.channel !== "coupang" ||
+          ![row.priceProductId, row.priceItemId, row.priceVendorItemId].every((v) =>
+            /^\d+$/.test(v ?? ""),
+          )
+        )
+          errors.push(label + ": price requires exact Coupang product, item and vendor item");
+      }
     }
   }
   for (const [file, fields] of [
