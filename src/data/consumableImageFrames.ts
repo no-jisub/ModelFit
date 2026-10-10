@@ -1,0 +1,30 @@
+export type ConsumableImageFrame = readonly [x: number, y: number, width: number, height: number];
+
+// Original assets stay intact; these windows show the part within official detail images.
+export const consumableImageFrames: Record<string, ConsumableImageFrame> = {
+  "/src/assets/consumables/narwal-freo-z10-side-brush.jpg": [0, 360, 1500, 1140],
+  "/src/assets/consumables/everybot-q11-filter.jpg": [250, 480, 500, 400],
+  "/src/assets/consumables/everybot-q11-main-brush.jpg": [150, 450, 700, 280],
+  "/src/assets/consumables/everybot-q11-mop-pad.jpg": [170, 450, 670, 700],
+  "/src/assets/consumables/everybot-q11-dust-bag.jpg": [70, 420, 860, 380],
+  "/src/assets/consumables/everybot-q9-filter.jpg": [320, 460, 360, 470],
+  "/src/assets/consumables/everybot-q9-main-brush.jpg": [150, 450, 700, 280],
+  "/src/assets/consumables/everybot-q9-side-brush.jpg": [160, 385, 680, 430],
+  "/src/assets/consumables/everybot-q9-mop-pad.jpg": [105, 380, 790, 550],
+  "/src/assets/consumables/everybot-q9-dust-bag.jpg": [265, 390, 470, 455],
+  "/src/assets/consumables/everybot-q3-filter.jpg": [315, 280, 375, 405],
+  "/src/assets/consumables/everybot-q3-main-brush.jpg": [180, 320, 650, 260],
+  "/src/assets/consumables/everybot-three-spin-disposable-sheet.jpg": [180, 530, 870, 890],
+  "/src/assets/consumables/everybot-rs350-yarn-mop.jpg": [120, 285, 770, 465],
+  "/src/assets/consumables/everybot-rs350-microfiber-mop.jpg": [120, 285, 770, 465],
+  "/src/assets/consumables/blueair-cp7i-pac-filter.png": [215, 205, 300, 445],
+  "/src/assets/consumables/blueair-dustmagnet-5200-combofilter.jpg": [470, 900, 490, 365],
+  "/src/assets/consumables/coway-ap2219k-composite-filter.png": [121, 247, 189, 351],
+  "/src/assets/consumables/coway-ap2021-pet-air-matching-filter.png": [152, 215, 149, 341],
+  "/src/assets/consumables/winix-tower-prime-plus-all-in-one-filter.png": [92, 235, 149, 227],
+  "/src/assets/consumables/winix-tower-prime-all-in-one-filter.png": [92, 235, 149, 225],
+  "/src/assets/consumables/winix-zero-s-dust-filter.png": [70, 170, 139, 290],
+  "/src/assets/consumables/winix-zero-s-deodorizing-filter.png": [72, 170, 136, 290],
+  "/src/assets/consumables/winix-tower-edge-all-in-one-filter.png": [83, 239, 166, 221],
+  "/src/assets/consumables/wells-al106-hepa-filter.jpg": [583, 5218, 75, 215],
+};

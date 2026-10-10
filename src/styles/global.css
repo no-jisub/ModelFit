@@ -4303,6 +4303,27 @@ html {
   object-fit: contain;
 }
 
+.part-image-focus {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.part-image-focus-window {
+  position: relative;
+  overflow: hidden;
+}
+
+.part-image-focus-window img {
+  position: absolute;
+  max-width: none;
+  aspect-ratio: auto;
+  border-radius: 0;
+  object-fit: fill;
+}
+
 .part-image figcaption {
   margin-top: 5px;
   color: var(--color-neutral-500);

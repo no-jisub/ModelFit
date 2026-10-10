@@ -9,6 +9,7 @@ import { isOfficialCompatibility } from "@/utils/compatibility";
 import AffiliateDisclosure from "./AffiliateDisclosure.astro";
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
+import { consumableImageFrames } from "@/data/consumableImageFrames";
 
 const imageAssets = import.meta.glob<{ default: ImageMetadata }>(
   "/src/assets/consumables/*.{jpg,png,webp}",
@@ -35,6 +36,15 @@ const typeDescriptions = {
 } as const;
 const partImage = part.image ? imageAssets[part.image.src]?.default : undefined;
 if (part.image && !partImage) throw new Error(`Missing consumable image asset: ${part.id}`);
+const imageFrame = part.image ? consumableImageFrames[part.image.src] : undefined;
+const frameSize = imageFrame ? Math.max(imageFrame[2], imageFrame[3]) : 1;
+const frameWindowStyle = imageFrame
+  ? `width:${(imageFrame[2] / frameSize) * 100}%;height:${(imageFrame[3] / frameSize) * 100}%`
+  : undefined;
+const frameImageStyle =
+  imageFrame && partImage
+    ? `width:${(partImage.width / imageFrame[2]) * 100}%;height:${(partImage.height / imageFrame[3]) * 100}%;left:${(-imageFrame[0] / imageFrame[2]) * 100}%;top:${(-imageFrame[1] / imageFrame[3]) * 100}%`
+    : undefined;
 const configuration = getPartConfiguration(part, modelId);
 const compatibility = part.compatibilities.find((relation) => relation.modelId === modelId);
 const compatibilityConfirmed = isOfficialCompatibility(compatibility);
@@ -88,17 +98,35 @@ function isOverseasStore(url: string) {
       {
         part.image && (
           <figure class="part-image">
-            <Image
-              src={partImage!}
-              alt={part.image.alt}
-              width="240"
-              height="240"
-              fit="contain"
-              widths={[240, 480]}
-              sizes="(max-width: 700px) 84px, 116px"
-              format="webp"
-              loading="lazy"
-            />
+            {imageFrame ? (
+              <div class="part-image-focus">
+                <div class="part-image-focus-window" style={frameWindowStyle}>
+                  <Image
+                    src={partImage!}
+                    alt={part.image.alt}
+                    width={partImage!.width}
+                    height={partImage!.height}
+                    widths={[Math.min(480, partImage!.width), Math.min(960, partImage!.width)]}
+                    sizes={`(max-width: 700px) ${(84 * partImage!.width) / frameSize}px, ${(116 * partImage!.width) / frameSize}px`}
+                    format="webp"
+                    loading="lazy"
+                    style={frameImageStyle}
+                  />
+                </div>
+              </div>
+            ) : (
+              <Image
+                src={partImage!}
+                alt={part.image.alt}
+                width="240"
+                height="240"
+                fit="contain"
+                widths={[240, 480]}
+                sizes="(max-width: 700px) 84px, 116px"
+                format="webp"
+                loading="lazy"
+              />
+            )}
             <figcaption>정품 참고 이미지</figcaption>
           </figure>
         )
