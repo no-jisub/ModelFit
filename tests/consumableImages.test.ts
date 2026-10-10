@@ -4,12 +4,13 @@ import { buildCatalogView } from "../scripts/lib/catalog-view";
 import sharp from "sharp";
 import { consumableImageFrames } from "../src/data/consumableImageFrames";
 import { stat } from "node:fs/promises";
+import { getFramedImageDimensions } from "../src/utils/consumableImage";
 
 describe("consumable image evidence", () => {
   it("has one existing local asset and active official source for every illustrated part", async () => {
     const raw = await loadRawCatalog();
     const parts = buildCatalogView(raw).consumables.filter((part) => part.image);
-    expect(parts).toHaveLength(140);
+    expect(parts).toHaveLength(167);
     for (const part of parts) {
       expect((await stat("." + part.image!.src)).size).toBeGreaterThan(0);
       const row = raw["consumable-images.csv"].find((row) => row.consumableId === part.id)!;
@@ -17,6 +18,13 @@ describe("consumable image evidence", () => {
         raw["sources.csv"].find((source) => source.id === row.sourceId)!.url,
       );
     }
+  });
+  it("keeps tall official detail images inside WebP dimension limits without upscaling", () => {
+    const dimensions = getFramedImageDimensions(750, 23641);
+    expect(dimensions.width).toBeLessThanOrEqual(750);
+    expect(dimensions.height).toBeLessThanOrEqual(16000);
+    expect(dimensions.widths.every((width) => (width * 23641) / 750 <= 16000)).toBe(true);
+    expect(getFramedImageDimensions(200, 270).widths).toEqual([200]);
   });
   it("keeps every presentation window inside an illustrated original asset", async () => {
     const raw = await loadRawCatalog();

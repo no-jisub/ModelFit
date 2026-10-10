@@ -10,6 +10,7 @@ import AffiliateDisclosure from "./AffiliateDisclosure.astro";
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import { consumableImageFrames } from "@/data/consumableImageFrames";
+import { getFramedImageDimensions } from "@/utils/consumableImage";
 
 const imageAssets = import.meta.glob<{ default: ImageMetadata }>(
   "/src/assets/consumables/*.{jpg,png,webp}",
@@ -37,6 +38,10 @@ const typeDescriptions = {
 const partImage = part.image ? imageAssets[part.image.src]?.default : undefined;
 if (part.image && !partImage) throw new Error(`Missing consumable image asset: ${part.id}`);
 const imageFrame = part.image ? consumableImageFrames[part.image.src] : undefined;
+const framedImageDimensions = partImage
+  ? getFramedImageDimensions(partImage.width, partImage.height)
+  : undefined;
+const imageCaption = part.image?.alt.endsWith("공식 구조도") ? "공식 구조도" : "정품 참고 이미지";
 const frameSize = imageFrame ? Math.max(imageFrame[2], imageFrame[3]) : 1;
 const frameWindowStyle = imageFrame
   ? `width:${(imageFrame[2] / frameSize) * 100}%;height:${(imageFrame[3] / frameSize) * 100}%`
@@ -104,9 +109,9 @@ function isOverseasStore(url: string) {
                   <Image
                     src={partImage!}
                     alt={part.image.alt}
-                    width={partImage!.width}
-                    height={partImage!.height}
-                    widths={[Math.min(480, partImage!.width), Math.min(960, partImage!.width)]}
+                    width={framedImageDimensions!.width}
+                    height={framedImageDimensions!.height}
+                    widths={framedImageDimensions!.widths}
                     sizes={`(max-width: 700px) ${(84 * partImage!.width) / frameSize}px, ${(116 * partImage!.width) / frameSize}px`}
                     format="webp"
                     loading="lazy"
@@ -127,7 +132,7 @@ function isOverseasStore(url: string) {
                 loading="lazy"
               />
             )}
-            <figcaption>정품 참고 이미지</figcaption>
+            <figcaption>{imageCaption}</figcaption>
           </figure>
         )
       }

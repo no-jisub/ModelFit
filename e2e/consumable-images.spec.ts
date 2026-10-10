@@ -29,7 +29,7 @@ for (const brandId of brands) {
           )
           .toBe(true);
         await expect(page.locator(`#${part.id} .part-image figcaption`)).toHaveText(
-          "정품 참고 이미지",
+          part.image!.alt.endsWith("공식 구조도") ? "공식 구조도" : "정품 참고 이미지",
         );
         const focusWindow = figure.locator(".part-image-focus-window");
         if (await focusWindow.count()) {
