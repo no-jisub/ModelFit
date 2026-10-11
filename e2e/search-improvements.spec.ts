@@ -47,9 +47,9 @@ test("모델번호 안내를 누르면 실제 라벨 안내가 열린다", async
   await expect(page.locator("#model-number-guide")).toContainText("이 모델의 라벨 위치");
 });
 
-test("미확인 모델은 등록 수와 공식 확인 수를 구분한다", async ({ page }) => {
+test("상세페이지에서 중복 확인 요약을 표시하지 않는다", async ({ page }) => {
   await page.goto("/model/coway/ap-4025d");
-  await expect(page.locator(".model-compatibility-summary")).toContainText("공식 호환 확인 0개");
+  await expect(page.locator(".model-compatibility-summary")).toHaveCount(0);
   await expect(page.locator(".part-evidence-summary")).toHaveCount(0);
 });
 

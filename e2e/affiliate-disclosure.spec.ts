@@ -14,7 +14,7 @@ for (const model of ["as355nsna", "as205ngja"]) {
         .locator(
           "xpath=ancestor::article[contains(concat(' ', normalize-space(@class), ' '), ' consumable-group ')][1]",
         )
-        .locator(".product-options-section > .affiliate-disclosure");
+        .locator(".purchase-notices > .affiliate-disclosure");
       const rel = (await link.getAttribute("rel")) ?? "";
       const isAffiliate = rel.split(/\s+/).includes("sponsored");
 

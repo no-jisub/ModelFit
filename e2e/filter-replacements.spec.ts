@@ -1,5 +1,44 @@
 import { expect, test } from "@playwright/test";
 
+test("기본 필터 종류와 수량은 모델별로 표시한다", async ({ page }) => {
+  for (const [model, name, quantity] of [
+    ["as355nsna", "360° 퓨리탈취청정 M 필터", 2],
+    ["as355nsah", "360° 퓨리탈취청정 G 필터", 2],
+    ["as356nsma", "360° 강력탈취청정 M7 필터", 2],
+    ["as186hwwa", "360° 탈취청정 V2 필터", 1],
+    ["as183hwwa", "360° H 필터", 1],
+    ["as303dwfa", "360° V 필터", 2],
+  ] as const) {
+    await page.goto(`/model/lg/${model}#compatible-parts`);
+    const note = page.locator(".default-filter-note");
+    await expect(note).toHaveCount(1);
+    await expect(note).toContainText(`기본 장착 필터: ${name} · ${quantity}개`);
+    await expect(note.getByRole("link", { name: "공식 제품 사양" })).toHaveAttribute(
+      "href",
+      /^https:\/\/www\.lge\.co\.kr\//,
+    );
+  }
+});
+
+test("AS153HWWC의 기본 장착 필터는 호환 교체 상품과 구분한다", async ({ page }) => {
+  await page.goto("/model/lg/as153hwwc#compatible-parts");
+  const note = page.locator(".default-filter-note");
+  await expect(note).toBeVisible();
+  await expect(note).toContainText("기본 장착 필터: 360° V 필터 · 1개");
+  await expect(note.getByRole("link", { name: "공식 제품 사양" })).toHaveAttribute(
+    "href",
+    "https://www.lge.co.kr/product/air-purifier/as153hwwc-akor1",
+  );
+  await expect(page.getByText("기본 장착 필터: H", { exact: true })).toHaveCount(0);
+  await expect(page.locator(".model-compatibility-summary")).toHaveCount(0);
+  await expect(page.getByText("제품 라벨의 모델번호가", { exact: false })).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.goto("/model/lg/as205ngja#compatible-parts");
+  await expect(page.locator(".default-filter-note")).toContainText(
+    "기본 장착 필터: 360° 퓨리탈취청정 G 필터 · 1개",
+  );
+});
+
 test("기본 M7과 호환 M5 안내는 상세 정보를 열지 않아도 보인다", async ({ page }) => {
   await page.goto("/model/lg/as356nsma#lg-360-m5-filter");
   const group = page

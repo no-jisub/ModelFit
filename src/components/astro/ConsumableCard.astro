@@ -10,6 +10,7 @@ import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
 import { consumableImageFrames } from "@/data/consumableImageFrames";
 import { getFramedImageDimensions } from "@/utils/consumableImage";
+import { defaultFilters } from "@/data/defaultFilters";
 
 const imageAssets = import.meta.glob<{ default: ImageMetadata }>(
   "/src/assets/consumables/*.{jpg,png,webp}",
@@ -52,6 +53,7 @@ const frameImageStyle =
     ? `width:${(partImage.width / imageFrame[2]) * 100}%;height:${(partImage.height / imageFrame[3]) * 100}%;left:${(-imageFrame[0] / imageFrame[2]) * 100}%;top:${(-imageFrame[1] / imageFrame[3]) * 100}%`
     : undefined;
 const configuration = getPartConfiguration(part, modelId);
+const defaultFilter = part.type === "all-in-one-filter" ? defaultFilters[modelId] : undefined;
 const compatibility = part.compatibilities.find((relation) => relation.modelId === modelId);
 const compatibilityConfirmed = isOfficialCompatibility(compatibility);
 const compatibilityStatus =
@@ -176,6 +178,20 @@ function isOverseasStore(url: string) {
           {part.groupedParts ? "아래 상품 중 한 종류를 선택하세요." : typeDescriptions[part.type]}
         </p>
         {
+          defaultFilter && (
+            <p class="part-fit-note default-filter-note">
+              <strong>
+                기본 장착 필터: {defaultFilter.name} · {defaultFilter.quantity}개
+              </strong>
+              <br />
+              처음 구매할 때 장착되는 필터입니다.{" "}
+              <a href={defaultFilter.sourceUrl} target="_blank" rel="noopener noreferrer">
+                공식 제품 사양 ↗
+              </a>
+            </p>
+          )
+        }
+        {
           !part.groupedParts && configuration?.fitNote && (
             <p class="part-fit-note">{configuration.fitNote}</p>
           )
@@ -289,15 +305,20 @@ function isOverseasStore(url: string) {
       }
     </div>
     {
-      part.groupedParts && (
-        <p class="filter-guide-note">
-          정품 성능은 제조사 자료 기준이며, 교체 시점은 사용 환경과 필터 상태에 따라 달라집니다.
-        </p>
-      )
-    }
-    {
-      coupangLinks.length > 0 && (
-        <AffiliateDisclosure hasAffiliateLinks={coupangLinks.some((link) => link.isAffiliate)} />
+      (part.groupedParts || coupangLinks.length > 0) && (
+        <aside class="purchase-notices" aria-label="구매 안내">
+          <strong class="purchase-notices-title">구매 안내</strong>
+          {part.groupedParts && (
+            <p class="filter-guide-note">
+              정품 성능은 제조사 자료 기준이며, 교체 시점은 사용 환경과 필터 상태에 따라 달라집니다.
+            </p>
+          )}
+          {coupangLinks.length > 0 && (
+            <AffiliateDisclosure
+              hasAffiliateLinks={coupangLinks.some((link) => link.isAffiliate)}
+            />
+          )}
+        </aside>
       )
     }
   </section>

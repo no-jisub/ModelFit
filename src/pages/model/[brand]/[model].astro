@@ -4,6 +4,9 @@ import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import MobilePartsJump from "@/components/astro/MobilePartsJump.astro";
 import ConsumableCard from "@/components/astro/ConsumableCard.astro";
 import PurchaseBundleList from "@/components/astro/PurchaseBundleList.astro";
+import ModelPhoto from "@/components/astro/ModelPhoto.astro";
+import AffiliateDisclosure from "@/components/astro/AffiliateDisclosure.astro";
+import { canDisplayModelImage } from "@/utils/modelImage";
 import SourceList from "@/components/astro/SourceList.astro";
 
 import { consumables } from "@/data/consumables";
@@ -11,7 +14,6 @@ import { models } from "@/data/models";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { categoryLabels, partTypeLabels } from "@/utils/labels";
 import { getModelFullName } from "@/utils/modelDisplayName";
-import { summarizeCompatibility } from "@/utils/compatibility";
 import { groupModelConsumables } from "@/utils/groupModelConsumables";
 
 export function getStaticPaths() {
@@ -27,7 +29,6 @@ const modelParts = model.consumableIds
   .filter((part) => part !== undefined);
 const parts = groupModelConsumables(modelParts);
 const categoryLabel = categoryLabels[model.category];
-const compatibilitySummary = summarizeCompatibility(parts, model.id);
 const fullModelName = getModelFullName(model);
 const title = `${fullModelName} 호환 소모품 찾기`;
 const description =
@@ -93,23 +94,35 @@ const breadcrumbJsonLd = {
           model.image && (
             <figure class="model-detail-image">
               <div class="model-photo-surface">
-                <img
-                  src={model.image.src}
-                  alt={model.image.alt}
-                  width="720"
-                  height="720"
-                  loading="eager"
-                />
+                <ModelPhoto image={model.image} modelCode={model.modelCode} loading="eager" />
               </div>
-              <figcaption>
-                <a href={model.image.sourceUrl} target="_blank" rel="noopener noreferrer">
-                  제품 이미지 출처
-                </a>
-              </figcaption>
+              {canDisplayModelImage(model.image.src) && (
+                <figcaption>
+                  <a
+                    href={model.image.sourceUrl}
+                    target="_blank"
+                    rel={
+                      model.image.sourceUrl.startsWith("https://link.coupang.com/")
+                        ? "sponsored noopener noreferrer"
+                        : "noopener noreferrer"
+                    }
+                  >
+                    {model.image.sourceUrl.startsWith("https://link.coupang.com/")
+                      ? "쿠팡 상품 이미지 · 제휴 링크"
+                      : "제품 이미지 출처"}
+                  </a>
+                </figcaption>
+              )}
             </figure>
           )
         }
       </div>
+
+      {
+        model.image?.sourceUrl.startsWith("https://link.coupang.com/") && (
+          <AffiliateDisclosure hasAffiliateLinks />
+        )
+      }
 
       {
         model.status !== "published" && (
@@ -132,21 +145,6 @@ const breadcrumbJsonLd = {
             <h2>호환 소모품·부품</h2>
             {parts.length > 0 && <span class="section-count">등록 {parts.length}개</span>}
           </div>
-          <p class="model-compatibility-summary">
-            공식 호환 확인 <strong>{compatibilitySummary.confirmed}개</strong>
-            {
-              compatibilitySummary.needsReview > 0 && (
-                <span>
-                  {" "}
-                  · 확인 필요 <strong>{compatibilitySummary.needsReview}개</strong>
-                </span>
-              )
-            }
-          </p>
-          <p class="section-description">
-            제품 라벨의 모델번호가 <strong>{model.modelCode}</strong>와 같은지 먼저 확인하세요.
-            <a href="#model-number-guide"> 확인 위치 보기</a>
-          </p>
         </div>
       </div>
       {
@@ -241,11 +239,6 @@ const breadcrumbJsonLd = {
 </BaseLayout>
 
 <style>
-  .model-compatibility-summary {
-    color: var(--color-neutral-700);
-    font-size: 14px;
-    margin: 10px 0;
-  }
   #model-number-guide {
     scroll-margin-top: 140px;
   }
