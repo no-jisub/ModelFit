@@ -7,6 +7,7 @@ export interface PurchasePriceSnapshot {
   vendorItemId: string;
   amount: number;
   checkedAt: string;
+  priceLabel?: "조회 가격" | "회원할인가";
 }
 export function isFreshPrice(
   snapshot: PurchasePriceSnapshot,

@@ -1,24 +1,38 @@
 import { createHmac } from "node:crypto";
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { appendFile, mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { parseEnv } from "node:util";
 import { loadRawCatalog } from "./lib/catalog-schema";
 import { matchesPriceTarget, type PurchasePriceSnapshot } from "../src/lib/purchase-price";
 
-// Build-time only: keys and raw API responses are never shipped to the browser.
+// Scheduled collection before deployment; never ship keys or raw responses to the browser.
 const local = await readFile(".env", "utf8")
   .then(parseEnv)
   .catch(() => ({}) as Record<string, string>);
 const access = (process.env.COUPANG_ACCESS_KEY ?? local.COUPANG_ACCESS_KEY ?? "").trim();
 const secret = (process.env.COUPANG_SECRET_KEY ?? local.COUPANG_SECRET_KEY ?? "").trim();
 const raw = await loadRawCatalog();
-const targets = raw["purchase-links.csv"].filter((r) => r.isActive === "true" && r.priceKeyword);
+const targets = raw["purchase-links.csv"].filter(
+  (r) => r.isActive === "true" && r.channel === "coupang" && r.priceKeyword,
+);
+if (process.argv.includes("--dry-run")) {
+  console.log(
+    `가격 갱신 대상: ${targets.length}개, 검색어 ${new Set(targets.map((t) => t.priceKeyword)).size}개 (API 호출 없음)`,
+  );
+  console.log(`API 인증 설정: ${access && secret ? "준비됨" : "누락"}`);
+  process.exit(0);
+}
+if (targets.length > 0 && (!access || !secret)) {
+  throw new Error("가격 갱신에 필요한 COUPANG_ACCESS_KEY / COUPANG_SECRET_KEY 설정이 없습니다.");
+}
 const prices: PurchasePriceSnapshot[] = [];
 const outcomes: { linkId: string; status: string }[] = [];
 const cache = new Map<string, Record<string, unknown>[]>();
+const failedKeywords = new Set<string>();
+let stopReason: string | undefined;
 let nextRequestAt = 0;
 for (const target of targets) {
-  if (!access || !secret) {
-    outcomes.push({ linkId: target.id, status: "missing-credentials" });
+  if (stopReason || failedKeywords.has(target.priceKeyword)) {
+    outcomes.push({ linkId: target.id, status: stopReason ?? "collection-failed" });
     continue;
   }
   try {
@@ -43,7 +57,12 @@ for (const target of targets) {
         },
         signal: AbortSignal.timeout(30000),
       });
-      if (!response.ok) throw new Error("http");
+      if (!response.ok) {
+        if (response.status === 429) stopReason = "rate-limited";
+        if (response.status === 401 || response.status === 403)
+          stopReason = "authentication-failed";
+        throw new Error("http");
+      }
       const data = await response.json();
       if (String(data.rCode) !== "0" || !Array.isArray(data.data?.productData))
         throw new Error("api");
@@ -74,11 +93,31 @@ for (const target of targets) {
     });
     outcomes.push({ linkId: target.id, status: "updated" });
   } catch {
-    outcomes.push({ linkId: target.id, status: "collection-failed" });
+    failedKeywords.add(target.priceKeyword);
+    outcomes.push({ linkId: target.id, status: stopReason ?? "collection-failed" });
   }
 }
 await mkdir("outputs", { recursive: true });
 // Always overwrite: never carry stale or unmatched prices across collection failures.
-await writeFile("outputs/purchase-prices.json", JSON.stringify({ version: 1, prices }, null, 2));
+await writeFile(
+  "outputs/purchase-prices.json.tmp",
+  JSON.stringify({ version: 1, prices }, null, 2),
+);
+await rename("outputs/purchase-prices.json.tmp", "outputs/purchase-prices.json");
 await writeFile("outputs/purchase-price-status.json", JSON.stringify(outcomes, null, 2));
+const counts = outcomes.reduce<Record<string, number>>((totals, result) => {
+  totals[result.status] = (totals[result.status] ?? 0) + 1;
+  return totals;
+}, {});
+const summary =
+  [
+    "## 상품 가격 갱신",
+    `갱신 ${prices.length}개 / 대상 ${targets.length}개`,
+    ...Object.entries(counts).map(([status, count]) => `- ${status}: ${count}개`),
+  ].join("\n") + "\n";
+if (process.env.GITHUB_STEP_SUMMARY) await appendFile(process.env.GITHUB_STEP_SUMMARY, summary);
 console.log(`가격 갱신: ${prices.length}/${targets.length} 개 (미확인 가격은 숨김)`);
+if (stopReason || (counts["collection-failed"] && prices.length === 0)) {
+  process.exitCode = 1;
+  console.error("API 오류로 가격 갱신을 완료하지 못했습니다. 자동 배포를 중단합니다.");
+}

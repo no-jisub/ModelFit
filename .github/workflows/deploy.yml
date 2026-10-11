@@ -3,6 +3,7 @@ name: Build and deploy
 on:
   workflow_dispatch:
   schedule:
+    # KST 03:23, 09:23, 15:23, 21:23 (GitHub scheduler may be delayed).
     - cron: "23 */6 * * *"
   push:
     branches: [main]
@@ -16,6 +17,7 @@ jobs:
   check:
     if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     env:
       PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL || 'https://modelfit-kr.web.app' }}
       PUBLIC_REPORT_EMAIL: ${{ vars.PUBLIC_REPORT_EMAIL }}
@@ -53,6 +55,17 @@ jobs:
         env:
           COUPANG_ACCESS_KEY: ${{ secrets.COUPANG_ACCESS_KEY }}
           COUPANG_SECRET_KEY: ${{ secrets.COUPANG_SECRET_KEY }}
+      - name: Save price collection results
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: purchase-price-status
+          path: outputs/purchase-price-status.json
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Refresh explicit official store prices
+        if: github.event_name != 'pull_request'
+        run: npm run sync:official-prices
       - run: npm run check
       - run: npm audit --audit-level=high
       - run: npx playwright install --with-deps chromium

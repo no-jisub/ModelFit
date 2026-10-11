@@ -4,29 +4,23 @@ import { getPurchasePrice } from "../../data/purchase-prices";
 import { PRICE_MAX_AGE_MS } from "../../lib/purchase-price";
 const { link } = Astro.props as { link: PurchaseLinkData };
 const snapshot = getPurchasePrice(link);
-const checkedTime = new Intl.DateTimeFormat("ko-KR", {
-  timeZone: "Asia/Seoul",
-  month: "numeric",
-  day: "numeric",
-  hour: "2-digit",
-  minute: "2-digit",
-  hour12: false,
-}).format(new Date(snapshot?.checkedAt ?? 0));
 ---
 
 {
   snapshot && (
     <div
       class="purchase-price"
-      aria-label="쿠팡 조회 가격"
+      aria-label={link.channel === "official" ? "공식몰 조회 가격" : "쿠팡 조회 가격"}
       data-price-expires={Date.parse(snapshot.checkedAt) + PRICE_MAX_AGE_MS}
     >
       <p class="price-heading">
         <strong>{snapshot.amount.toLocaleString("ko-KR")}원</strong>
-        <span>조회 가격</span>
+        <span>{snapshot.priceLabel ?? "조회 가격"}</span>
       </p>
       <p class="price-note">
-        <time datetime={snapshot.checkedAt}>{checkedTime}</time> 확인 · 결제 가격은 구매처에서 확인
+        {snapshot.priceLabel === "회원할인가"
+          ? "회원 로그인 기준 · 결제 가격은 구매처에서 확인"
+          : "결제 가격은 구매처에서 확인"}
       </p>
     </div>
   )
