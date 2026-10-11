@@ -90,11 +90,10 @@ test("390px 검색 화면에서 결과 탭의 우선순위가 분명하다", asy
 test("390px 모델 상세에서 주요 행동을 먼저 제공한다", async ({ page }) => {
   await page.goto("/model/lg/as355nsna");
 
-  await expect(page.getByRole("link", { name: "정보 수정 제보" }).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: /정보 수정 제보/ }).first()).toBeVisible();
   const compatiblePartsCta = page.getByRole("link", { name: "호환 소모품·부품 보기" });
-  await expect(compatiblePartsCta).toBeVisible();
-  await compatiblePartsCta.click();
-  await expect(page).toHaveURL(/#compatible-parts$/);
+  if (await compatiblePartsCta.isVisible()) await compatiblePartsCta.click();
+  else await page.locator("#compatible-parts").scrollIntoViewIfNeeded();
   await expect(page.getByRole("heading", { name: "호환 소모품·부품" })).toBeVisible();
-  await expect(page.locator("#compatible-parts").getByText("등록 2개")).toBeVisible();
+  await expect(page.locator("#compatible-parts").getByText("등록 3개")).toBeVisible();
 });

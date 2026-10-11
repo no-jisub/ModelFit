@@ -235,6 +235,12 @@ function isOverseasStore(url: string) {
                 )?.id ?? part.id
               }
               partName={part.displayName}
+              fitNote={
+                part.groupedParts
+                  ?.find((entry) => entry.productOptions.some((item) => item.id === option.id))
+                  ?.compatibilities.find((relation) => relation.modelId === modelId)
+                  ?.configuration?.fitNote?.match(/^기본 .*/)?.[0]
+              }
               layout="row"
               showDisclosure={false}
               packageLabel={getSalesPackageLabel(

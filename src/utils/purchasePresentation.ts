@@ -80,7 +80,7 @@ export function getSalesPackageLabel(
   }
   const compact = label
     .split("·")
-    .filter((segment) => !segment.includes("필요"))
+    .filter((segment) => !segment.includes("필요") || /옵션\s*선택/.test(segment))
     .join(" · ")
     .replace(/\b[A-Z][A-Z0-9-]{4,}\b/g, "")
     .replace(/공식 판매 구성/g, "")

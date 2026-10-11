@@ -30,11 +30,17 @@ test("모바일은 선택 단계 없이 구매 버튼을 누르고 클릭을 한
     page.locator("[data-purchase-select], [data-mobile-purchase-selection]"),
   ).toHaveCount(0);
   const part = page.locator("#lg-puricare-m-filter");
-  const link = part.locator('a[data-link-status="direct-product"]');
+  const link = part.locator(
+    'a[data-link-status="direct-product"][data-part-id="lg-puricare-m-filter"]',
+  );
   await expect(link).toHaveAttribute("rel", /sponsored/);
   await expect(part.locator(".affiliate-disclosure")).toBeVisible();
   await expect(part.locator(".purchase-quantity-summary")).toContainText("2개 필요");
-  await expect(part.locator(".product-option-details")).toBeVisible();
+  await expect(
+    part.locator(
+      '[aria-labelledby="lg-puricare-m-filter-genuine-option-heading"] .product-option-details',
+    ),
+  ).toBeVisible();
   await link.evaluate((a) => a.addEventListener("click", (e) => e.preventDefault()));
   await link.click();
   const clicks = await page.evaluate(() =>

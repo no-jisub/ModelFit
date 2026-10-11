@@ -55,7 +55,8 @@ test("미확인 모델은 등록 수와 공식 확인 수를 구분한다", asyn
 
 test("공식 근거와 구매 이벤트에 모델 ID가 있으며 중복 기록하지 않는다", async ({ page }) => {
   await page.goto("/model/lg/as355nsna");
-  const evidence = page.locator(".part-evidence-summary a").first();
+  await page.locator(".part-details > summary").first().click();
+  const evidence = page.locator(".part-evidence a[data-source-type]").first();
   await evidence.evaluate((a) => a.addEventListener("click", (event) => event.preventDefault()));
   await evidence.click();
   const purchase = page.locator('a[data-link-status="direct-product"]').first();

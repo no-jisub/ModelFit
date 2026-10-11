@@ -6,7 +6,7 @@ for (const channel of ["coupang", "official"]) {
       ? "구매 버튼 실제 클릭을 한 번 기록한다"
       : "공식 참고 링크를 구매 클릭으로 기록하지 않는다",
     async ({ page }) => {
-      await page.goto("/model/lg/as355nsna");
+      await page.goto(direct ? "/model/lg/as355nsna" : "/model/eufy/omni-c28");
       const link = page
         .locator(
           'a[data-purchase-channel="' +
@@ -16,7 +16,6 @@ for (const channel of ["coupang", "official"]) {
             '"]',
         )
         .first();
-      if (!direct) await page.locator(".part-details > summary").first().click();
       await expect(link).toBeVisible();
       const partId = await link.getAttribute("data-part-id");
       const productKind = await link.getAttribute("data-product-kind");

@@ -17,6 +17,7 @@ const {
   layout = "card",
   showDisclosure = true,
   partNumber,
+  fitNote,
 } = Astro.props as {
   option: ConsumableProductOption;
   compatibilityConfirmed?: boolean;
@@ -30,6 +31,7 @@ const {
   layout?: "card" | "row";
   showDisclosure?: boolean;
   partNumber?: string;
+  fitNote?: string;
 };
 const headingId = option.id + "-heading";
 const kindLabel = option.kind === "genuine" ? "정품" : "호환상품";
@@ -80,6 +82,7 @@ const selectionGuide = getFilterSelectionGuide(partId, option.itemCode ?? partNu
       <h5 id={headingId} class:list={[layout !== "row" && option.name === partName && "sr-only"]}>
         {option.name}
       </h5>
+      {fitNote && <p class="product-fit-note">{fitNote}</p>}
       {
         selectionGuide && (
           <dl class="product-selection-guide">

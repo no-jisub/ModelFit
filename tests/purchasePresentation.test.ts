@@ -100,6 +100,9 @@ describe("sales package presentation", () => {
     expect(getSalesPackageLabel(undefined, undefined, "AS355NSNA")).toBe("수량은 구매처에서 확인");
   });
   it("preserves actual package information and unresolved labels", () => {
+    expect(getSalesPackageLabel("필터 2개입 옵션 선택 필요", undefined, "MODEL")).toBe(
+      "필터 2개입 옵션 선택 필요",
+    );
     expect(
       getSalesPackageLabel("필터 2개입 · 1개 필요", { requiredQuantity: "1개 필요" }, "MODEL"),
     ).toBe("필터 2개입");

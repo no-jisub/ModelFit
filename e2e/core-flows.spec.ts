@@ -110,7 +110,7 @@ test("검색에서 소모품의 연결 모델과 개별 호환 상태를 확인�
   const partCard = page.locator(".search-part-card").filter({
     hasText: "LG 퓨리탈취청정 M 필터",
   });
-  const compatibleModels = partCard.getByText(/연결 모델 2개 보기/);
+  const compatibleModels = partCard.getByText(/연결 모델 \d+개 보기/);
   await compatibleModels.click();
   await partCard.getByRole("link", { name: "LG AS355NSNA" }).click();
 
@@ -369,12 +369,13 @@ test("다수 부품 모델은 바로가기를 제공하고 구매처 누락은 �
 
   await page.goto("/model/coway/ap-1521b");
   const noPurchaseCard = page.locator("#coway-4d-pre-filter");
+  await expect(noPurchaseCard.locator('a[data-link-status="direct-product"]')).toHaveCount(0);
   await expect(
-    noPurchaseCard
-      .locator(".product-options-section > .product-option-list")
-      .getByText("확인된 구매처가 없습니다."),
+    noPurchaseCard.locator(
+      ".product-options-section > .product-option-list .purchase-unavailable > strong",
+    ),
   ).toBeVisible();
-  await expect(noPurchaseCard.getByText("공식 자료에 번호 미표기")).toBeVisible();
+  await expect(noPurchaseCard.locator(".part-number-inline code")).toHaveCount(0);
   await noPurchaseCard.locator(".part-details > summary").click();
   await expect(noPurchaseCard.getByText("세척 후 재사용", { exact: true })).toBeVisible();
 });

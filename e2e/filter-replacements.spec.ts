@@ -2,18 +2,22 @@ import { expect, test } from "@playwright/test";
 
 test("기본 M7과 호환 M5 안내는 상세 정보를 열지 않아도 보인다", async ({ page }) => {
   await page.goto("/model/lg/as356nsma#lg-360-m5-filter");
-  const group = page.locator("#lg-360-m5-filter");
-  await expect(group.locator(".part-fit-note")).toHaveText(
+  const group = page
+    .locator("article.consumable-group")
+    .filter({ has: page.locator("#lg-360-m5-filter-genuine-option-heading") });
+  await expect(group.locator(".product-fit-note")).toHaveText(
     "기본 M7 필터 대신 사용할 수 있는 M5 교체 필터입니다.",
   );
-  await expect(group.locator(".part-fit-note")).toBeVisible();
+  await expect(group.locator(".product-fit-note")).toBeVisible();
   await expect(group.locator("details")).not.toHaveAttribute("open", "");
   await expect(group.locator(".purchase-quantity-summary")).toContainText("2개 필요");
-  await expect(group.getByRole("link", { name: "공식몰에서 구매하기" })).toBeVisible();
+  await expect(
+    group.locator('a[data-part-id="lg-360-m5-filter"][data-link-status="direct-product"]'),
+  ).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 
   await page.goto("/model/lg/as336nslc#lg-360-m5-filter");
-  await expect(page.locator("#lg-360-m5-filter .part-fit-note")).toHaveText("기본 장착 필터: M5");
+  await expect(page.locator(".product-fit-note")).toHaveText("기본 장착 필터: M5");
 });
 
 test("미확인 쿠팡 상품 대신 검증한 공식몰 개별 필터를 안내한다", async ({ page }) => {

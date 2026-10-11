@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { consumables } from "../src/data/consumables";
+import { groupModelConsumables } from "../src/utils/groupModelConsumables";
 import { models } from "../src/data/models";
 
 const illustrated = consumables.filter((part) => part.image);
@@ -17,7 +18,14 @@ for (const brandId of brands) {
     }
     for (const [path, parts] of grouped) {
       await page.goto(path);
+      const model = models.find((entry) => `/model/${entry.brandId}/${entry.slug}` === path)!;
+      const displayedIds = new Set(
+        groupModelConsumables(
+          model.consumableIds.map((id) => consumables.find((part) => part.id === id)!),
+        ).map((part) => part.id),
+      );
       for (const part of parts) {
+        if (!displayedIds.has(part.id)) continue;
         const image = page.locator(`#${part.id} .part-image img`);
         const figure = page.locator(`#${part.id} .part-image`);
         await figure.scrollIntoViewIfNeeded();
