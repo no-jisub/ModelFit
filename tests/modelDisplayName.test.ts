@@ -11,9 +11,9 @@ describe("모델 표시명", () => {
   });
 
   it("모델명 앞에 중복된 영문 브랜드를 제거한다", () => {
-    const model = models.find((item) => item.id === "lg-as355nsna");
+    const model = { brandName: "LG", brandNameEn: "LG", modelName: "LG 퓨리케어 360° 공기청정기" };
 
-    expect(model && getModelDisplayName(model)).toBe("퓨리케어 360° 공기청정기");
-    expect(model && getModelFullName(model)).toBe("LG 퓨리케어 360° 공기청정기");
+    expect(getModelDisplayName(model)).toBe("퓨리케어 360° 공기청정기");
+    expect(getModelFullName(model)).toBe("LG 퓨리케어 360° 공기청정기");
   });
 });

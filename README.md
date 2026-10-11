@@ -1,8 +1,8 @@
 # 모델핏(ModelFit)
 
 가전 모델번호로 교체 소모품의 공식 호환 근거와 구매 링크를 찾는 정적 웹서비스입니다.
-현재 공개 카탈로그는 **16개 브랜드, 80개 모델, 177개 소모품**입니다.
-모델 80개의 대표 이미지를 로컬 WebP로 제공하며, 카탈로그는 기본적으로 정적 페이지로 빌드합니다.
+모델과 소모품은 비공개 관계형 CSV에서 관리합니다. 등록 개수는 `npm run validate:data`로 확인합니다.
+모델 대표 이미지를 로컬 WebP로 제공하며, 카탈로그는 기본적으로 정적 페이지로 빌드합니다.
 
 ## 실행
 
@@ -25,7 +25,7 @@ Firebase Hosting으로 배포하며, 오류 제보는 별도 Firestore 데이터
 | `src/data/catalogModels.ts`           | 모델 원본과 화면용 모델 생성               |
 | `src/data/compatibilityMap.ts`        | 모델 ID별 소모품 ID 연결                   |
 | `src/data/models.ts`                  | 모델 목록 진입점                           |
-| `src/data/consumables/*.ts`           | 브랜드별 소모품 원본                       |
+| `data/catalog/*.csv`                  | 모델·소모품·호환·구매 링크의 비공개 원본   |
 | `src/data/importedCatalogMetadata.ts` | CSV에서 생성한 경량 브랜드·카테고리 데이터 |
 | `src/data/consumables/index.ts`       | 소모품 정렬과 구매 선택지 생성             |
 | `src/utils/validateData.ts`           | 출처·ID·양방향 호환 연결·구매 링크 검증    |
@@ -33,11 +33,11 @@ Firebase Hosting으로 배포하며, 오류 제보는 별도 Firestore 데이터
 ## 모델·소모품 추가
 
 1. 공식 자료에서 모델번호와 적용 소모품을 확인합니다. 출처 URL과 실제 확인일을 기록합니다.
-2. 모델은 `catalogModels.ts`의 원본 목록에 추가합니다. 기존 모델 ID와 중복되지 않아야 합니다.
-3. 해당 브랜드 소모품 파일에 소모품을 추가하고 `compatibleModelIds`를 연결합니다.
-4. `compatibilityMap.ts`에 모델 → 소모품 연결을 추가합니다.
-5. `consumables/index.ts`의 `consumableOrder`에도 새 소모품 ID를 추가합니다.
-6. `npm run validate:data`, 관련 테스트, 빌드 결과를 확인합니다.
+2. `data/catalog/models.csv`, `consumables.csv`와 관련 관계 CSV를 수정합니다. 화면용 TypeScript 파일을 직접 수정하지 않습니다.
+3. `model-consumables.csv`에 모델과 소모품의 호환 관계를 등록하고 출처를 연결합니다.
+4. `product-options.csv`, `purchase-links.csv`에 판매 구성과 구매 링크를 등록합니다.
+5. `npm run catalog:update`로 검사·생성 데이터 갱신·백업을 수행합니다.
+6. 관련 테스트와 빌드를 확인합니다. 배포할 때는 `npm run catalog:ci:pack` 후 CI 카탈로그 Secrets도 갱신합니다.
 
 물리적으로 다른 교체 부품은 별도 소모품으로 등록합니다. 묶음 판매 수량은 소모품 이름에 섞지 않습니다.
 정기 교체가 아닌 청소용 필터와 추가 선택 필터는 구분합니다. 부품번호·교체 주기·HEPA 등급을 추정하지 않습니다.
@@ -114,8 +114,8 @@ CI는 비공개 카탈로그 CSV를 GitHub Actions Secrets에서 복원한 뒤 �
 - GitHub Variable: `FIREBASE_PROJECT_ID`
 - 운영 사이트: <https://modelfit-kr.web.app/>
 
-배포 승인 전에 변경 내역과 검사 결과를 확인합니다. 현재 작업 상태와 미완료 항목은
-[인수인계](docs/HANDOFF.md), [출시 점검](docs/RELEASE_REVIEW.md)을 참고하세요.
+배포 승인 전에 변경 내역과 검사 결과를 확인합니다. 운영 절차는 [운영 문서](docs/OPERATIONS.md), 가격 갱신은 [구매 가격 운영](docs/purchase-prices.md)을 참고하세요.
+`HANDOFF.md`, `RELEASE_REVIEW.md`와 날짜가 붙은 검토 문서는 당시 기록이며 현재 상태와 다를 수 있습니다.
 
 ## SEO와 출처 관리
 
