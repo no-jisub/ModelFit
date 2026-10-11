@@ -1,6 +1,5 @@
 ---
 import type { ConsumableCompatibility } from "@/types";
-import { partNumberStatusLabels } from "@/utils/labels";
 import { getMaintenancePresentation, getPartConfiguration } from "@/utils/partPresentation";
 import { groupPurchaseOptions, getSalesPackageLabel } from "@/utils/purchasePresentation";
 import ProductOptionCard from "./ProductOptionCard.astro";
@@ -34,6 +33,8 @@ const typeDescriptions = {
   "main-brush": "바닥의 먼지와 이물질을 쓸어 흡입구로 보내는 메인 브러시입니다.",
   "side-brush": "벽면과 모서리의 먼지를 중앙 흡입구 쪽으로 모아 줍니다.",
   "mop-pad": "바닥 물걸레 청소에 사용하는 패드입니다.",
+  "moving-wheel":
+    "공기청정기를 옮기기 위한 선택 액세서리입니다. 본체 단수에 맞는 제품을 사용하세요.",
 } as const;
 const partImage = part.image ? imageAssets[part.image.src]?.default : undefined;
 if (part.image && !partImage) throw new Error(`Missing consumable image asset: ${part.id}`);
@@ -64,9 +65,24 @@ const compatibilityNotes = {
   "user-reported": "사용자 제보로 확인된 정보이며 공식 자료 확인이 필요합니다.",
   unverified: "구매 판단에 필요한 호환 근거가 아직 확인되지 않았습니다.",
 } as const;
-const evidenceSources =
-  compatibility?.evidenceScope === "scoped" ? compatibility.sources : part.sources;
-const evidenceCount = evidenceSources.length;
+const detailedParts = part.groupedParts ?? [part];
+const detailedSources = detailedParts
+  .flatMap((entry) => {
+    const relation = entry.compatibilities.find((item) => item.modelId === modelId);
+    return relation?.evidenceScope === "scoped" ? relation.sources : entry.sources;
+  })
+  .filter((source, index, list) => list.findIndex((entry) => entry.url === source.url) === index);
+const evidenceCount = detailedSources.length;
+const careNotes = [
+  ...new Set(
+    detailedParts.flatMap((entry) =>
+      (entry.purchaseWarning ?? "")
+        .split(/(?<=[.!?])\s+/)
+        .filter((sentence) => /세척|건조|장착|전원|비닐|물로/.test(sentence)),
+    ),
+  ),
+];
+const isWheel = part.type === "moving-wheel";
 const purchaseOptions = groupPurchaseOptions(part.productOptions);
 const coupangLinks = purchaseOptions.available.flatMap((option) =>
   option.purchaseLinks.filter((link) => link.channel === "coupang"),
@@ -98,6 +114,11 @@ function isOverseasStore(url: string) {
 ---
 
 <article class="consumable-group card" id={part.id}>
+  {
+    part.groupedParts
+      ?.filter((entry) => entry.id !== part.id)
+      .map((entry) => <span id={entry.id} class="grouped-part-anchor" aria-hidden="true" />)
+  }
   <div class="part-overview">
     <header class:list={["consumable-group-heading", part.image && "has-part-image"]}>
       {
@@ -138,60 +159,35 @@ function isOverseasStore(url: string) {
       }
       <div class="part-heading-copy">
         <div class="part-title-line">
-          <h3>{part.displayName}</h3><span aria-label={`${modelCode} 호환 상태`}
+          <h3>
+            {
+              part.id === "lg-360-micro-filter"
+                ? "극세필터"
+                : isWheel
+                  ? "이동용 무빙휠"
+                  : part.displayName
+            }
+          </h3>{isWheel && <span class="optional-accessory-badge">선택 액세서리</span>}<span
+            aria-label={`${modelCode} 호환 상태`}
             ><VerificationBadge status={compatibilityStatus} context="compatibility" /></span
           >
         </div>
-        <p class="part-purpose">{typeDescriptions[part.type]}</p>
-        {configuration?.fitNote && <p class="part-fit-note">{configuration.fitNote}</p>}
-        <div class="part-number-inline" aria-label="부품번호">
-          <span>부품번호</span>
-          {
-            part.genuinePartNumber ? (
-              <>
-                <>
-                  <code>{part.genuinePartNumber}</code>
-                  <button
-                    type="button"
-                    class="copy-part-number"
-                    data-copy-value={part.genuinePartNumber}
-                    aria-label={`${part.genuinePartNumber} 부품번호 복사`}
-                  >
-                    <span data-copy-label>복사</span>
-                  </button>
-                </>
-              </>
-            ) : (
-              <span>{partNumberStatusLabels[part.partNumberStatus]}</span>
-            )
-          }
-        </div>
+        <p class="part-purpose">
+          {part.groupedParts ? "아래 상품 중 한 종류를 선택하세요." : typeDescriptions[part.type]}
+        </p>
+        {
+          !part.groupedParts && configuration?.fitNote && (
+            <p class="part-fit-note">{configuration.fitNote}</p>
+          )
+        }
       </div>
     </header>
-    {
-      compatibilityConfirmed && compatibility?.sources[0] && (
-        <p class="part-evidence-summary">
-          <a
-            href={compatibility.sources[0].url}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-source-type={compatibility.sources[0].sourceType}
-            data-part-id={part.id}
-          >
-            이 모델의 공식 호환 근거 <span aria-hidden="true">↗</span>
-          </a>
-          <span>
-            호환 확인 <time datetime={compatibility.verifiedAt}>{compatibility.verifiedAt}</time>
-          </span>
-        </p>
-      )
-    }
     {
       (configuration?.requiredQuantity || purchaseOptions.available.length > 0) && (
         <dl class="purchase-quantity-summary">
           {configuration?.requiredQuantity && (
             <div>
-              <dt>제품 1대 필요 수량</dt>
+              <dt>{isWheel ? "선택 구매 수량" : "제품 1대 필요 수량"}</dt>
               <dd>{configuration.requiredQuantity}</dd>
             </div>
           )}
@@ -233,7 +229,11 @@ function isOverseasStore(url: string) {
               compatibilityConfirmed={compatibilityConfirmed}
               option={option}
               modelId={modelId}
-              partId={part.id}
+              partId={
+                part.groupedParts?.find((entry) =>
+                  entry.productOptions.some((item) => item.id === option.id),
+                )?.id ?? part.id
+              }
               partName={part.displayName}
               layout="row"
               showDisclosure={false}
@@ -243,6 +243,11 @@ function isOverseasStore(url: string) {
                 modelCode,
               )}
               fallbackPartNumber={part.genuinePartNumber}
+              partNumber={
+                part.groupedParts?.find((entry) =>
+                  entry.productOptions.some((item) => item.id === option.id),
+                )?.genuinePartNumber ?? (!part.groupedParts ? part.genuinePartNumber : undefined)
+              }
             />
           ))
         ) : officialStoreGuidance.length > 0 ? (
@@ -278,6 +283,13 @@ function isOverseasStore(url: string) {
       }
     </div>
     {
+      part.groupedParts && (
+        <p class="filter-guide-note">
+          정품 성능은 제조사 자료 기준이며, 교체 시점은 사용 환경과 필터 상태에 따라 달라집니다.
+        </p>
+      )
+    }
+    {
       coupangLinks.length > 0 && (
         <AffiliateDisclosure hasAffiliateLinks={coupangLinks.some((link) => link.isAffiliate)} />
       )
@@ -287,42 +299,11 @@ function isOverseasStore(url: string) {
     <summary>상세 정보</summary>
     <div class="part-details-content">
       <section class="part-management">
-        <h4>부품·관리 안내</h4><p>{typeDescriptions[part.type]}</p>
-        <p>{compatibilityNotes[compatibilityStatus]}</p>
-        <dl class="part-use-details">
-          {
-            configuration?.itemCode && (
+        <h4>관리 방법</h4>
+        {
+          maintenance && !part.groupedParts && (
+            <dl class="part-use-details">
               <div>
-                <>
-                  <dt>상품·구성 코드</dt>
-                  <dd>{configuration.itemCode}</dd>
-                </>
-              </div>
-            )
-          }
-          {
-            configuration?.salesPackage && (
-              <div>
-                <>
-                  <dt>판매 단위</dt>
-                  <dd>{configuration.salesPackage}</dd>
-                </>
-              </div>
-            )
-          }
-          {
-            configuration?.composition && (
-              <div>
-                <>
-                  <dt>확인된 구성 정보</dt>
-                  <dd>{configuration.composition}</dd>
-                </>
-              </div>
-            )
-          }
-          {
-            maintenance && (
-              <div class="part-maintenance-detail">
                 <>
                   <dt>관리 방식</dt>
                   <dd>
@@ -333,40 +314,55 @@ function isOverseasStore(url: string) {
                   </dd>
                 </>
               </div>
+            </dl>
+          )
+        }
+        {
+          careNotes.map((note) => (
+            <p>
+              {part.groupedParts ? "정품 필터: " : ""}
+              {note}
+            </p>
+          ))
+        }
+        {!maintenance && careNotes.length === 0 && <p>선택한 상품의 관리 안내를 확인하세요.</p>}
+        {
+          part.groupedParts && (
+            <p>
+              공식 호환 근거는 정품 기준입니다. 호환상품은 각 판매자의 적용 모델과 관리 안내를
+              확인하세요.
+            </p>
+          )
+        }
+      </section>
+      <section class="part-product-codes">
+        <h4>상품·구성 코드</h4>
+        <dl class="part-use-details">
+          {
+            detailedParts
+              .flatMap((entry) => entry.productOptions)
+              .filter((option) => option.itemCode)
+              .map((option) => (
+                <div>
+                  <>
+                    <dt>{option.name}</dt>
+                    <dd>{option.itemCode}</dd>
+                  </>
+                </div>
+              ))
+          }
+          {
+            configuration?.itemCode && (
+              <div>
+                <>
+                  <dt>구성 코드</dt>
+                  <dd>{configuration.itemCode}</dd>
+                </>
+              </div>
             )
           }
         </dl>
       </section>
-      {
-        purchaseOptions.available.map((option) => (
-          <section class="product-option-description">
-            <p>{option.description}</p>
-            <p>상품 원문 표기: {option.modelLabels[modelId] ?? option.packageLabel}</p>
-            {option.purchaseLinks.map((link) => (
-              <p class="purchase-checked-at">구매 링크 확인: {link.checkedAt}</p>
-            ))}
-            <div class="product-guidance-links">
-              {option.guidanceLinks.map((link) => (
-                <a
-                  href={link.url}
-                  rel="noopener noreferrer"
-                  target="_blank"
-                  data-product-option-id={option.id}
-                  data-product-kind={option.kind}
-                  data-purchase-channel={link.channel}
-                  data-part-id={part.id}
-                  data-link-status={link.linkType}
-                >
-                  {!compatibilityConfirmed && link.label.includes("공식 호환")
-                    ? "제조사 참고 자료"
-                    : link.label}{" "}
-                  <span aria-hidden="true">↗</span>
-                </a>
-              ))}
-            </div>
-          </section>
-        ))
-      }
       {
         purchaseOptions.reference.length > 0 && (
           <section class="purchase-reference-options">
@@ -385,11 +381,11 @@ function isOverseasStore(url: string) {
         )
       }
       <section class="part-evidence">
-        <h4>확인 근거와 날짜</h4><div class="part-evidence-content">
+        <h4>공식 자료·호환 근거</h4><div class="part-evidence-content">
           {
             evidenceCount > 0 ? (
               <ul>
-                {evidenceSources.map((source) => (
+                {detailedSources.map((source) => (
                   <li>
                     <a
                       href={source.url}
@@ -400,9 +396,6 @@ function isOverseasStore(url: string) {
                     >
                       {source.title}
                     </a>
-                    <span>
-                      자료 확인: <time datetime={source.checkedAt}>{source.checkedAt}</time>
-                    </span>
                   </li>
                 ))}
               </ul>
@@ -417,8 +410,7 @@ function isOverseasStore(url: string) {
           <p class="part-image-credit">
             <a href={part.image.sourceUrl} target="_blank" rel="noopener noreferrer">
               부품 이미지 출처
-            </a>{" "}
-            · 이미지 확인: {part.image.checkedAt}
+            </a>
           </p>
         )
       }

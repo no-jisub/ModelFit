@@ -102,7 +102,7 @@ describe("data validation", () => {
     expect(brands.some((brand) => brand.id === "samsung")).toBe(false);
   });
 
-  it("모든 소모품이 제조사 공식 출처와 확인일을 제공한다", () => {
+  it("소모품 확인 상태에 맞는 공식 또는 판매자 출처와 확인일을 제공한다", () => {
     expect(
       consumables.every(
         (part) =>
@@ -112,7 +112,9 @@ describe("data validation", () => {
               source.url.startsWith("https://") && !Number.isNaN(Date.parse(source.checkedAt)),
           ) &&
           part.sources.some((source) =>
-            ["manufacturer", "official-manual", "official-store"].includes(source.sourceType),
+            part.verificationStatus === "seller-confirmed"
+              ? source.sourceType === "seller"
+              : ["manufacturer", "official-manual", "official-store"].includes(source.sourceType),
           ),
       ),
     ).toBe(true);

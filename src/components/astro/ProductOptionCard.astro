@@ -2,6 +2,7 @@
 import type { ConsumableProductOption } from "@/types";
 import AffiliateDisclosure from "./AffiliateDisclosure.astro";
 import PurchasePrice from "./PurchasePrice.astro";
+import { getFilterSelectionGuide } from "@/utils/filterSelectionGuide";
 
 const {
   option,
@@ -15,6 +16,7 @@ const {
   packageLabel: presentedPackageLabel,
   layout = "card",
   showDisclosure = true,
+  partNumber,
 } = Astro.props as {
   option: ConsumableProductOption;
   compatibilityConfirmed?: boolean;
@@ -27,6 +29,7 @@ const {
   packageLabel?: string;
   layout?: "card" | "row";
   showDisclosure?: boolean;
+  partNumber?: string;
 };
 const headingId = option.id + "-heading";
 const kindLabel = option.kind === "genuine" ? "정품" : "호환상품";
@@ -47,10 +50,12 @@ const verificationLabel =
     ? "상품 자료 확인 · 모델 호환 확인 필요"
     : productVerificationLabel;
 const packageLabel = presentedPackageLabel ?? option.modelLabels[modelId] ?? option.packageLabel;
+const packageNeedsReview = !packageLabel || /확인 필요|구매처에서 확인/.test(packageLabel);
 const purchaseLinks = option.purchaseLinks;
 const guidanceLinks = option.guidanceLinks;
 const searchablePartNumber = option.itemCode ?? fallbackPartNumber;
 const isOverseas = (url: string) => new URL(url).hostname === "www.eufy.com";
+const selectionGuide = getFilterSelectionGuide(partId, option.itemCode ?? partNumber);
 ---
 
 <article
@@ -75,6 +80,48 @@ const isOverseas = (url: string) => new URL(url).hostname === "www.eufy.com";
       <h5 id={headingId} class:list={[layout !== "row" && option.name === partName && "sr-only"]}>
         {option.name}
       </h5>
+      {
+        selectionGuide && (
+          <dl class="product-selection-guide">
+            <div>
+              <>
+                <dt>탈취 성능</dt>
+                <dd>{selectionGuide.deodorization}</dd>
+              </>
+            </div>
+            <div>
+              <>
+                <dt>추천 환경</dt>
+                <dd>{selectionGuide.environment}</dd>
+              </>
+            </div>
+            <div>
+              <>
+                <dt>교체 주기</dt>
+                <dd>{selectionGuide.replacement}</dd>
+              </>
+            </div>
+          </dl>
+        )
+      }
+      {
+        partNumber && (
+          <div class="part-number-inline" aria-label="상품 부품번호">
+            <>
+              <span>부품번호</span>
+              <code>{partNumber}</code>
+            </>
+            <button
+              type="button"
+              class="copy-part-number"
+              data-copy-value={partNumber}
+              aria-label={`${partNumber} 부품번호 복사`}
+            >
+              <span data-copy-label>복사</span>
+            </button>
+          </div>
+        )
+      }
     </div>
   </div>
 
@@ -89,12 +136,8 @@ const isOverseas = (url: string) => new URL(url).hostname === "www.eufy.com";
         )}
         <div>
           <dt>판매 구성</dt>
-          <dd
-            class:list={[
-              (!packageLabel || packageLabel.includes("확인 필요")) && "package-needs-review",
-            ]}
-          >
-            {packageLabel ?? "판매 구성 확인 필요"}
+          <dd class:list={[packageNeedsReview && "package-needs-review"]}>
+            {packageLabel ?? "수량은 구매처에서 확인"}
           </dd>
         </div>
       </dl>

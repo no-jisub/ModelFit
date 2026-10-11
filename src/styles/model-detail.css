@@ -1,4 +1,57 @@
 /* Model identification and purchase decisions share a compact reading order. */
+.grouped-part-anchor {
+  display: block;
+  height: 0;
+  scroll-margin-top: 140px;
+}
+.product-selection-guide {
+  display: grid;
+  gap: 4px;
+  margin: 10px 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.product-selection-guide > div {
+  display: grid;
+  grid-template-columns: 60px minmax(0, 1fr);
+  gap: 8px;
+}
+.product-selection-guide dt {
+  color: var(--color-neutral-600);
+}
+.product-selection-guide dd {
+  margin: 0;
+  color: var(--color-neutral-800);
+}
+.filter-guide-note {
+  margin: 12px 0 0;
+  font-size: 12px;
+  color: var(--color-neutral-600);
+}
+.product-option-heading .part-number-inline {
+  margin-top: 8px;
+  font-size: 12px;
+}
+.product-option-heading > div {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.product-option-heading h5 {
+  order: -2;
+}
+.product-option-heading .product-option-badges {
+  order: -1;
+  margin-top: 8px;
+}
+.optional-accessory-badge {
+  border-radius: 20px;
+  padding: 4px 9px;
+  background: var(--color-neutral-100);
+  color: var(--color-neutral-600);
+  font-size: 12px;
+  font-weight: 600;
+}
 .model-content .compatible-parts-section:target {
   margin-inline: 0;
   padding-inline: 0;

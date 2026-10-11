@@ -5,15 +5,14 @@ import MobilePartsJump from "@/components/astro/MobilePartsJump.astro";
 import ConsumableCard from "@/components/astro/ConsumableCard.astro";
 import PurchaseBundleList from "@/components/astro/PurchaseBundleList.astro";
 import SourceList from "@/components/astro/SourceList.astro";
-import VerificationBadge from "@/components/astro/VerificationBadge.astro";
 
 import { consumables } from "@/data/consumables";
 import { models } from "@/data/models";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { categoryLabels, partTypeLabels } from "@/utils/labels";
 import { getModelFullName } from "@/utils/modelDisplayName";
-import { groupModelsByName } from "@/utils/modelGroups";
 import { summarizeCompatibility } from "@/utils/compatibility";
+import { groupModelConsumables } from "@/utils/groupModelConsumables";
 
 export function getStaticPaths() {
   return models.map((model) => ({
@@ -23,12 +22,10 @@ export function getStaticPaths() {
 }
 
 const { model } = Astro.props;
-const modelVariants = groupModelsByName(models).find(({ models: groupedModels }) =>
-  groupedModels.some((candidate) => candidate.id === model.id),
-)?.models ?? [model];
-const parts = model.consumableIds
+const modelParts = model.consumableIds
   .map((id: string) => consumables.find((part) => part.id === id))
   .filter((part) => part !== undefined);
+const parts = groupModelConsumables(modelParts);
 const categoryLabel = categoryLabels[model.category];
 const compatibilitySummary = summarizeCompatibility(parts, model.id);
 const fullModelName = getModelFullName(model);
@@ -84,39 +81,11 @@ const breadcrumbJsonLd = {
         <div class="model-identity">
           <p class="model-brand-category">{model.brandName} · {categoryLabel}</p>
           <h1>{fullModelName}</h1>
-          {
-            modelVariants.length > 1 ? (
-              <div class="model-detail-selector">
-                <span>정확한 모델번호</span>
-                <details data-model-detail-selector>
-                  <summary aria-label={`모델번호 선택, 현재 ${model.modelCode}`}>
-                    <span class="model-detail-current-code">{model.modelCode}</span>
-                  </summary>
-                  <nav class="model-detail-options" aria-label="모델번호 목록">
-                    {modelVariants.map((variant) => (
-                      <a
-                        href={`/model/${variant.brandId}/${variant.slug}#compatible-parts`}
-                        aria-current={variant.id === model.id ? "page" : undefined}
-                      >
-                        {variant.modelCode}
-                      </a>
-                    ))}
-                  </nav>
-                </details>
-              </div>
-            ) : (
-              <div class="model-code-block">
-                <span>정확한 모델번호</span>
-                <strong class="model-code">{model.modelCode}</strong>
-                {model.series && <small>{model.series}</small>}
-              </div>
-            )
-          }
-          <div class="model-identity-meta" aria-label="모델 등록 확인">
-            <VerificationBadge status={model.verificationStatus} context="model" />
-            <span>
-              모델 정보 확인: <time datetime={model.lastVerifiedAt}>{model.lastVerifiedAt}</time>
-            </span>
+          <div class="model-code-block">
+            <span>모델 번호</span>
+            <strong class="model-code">{model.modelCode}</strong>
+          </div>
+          <div class="model-identity-meta">
             <a href="#model-number-guide">모델번호 확인 방법</a>
           </div>
         </div>
@@ -136,7 +105,6 @@ const breadcrumbJsonLd = {
                 <a href={model.image.sourceUrl} target="_blank" rel="noopener noreferrer">
                   제품 이미지 출처
                 </a>
-                <span> · {model.image.checkedAt} 확인</span>
               </figcaption>
             </figure>
           )
@@ -296,25 +264,5 @@ const breadcrumbJsonLd = {
       const guide = document.querySelector<HTMLDetailsElement>("#model-number-guide");
       if (guide) guide.open = true;
     });
-  });
-  document
-    .querySelectorAll<HTMLDetailsElement>("[data-model-detail-selector]")
-    .forEach((details) => {
-      details.querySelector("summary")?.addEventListener("click", (event) => {
-        const selection = window.getSelection();
-        if (selection && !selection.isCollapsed) event.preventDefault();
-      });
-
-      details.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") details.open = false;
-      });
-    });
-
-  document.addEventListener("click", (event) => {
-    document
-      .querySelectorAll<HTMLDetailsElement>("[data-model-detail-selector][open]")
-      .forEach((details) => {
-        if (!details.contains(event.target as Node)) details.open = false;
-      });
   });
 </script>

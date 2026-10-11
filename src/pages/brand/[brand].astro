@@ -1,21 +1,20 @@
 ---
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import ModelCard from "@/components/astro/ModelCard.astro";
-import ModelGroupCard from "@/components/astro/ModelGroupCard.astro";
 import { brands } from "@/data/brands";
 import { guides } from "@/data/guides";
 import { models } from "@/data/models";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { categoryLabels } from "@/utils/labels";
-import { groupModelsByName } from "@/utils/modelGroups";
 
 export function getStaticPaths() {
   return brands.map((brand) => ({ params: { brand: brand.slug }, props: { brand } }));
 }
 
 const { brand } = Astro.props;
-const brandModels = models.filter((model) => model.brandId === brand.id);
-const brandModelGroups = groupModelsByName(brandModels);
+const brandModels = models
+  .filter((model) => model.brandId === brand.id)
+  .sort((a, b) => a.modelCode.localeCompare(b.modelCode, "ko", { numeric: true }));
 const officialModels = brandModels.filter((model) => !(model.status !== "published"));
 const supportedCategoryNames = brand.supportedCategories
   .map((category) => categoryLabels[category])
@@ -45,15 +44,7 @@ const supportedCategoryNames = brand.supportedCategories
         </div>
       </div>
       <div class="model-grid">
-        {
-          brandModelGroups.map(({ models: groupedModels }) =>
-            groupedModels.length > 1 ? (
-              <ModelGroupCard models={groupedModels} />
-            ) : (
-              groupedModels[0] && <ModelCard model={groupedModels[0]} />
-            ),
-          )
-        }
+        {brandModels.map((model) => <ModelCard model={model} />)}
       </div>
     </div>
   </section>

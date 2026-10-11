@@ -88,6 +88,7 @@ export function validateRawCatalog(raw: RawCatalog): string[] {
       "main-brush",
       "side-brush",
       "mop-pad",
+      "moving-wheel",
     ],
   };
   for (const file of Object.keys(catalogSchema) as CatalogFile[]) {

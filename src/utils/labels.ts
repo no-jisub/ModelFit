@@ -60,4 +60,5 @@ export const partTypeLabels: Record<ConsumableType, string> = {
   "main-brush": "메인브러시",
   "side-brush": "사이드브러시",
   "mop-pad": "물걸레 패드",
+  "moving-wheel": "이동용 무빙휠",
 };

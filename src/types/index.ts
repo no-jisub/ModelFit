@@ -17,7 +17,8 @@ export type ConsumableType =
   | "dust-bag"
   | "main-brush"
   | "side-brush"
-  | "mop-pad";
+  | "mop-pad"
+  | "moving-wheel";
 
 export interface SourceReference {
   id: string;
@@ -75,6 +76,8 @@ export interface ConsumableCompatibility {
   verificationStatus: VerificationStatus;
   sources: SourceReference[];
   productOptions: ConsumableProductOption[];
+  /** Presentation-only grouping; source compatibility records stay separate. */
+  groupedParts?: ConsumableCompatibility[];
 }
 
 export interface ModelImage {

@@ -8,7 +8,11 @@ const displayName = getModelDisplayName(model);
 const detailPath = `/model/${model.brandId}/${model.slug}#compatible-parts`;
 ---
 
-<a class="model-card card" href={detailPath} aria-label={`${displayName} 모델 상세 보기`}>
+<a
+  class="model-card card"
+  href={detailPath}
+  aria-label={`${displayName} 모델 상세 보기 (${model.modelCode})`}
+>
   <div class="model-card-top">
     <span class="category-chip">
       {categoryLabels[model.category]}

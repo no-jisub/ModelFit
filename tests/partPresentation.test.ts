@@ -28,7 +28,11 @@ describe("structured part presentation", () => {
     );
     expect(getPartConfiguration(m5, "lg-as336nslc")?.fitNote).toBe("기본 장착 필터: M5");
     const v2 = consumables.find((p) => p.id === "lg-360-v2-filter")!;
-    expect(getPartConfiguration(v2, "lg-as305dwwa")?.fitNote).toContain("기본 V 필터 대신");
-    expect(getPartConfiguration(v2, "lg-as186hwwa")?.fitNote).toBe("기본 장착 필터: V2");
+    for (const modelId of ["lg-as305dwwa", "lg-as186hwwa"]) {
+      expect(getPartConfiguration(v2, modelId)?.fitNote).toContain(
+        "부품번호 ADQ30041401이 같습니다",
+      );
+      expect(getPartConfiguration(v2, modelId)?.fitNote).toContain("M·G·V 중 하나를 선택");
+    }
   });
 });

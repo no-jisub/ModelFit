@@ -96,13 +96,13 @@ describe("sales package presentation", () => {
         { itemCode: "PFSALC01", requiredQuantity: "1회 교체 시 2개 필요" },
         "AS355NSNA",
       ),
-    ).toBe("판매 구성 확인 필요");
-    expect(getSalesPackageLabel(undefined, undefined, "AS355NSNA")).toBe("판매 구성 확인 필요");
+    ).toBe("수량은 구매처에서 확인");
+    expect(getSalesPackageLabel(undefined, undefined, "AS355NSNA")).toBe("수량은 구매처에서 확인");
   });
   it("preserves actual package information and unresolved labels", () => {
     expect(
       getSalesPackageLabel("필터 2개입 · 1개 필요", { requiredQuantity: "1개 필요" }, "MODEL"),
-    ).toBe("필터 2개입 · 1개 필요");
+    ).toBe("필터 2개입");
     expect(getSalesPackageLabel("Replacement Side Brush, 2개", undefined, "MODEL")).toBe(
       "Replacement Side Brush, 2개",
     );

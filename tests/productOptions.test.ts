@@ -320,14 +320,19 @@ describe("consumable product options", () => {
       "최대 120일 (사용량과 봉투 상태에 따라 달라짐)",
     ]);
   });
-  it("모든 소모품에 최소 한 개의 정품 기준 상품을 제공한다", () => {
+  it("공식 소모품에는 정품 기준을 제공하고 판매자 확인 소모품은 호환상품으로 구분한다", () => {
     expect(
       consumables.every(
         (part) =>
           part.productOptions.length > 0 &&
-          part.productOptions.some(
-            (option) => option.kind === "genuine" && option.verification === "official-genuine",
-          ),
+          (part.verificationStatus === "seller-confirmed"
+            ? part.productOptions.every(
+                (option) =>
+                  option.kind === "compatible" && option.verification === "seller-claimed",
+              )
+            : part.productOptions.some(
+                (option) => option.kind === "genuine" && option.verification === "official-genuine",
+              )),
       ),
     ).toBe(true);
   });

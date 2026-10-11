@@ -2,14 +2,12 @@
 import BrandCard from "@/components/astro/BrandCard.astro";
 import Breadcrumbs from "@/components/astro/Breadcrumbs.astro";
 import ModelCard from "@/components/astro/ModelCard.astro";
-import ModelGroupCard from "@/components/astro/ModelGroupCard.astro";
 import { brands } from "@/data/brands";
 import { categories, getCategoryConfig, type CategoryId } from "@/data/categories";
 import { consumables } from "@/data/consumables";
 import { guides } from "@/data/guides";
 import { models } from "@/data/models";
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { groupModelsByName } from "@/utils/modelGroups";
 
 export function getStaticPaths() {
   return categories.map(({ id }) => ({ params: { category: id } }));
@@ -18,12 +16,18 @@ export function getStaticPaths() {
 const category = Astro.params.category as CategoryId;
 const categoryConfig = getCategoryConfig(category);
 const { label } = categoryConfig;
-const categoryModels = models.filter((model) => model.category === category);
+const brandOrder = new Map(brands.map((brand, index) => [brand.id, index]));
+const categoryModels = models
+  .filter((model) => model.category === category)
+  .sort(
+    (a, b) =>
+      (brandOrder.get(a.brandId) ?? brands.length) - (brandOrder.get(b.brandId) ?? brands.length) ||
+      a.modelCode.localeCompare(b.modelCode, "ko", { numeric: true }),
+  );
 const categoryConsumableIds = new Set(categoryModels.flatMap((model) => model.consumableIds));
 const categoryPartTypeCount = new Set(
   consumables.filter((part) => categoryConsumableIds.has(part.id)).map((part) => part.type),
 ).size;
-const categoryModelGroups = groupModelsByName(categoryModels);
 const categoryBrands = brands.filter((brand) => brand.supportedCategories.includes(category));
 const relatedGuides = guides.filter(
   (guide) => guide.category === category || guide.category === "basics",
@@ -97,36 +101,25 @@ const relatedGuides = guides.filter(
       </details>
       <div class="model-grid" data-filter-model-grid>
         {
-          categoryModelGroups.map(({ models: groupedModels }) => {
-            const representative = groupedModels[0];
-            if (!representative) return null;
-            const searchText = groupedModels
-              .flatMap((item) => [
-                item.brandName,
-                item.brandNameEn,
-                item.modelName,
-                item.modelCode,
-                item.series,
-                ...item.aliases,
-              ])
-              .filter(Boolean)
-              .join(" ");
-
-            return (
-              <div
-                class="category-model-filter-item"
-                data-brand-id={representative.brandId}
-                data-model-count={groupedModels.length}
-                data-search-text={searchText}
-              >
-                {groupedModels.length > 1 ? (
-                  <ModelGroupCard models={groupedModels} />
-                ) : (
-                  <ModelCard model={representative} />
-                )}
-              </div>
-            );
-          })
+          categoryModels.map((model) => (
+            <div
+              class="category-model-filter-item"
+              data-brand-id={model.brandId}
+              data-model-count="1"
+              data-search-text={[
+                model.brandName,
+                model.brandNameEn,
+                model.modelName,
+                model.modelCode,
+                model.series,
+                ...model.aliases,
+              ]
+                .filter(Boolean)
+                .join(" ")}
+            >
+              <ModelCard model={model} />
+            </div>
+          ))
         }
       </div>
       <div class="empty-state card category-filter-empty" hidden data-filter-empty>

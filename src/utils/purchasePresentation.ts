@@ -70,12 +70,21 @@ export function getSalesPackageLabel(
   configuration: PartConfigurationPresentation | undefined,
   modelCode: string,
 ): string {
-  if (!label?.trim()) return "판매 구성 확인 필요";
+  if (!label?.trim()) return "수량은 구매처에서 확인";
+  if (label.includes("확인 필요")) return "수량은 구매처에서 확인";
   const requiredQuantity = configuration?.requiredQuantity;
   if (requiredQuantity && label.includes(requiredQuantity)) {
     let remainder = label.replace(requiredQuantity, "").replace(modelCode, "");
     if (configuration?.itemCode) remainder = remainder.replace(configuration.itemCode, "");
-    if (!remainder.replace(/[\s·,/:|()-]/g, "")) return "판매 구성 확인 필요";
+    if (!remainder.replace(/[\s·,/:|()-]/g, "")) return "수량은 구매처에서 확인";
   }
-  return label;
+  const compact = label
+    .split("·")
+    .filter((segment) => !segment.includes("필요"))
+    .join(" · ")
+    .replace(/\b[A-Z][A-Z0-9-]{4,}\b/g, "")
+    .replace(/공식 판매 구성/g, "")
+    .replace(/^[\s·,/:|()-]+|[\s·,/:|()-]+$/g, "")
+    .trim();
+  return compact || "수량은 구매처에서 확인";
 }
