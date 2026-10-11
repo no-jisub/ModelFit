@@ -29,6 +29,14 @@ const categoryPartTypeCount = new Set(
   consumables.filter((part) => categoryConsumableIds.has(part.id)).map((part) => part.type),
 ).size;
 const categoryBrands = brands.filter((brand) => brand.supportedCategories.includes(category));
+const brandSeries = categoryBrands.map((brand) => {
+  const brandModels = categoryModels.filter((model) => model.brandId === brand.id);
+  const series = [...new Set(brandModels.map((model) => model.series ?? ""))].map((name) => ({
+    name,
+    count: brandModels.filter((model) => (model.series ?? "") === name).length,
+  }));
+  return { brandId: brand.id, count: brandModels.length, series };
+});
 const relatedGuides = guides.filter(
   (guide) => guide.category === category || guide.category === "basics",
 );
@@ -94,6 +102,34 @@ const relatedGuides = guides.filter(
               }
             </div>
           </div>
+          <div
+            class="category-filter-group category-filter-series"
+            role="group"
+            aria-labelledby="category-series-filter-label"
+            data-series-filter
+            hidden
+          >
+            <span id="category-series-filter-label" class="category-filter-label">시리즈</span>
+            {
+              brandSeries.map(({ brandId, count, series }) => (
+                <div class="category-filter-chips" data-series-brand={brandId} hidden>
+                  <button
+                    type="button"
+                    aria-pressed="true"
+                    class="is-active"
+                    data-filter-series="all"
+                  >
+                    전체 <span class="category-series-count">{count}</span>
+                  </button>
+                  {series.map(({ name, count }) => (
+                    <button type="button" aria-pressed="false" data-filter-series={name}>
+                      {name || "시리즈 미등록"} <span class="category-series-count">{count}</span>
+                    </button>
+                  ))}
+                </div>
+              ))
+            }
+          </div>
           <p class="category-filter-result" role="status" aria-live="polite" data-filter-result>
             {categoryModels.length}개 모델
           </p>
@@ -105,6 +141,7 @@ const relatedGuides = guides.filter(
             <div
               class="category-model-filter-item"
               data-brand-id={model.brandId}
+              data-series={model.series ?? ""}
               data-model-count="1"
               data-search-text={[
                 model.brandName,
@@ -125,7 +162,7 @@ const relatedGuides = guides.filter(
       <div class="empty-state card category-filter-empty" hidden data-filter-empty>
         <span class="empty-icon" aria-hidden="true">⌕</span>
         <h2>조건에 맞는 모델이 없습니다</h2>
-        <p>브랜드나 모델번호 조건을 바꿔 다시 확인해 보세요.</p>
+        <p>브랜드, 시리즈 또는 모델번호 조건을 바꿔 다시 확인해 보세요.</p>
       </div>
     </div>
   </section>
@@ -174,14 +211,21 @@ const relatedGuides = guides.filter(
     const empty = filter.parentElement?.querySelector<HTMLElement>("[data-filter-empty]");
     const mobileQuery = window.matchMedia("(max-width: 700px)");
     let selectedBrand = "all";
+    let selectedSeries = "all";
+    const seriesFilter = filter.querySelector<HTMLElement>("[data-series-filter]");
+    const seriesGroups = filter.querySelectorAll<HTMLElement>("[data-series-brand]");
 
     const updateDisclosure = () => {
       if (filter instanceof HTMLDetailsElement) filter.open = !mobileQuery.matches;
     };
 
-    const updatePressed = (buttons: NodeListOf<HTMLButtonElement>, selectedValue: string) => {
+    const updatePressed = (
+      buttons: NodeListOf<HTMLButtonElement>,
+      selectedValue: string,
+      key: "filterBrand" | "filterSeries",
+    ) => {
       buttons.forEach((button) => {
-        const value = button.dataset.filterBrand;
+        const value = button.dataset[key];
         const active = value === selectedValue;
         button.classList.toggle("is-active", active);
         button.setAttribute("aria-pressed", String(active));
@@ -194,8 +238,9 @@ const relatedGuides = guides.filter(
 
       items.forEach((item) => {
         const matchesBrand = selectedBrand === "all" || item.dataset.brandId === selectedBrand;
+        const matchesSeries = selectedSeries === "all" || item.dataset.series === selectedSeries;
         const matchesQuery = normalizeFilterText(item.dataset.searchText ?? "").includes(query);
-        const visible = matchesBrand && matchesQuery;
+        const visible = matchesBrand && matchesSeries && matchesQuery;
         item.hidden = !visible;
         if (visible) visibleModelCount += Number(item.dataset.modelCount ?? 1);
       });
@@ -207,11 +252,25 @@ const relatedGuides = guides.filter(
     };
 
     const brandButtons = filter.querySelectorAll<HTMLButtonElement>("[data-filter-brand]");
+    const seriesButtons = filter.querySelectorAll<HTMLButtonElement>("[data-filter-series]");
 
     brandButtons.forEach((button) => {
       button.addEventListener("click", () => {
         selectedBrand = button.dataset.filterBrand ?? "all";
-        updatePressed(brandButtons, selectedBrand);
+        selectedSeries = "all";
+        updatePressed(brandButtons, selectedBrand, "filterBrand");
+        updatePressed(seriesButtons, selectedSeries, "filterSeries");
+        if (seriesFilter) seriesFilter.hidden = selectedBrand === "all";
+        seriesGroups.forEach((group) => {
+          group.hidden = group.dataset.seriesBrand !== selectedBrand;
+        });
+        applyFilters();
+      });
+    });
+    seriesButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        selectedSeries = button.dataset.filterSeries ?? "all";
+        updatePressed(seriesButtons, selectedSeries, "filterSeries");
         applyFilters();
       });
     });

@@ -67,7 +67,7 @@ test("카테고리에서 브랜드와 모델번호를 바로 필터링한다", a
 
   if ((page.viewportSize()?.width ?? 0) > 700) {
     const filterBox = await filter.boundingBox();
-    const brandLabelBox = await filter.locator(".category-filter-label").boundingBox();
+    const brandLabelBox = await filter.locator("#category-brand-filter-label").boundingBox();
     const brandChipBox = await filter.locator(".category-filter-chips").first().boundingBox();
     const brandLabelCenter = (brandLabelBox?.y ?? 0) + (brandLabelBox?.height ?? 0) / 2;
     const brandChipCenter = (brandChipBox?.y ?? 0) + (brandChipBox?.height ?? 0) / 2;
