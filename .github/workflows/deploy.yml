@@ -57,7 +57,7 @@ jobs:
           COUPANG_SECRET_KEY: ${{ secrets.COUPANG_SECRET_KEY }}
       - name: Save price collection results
         if: always() && github.event_name != 'pull_request'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: purchase-price-status
           path: outputs/purchase-price-status.json
@@ -71,7 +71,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: npx playwright test
       - run: npm run release:manifest
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: release-manifest
           path: outputs/release-manifest.json
