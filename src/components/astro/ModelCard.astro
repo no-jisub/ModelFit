@@ -2,6 +2,7 @@
 import type { ApplianceModel } from "@/types";
 import { categoryLabels } from "@/utils/labels";
 import { getModelDisplayName } from "@/utils/modelDisplayName";
+import ModelPhoto from "./ModelPhoto.astro";
 
 const { model } = Astro.props as { model: ApplianceModel };
 const displayName = getModelDisplayName(model);
@@ -19,13 +20,9 @@ const detailPath = `/model/${model.brandId}/${model.slug}#compatible-parts`;
     </span>
     {model.status !== "published" && <span class="demo-chip">데모 데이터</span>}
   </div>
-  {
-    model.image && (
-      <div class="model-card-image">
-        <img src={model.image.src} alt={model.image.alt} width="720" height="720" loading="lazy" />
-      </div>
-    )
-  }
+  <div class="model-card-image">
+    <ModelPhoto image={model.image} modelCode={model.modelCode} />
+  </div>
   <p class="model-brand-label">{model.brandName}</p>
   <h3>{displayName}</h3>
   <p class="model-series">{model.modelCode} {model.series ? `· ${model.series}` : ""}</p>

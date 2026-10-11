@@ -13,6 +13,7 @@ import {
   partTypeLabels,
 } from "@/utils/labels";
 import { getModelDisplayName } from "@/utils/modelDisplayName";
+import { canDisplayModelImage } from "@/utils/modelImage";
 import {
   type CompatibleModelMatch,
   type ConsumableMatchReason,
@@ -59,6 +60,8 @@ function ModelResultCard({
     .filter((part) => part !== undefined);
   const panelId = `model-parts-${model.id}`;
   const summary = summarizeCompatibility(modelParts, model.id);
+  const [imageFailed, setImageFailed] = useState(false);
+  const imageUsable = model.image && canDisplayModelImage(model.image.src) && !imageFailed;
 
   return (
     <article className={`model-card card ${selected ? "is-selected" : ""}`}>
@@ -66,17 +69,23 @@ function ModelResultCard({
         <span className="category-chip">{categoryLabels[model.category]}</span>
         {association && <span className="official-chip">소모품으로 찾은 모델</span>}
       </div>
-      {model.image && (
-        <div className="model-card-image">
+      <div className="model-card-image">
+        {imageUsable ? (
           <img
-            src={model.image.src}
-            alt={model.image.alt}
+            src={model.image!.src}
+            alt={model.image!.alt}
             width={720}
             height={720}
             loading="lazy"
+            onError={() => setImageFailed(true)}
           />
-        </div>
-      )}
+        ) : (
+          <span className="model-photo-placeholder">
+            <strong>{model.modelCode}</strong>
+            <span>제품 이미지 준비 중</span>
+          </span>
+        )}
+      </div>
       <p className="model-brand-label">{model.brandName}</p>
       <h3>{getModelDisplayName(model)}</h3>
       <p className="model-series">
