@@ -15,3 +15,26 @@ it("검색 결과 없음 비율과 모델별 클릭을 집계하며 전환을 �
   ]);
   expect(summarizeAnalytics([]).noResultRate).toBeNull();
 });
+
+it("빈 결과 검색어와 많이 조회한 검색어를 별도로 집계한다", () => {
+  const result = summarizeAnalytics([
+    {
+      name: "search_results_viewed",
+      params: { search_term: "Q9", result_count: 1 },
+      createdAt: "2026-10-13",
+    },
+    {
+      name: "search_results_viewed",
+      params: { search_term: "Q9", result_count: 1 },
+      createdAt: "2026-10-13",
+    },
+    {
+      name: "search_results_viewed",
+      params: { search_term: "UNREGISTERED", result_count: 0 },
+      createdAt: "2026-10-13",
+    },
+    { name: "search_no_result", params: { search_term: "UNREGISTERED" }, createdAt: "2026-10-13" },
+  ]);
+  expect(result.searchTerms[0]).toEqual({ term: "Q9", resultViews: 2, noResultViews: 0 });
+  expect(result.noResultTerms).toEqual([{ term: "UNREGISTERED", views: 1 }]);
+});

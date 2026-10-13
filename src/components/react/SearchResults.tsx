@@ -111,6 +111,14 @@ function ModelResultCard({
             공식 호환 확인 {summary.confirmed}개 · 확인 필요 {summary.needsReview}개
           </small>
         </div>
+        <a
+          className="button button-primary search-model-purchase-link"
+          href={`/model/${model.brandId}/${model.slug}#compatible-parts`}
+          data-search-model-id={model.id}
+          aria-label={`${model.modelCode} 소모품·구매처 보기`}
+        >
+          소모품·구매처 보기 →
+        </a>
         <button
           className="text-button"
           type="button"

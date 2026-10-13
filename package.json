@@ -49,6 +49,7 @@
     "catalog:ci:check": "tsx scripts/catalog-ci.ts check",
     "catalog:review": "tsx scripts/catalog-review.ts",
     "analytics:report": "tsx scripts/analytics-report.ts",
+    "catalog:priorities": "tsx scripts/backlog-priority.ts",
     "release:manifest": "tsx scripts/release-manifest.ts",
     "sync:purchase-prices": "tsx scripts/sync-purchase-prices.ts",
     "sync:official-prices": "tsx scripts/sync-official-prices.ts"

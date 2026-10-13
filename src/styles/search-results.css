@@ -57,6 +57,9 @@
   flex-wrap: wrap;
   gap: 12px;
 }
+.search-model-purchase-link {
+  min-height: 44px;
+}
 @media (max-width: 700px) {
   .search-page-app .model-card {
     grid-template-columns: 64px minmax(0, 1fr);
@@ -71,5 +74,8 @@
   }
   .search-page-app .model-card .model-card-footer {
     grid-column: 1 / -1;
+  }
+  .search-page-app .search-model-purchase-link {
+    width: 100%;
   }
 }

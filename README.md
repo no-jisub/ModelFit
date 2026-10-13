@@ -17,6 +17,22 @@ Astro SSG, TypeScript strict, React를 사용합니다. 검색·자동완성·�
 카탈로그는 빌드 시 생성합니다. 기존 `/part/...` 주소는 해당 모델의 `#compatible-parts`로 이동합니다.
 Firebase Hosting으로 배포하며, 오류 제보는 별도 Firestore 데이터베이스에 저장합니다.
 
+## 이용 데이터와 보완 순서
+
+실제 이용 이벤트를 중앙에서 수집하려면 `PUBLIC_GA_MEASUREMENT_ID`를 설정해야 합니다.
+측정 ID가 없으면 브라우저의 현재 페이지 이벤트 큐만 남으며, 과거 이용 통계를 조회할 수 없습니다.
+
+```bash
+npm run analytics:report -- --from events.json
+npm run catalog:priorities -- --from outputs/analytics/report.json
+npm run catalog:priorities
+```
+
+분석 보고서는 검색어별 결과 조회·결과 없음과 모델별 조회·구매 클릭 횟수를 집계합니다.
+마지막 명령은 이용 데이터 없이 구매 링크가 있는 미검증 연결을 우선하는 임시 작업 목록을 만듭니다.
+이용량은 알 수 없음으로 표시하며 인기 순위나 주문 수로 해석하지 않습니다.
+테스트 이벤트에는 `analytics:report`의 `--test-data`를 붙이고, 실제 작업 순위 입력에서는 제외합니다.
+
 ## 데이터 구조
 
 | 파일                                  | 역할                                       |
