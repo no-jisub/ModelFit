@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { consumables } from "../src/data/consumables";
 import { models } from "../src/data/models";
 import type { ConsumableCompatibility } from "../src/types";
+import { getPackageQuantity } from "../src/utils/packageQuantity";
 
 const packageLabel = (part: ConsumableCompatibility) =>
   part.productOptions.find((option) => option.packageLabel)?.packageLabel;
@@ -97,6 +98,13 @@ describe("consumable product options", () => {
     expect(filter.genuinePartNumber).toBe("ACF-AHMT10");
     expect(packageLabel(filter)).toContain("필터 2개입");
     expect(filter.sources[0].url).toContain("productNo=7461");
+    for (const id of ["cuckoo-acf-ahmt10-filter", "cuckoo-ac23-total-care-filter"]) {
+      const genuine = consumables
+        .find((part) => part.id === id)!
+        .productOptions.find((option) => option.verification === "official-genuine")!;
+      expect(genuine.packageLabel).toContain("1세트");
+      expect(getPackageQuantity(genuine.packageLabel)).toBeUndefined();
+    }
   });
   it("아이로봇 205와 Combo 물걸레 부품은 공식 수량과 부품번호를 제공한다", () => {
     const find = (id: string) => consumables.find((part) => part.id === id)!;
