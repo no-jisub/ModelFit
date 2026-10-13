@@ -57,7 +57,7 @@ test("카테고리에서 브랜드와 모델번호를 바로 필터링한다", a
   await expect(page.getByRole("link", { name: "검색에서 필터링 →" })).toHaveCount(0);
   const filter = page.locator("[data-category-model-filter]");
   const result = filter.locator("[data-filter-result]");
-  await expect(result).toHaveText("50개 모델");
+  await expect(result).toHaveText("52개 모델");
   await expect(filter.getByText("소모품 연결", { exact: true })).toHaveCount(0);
 
   const isOpen = await filter.evaluate((element) => (element as HTMLDetailsElement).open);
@@ -290,7 +290,9 @@ test("현재 모델에 필요한 상품 구성만 표시한다", async ({ page }
   await page.goto("/model/lg/as205ngja");
 
   const filter = page.locator("#lg-puricare-g-filter");
-  await expect(filter.getByText("제품 1대 필요 수량", { exact: true })).toBeVisible();
+  await expect(
+    filter.locator(".purchase-quantity-summary").getByText("제품 1대 필요 수량", { exact: true }),
+  ).toBeVisible();
   await expect(
     filter.locator(".purchase-quantity-summary").getByText("1개 필요", { exact: true }),
   ).toBeVisible();
@@ -485,8 +487,6 @@ test("미확인 관계는 검색과 상품 카드에서 공식 호환으로 표�
   const part = page.locator("#blueair-dustmagnet-5200-combofilter");
   await expect(part.getByTitle("미검증 상태")).toBeVisible();
   await expect(part.getByTitle("공식 호환 확인 상태")).toHaveCount(0);
-  await expect(part.locator(".product-verification-badge").first()).toContainText(
-    "판매자 호환 표기",
-  );
+  await expect(part.locator('[data-purchase-channel="coupang"]')).toHaveCount(0);
   await expect(part.getByRole("link", { name: /공식 호환 근거/ })).toHaveCount(0);
 });

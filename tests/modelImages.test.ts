@@ -9,8 +9,8 @@ describe("model images", () => {
   it("검증된 본체 이미지를 모델에 연결하고 확인하지 못한 모델만 제외한다", () => {
     const missingIds = models.filter((model) => !model.image).map((model) => model.id);
 
-    expect(missingIds).toEqual([]);
-    expect(Object.keys(modelImages)).toHaveLength(models.length);
+    expect(missingIds).toEqual(["samsung-ax033b310gbd", "samsung-ax90t7020wdd"]);
+    expect(Object.keys(modelImages)).toHaveLength(models.length - missingIds.length);
   });
 
   it("이미지 주소와 출처 확인일을 검증하고 로컬 WebP 규격을 유지한다", async () => {

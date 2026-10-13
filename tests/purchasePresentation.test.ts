@@ -60,7 +60,23 @@ describe("purchase option ordering", () => {
 
 describe("sales package presentation", () => {
   it("separates mixed bundles from individual parts and deduplicates a shared bundle", () => {
-    const parts = consumables.filter((part) => part.id.startsWith("eufy-s1-pro-"));
+    const parts = structuredClone(consumables.filter((part) => part.id.startsWith("eufy-s1-pro-")));
+    const sample = consumables.flatMap((p) => p.productOptions).flatMap((o) => o.purchaseLinks)[0];
+    for (const part of parts) {
+      const bundle = part.productOptions.find((o) => o.kind === "compatible")!;
+      bundle.purchaseLinks = [
+        {
+          ...sample,
+          id: part.id + "-fixture",
+          url: "https://link.coupang.com/a/testbundle",
+          purchaseScope: "bundle",
+        },
+      ];
+      const individual = part.productOptions.find((o) => o.kind === "genuine")!;
+      individual.purchaseLinks = [
+        { ...sample, id: part.id + "-individual-fixture", purchaseScope: "individual" },
+      ];
+    }
     const before = structuredClone(parts);
     const bundles = getPurchaseBundles(parts, parts[0].compatibleModelIds[0]);
     expect(bundles).toHaveLength(1);

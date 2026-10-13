@@ -41,8 +41,6 @@ describe("normalized option links", () => {
     const replacements = [
       ["xiaomi-x10-plus-main-brush", "https://link.coupang.com/a/hC9ARzuMp2", true],
       ["xiaomi-x20-plus-main-brush", "https://link.coupang.com/a/hC9ARzuMp2", true],
-      ["xiaomi-x10-plus-side-brush", "https://www.coupang.com/vp/products/8305225725", false],
-      ["xiaomi-x20-plus-side-brush", "https://www.coupang.com/vp/products/8305225725", false],
       ["xiaomi-x10-plus-dust-bag", "https://link.coupang.com/a/hC9BEDlMbY", true],
     ] as const;
     for (const [id, url, isAffiliate] of replacements) {
@@ -69,10 +67,10 @@ describe("normalized option links", () => {
       expect(links[0]).toMatchObject({ channel: "official", isAffiliate: false });
     }
   });
-  it("preserves non-affiliate product URLs and link check dates", () => {
+  it("omits failed ordinary Coupang URLs and preserves link check dates", () => {
     const links = consumables.flatMap((p) => p.productOptions.flatMap((o) => o.purchaseLinks));
     expect(links.some((l) => !l.isAffiliate && l.url.includes("/vp/products/8305225725"))).toBe(
-      true,
+      false,
     );
     expect(links.every((l) => !Number.isNaN(Date.parse(l.checkedAt)))).toBe(true);
     expect(

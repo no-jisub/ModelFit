@@ -83,9 +83,9 @@ describe("data validation", () => {
   });
 
   it("공개 카탈로그에는 교체 소모품이 연결된 모델만 등록한다", () => {
-    expect(models).toHaveLength(90);
+    expect(models).toHaveLength(92);
     expect(models.every((model) => model.consumableIds.length > 0)).toBe(true);
-    expect(models.filter((model) => model.category === "air-purifier")).toHaveLength(50);
+    expect(models.filter((model) => model.category === "air-purifier")).toHaveLength(52);
     expect(models.filter((model) => model.category === "robot-vacuum")).toHaveLength(40);
     expect(brands.every((brand) => models.some((model) => model.brandId === brand.id))).toBe(true);
   });
@@ -99,7 +99,9 @@ describe("data validation", () => {
       "AP90H10198MDD",
     ];
     expect(models.some((model) => excludedCodes.includes(model.modelCode))).toBe(false);
-    expect(brands.some((brand) => brand.id === "samsung")).toBe(false);
+    expect(
+      models.filter((model) => model.brandId === "samsung").map((model) => model.modelCode),
+    ).toEqual(["AX033B310GBD", "AX90T7020WDD"]);
   });
 
   it("소모품 확인 상태에 맞는 공식 또는 판매자 출처와 확인일을 제공한다", () => {

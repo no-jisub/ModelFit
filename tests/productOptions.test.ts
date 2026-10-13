@@ -404,13 +404,12 @@ describe("consumable product options", () => {
     );
   });
 
-  it("검증된 직접 상품 링크는 해당 정품 후보 안에서 제공한다", () => {
+  it("재확인하지 못한 타워 엣지 일반 구매 링크는 노출하지 않는다", () => {
     const part = consumables.find((item) => item.id === "winix-tower-edge-all-in-one-filter");
     const directLinks = part?.productOptions[0]?.purchaseLinks.filter(
       (link) => link.linkType === "direct-product",
     );
 
-    expect(directLinks).toHaveLength(1);
-    expect(directLinks?.[0]?.url).toContain("/vp/products/7368403017");
+    expect(directLinks).toHaveLength(0);
   });
 });

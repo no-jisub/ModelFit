@@ -75,7 +75,7 @@ test("브랜드별 시리즈 선택은 검색과 함께 적용되고 브랜드 �
   await expect(visibleModels).toHaveCount(5);
   await filter.locator('[data-filter-brand="all"]').click();
   await expect(seriesFilter).toBeHidden();
-  await expect(visibleModels).toHaveCount(50);
+  await expect(visibleModels).toHaveCount(52);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 

@@ -61,18 +61,17 @@ test("상세 정보를 접어도 모델 호환 미확인과 판매자 상품 표
   await expect(part.locator(".part-details")).not.toHaveAttribute("open", "");
   await expect(part.getByTitle("미검증 상태")).toBeVisible();
   await expect(part.locator(".part-purchase-warning").first()).toBeVisible();
-  await expect(part.locator(".product-options-section .product-verification-badge")).toHaveText(
-    "판매자 호환 표기",
-  );
+  await expect(part.locator('[data-purchase-channel="coupang"]')).toHaveCount(0);
   await expect(part.getByTitle("공식 호환 확인 상태")).toHaveCount(0);
-  await expect(part.getByRole("link", { name: /쿠팡에서 구매하기/ })).toBeVisible();
+  await expect(
+    part.locator(".product-options-section").getByRole("link", { name: "공식몰에서 부품 확인" }),
+  ).toBeVisible();
 });
 test("검토한 대체 구매 링크와 묶음·선택 구성을 구분한다", async ({ page }) => {
   for (const model of ["x20-plus", "x10-plus"]) {
     await page.goto("/model/xiaomi/" + model + "#compatible-parts");
     for (const [partType, destination] of [
       ["main-brush", "https://link.coupang.com/a/hC9ARzuMp2"],
-      ["side-brush", "https://www.coupang.com/vp/products/8305225725"],
     ]) {
       const part = page.locator("#xiaomi-" + model + "-" + partType);
       const link = part.locator('a[data-link-status="direct-product"]');
@@ -82,6 +81,9 @@ test("검토한 대체 구매 링크와 묶음·선택 구성을 구분한다", 
         "판매자 정품 표기",
       );
     }
+    await expect(
+      page.locator(`#xiaomi-${model}-side-brush a[data-purchase-channel="coupang"]`),
+    ).toHaveCount(0);
   }
   await expect(
     page.locator("#xiaomi-x10-plus-dust-bag a[data-link-status=direct-product]"),
@@ -92,15 +94,12 @@ test("검토한 대체 구매 링크와 묶음·선택 구성을 구분한다", 
   await expect(mop).not.toContainText("물걸레 패드 6개 + 먼지봉투 8개 묶음");
   const bundles = page.locator("#purchase-bundles");
   await expect(mop.locator(".product-option-details")).toContainText("물걸레 패드");
-  await expect(bundles).toContainText("물걸레 패드 6개 + 먼지봉투 8개 묶음");
-  await expect(
-    bundles.locator('a[href="https://www.coupang.com/vp/products/9319311624"]'),
-  ).toHaveCount(1);
+  await expect(bundles).toHaveCount(0);
   await expect(mop.locator(".product-verification-badge")).toHaveText("판매자 호환 표기");
   await page.goto("/model/everybot/q9#compatible-parts");
-  await expect(
-    page.locator("#everybot-q9-filter .product-options-section .product-option-details"),
-  ).toContainText("필터 2개입 옵션 선택 필요");
+  await expect(page.locator('#everybot-q9-filter a[data-purchase-channel="coupang"]')).toHaveCount(
+    0,
+  );
 });
 
 test("쿠팡 상품이 없으면 국내 공식몰 구매 링크를 표시하고 클릭을 기록한다", async ({ page }) => {
