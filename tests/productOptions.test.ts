@@ -39,7 +39,7 @@ describe("consumable product options", () => {
     expect(
       parts
         .filter((part) => part.type !== "custom-filter")
-        .every((part) => part.maintenance?.detail?.startsWith("12개월")),
+        .every((part) => part.maintenance?.detail?.includes("12개월")),
     ).toBe(true);
     expect(parts.every((part) => !part.genuinePartNumber)).toBe(true);
     expect(parts.filter(hasCoupangProduct)).toHaveLength(1);
@@ -217,7 +217,8 @@ describe("consumable product options", () => {
     expect(cp7.maintenance?.detail).toMatch(/^최대 1년/);
     expect(cp7.purchaseWarning).toContain("메인 필터 2개");
     expect(packageLabel(cp9)).toContain("3개 장착");
-    expect(cp9.maintenance?.detail).toMatch(/^최대 1년/);
+    expect(cp9.maintenance?.detail).toContain("필터 교체 알림");
+    expect(cp9.maintenance?.detail).toContain("주기 차이");
     expect(cp9.purchaseWarning).toContain("CP7i용 2개입");
   });
 
@@ -269,7 +270,7 @@ describe("consumable product options", () => {
           part.compatibleModelIds.includes("dreame-x50s-pro-ultra"),
       ),
     ).toBe(true);
-    expect(parts.every((part) => part.purchaseWarning?.includes("스테이션 형태가 다릅니다"))).toBe(
+    expect(parts.every((part) => part.purchaseWarning?.includes("스테이션 형태가 다르"))).toBe(
       true,
     );
   });

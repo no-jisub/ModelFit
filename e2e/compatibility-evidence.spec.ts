@@ -1,5 +1,59 @@
 import { expect, test } from "@playwright/test";
 
+test("남은 미검증 항목은 확인한 기본 구성과 타사 상품 규격을 구분한다", async ({ page }) => {
+  for (const [model, ids] of [
+    [
+      "dreame/x50s-pro-master",
+      [
+        "dreame-x50s-main-brush",
+        "dreame-x50s-side-brush",
+        "dreame-x50s-dust-box-filter",
+        "dreame-x50s-mop-pad",
+        "dreame-x50s-dust-bag",
+      ],
+    ],
+    [
+      "dreame/x50s-pro-ultra",
+      [
+        "dreame-x50s-main-brush",
+        "dreame-x50s-side-brush",
+        "dreame-x50s-dust-box-filter",
+        "dreame-x50s-mop-pad",
+        "dreame-x50s-dust-bag",
+      ],
+    ],
+    ["blueair/cp9i", ["blueair-cp9i-main-filter"]],
+    ["roborock/s10-maxv-ultra", ["roborock-s10-maxv-dust-bag"]],
+    ["irobot/205-dustcompactor", ["irobot-205-mop-pad"]],
+  ] as const) {
+    await page.goto("/model/" + model + "#compatible-parts");
+    for (const id of ids)
+      await expect(page.locator("#" + id).getByTitle("공식 호환 확인 상태")).toBeVisible();
+  }
+  await page.goto("/model/dreame/x40s-pro-ultra#compatible-parts");
+  await expect(page.locator("#dreame-x40s-main-brush").getByTitle("미검증 상태")).toBeVisible();
+  await expect(page.locator("#dreame-x40s-main-brush")).toContainText("등록된 설명서가 없습니다");
+  await page.goto("/model/coway/ap-2021a#compatible-parts");
+  await expect(page.locator("#coway-ap2021-compatible-4d-filter")).toContainText(
+    "타사 판매 상품의 정확한 규격",
+  );
+});
+
+test("샤오미 공식 교체 품번과 판매 수량을 장착 수량과 구분한다", async ({ page }) => {
+  for (const model of ["x10-plus", "x20-plus"]) {
+    await page.goto("/model/xiaomi/" + model + "#compatible-parts");
+    const part = page.locator("#xiaomi-" + model + "-filter");
+    await expect(part).toContainText("STLW01ZHM");
+    await expect(part).toContainText("판매 구성은 2개입");
+    await expect(part.locator('a[data-link-status="direct-product"]')).toHaveCount(0);
+    await expect(
+      part.locator(
+        '.official-store-guidance a[href="https://www.mi.com/kr/product/xiaomi-robot-vacuum-x10-plus-filter/buy/"]',
+      ),
+    ).toBeVisible();
+  }
+});
+
 test("핵심 공기청정기 필터에 모델별 공식 근거와 확인한 구매처를 표시한다", async ({ page }) => {
   for (const [model, id, purchase] of [
     [

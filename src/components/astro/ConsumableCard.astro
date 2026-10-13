@@ -110,6 +110,7 @@ function isOverseasStore(url: string) {
   return (
     destination.hostname === "us.roborock.com" ||
     destination.hostname === "www.eufy.com" ||
+    (destination.hostname === "www.blueair.com" && !destination.pathname.startsWith("/en-kr/")) ||
     /\/(us|en_US)\//.test(destination.pathname)
   );
 }
