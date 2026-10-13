@@ -1,5 +1,75 @@
 import { expect, test } from "@playwright/test";
 
+test("핵심 공기청정기 필터에 모델별 공식 근거와 확인한 구매처를 표시한다", async ({ page }) => {
+  for (const [model, id, purchase] of [
+    [
+      "winix/at8e430-mwk",
+      "winix-tower-edge-all-in-one-filter",
+      "https://www.winix.com/product/1534",
+    ],
+    [
+      "cuckoo/ac-23ah10fnw",
+      "cuckoo-ac23-total-care-filter",
+      "https://www.cuckoo.co.kr/mall/productView?productNo=9041",
+    ],
+    [
+      "cuckoo/ac-28ahnl20fnw",
+      "cuckoo-acf-ahmt10-filter",
+      "https://www.cuckoo.co.kr/mall/productView?productNo=9041",
+    ],
+    [
+      "skmagic/acl-131t0",
+      "skmagic-acl131-filter",
+      "https://www.skmagic.com/goods/indexGoodsDetail?goodsId=G000059559",
+    ],
+  ] as const) {
+    await page.goto("/model/" + model + "#compatible-parts");
+    const part = page.locator("#" + id);
+    await expect(part.getByTitle("공식 호환 확인 상태")).toBeVisible();
+    const direct = part.locator(
+      'a[data-purchase-channel="official"][data-link-status="direct-product"]',
+    );
+    await expect(direct).toHaveAttribute("href", purchase);
+    await expect(direct).toBeVisible();
+    if (model === "cuckoo/ac-23ah10fnw") {
+      await expect(part).toContainText("ACF-AHMT10");
+      await expect(part).toContainText("필터 2개입");
+      await expect(
+        page
+          .getByRole("region", { name: "세트 상품", exact: true })
+          .getByText("판매자 호환 표기", { exact: true }),
+      ).toBeVisible();
+    }
+  }
+});
+
+test("기본 필터 종류 확인과 판매 상품의 품번 검증을 구분한다", async ({ page }) => {
+  for (const [model, id] of [
+    ["cuckoo/ac-14l10few", "cuckoo-ac14-total-care-filter"],
+    ["skmagic/acl15c1askwh", "skmagic-all-in-one-care-filter"],
+    ["skmagic/acl25c1askce", "skmagic-acl25-all-in-one-care-filter"],
+    ["skmagic/acl130z0skpn", "skmagic-acl130z-deodorizing-filter"],
+    ["skmagic/acl130z0skpn", "skmagic-acl130z-dust-filter"],
+  ] as const) {
+    await page.goto("/model/" + model + "#compatible-parts");
+    const part = page.locator("#" + id);
+    await expect(part.getByTitle("공식 호환 확인 상태")).toBeVisible();
+    if (model.includes("c1a")) {
+      await expect(part.locator("h3")).toContainText("올인원플러스");
+      await expect(part).toContainText("프레임 포함 상품");
+      await expect(
+        part.locator('a[data-purchase-channel="official"][data-link-status="direct-product"]'),
+      ).toHaveCount(0);
+    }
+    if (model.includes("130z")) {
+      await expect(part).toContainText("개별 필터 품번은 아닙니다");
+      await expect(
+        part.locator('a[data-purchase-channel="official"][data-link-status="direct-product"]'),
+      ).toHaveCount(0);
+    }
+  }
+});
+
 test("코웨이 설명서의 필터 구성 확인과 판매자 호환 상품을 구분한다", async ({ page }) => {
   await page.goto("/model/coway/ap-1521b#compatible-parts");
   for (const id of [

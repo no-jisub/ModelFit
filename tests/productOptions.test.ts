@@ -95,7 +95,7 @@ describe("consumable product options", () => {
     const filter = consumables.find((part) => part.id === "cuckoo-acf-ahmt10-filter")!;
 
     expect(filter.genuinePartNumber).toBe("ACF-AHMT10");
-    expect(packageLabel(filter)).toContain("2개입 1세트");
+    expect(packageLabel(filter)).toContain("필터 2개입");
     expect(filter.sources[0].url).toContain("productNo=7461");
   });
   it("아이로봇 205와 Combo 물걸레 부품은 공식 수량과 부품번호를 제공한다", () => {
@@ -404,12 +404,14 @@ describe("consumable product options", () => {
     );
   });
 
-  it("재확인하지 못한 타워 엣지 일반 구매 링크는 노출하지 않는다", () => {
+  it("타워 엣지는 확인한 공식 필터 상품만 구매 링크로 노출한다", () => {
     const part = consumables.find((item) => item.id === "winix-tower-edge-all-in-one-filter");
     const directLinks = part?.productOptions[0]?.purchaseLinks.filter(
       (link) => link.linkType === "direct-product",
     );
 
-    expect(directLinks).toHaveLength(0);
+    expect(directLinks).toHaveLength(1);
+    expect(directLinks?.[0]?.url).toBe("https://www.winix.com/product/1534");
+    expect(directLinks?.[0]?.isAffiliate).toBe(false);
   });
 });
