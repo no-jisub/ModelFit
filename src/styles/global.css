@@ -1065,7 +1065,7 @@ img[data-model-photo][hidden],
   align-items: center;
   justify-content: center;
   gap: 8px;
-  color: var(--color-neutral-500);
+  color: var(--color-neutral-600);
   font-size: 12px;
 }
 

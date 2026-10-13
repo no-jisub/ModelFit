@@ -2,8 +2,10 @@
 import type { PurchaseLinkData } from "@/types";
 import { getPurchasePrice } from "../../data/purchase-prices";
 import { PRICE_MAX_AGE_MS } from "../../lib/purchase-price";
-const { link } = Astro.props as { link: PurchaseLinkData };
+import { getPackageQuantity } from "@/utils/packageQuantity";
+const { link, packageLabel } = Astro.props as { link: PurchaseLinkData; packageLabel?: string };
 const snapshot = getPurchasePrice(link);
+const quantity = getPackageQuantity(packageLabel);
 ---
 
 {
@@ -22,6 +24,12 @@ const snapshot = getPurchasePrice(link);
           ? "회원 로그인 기준 · 결제 가격은 구매처에서 확인"
           : "결제 가격은 구매처에서 확인"}
       </p>
+      {quantity && quantity > 1 && (
+        <p class="price-note">
+          개당 약 {Math.round(snapshot.amount / quantity).toLocaleString("ko-KR")}원 · {quantity}
+          개입 기준
+        </p>
+      )}
     </div>
   )
 }

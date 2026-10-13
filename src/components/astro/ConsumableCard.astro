@@ -258,6 +258,7 @@ function isOverseasStore(url: string) {
                   ?.configuration?.fitNote?.match(/^기본 .*/)?.[0]
               }
               layout="row"
+              requiredQuantity={configuration?.requiredQuantity}
               showDisclosure={false}
               packageLabel={getSalesPackageLabel(
                 option.modelLabels[modelId] ?? option.packageLabel,
