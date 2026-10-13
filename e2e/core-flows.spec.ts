@@ -475,18 +475,18 @@ test("모델 카드는 동일한 비율에서 제품 전체 이미지를 표시�
   }
 });
 
-test("미확인 관계는 검색과 상품 카드에서 공식 호환으로 표시하지 않는다", async ({ page }) => {
+test("적용 목록을 검증한 관계는 검색과 상품 카드에 공식 호환으로 표시한다", async ({ page }) => {
   await page.goto("/find?q=DustMagnet&type=parts", { waitUntil: "networkidle" });
   const result = page
     .locator(".search-part-card")
     .filter({ hasText: "Blueair DustMagnet 5200 시리즈 ComboFilter" });
   await result.getByText("연결 모델 2개 보기").click();
-  await expect(result.getByText("호환 확인 필요", { exact: false })).toHaveCount(2);
-  await expect(result.getByText("공식 호환 확인", { exact: false })).toHaveCount(0);
+  await expect(result.getByText("호환 확인 필요", { exact: false })).toHaveCount(0);
+  await expect(result.getByText("공식 호환 확인", { exact: false })).toHaveCount(2);
   await result.getByRole("link", { name: /5210i/ }).click();
   const part = page.locator("#blueair-dustmagnet-5200-combofilter");
-  await expect(part.getByTitle("미검증 상태")).toBeVisible();
-  await expect(part.getByTitle("공식 호환 확인 상태")).toHaveCount(0);
+  await expect(part.getByTitle("미검증 상태")).toHaveCount(0);
+  await expect(part.getByTitle("공식 호환 확인 상태")).toBeVisible();
   await expect(part.locator('[data-purchase-channel="coupang"]')).toHaveCount(0);
   await expect(part.getByRole("link", { name: /공식 호환 근거/ })).toHaveCount(0);
 });

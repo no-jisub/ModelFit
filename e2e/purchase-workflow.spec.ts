@@ -55,14 +55,13 @@ test("모바일은 선택 단계 없이 구매 버튼을 누르고 클릭을 한
   });
 });
 
-test("상세 정보를 접어도 모델 호환 미확인과 판매자 상품 표기를 숨기지 않는다", async ({ page }) => {
+test("공식 적용 목록을 확인한 DustMagnet은 모델 호환 상태와 근거를 표시한다", async ({ page }) => {
   await page.goto("/model/blueair/5210i#compatible-parts");
   const part = page.locator("#blueair-dustmagnet-5200-combofilter");
   await expect(part.locator(".part-details")).not.toHaveAttribute("open", "");
-  await expect(part.getByTitle("미검증 상태")).toBeVisible();
-  await expect(part.locator(".part-purchase-warning").first()).toBeVisible();
+  await expect(part.getByTitle("미검증 상태")).toHaveCount(0);
   await expect(part.locator('[data-purchase-channel="coupang"]')).toHaveCount(0);
-  await expect(part.getByTitle("공식 호환 확인 상태")).toHaveCount(0);
+  await expect(part.getByTitle("공식 호환 확인 상태")).toBeVisible();
   await expect(
     part.locator(".product-options-section").getByRole("link", { name: "공식몰에서 부품 확인" }),
   ).toBeVisible();
