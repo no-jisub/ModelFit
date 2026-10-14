@@ -108,7 +108,7 @@ describe("consumable product options", () => {
   });
   it("아이로봇 205와 Combo 물걸레 부품은 공식 수량과 부품번호를 제공한다", () => {
     const find = (id: string) => consumables.find((part) => part.id === id)!;
-    expect(packageLabel(find("irobot-205-filter"))).toContain("3-Pack");
+    expect(packageLabel(find("irobot-205-filter"))).toContain("3개");
     expect(packageLabel(find("irobot-205-main-brush"))).toContain("1개");
     expect(find("irobot-205-side-brush").genuinePartNumber).toBe("4837322");
     expect(find("irobot-205-mop-pad").genuinePartNumber).toBe("4849958");
@@ -154,7 +154,7 @@ describe("consumable product options", () => {
   });
   it("유피 C20·X10 Pro·C28·S2는 공식 키트 수량과 모델별 교체 주기를 분리한다", () => {
     const find = (id: string) => consumables.find((part) => part.id === id)!;
-    expect(packageLabel(find("eufy-c20-dust-bag"))).toContain("6-Pack");
+    expect(packageLabel(find("eufy-c20-dust-bag"))).toContain("6개");
     expect(packageLabel(find("eufy-c20-washable-filter"))).toContain("필터 2개");
     expect(find("eufy-x10-pro-side-brush").genuinePartNumber).toBe("T29A1031");
     expect(find("eufy-x10-pro-filter").maintenance?.detail).toMatch(/^약 3개월/);
@@ -279,9 +279,9 @@ describe("consumable product options", () => {
     const parts = model.consumableIds.map((id) => consumables.find((part) => part.id === id)!);
 
     expect(parts.map(packageLabel)).toEqual([
-      "N20 PRO PLUS Buddy Kit · Main Brush ×1",
-      "N20 PRO PLUS Buddy Kit · Side Brush ×4",
-      "N20 PRO PLUS Buddy Kit · Filter ×3",
+      "N20 Buddy Kit 포함 메인 브러시 1개",
+      "N20 Buddy Kit 포함 사이드 브러시 4개",
+      "N20 Buddy Kit 포함 필터 3개",
     ]);
   });
 
