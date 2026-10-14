@@ -18,7 +18,7 @@ if (fromIndex >= 0) {
       await writeFile("data/catalog/" + name, encodeCsv(catalogSchema[name], next[name]), "utf8");
   }
   console.log(
-    `호환 검토 ${decisions.length}건: 공식 ${decisions.filter((d) => d.status === "official").length}, 미확인 ${decisions.filter((d) => d.status === "unverified").length} (${process.argv.includes("--apply") ? "적용" : "미리보기"})`,
+    `호환 검토 ${decisions.length}건: 공식 ${decisions.filter((d) => d.status === "official").length}, 판매자 확인 ${decisions.filter((d) => d.status === "seller-confirmed").length}, 미확인 ${decisions.filter((d) => d.status === "unverified").length} (${process.argv.includes("--apply") ? "적용" : "미리보기"})`,
   );
 } else {
   const queue = raw["model-consumables.csv"]

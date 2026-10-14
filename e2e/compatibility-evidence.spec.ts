@@ -35,7 +35,7 @@ test("남은 미검증 항목은 확인한 기본 구성과 타사 상품 규격
   await expect(page.locator("#dreame-x40s-main-brush")).toContainText("등록된 설명서가 없습니다");
   await page.goto("/model/coway/ap-2021a#compatible-parts");
   await expect(page.locator("#coway-ap2021-compatible-4d-filter")).toContainText(
-    "타사 판매 상품의 정확한 규격",
+    "판매 페이지의 선택 옵션과 호환모델에 AP-2021A",
   );
 });
 
@@ -145,8 +145,34 @@ test("코웨이 설명서의 필터 구성 확인과 판매자 호환 상품을 
   await expect(option).toHaveText("판매자 호환 표기");
   await page.goto("/model/coway/ap-2021a#compatible-parts");
   const aftermarket = page.locator("#coway-ap2021-compatible-4d-filter");
-  await expect(aftermarket.getByTitle("미검증 상태")).toBeVisible();
+  await expect(aftermarket.getByTitle("판매자 확인 상태")).toBeVisible();
   await expect(aftermarket.getByTitle("공식 호환 확인 상태")).toHaveCount(0);
+});
+
+test("판매자 적용 근거와 공식 선택형 필터를 구분하고 잘못 연결된 구매처를 제외한다", async ({
+  page,
+}) => {
+  await page.goto("/model/coway/ap-2021a#compatible-parts");
+  const pet = page.locator("#coway-ap2021-pet-air-matching-filter");
+  await expect(pet.getByTitle("공식 호환 확인 상태")).toBeVisible();
+  await expect(pet).toContainText("펫필터 2개가 필요하다는 의미는 아닙니다");
+  await expect(pet.locator('a[data-link-status="direct-product"]')).toHaveCount(0);
+  const wrong = page.locator("#coway-ap2021-compatible-complete-filter-set");
+  await expect(wrong.getByTitle("미검증 상태")).toBeVisible();
+  await expect(wrong).toContainText("AP-1521B·AP-3021D 상단용");
+  await expect(page.locator('a[href="https://link.coupang.com/a/haWfjzH7bU"]')).toHaveCount(0);
+  for (const model of ["s8-maxv-ultra", "qrevo-curv"]) {
+    await page.goto("/model/roborock/" + model + "#compatible-parts");
+    const bag = page.locator("#roborock-s8-qrevo-curv-compatible-dust-bag");
+    await expect(bag.getByTitle("판매자 확인 상태")).toBeVisible();
+    await expect(bag.getByTitle("공식 호환 확인 상태")).toHaveCount(0);
+    await expect(bag).toContainText("용 옵션 그룹");
+  }
+  await page.goto("/model/dreame/x40s-pro-ultra#compatible-parts");
+  const bag = page.locator("#dreame-x40s-dust-bag");
+  await expect(bag.getByTitle("미검증 상태")).toBeVisible();
+  await expect(bag.locator('a[data-link-status="direct-product"]')).toHaveCount(0);
+  await expect(bag).toContainText("L40s Pro Ultra 판매 페이지로 연결");
 });
 
 test("웰스 AN730은 다른 모델의 사양 대신 정확한 모델 출처를 연결한다", async ({ page }) => {

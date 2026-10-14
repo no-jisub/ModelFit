@@ -40,7 +40,10 @@ for (const model of ["as355nsna", "as205ngja"]) {
 test("구매 링크가 없는 품목과 확인된 품목을 구분한다", async ({ page }) => {
   await page.goto("/model/dreame/x40s-pro-ultra");
 
-  await expect(page.locator('a[data-purchase-channel="coupang"]')).toHaveCount(1);
+  await expect(page.locator('a[data-purchase-channel="coupang"]')).toHaveCount(0);
+  await expect(page.locator("#dreame-x40s-dust-bag")).toContainText(
+    "X40s Pro Ultra 전용 교체 품번·장착 규격은 미확인",
+  );
   const unavailablePart = page.locator(".consumable-group").filter({
     has: page.getByRole("heading", { name: "드리미 X40s Pro Ultra 메인 브러시" }),
   });

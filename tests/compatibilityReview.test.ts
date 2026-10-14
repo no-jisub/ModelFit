@@ -23,6 +23,27 @@ async function fixture() {
   return { raw, relation, sourceId, decision };
 }
 describe("compatibility evidence review", () => {
+  it("records seller evidence separately and rejects promoting it to official proof", async () => {
+    const { raw, relation, decision } = await fixture();
+    const seller = raw["sources.csv"].find(
+      (source) => source.sourceType === "seller" && source.isActive === "true",
+    )!;
+    const review = {
+      ...decision,
+      status: "seller-confirmed" as const,
+      reviewedAt: seller.checkedAt,
+      sourceIds: [seller.id],
+    };
+    const result = applyCompatibilityReview(raw, [review]);
+    expect(result["model-consumables.csv"].find((r) => r.id === relation.id)).toMatchObject({
+      verificationStatus: "seller-confirmed",
+      evidenceScope: "scoped",
+    });
+    expect(() => applyCompatibilityReview(raw, [{ ...review, status: "official" }])).toThrow();
+    expect(() =>
+      applyCompatibilityReview(raw, [{ ...review, sourceIds: decision.sourceIds }]),
+    ).toThrow("활성 판매자");
+  });
   it("applies model-scoped evidence without changing IDs or mutating its input", async () => {
     const { raw, relation, decision } = await fixture();
     const original = JSON.stringify(raw);
