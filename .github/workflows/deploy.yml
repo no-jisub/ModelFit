@@ -50,7 +50,11 @@ jobs:
       - name: Generate catalog data
         run: npm run catalog:import
       - name: Compile SQL catalog schema
-        run: npm run database:compile
+        # Compile locally without looking up the production SQL service.
+        run: |
+          mv .firebaserc "$RUNNER_TEMP/modelfit.firebaserc"
+          trap 'mv "$RUNNER_TEMP/modelfit.firebaserc" .firebaserc' EXIT
+          npm run database:compile
       - name: Refresh exact purchase option prices
         if: github.event_name != 'pull_request'
         run: npm run sync:purchase-prices
