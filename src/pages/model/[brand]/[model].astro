@@ -15,6 +15,7 @@ import BaseLayout from "@/layouts/BaseLayout.astro";
 import { categoryLabels, partTypeLabels } from "@/utils/labels";
 import { getModelFullName } from "@/utils/modelDisplayName";
 import { groupModelConsumables } from "@/utils/groupModelConsumables";
+import { getModelPurchaseOptions } from "@/utils/purchasePresentation";
 
 export function getStaticPaths() {
   return models.map((model) => ({
@@ -26,7 +27,11 @@ export function getStaticPaths() {
 const { model } = Astro.props;
 const modelParts = model.consumableIds
   .map((id: string) => consumables.find((part) => part.id === id))
-  .filter((part) => part !== undefined);
+  .filter((part) => part !== undefined)
+  .map((part) => ({
+    ...part,
+    productOptions: getModelPurchaseOptions(part.productOptions, model.id),
+  }));
 const parts = groupModelConsumables(modelParts);
 const categoryLabel = categoryLabels[model.category];
 const fullModelName = getModelFullName(model);

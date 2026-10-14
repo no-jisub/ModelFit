@@ -156,7 +156,8 @@ test("판매자 적용 근거와 공식 선택형 필터를 구분하고 잘못 
   const pet = page.locator("#coway-ap2021-pet-air-matching-filter");
   await expect(pet.getByTitle("공식 호환 확인 상태")).toBeVisible();
   await expect(pet).toContainText("펫필터 2개가 필요하다는 의미는 아닙니다");
-  await expect(pet.locator('a[data-link-status="direct-product"]')).toHaveCount(0);
+  await expect(pet.locator('a[data-link-status="direct-product"]')).toHaveCount(1);
+  await expect(pet).toContainText("판매자 정품 표기");
   const wrong = page.locator("#coway-ap2021-compatible-complete-filter-set");
   await expect(wrong.getByTitle("미검증 상태")).toBeVisible();
   await expect(wrong).toContainText("AP-1521B·AP-3021D 상단용");

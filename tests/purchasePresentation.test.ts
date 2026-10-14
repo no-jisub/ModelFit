@@ -4,6 +4,7 @@ import {
   groupPurchaseOptions,
   getSalesPackageLabel,
   getPurchaseBundles,
+  getModelPurchaseOptions,
 } from "../src/utils/purchasePresentation";
 import type { ConsumableProductOption } from "../src/types";
 
@@ -28,6 +29,29 @@ function option(
   };
 }
 describe("purchase option ordering", () => {
+  it("limits individual and bundle seller offers to their explicitly reviewed models", () => {
+    const shared = option("shared", "official-genuine", "genuine", true);
+    const scoped = {
+      ...option("scoped", "seller-claimed", "compatible", true),
+      applicableModelIds: ["coway-ap-1521b"],
+    };
+    const original = structuredClone([shared, scoped]);
+    expect(getModelPurchaseOptions([shared, scoped], "coway-ap-2021a").map((o) => o.id)).toEqual([
+      "shared",
+    ]);
+    expect(getModelPurchaseOptions([shared, scoped], "coway-ap-1521b").map((o) => o.id)).toEqual([
+      "shared",
+      "scoped",
+    ]);
+    scoped.purchaseLinks = scoped.purchaseLinks.map((link) => ({
+      ...link,
+      purchaseScope: "bundle",
+    }));
+    const part = { ...consumables[0], productOptions: [scoped] };
+    expect(getPurchaseBundles([part], "coway-ap-2021a")).toEqual([]);
+    expect(getPurchaseBundles([part], "coway-ap-1521b")).toHaveLength(1);
+    expect(shared).toEqual(original[0]);
+  });
   it("shows verified available offers first and separates unavailable official references", () => {
     const options = [
       option("reference", "official-genuine", "genuine", false),

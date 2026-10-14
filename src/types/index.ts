@@ -55,6 +55,8 @@ export interface ConsumableProductOption {
   itemCode?: string;
   modelLabels: Record<string, string>;
   packageLabel?: string;
+  /** When present, this seller option is only shown for these exact models. */
+  applicableModelIds?: string[];
   sources: SourceReference[];
   purchaseLinks: PurchaseLinkData[];
   guidanceLinks: GuidanceLinkData[];

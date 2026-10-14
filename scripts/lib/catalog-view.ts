@@ -102,6 +102,7 @@ export function buildCatalogView(raw: RawCatalog) {
     description: r.description,
     itemCode: optional(r.itemCode),
     packageLabel: optional(r.packageLabel),
+    applicableModelIds: r.applicableModelIds ? r.applicableModelIds.split("|") : undefined,
     modelLabels: Object.fromEntries(
       raw["option-model-labels.csv"]
         .filter((j) => j.productOptionId === r.id)

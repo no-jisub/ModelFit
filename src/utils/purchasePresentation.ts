@@ -11,6 +11,12 @@ const verificationOrder: Record<ConsumableProductOption["verification"], number>
   unverified: 3,
 };
 
+export function getModelPurchaseOptions(options: ConsumableProductOption[], modelId: string) {
+  return options.filter(
+    (option) => !option.applicableModelIds || option.applicableModelIds.includes(modelId),
+  );
+}
+
 export function groupPurchaseOptions(options: ConsumableProductOption[]) {
   const ordered = options
     .filter(
@@ -42,7 +48,7 @@ export function getPurchaseBundles(parts: ConsumableCompatibility[], modelId: st
     { option: ConsumableProductOption; parts: ConsumableCompatibility[] }
   >();
   for (const part of parts) {
-    for (const option of part.productOptions) {
+    for (const option of getModelPurchaseOptions(part.productOptions, modelId)) {
       for (const link of option.purchaseLinks.filter((link) => link.purchaseScope === "bundle")) {
         const bundle = bundles.get(link.url);
         if (bundle) {

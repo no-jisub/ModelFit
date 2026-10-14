@@ -11,6 +11,14 @@ const files = Object.fromEntries(
   catalogCiFiles.map((name) => [name, "\uFEFFid,name\r\n1,한글 CSV\r\n"]),
 );
 describe("CI catalog transfer", () => {
+  it("round-trips a growing catalog while staying below GitHub's 48 KiB limit", () => {
+    const large = { ...files, [catalogCiFiles[0]]: randomBytes(101_000).toString("base64") };
+    const parts = packCatalogCi(large);
+    expect(parts).toHaveLength(3);
+    expect(parts.every((part) => Buffer.byteLength(part!) <= 48_000)).toBe(true);
+    expect(unpackCatalogCi(...parts)).toEqual(large);
+    expect(() => unpackCatalogCi("a".repeat(48_001), "b")).toThrow();
+  });
   it("splits a larger catalog across three secrets and requires all three parts", () => {
     const large = { ...files, [catalogCiFiles[0]]: randomBytes(80_000).toString("base64") };
     const parts = packCatalogCi(large);

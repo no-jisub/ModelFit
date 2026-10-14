@@ -49,6 +49,8 @@ jobs:
           MODELFIT_CATALOG_GZIP_3: ${{ secrets.MODELFIT_CATALOG_GZIP_3 }}
       - name: Generate catalog data
         run: npm run catalog:import
+      - name: Compile SQL catalog schema
+        run: npm run database:compile
       - name: Refresh exact purchase option prices
         if: github.event_name != 'pull_request'
         run: npm run sync:purchase-prices

@@ -3,7 +3,8 @@ import { createHash } from "node:crypto";
 import { catalogSchema } from "./catalog-schema";
 
 export const catalogCiFiles = Object.keys(catalogSchema).map((file) => "data/catalog/" + file);
-const maxSecretBytes = 45_000;
+// GitHub allows 48 KiB per secret; keep each fragment below that hard limit.
+const maxSecretBytes = 48_000;
 
 export function catalogFingerprint(files: Record<string, string>): string {
   validateFiles(files);

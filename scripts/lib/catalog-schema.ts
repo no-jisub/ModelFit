@@ -20,7 +20,7 @@ export const catalogSchema = {
   "product-option-sources.csv": "productOptionId,sourceId",
   "compatibility-sources.csv": "compatibilityId,sourceId",
   "product-options.csv":
-    "id,consumableId,name,kind,verification,description,itemCode,packageLabel,sortOrder,isActive",
+    "id,consumableId,name,kind,verification,description,itemCode,packageLabel,sortOrder,isActive,applicableModelIds",
   "option-model-labels.csv": "productOptionId,modelId,label",
   "purchase-links.csv":
     "id,productOptionId,label,url,channel,isAffiliate,checkedAt,isActive,purchaseScope,priceKeyword,priceProductId,priceItemId,priceVendorItemId",
@@ -233,6 +233,20 @@ export function validateRawCatalog(raw: RawCatalog): string[] {
           )
         )
           errors.push(label + ": option not compatible with model");
+      }
+      if (file === "product-options.csv" && row.applicableModelIds) {
+        const modelIds = row.applicableModelIds.split("|");
+        if (
+          new Set(modelIds).size !== modelIds.length ||
+          modelIds.some(
+            (modelId) =>
+              !raw["model-consumables.csv"].some(
+                (relation) =>
+                  relation.modelId === modelId && relation.consumableId === row.consumableId,
+              ),
+          )
+        )
+          errors.push(label + ": invalid product option model scope");
       }
       if (
         file === "purchase-links.csv" &&

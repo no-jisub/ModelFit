@@ -62,7 +62,8 @@ export function createCatalogSeed(raw: RawCatalog) {
         }
         if (file === "consumables.csv") row.status = "published";
         const fields = Object.entries(row).map(([key, value]) => {
-          if (key === "searchKeywords")
+          if (key === "applicableModelIds" && !value) return key + ": null";
+          if (key === "searchKeywords" || key === "applicableModelIds")
             return key + ": " + JSON.stringify(String(value).split("|").filter(Boolean));
           if (references[key]) return references[key] + ": {id: " + JSON.stringify(value) + "}";
           if (enumFields.includes(key))

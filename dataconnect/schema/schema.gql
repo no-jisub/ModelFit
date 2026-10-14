@@ -193,6 +193,7 @@ type ProductOption @table(key: "id") @index(fields: ["consumableId", "kind"]) {
   description: String!
   itemCode: String @col(dataType: "varchar(160)")
   packageLabel: String @col(dataType: "varchar(160)")
+  applicableModelIds: [String!]
   sortOrder: Int! @default(value: 0)
   isActive: Boolean! @default(value: true)
 }

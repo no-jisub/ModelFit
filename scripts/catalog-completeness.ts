@@ -6,7 +6,10 @@ const rows = raw["model-consumables.csv"].map((relation) => {
   const model = raw["models.csv"].find((row) => row.id === relation.modelId)!;
   const part = raw["consumables.csv"].find((row) => row.id === relation.consumableId)!;
   const options = raw["product-options.csv"].filter(
-    (row) => row.consumableId === part.id && row.isActive === "true",
+    (row) =>
+      row.consumableId === part.id &&
+      row.isActive === "true" &&
+      (!row.applicableModelIds || row.applicableModelIds.split("|").includes(model.id)),
   );
   const links = raw["purchase-links.csv"].filter(
     (row) => options.some((option) => option.id === row.productOptionId) && row.isActive === "true",
@@ -50,6 +53,13 @@ const summary = {
   sellerConfirmedRelations: rows.filter((row) => row.verificationStatus === "seller-confirmed")
     .length,
   partTypesWithoutPurchase: new Set(
+    rows
+      .filter(
+        (row) => !rows.some((other) => other.partId === row.partId && other.purchaseUrls.length),
+      )
+      .map((row) => row.partId),
+  ).size,
+  partTypesWithModelPurchaseGaps: new Set(
     rows.filter((row) => !row.purchaseUrls.length).map((row) => row.partId),
   ).size,
   relationsWithInformationGaps: rows.filter((row) => row.missing.length).length,
