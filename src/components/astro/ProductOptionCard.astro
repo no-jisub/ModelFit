@@ -174,7 +174,9 @@ const selectionGuide = getFilterSelectionGuide(partId, option.itemCode ?? partNu
             data-link-status={link.linkType}
           >
             {link.channel === "coupang"
-              ? "쿠팡에서 구매하기"
+              ? link.label.includes("해외직구")
+                ? "쿠팡 해외직구 상품 보기"
+                : "쿠팡에서 구매하기"
               : link.channel === "official"
                 ? isOverseas(link.url)
                   ? "해외 공식몰에서 구매하기"
@@ -184,6 +186,11 @@ const selectionGuide = getFilterSelectionGuide(partId, option.itemCode ?? partNu
           </a>
           {showDisclosure && link.channel === "coupang" && (
             <AffiliateDisclosure hasAffiliateLinks={link.isAffiliate} />
+          )}
+          {link.channel === "coupang" && link.label.includes("해외직구") && (
+            <p class="purchase-unavailable">
+              해외직구 상품입니다. 배송일과 통관 조건을 구매처에서 확인하세요.
+            </p>
           )}
           {link.channel === "official" && isOverseas(link.url) && (
             <p class="purchase-unavailable">

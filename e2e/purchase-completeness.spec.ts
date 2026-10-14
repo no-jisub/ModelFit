@@ -42,10 +42,11 @@ test("유피 C20·C28 해외직구 호환상품은 선택된 부품과 판매 �
     await page.goto("/model/eufy/omni-" + model + "#compatible-parts");
     for (const [suffix, pack] of entries) {
       const option = page
-        .locator("#eufy-" + model + "-" + suffix + " .product-option-card")
+        .locator("#eufy-" + model + "-" + suffix + " .product-option-card.is-compatible")
         .filter({ hasText: pack });
       await expect(option).toContainText("판매자 호환 표기");
       await expect(option.getByRole("link", { name: /쿠팡 해외직구 상품 보기/ })).toBeVisible();
+      await expect(option).toContainText("배송일과 통관 조건");
     }
   }
 });
@@ -62,7 +63,9 @@ test("같은 품번의 샤오미 사이드 브러시와 로보락 먼지봉투�
         .locator("dd"),
     ).toContainText("1개");
     await expect(part).toContainText("사이드 브러시 2개");
-    await expect(part.getByRole("link", { name: /공식몰 사이드 브러시 구매하기/ })).toBeVisible();
+    await expect(
+      part.locator('a[data-purchase-channel="official"][data-link-status="direct-product"]'),
+    ).toBeVisible();
   }
   for (const [model, count] of [
     ["s8-maxv-ultra", 1],
