@@ -62,7 +62,7 @@
     "astro": "^7.2.0",
     "firebase": "^12.3.0",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.3.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
@@ -70,7 +70,7 @@
     "@firebase/rules-unit-testing": "^5.0.2",
     "@playwright/test": "^1.62.1",
     "@types/react": "^19.1.10",
-    "@types/react-dom": "^19.2.4",
+    "@types/react-dom": "^19.3.0",
     "@typescript-eslint/parser": "^8.67.0",
     "cross-env": "^10.0.0",
     "eslint": "^10.0.0",
